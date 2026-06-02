@@ -55,35 +55,7 @@ margin-bottom:15px;
 margin-top:35px;
 }
 
-.card{
-display:flex;
-align-items:center;
-justify-content:flex-start;
 
-gap:15px;
-
-text-decoration:none;
-color:#1b2345;
-
-background:rgba(255,255,255,.75);
-
-backdrop-filter:blur(15px);
-
-padding:16px 20px;
-
-border-radius:25px;
-
-margin-bottom:18px;
-
-font-size:17px;
-
-font-weight:600;
-
-box-shadow:
-0 8px 25px rgba(0,0,0,.08);
-
-transition:.3s;
-}
 
 .card:hover{
 transform:translateY(-5px);
