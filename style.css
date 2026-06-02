@@ -397,3 +397,33 @@ display:flex;
 justify-content:center;
 align-items:center;
 }
+.swiper{
+width:100%;
+overflow:hidden;
+padding-bottom:40px;
+}
+
+.swiper-slide{
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.slide-card{
+width:100%;
+max-width:420px;
+min-height:220px;
+padding:30px 20px;
+background:white;
+border-radius:30px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.swiper-pagination-bullet{
+width:10px;
+height:10px;
+}
+
+.swiper-pagination-bullet-active{
+background:#f01873;
+}
