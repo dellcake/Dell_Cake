@@ -22,3 +22,24 @@ buttons.classList.remove("hidden");
 buttons.classList.add("show");
 
 }, 2800);
+new Swiper(".promoSwiper", {
+
+loop:true,
+
+grabCursor:true,
+
+centeredSlides:true,
+
+spaceBetween:20,
+
+pagination:{
+el:".swiper-pagination",
+clickable:true,
+},
+
+autoplay:{
+delay:4500,
+disableOnInteraction:false,
+},
+
+});
