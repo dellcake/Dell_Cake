@@ -204,16 +204,11 @@ padding-bottom:40px;
 overflow:hidden;
 }
 
-.swiper-slide{
-display:flex;
-justify-content:center;
-align-items:center;
-}
 
 .slide-card{
-
-width:100%;
-max-width:420px;
+width:90%;
+max-width:350px;
+margin:auto;
 
 min-height:260px;
 
