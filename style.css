@@ -340,8 +340,19 @@ align-items:center;
 }
 
 .slide-icon{
-font-size:60px;
-margin-bottom:20px;
+
+font-size:65px;
+
+color:#f01873;
+
+margin-bottom:18px;
+
+animation:floatIcon 3s ease-in-out infinite;
+
+filter:drop-shadow(
+0 5px 10px rgba(240,24,115,.25)
+);
+
 }
 
 .slide-card h3{
