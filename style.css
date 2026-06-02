@@ -93,6 +93,17 @@ transform:translateY(-5px);
 font-size:28px;
 }
 
+.card{
+justify-content:flex-start;
+padding-right:15px;
+}
+
+.card span{
+font-size:20px;
+font-weight:700;
+margin-right:15px;
+}
+
 .instagram{
 border-right:8px solid #ff2f8d;
 }
