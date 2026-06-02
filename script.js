@@ -10,19 +10,24 @@ setTimeout(() => {
 setTimeout(() => {
   intro.classList.remove("hidden");
   intro.classList.add("show");
-}, 1200);
+}, 1400);
 
 setTimeout(() => {
   buttons.classList.remove("hidden");
   buttons.classList.add("show");
-}, 2600);
+}, 2800);
 
 document.addEventListener("DOMContentLoaded", () => {
 
   new Swiper(".promoSwiper", {
-    effect:"slide",
-    grabCursor: true,
+
+    effect: "slide",
+
     loop: true,
+
+    grabCursor: true,
+
+    centeredSlides: true,
 
     autoplay: {
       delay: 3500,
@@ -33,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
       el: ".swiper-pagination",
       clickable: true,
     }
+
   });
 
 });
