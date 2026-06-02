@@ -20,14 +20,8 @@ overflow-x:hidden;
 width:100%;
 max-width:500px;
 margin:auto;
-padding:40px 20px;
+padding:30px 20px;
 text-align:center;
-}
-
-/* LOGO */
-
-.logo-box{
-margin-top:10px;
 }
 
 .logo-box img{
@@ -37,39 +31,213 @@ box-shadow:0 0 30px rgba(255,105,180,.4);
 animation:floatLogo 4s ease-in-out infinite;
 }
 
-/* TITLE */
-
-.intro{
-margin-top:15px;
-}
-
 .intro h1{
-font-size:55px;
+font-size:58px;
 color:#f01873;
-margin-bottom:15px;
+margin:20px 0;
 }
 
-/* BUTTONS */
+.hidden{
+opacity:0;
+transform:translateY(40px);
+}
+
+.show{
+animation:showUp 1s ease forwards;
+}
+
+.logoAnimate{
+animation:logoZoom 1.4s ease forwards;
+}
+
+@keyframes logoZoom{
+from{
+opacity:0;
+transform:scale(.3);
+}
+to{
+opacity:1;
+transform:scale(1);
+}
+}
+
+@keyframes showUp{
+from{
+opacity:0;
+transform:translateY(40px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@keyframes floatLogo{
+0%{transform:translateY(0);}
+50%{transform:translateY(-10px);}
+100%{transform:translateY(0);}
+}
+
+/* اسلایدر */
+
+.promoSwiper{
+margin-top:20px;
+padding-bottom:40px;
+}
+
+.slide-card{
+
+background:white;
+
+border-radius:35px;
+
+padding:30px 25px;
+
+min-height:240px;
+
+box-shadow:
+0 15px 35px rgba(240,24,115,.12);
+
+position:relative;
+
+overflow:hidden;
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+.slide-card::before{
+
+content:"❤";
+
+position:absolute;
+
+top:-30px;
+right:-15px;
+
+font-size:150px;
+
+color:rgba(240,24,115,.05);
+
+}
+
+.slide-icon{
+
+font-size:60px;
+
+color:#f01873;
+
+margin-bottom:15px;
+
+animation:floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon{
+
+0%{transform:translateY(0);}
+50%{transform:translateY(-10px);}
+100%{transform:translateY(0);}
+
+}
+
+.slide-card h3{
+
+color:#f01873;
+
+font-size:24px;
+
+margin-bottom:12px;
+}
+
+.slide-card p{
+
+font-size:17px;
+
+line-height:2;
+
+color:#444;
+}
+
+.swiper-slide-active .slide-card{
+
+animation:cardPop .5s ease;
+}
+
+@keyframes cardPop{
+
+0%{
+transform:scale(.9);
+opacity:.5;
+}
+
+100%{
+transform:scale(1);
+opacity:1;
+}
+
+}
+
+.swiper-pagination-bullet{
+
+width:12px;
+height:12px;
+
+background:#ffc0d6;
+
+opacity:1;
+}
+
+.swiper-pagination-bullet-active{
+
+background:#f01873;
+
+width:28px;
+
+border-radius:20px;
+}
+
+/* دکمه ها */
 
 .buttons{
 margin-top:35px;
 }
 
+.card{
 
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+padding:18px 22px;
+
+background:white;
+
+border-radius:25px;
+
+margin-bottom:18px;
+
+text-decoration:none;
+
+color:#1b2345;
+
+font-size:22px;
+
+font-weight:700;
+
+box-shadow:
+0 8px 25px rgba(0,0,0,.08);
+
+transition:.3s;
+}
 
 .card:hover{
 transform:translateY(-5px);
 }
 
-.card span{
-font-size:20px;
-font-weight:700;
-margin-right:10px;
-}
-
 .social-icon{
-font-size:34px;
-margin-left:15px;
+font-size:36px;
 }
 
 .instagram{
@@ -101,11 +269,41 @@ color:#ff6b95;
 }
 
 .bale-logo{
-width:32px;
-height:32px;
-margin-left:15px;
-object-fit:contain;
+width:34px;
+height:34px;
 }
+
+.footer{
+margin-top:40px;
+font-size:20px;
+font-weight:700;
+color:#f01873;
+}
+
+/* قلب ها */
+
+.heart{
+position:fixed;
+font-size:25px;
+color:#ff7fb5;
+opacity:.15;
+animation:floatHeart 10s linear infinite;
+pointer-events:none;
+}
+
+.h1{left:10%;bottom:-50px;}
+.h2{left:30%;bottom:-100px;}
+.h3{left:70%;bottom:-70px;}
+.h4{left:90%;bottom:-120px;}
+
+@keyframes floatHeart{
+from{
+transform:translateY(0);
+}
+to{
+transform:translateY(-120vh);
+}
+}}
 
 /* FOOTER */
 
