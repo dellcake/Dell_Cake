@@ -20,7 +20,7 @@ setTimeout(() => {
 document.addEventListener("DOMContentLoaded", () => {
 
   new Swiper(".promoSwiper", {
-    effect: "cards",
+    effect:"slide",
     grabCursor: true,
     loop: true,
 
