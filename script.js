@@ -27,15 +27,6 @@ grabCursor:true,
 
 loop:true,
 
-centeredSlides:true,
-
-cardsEffect:{
-slideShadows:false,
-rotate:true,
-perSlideRotate:4,
-perSlideOffset:10,
-},
-
 autoplay:{
 delay:3500,
 disableOnInteraction:false,
