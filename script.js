@@ -19,19 +19,22 @@ setTimeout(() => {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  new Swiper(".promoSwiper", {
-    loop: true,
-    grabCursor: true,
+  new Swiper(".promoSwiper",{
 
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
-    },
+effect:"cards",
 
-    autoplay: {
-      delay: 4000,
-      disableOnInteraction: false,
-    }
-  });
+grabCursor:true,
+
+loop:true,
+
+autoplay:{
+delay:3500,
+disableOnInteraction:false,
+},
+
+pagination:{
+el:".swiper-pagination",
+clickable:true,
+},
 
 });
