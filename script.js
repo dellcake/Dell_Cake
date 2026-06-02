@@ -10,41 +10,29 @@ setTimeout(() => {
 setTimeout(() => {
   intro.classList.remove("hidden");
   intro.classList.add("show");
-}, 1400);
+}, 1200);
 
 setTimeout(() => {
   buttons.classList.remove("hidden");
   buttons.classList.add("show");
-}, 2800);
+}, 2600);
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 
-  new Swiper(".promoSwiper",{
+  new Swiper(".promoSwiper", {
+    effect: "cards",
+    grabCursor: true,
+    loop: true,
 
-effect:"cards",
+    autoplay: {
+      delay: 3500,
+      disableOnInteraction: false,
+    },
 
-grabCursor:true,
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    }
+  });
 
-loop:true,
-
-centeredSlides:true,
-
-cardsEffect:{
-slideShadows:false,
-rotate:true,
-perSlideRotate:4,
-perSlideOffset:10,
-},
-
-autoplay:{
-delay:3500,
-disableOnInteraction:false,
-},
-
-pagination:{
-el:".swiper-pagination",
-clickable:true,
-},
-
-});
 });
