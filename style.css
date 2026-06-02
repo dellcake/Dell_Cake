@@ -381,3 +381,15 @@ line-height:2.2;
 color:#2a2a2a;
 
 }
+.swiper{
+width:100%;
+max-width:600px;
+margin:20px auto;
+overflow:hidden;
+}
+
+.swiper-slide{
+display:flex;
+justify-content:center;
+align-items:center;
+}
