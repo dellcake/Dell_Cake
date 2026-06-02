@@ -240,3 +240,9 @@ background:#4CAF50;
 .phone-icon{
 background:#ff6b95;
 }
+.bale-logo{
+width:28px;
+height:28px;
+object-fit:contain;
+display:block;
+}
