@@ -1126,3 +1126,37 @@ background:none !important;
 -webkit-text-fill-color:#e6006f !important;
 
 }
+.brand-title{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:18px;
+
+font-family:'Morabba',sans-serif;
+font-size:82px;
+font-weight:700;
+
+margin:25px 0;
+}
+
+.brand-title span{
+
+color:#e6006f !important;
+
+text-shadow:
+0 0 15px rgba(230,0,111,.35),
+0 4px 10px rgba(230,0,111,.25);
+
+}
+
+.title-icon{
+
+font-size:42px;
+color:#ff4f9d;
+
+filter:
+drop-shadow(0 0 10px rgba(255,79,157,.4));
+
+animation:iconFloat 3s ease-in-out infinite;
+
+}
