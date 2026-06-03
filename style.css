@@ -230,8 +230,39 @@ box-shadow:
 0 8px 25px rgba(0,0,0,.08);
 
 transition:.3s;
+  
+  position:relative;
+  overflow:hidden;
 }
 
+.card::before{
+
+content:"";
+
+position:absolute;
+
+top:0;
+right:-120%;
+
+width:70%;
+height:100%;
+
+background:linear-gradient(
+90deg,
+transparent,
+rgba(255,255,255,.7),
+transparent
+);
+
+transform:skewX(-25deg);
+
+transition:1s;
+
+}
+
+.card:hover::before{
+right:150%;
+}
 .card:hover{
 transform:translateY(-5px);
 }
