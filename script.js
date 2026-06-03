@@ -1,6 +1,7 @@
 const logo = document.getElementById("logoBox");
 const intro = document.getElementById("introBox");
 const buttons = document.getElementById("buttons");
+const contactText = document.getElementById("contactText");
 
 setTimeout(() => {
   logo.classList.remove("hidden");
@@ -13,8 +14,13 @@ setTimeout(() => {
 }, 1400);
 
 setTimeout(() => {
+
+  contactText.classList.remove("hidden");
+  contactText.classList.add("show");
+
   buttons.classList.remove("hidden");
   buttons.classList.add("show");
+
 }, 2800);
 
 document.addEventListener("DOMContentLoaded", () => {
