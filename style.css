@@ -207,21 +207,6 @@ body{
     transition:.3s;
 }
 
-/* متن راه های ارتباطی */
-
-.contact-text{
-margin:25px 0 20px;
-font-size:18px;
-line-height:2;
-color:#555;
-text-align:center;
-}
-
-.contact-text span{
-color:#f01873;
-font-weight:800;
-}
-
 /* BUTTONS */
 
 .buttons{
@@ -356,4 +341,18 @@ font-weight:800;
     to{
         transform:translateY(-120vh);
     }
+}
+/* متن راه های ارتباطی */
+
+.contact-text{
+margin:25px 0 20px;
+font-size:18px;
+line-height:2;
+color:#555;
+text-align:center;
+}
+
+.contact-text span{
+color:#f01873;
+font-weight:800;
 }
