@@ -31,105 +31,6 @@ box-shadow:0 0 30px rgba(255,105,180,.4);
 animation:floatLogo 4s ease-in-out infinite;
 }
 
-.intro h1{
-
-font-size:72px;
-font-weight:800;
-
-background:linear-gradient(
-45deg,
-#ff4f9d,
-#ff7ab8,
-#f01873
-);
-
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-
-margin-bottom:25px;
-
-opacity:0;
-
-transform:translateY(-40px) scale(.8);
-
-animation:titleShow 1.8s ease forwards;
-
-}
-
-.intro h1::after{
-
-content:"✨";
-
-position:absolute;
-
-margin-right:10px;
-
-animation:sparkle 2s infinite;
-
-}
-
-@keyframes titleShow{
-
-0%{
-opacity:0;
-transform:
-translateY(-40px)
-scale(.8)
-rotate(-4deg);
-}
-
-60%{
-opacity:1;
-transform:
-translateY(8px)
-scale(1.08)
-rotate(2deg);
-}
-
-100%{
-opacity:1;
-transform:
-translateY(0)
-scale(1)
-rotate(0);
-}
-
-}
-
-@keyframes sparkle{
-
-0%{
-opacity:0;
-transform:scale(.5);
-}
-
-50%{
-opacity:1;
-transform:scale(1.2);
-}
-
-100%{
-opacity:0;
-transform:scale(.5);
-}
-
-}
-
-@keyframes titleFloat{
-
-0%{
-transform:translateY(0);
-}
-
-50%{
-transform:translateY(-6px);
-}
-
-100%{
-transform:translateY(0);
-}
-
-}
 
 .hidden{
 opacity:0;
@@ -1031,18 +932,23 @@ transform:translate(80px,-60px);
 
 display:flex;
 justify-content:center;
-gap:4px;
+align-items:center;
 
-font-size:75px;
-font-weight:800;
+font-family:'Lalezar',cursive;
+
+font-size:78px;
 
 margin:25px 0;
+
+direction:rtl;
 
 }
 
 .typing-title span{
 
 opacity:0;
+
+display:inline-block;
 
 background:linear-gradient(
 45deg,
@@ -1070,21 +976,24 @@ animation:letterPop .6s forwards;
 0%{
 opacity:0;
 transform:
-translateY(-40px)
-scale(.4);
+translateY(-50px)
+rotate(-20deg)
+scale(.2);
 }
 
 70%{
 opacity:1;
 transform:
-translateY(8px)
-scale(1.15);
+translateY(10px)
+rotate(8deg)
+scale(1.25);
 }
 
 100%{
 opacity:1;
 transform:
 translateY(0)
+rotate(0)
 scale(1);
 }
 
