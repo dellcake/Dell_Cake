@@ -207,6 +207,19 @@ body{
     transition:.3s;
 }
 
+/* CONTACT TEXT */
+
+.contact-text{
+    margin:25px 0;
+    padding:0 10px;
+
+    font-size:18px;
+    line-height:2;
+
+    color:#555;
+    text-align:center;
+}
+
 /* BUTTONS */
 
 .buttons{
