@@ -207,17 +207,19 @@ body{
     transition:.3s;
 }
 
-/* CONTACT TEXT */
+/* متن راه های ارتباطی */
 
 .contact-text{
-    margin:25px 0;
-    padding:0 10px;
+margin:25px 0 20px;
+font-size:18px;
+line-height:2;
+color:#555;
+text-align:center;
+}
 
-    font-size:18px;
-    line-height:2;
-
-    color:#555;
-    text-align:center;
+.contact-text span{
+color:#f01873;
+font-weight:800;
 }
 
 /* BUTTONS */
