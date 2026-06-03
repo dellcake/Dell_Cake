@@ -1099,3 +1099,30 @@ right:150%;
 }
 
 }
+.typing-title{
+
+font-family:'Lalezar',cursive !important;
+
+font-size:80px !important;
+
+color:#e6006f !important;
+
+background:none !important;
+
+-webkit-text-fill-color:#e6006f !important;
+
+text-shadow:
+0 0 10px rgba(230,0,111,.4),
+0 0 25px rgba(255,105,180,.3);
+
+}
+
+.typing-title span{
+
+color:#e6006f !important;
+
+background:none !important;
+
+-webkit-text-fill-color:#e6006f !important;
+
+}
