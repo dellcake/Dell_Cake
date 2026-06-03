@@ -1005,6 +1005,10 @@ overflow:hidden;
 
 }
 
+.typing-title{
+gap:8px;
+}
+
 .typing-title::after{
 
 content:"";
