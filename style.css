@@ -36,9 +36,6 @@ animation:floatLogo 4s ease-in-out infinite;
 font-family:'Morabba',sans-serif;
 
 font-size:72px;
-font-weight:700;
-
-margin-bottom:25px;
 
 background:linear-gradient(
 45deg,
@@ -54,8 +51,6 @@ text-shadow:
 0 0 10px rgba(255,255,255,.9),
 0 0 20px rgba(255,182,193,.6),
 0 5px 15px rgba(240,24,115,.25);
-
-letter-spacing:1px;
 
 }
 .hidden{
