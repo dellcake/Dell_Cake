@@ -71,25 +71,27 @@ font-size:78px;
 
 margin:20px 0;
 
-color:#e6006f;
+color:#d60067;
 
 text-shadow:
-0 3px 8px rgba(230,0,111,.25);
+0 0 10px rgba(214,0,103,.4),
+0 0 25px rgba(255,105,180,.3),
+0 4px 8px rgba(0,0,0,.12);
 
 }
 
 .title-icon{
 
-font-size:38px;
+font-size:40px;
 
-color:#ff4f9d;
-
-animation:iconFloat 3s ease-in-out infinite;
+color:#ff2f8d;
 
 filter:
 drop-shadow(
-0 5px 10px rgba(255,79,157,.35)
+0 0 10px rgba(255,47,141,.5)
 );
+
+animation:iconFloat 3s ease-in-out infinite;
 
 }
 
