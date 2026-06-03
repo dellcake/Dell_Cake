@@ -36,24 +36,25 @@ animation:floatLogo 4s ease-in-out infinite;
 font-family:'Morabba',sans-serif;
 
 font-size:72px;
-
 font-weight:700;
 
-margin-bottom:20px;
+margin-bottom:25px;
 
 background:linear-gradient(
-45deg,
-#ff5fa8,
-#ff9cc8,
-#f01873
+135deg,
+#ff006e,
+#ff4fa3,
+#ff8cc8
 );
 
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 
 filter:drop-shadow(
-0 4px 10px rgba(240,24,115,.25)
+0 4px 12px rgba(255,0,110,.35)
 );
+
+position:relative;
 
 }
 .hidden{
