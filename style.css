@@ -59,32 +59,25 @@ position:relative;
 }
 
 .brand-title{
-
 display:flex;
 align-items:center;
 justify-content:center;
-gap:18px;
+gap:20px;
 
-font-family:'Lalezar',cursive;
+font-family:'Morabba',sans-serif;
 
 font-size:78px;
+font-weight:700;
 
-margin:20px 0;
+color:#ff0f7b !important;
+background:none !important;
 
-background:linear-gradient(
-180deg,
-#ff2f8d,
-#e6006f,
-#b80058
-);
+-webkit-text-fill-color:#ff0f7b !important;
+-webkit-background-clip:unset !important;
 
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-
-filter:drop-shadow(
-0 4px 10px rgba(230,0,111,.35)
-);
-
+text-shadow:
+0 0 15px rgba(255,15,123,.45),
+0 0 35px rgba(255,15,123,.25);
 }
 
 .title-icon{
