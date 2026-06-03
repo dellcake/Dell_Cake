@@ -32,9 +32,42 @@ animation:floatLogo 4s ease-in-out infinite;
 }
 
 .intro h1{
-font-size:58px;
+
+font-family:'Lalezar', cursive;
+
+font-size:68px;
+
 color:#f01873;
-margin:20px 0;
+
+letter-spacing:1px;
+
+margin-bottom:20px;
+
+text-shadow:
+0 4px 15px rgba(240,24,115,.25);
+
+}
+
+.intro h1{
+
+animation:titleFloat 4s ease-in-out infinite;
+
+}
+
+@keyframes titleFloat{
+
+0%{
+transform:translateY(0);
+}
+
+50%{
+transform:translateY(-6px);
+}
+
+100%{
+transform:translateY(0);
+}
+
 }
 
 .hidden{
