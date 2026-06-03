@@ -402,3 +402,33 @@ transform:translate(70px,-50px);
 }
 
 }
+/* ===== GALLERY ===== */
+
+.gallery{
+margin-top:50px;
+}
+
+.gallery h2{
+font-size:28px;
+color:#f01873;
+margin-bottom:20px;
+}
+
+.gallery-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px;
+}
+
+.gallery-grid img{
+width:100%;
+height:170px;
+object-fit:cover;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+transition:.4s;
+}
+
+.gallery-grid img:hover{
+transform:scale(1.05);
+}
