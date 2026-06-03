@@ -33,24 +33,85 @@ animation:floatLogo 4s ease-in-out infinite;
 
 .intro h1{
 
-font-family:'Lalezar', cursive;
+font-size:72px;
+font-weight:800;
 
-font-size:68px;
+background:linear-gradient(
+45deg,
+#ff4f9d,
+#ff7ab8,
+#f01873
+);
 
-color:#f01873;
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 
-letter-spacing:1px;
+margin-bottom:25px;
 
-margin-bottom:20px;
+opacity:0;
 
-text-shadow:
-0 4px 15px rgba(240,24,115,.25);
+transform:translateY(-40px) scale(.8);
+
+animation:titleShow 1.8s ease forwards;
 
 }
 
-.intro h1{
+.intro h1::after{
 
-animation:titleFloat 4s ease-in-out infinite;
+content:"✨";
+
+position:absolute;
+
+margin-right:10px;
+
+animation:sparkle 2s infinite;
+
+}
+
+@keyframes titleShow{
+
+0%{
+opacity:0;
+transform:
+translateY(-40px)
+scale(.8)
+rotate(-4deg);
+}
+
+60%{
+opacity:1;
+transform:
+translateY(8px)
+scale(1.08)
+rotate(2deg);
+}
+
+100%{
+opacity:1;
+transform:
+translateY(0)
+scale(1)
+rotate(0);
+}
+
+}
+
+@keyframes sparkle{
+
+0%{
+opacity:0;
+transform:scale(.5);
+}
+
+50%{
+opacity:1;
+transform:scale(1.2);
+}
+
+100%{
+opacity:0;
+transform:scale(.5);
+}
 
 }
 
