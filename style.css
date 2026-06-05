@@ -598,3 +598,8 @@ line-height:2.2;
 color:#555;
 
 }
+.course-card-link{
+display:block;
+text-decoration:none;
+color:inherit;
+}
