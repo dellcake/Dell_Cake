@@ -444,3 +444,62 @@ transition:.3s;
 transform:translateY(-4px);
 
 }
+/* ===== COURSES ===== */
+
+.courses-section{
+margin-top:50px;
+}
+
+.courses-section h2{
+color:#f01873;
+font-size:32px;
+margin-bottom:25px;
+}
+
+.course-card{
+
+background:white;
+
+border-radius:30px;
+
+padding:25px;
+
+margin-bottom:20px;
+
+box-shadow:
+0 10px 30px rgba(240,24,115,.12);
+
+transition:.3s;
+
+}
+
+.course-card:hover{
+
+transform:
+translateY(-6px);
+
+}
+
+.course-icon{
+
+font-size:50px;
+
+margin-bottom:15px;
+
+}
+
+.course-card h3{
+
+color:#f01873;
+
+margin-bottom:10px;
+
+}
+
+.course-card p{
+
+color:#555;
+
+line-height:2;
+
+}
