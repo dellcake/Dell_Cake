@@ -387,3 +387,60 @@ transition:.4s;
 .gallery-grid img:hover{
 transform:scale(1.05);
 }
+/* ===== ACADEMY PAGE ===== */
+
+.academy-header{
+margin-top:20px;
+}
+
+.academy-header h1{
+
+font-size:42px;
+color:#f01873;
+
+margin-bottom:20px;
+
+}
+
+.academy-header p{
+
+font-size:18px;
+line-height:2.2;
+
+color:#555;
+
+max-width:420px;
+margin:auto;
+
+}
+
+.back-btn{
+
+display:block;
+
+margin-top:40px;
+
+padding:18px;
+
+background:#f01873;
+
+color:white;
+
+text-decoration:none;
+
+border-radius:20px;
+
+font-weight:700;
+
+box-shadow:
+0 10px 25px rgba(240,24,115,.25);
+
+transition:.3s;
+
+}
+
+.back-btn:hover{
+
+transform:translateY(-4px);
+
+}
