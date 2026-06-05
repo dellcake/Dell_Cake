@@ -603,3 +603,28 @@ display:block;
 text-decoration:none;
 color:inherit;
 }
+.banner-decoration{
+
+font-size:34px;
+
+margin-bottom:20px;
+
+animation:floatBanner 4s ease-in-out infinite;
+
+}
+
+@keyframes floatBanner{
+
+0%{
+transform:translateY(0);
+}
+
+50%{
+transform:translateY(-8px);
+}
+
+100%{
+transform:translateY(0);
+}
+
+}
