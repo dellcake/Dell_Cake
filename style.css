@@ -503,3 +503,98 @@ color:#555;
 line-height:2;
 
 }
+/* ===== COURSE PAGE ===== */
+
+.course-page{
+margin-top:30px;
+}
+
+.course-banner{
+
+padding:35px;
+
+border-radius:35px;
+
+background:
+linear-gradient(
+135deg,
+#f01873,
+#ff7eb3
+);
+
+color:white;
+
+box-shadow:
+0 15px 35px rgba(240,24,115,.25);
+
+}
+
+.course-banner h1{
+
+font-size:34px;
+
+margin-bottom:15px;
+
+}
+
+.course-banner p{
+
+line-height:2;
+
+}
+
+.course-info{
+
+margin-top:25px;
+
+display:grid;
+
+gap:15px;
+
+}
+
+.info-card{
+
+background:white;
+
+padding:18px;
+
+border-radius:20px;
+
+box-shadow:
+0 8px 20px rgba(0,0,0,.08);
+
+font-weight:700;
+
+}
+
+.course-description{
+
+margin-top:35px;
+
+background:white;
+
+padding:25px;
+
+border-radius:25px;
+
+box-shadow:
+0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.course-description h2{
+
+color:#f01873;
+
+margin-bottom:15px;
+
+}
+
+.course-description p{
+
+line-height:2.2;
+
+color:#555;
+
+}
