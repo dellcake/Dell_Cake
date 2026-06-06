@@ -760,3 +760,55 @@ transform:scale(1);
 }
 
 }
+.logo-box{
+    position:relative;
+    width:220px;
+    margin:0 auto 30px;
+}
+
+.logo-box img{
+    width:180px;
+    display:block;
+    margin:auto;
+}
+
+.academy-icons span{
+    position:absolute;
+    font-size:30px;
+    animation:floatIcon 3s ease-in-out infinite;
+}
+
+.icon1{
+    top:-10px;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.icon2{
+    right:-20px;
+    top:70px;
+}
+
+.icon3{
+    left:-20px;
+    top:70px;
+}
+
+.icon4{
+    bottom:10px;
+    left:10px;
+}
+
+@keyframes floatIcon{
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-8px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+}
