@@ -389,11 +389,16 @@ transform:scale(1.05);
 }
 /* ===== ACADEMY PAGE ===== */
 
+.logo-box{
+    position: relative;
+    width: 220px;
+    margin: 0 auto 5px;
+}
+
 .academy-header{
     margin-top: 0;
     padding-top: 0;
 }
-
 .academy-header h1{
 
 font-size:42px;
