@@ -390,7 +390,8 @@ transform:scale(1.05);
 /* ===== ACADEMY PAGE ===== */
 
 .academy-header{
-margin-top:20px;
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .academy-header h1{
@@ -796,6 +797,10 @@ transform:scale(1);
     transform:translate(-50%,-50%);
 }
 
+.logo-box{
+    position: relative;
+    width: 220px;
+    margin: 0 auto 5px;
 
 @keyframes floatIntro{
     0%{
