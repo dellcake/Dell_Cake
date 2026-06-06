@@ -839,4 +839,23 @@ transform:scale(1);
         pointer-events:none;
     }
 }
+.logo-move{
 
+    animation:
+    moveLogo 1.2s ease forwards;
+
+    animation-delay:2s;
+}
+
+@keyframes moveLogo{
+
+    0%{
+        transform:scale(1);
+    }
+
+    100%{
+        transform:
+        translate(170px,-180px)
+        scale(.35);
+    }
+}
