@@ -36,7 +36,7 @@ body{
 /* TITLE */
 
 .intro h1{
-    font-size:58px;
+    font-size: clamp(32px, 6vw, 58px);
     color:#f01873;
     margin:20px 0;
 }
@@ -801,11 +801,6 @@ transform:scale(1);
     left:50%;
     transform:translate(-50%,-50%);
 }
-
-.logo-box{
-    position: relative;
-    width: 220px;
-    margin: 0 auto 5px;
 
 @keyframes floatIntro{
     0%{
