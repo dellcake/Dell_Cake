@@ -771,8 +771,6 @@ transform:scale(1);
     background:#fff7fa;
     z-index:9999;
 
-    animation:introFade 1s ease forwards;
-    animation-delay:4.5s;
 }
 
 .intro-logo{
@@ -832,13 +830,7 @@ transform:scale(1);
     }
 }
 
-@keyframes introFade{
-    to{
-        opacity:0;
-        visibility:hidden;
-        pointer-events:none;
-    }
-}
+
 .logo-move{
 
     animation:
