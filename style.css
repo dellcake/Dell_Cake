@@ -835,5 +835,21 @@ transform:scale(1);
     }
 
 }
+.academy-motion{
 
+    width:100%;
+    display:flex;
+    justify-content:center;
+
+    margin-top:20px;
+    margin-bottom:30px;
+
+}
+
+.academy-motion img{
+
+    width:280px;
+    max-width:90%;
+
+}
 
