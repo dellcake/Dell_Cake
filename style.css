@@ -760,3 +760,48 @@ transform:scale(1);
 }
 
 }
+.academy-logo{
+
+width:90px;
+height:90px;
+
+margin:0 auto 20px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+gap:8px;
+
+font-size:38px;
+
+background:rgba(255,255,255,.2);
+
+border:2px solid rgba(255,255,255,.3);
+
+border-radius:50%;
+
+backdrop-filter:blur(10px);
+-webkit-backdrop-filter:blur(10px);
+
+box-shadow:
+0 10px 25px rgba(0,0,0,.12);
+
+animation:floatLogoAcademy 4s ease-in-out infinite;
+
+}
+
+@keyframes floatLogoAcademy{
+
+0%{
+transform:translateY(0);
+}
+
+50%{
+transform:translateY(-8px);
+}
+
+100%{
+transform:translateY(0);
+}
+
+}
