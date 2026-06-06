@@ -132,3 +132,97 @@
 .cta-btn:hover{
   transform:scale(1.05);
 }
+.course-hero{
+background:linear-gradient(135deg,#f01873,#ff8eb8);
+padding:40px 25px;
+border-radius:35px;
+text-align:center;
+color:white;
+box-shadow:0 15px 35px rgba(240,24,115,.25);
+}
+
+.course-badge{
+display:inline-block;
+background:white;
+color:#f01873;
+padding:8px 16px;
+border-radius:30px;
+font-size:13px;
+font-weight:700;
+margin-bottom:15px;
+}
+
+.course-hero h1{
+font-size:34px;
+margin-bottom:15px;
+}
+
+.course-hero p{
+line-height:2;
+}
+
+.hero-info{
+margin-top:25px;
+display:grid;
+gap:10px;
+}
+
+.hero-item{
+background:rgba(255,255,255,.2);
+padding:15px;
+border-radius:18px;
+}
+
+.buy-btn{
+display:inline-block;
+margin-top:25px;
+background:white;
+color:#f01873;
+padding:14px 30px;
+border-radius:20px;
+text-decoration:none;
+font-weight:700;
+}
+
+.course-features,
+.course-topics,
+.teacher-box,
+.final-cta{
+margin-top:35px;
+background:white;
+padding:25px;
+border-radius:25px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.course-features h2,
+.course-topics h2,
+.teacher-box h2,
+.final-cta h2{
+color:#f01873;
+margin-bottom:20px;
+}
+
+.feature-card{
+background:#fff2f7;
+padding:15px;
+border-radius:15px;
+margin-bottom:10px;
+}
+
+.topic{
+padding:15px;
+border-bottom:1px solid #eee;
+}
+
+.topic:last-child{
+border-bottom:none;
+}
+
+.teacher-box img{
+width:120px;
+height:120px;
+border-radius:50%;
+object-fit:cover;
+margin-bottom:15px;
+}
