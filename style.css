@@ -772,7 +772,7 @@ transform:scale(1);
     z-index:9999;
 
     animation:introFade 1s ease forwards;
-    animation-delay:3s;
+    animation-delay:4.5s;
 }
 
 .intro-logo{
@@ -837,5 +837,25 @@ transform:scale(1);
         opacity:0;
         visibility:hidden;
         pointer-events:none;
+    }
+}
+.logo-move{
+
+    animation:
+    moveLogo 1.2s ease forwards;
+
+    animation-delay:2s;
+}
+
+@keyframes moveLogo{
+
+    0%{
+        transform:scale(1);
+    }
+
+    100%{
+        transform:
+        translate(170px,-180px)
+        scale(.35);
     }
 }
