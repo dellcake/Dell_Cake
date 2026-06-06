@@ -646,7 +646,7 @@ transform:translateY(-8px);
 100%{
 transform:translateY(0);
 }
-
+                
 }
 .info-card{
 
@@ -718,5 +718,45 @@ color:#555;
 .info-text{
 
 flex:1;
+
+}
+.best-seller{
+
+display:inline-block;
+
+background:white;
+
+color:#f01873;
+
+padding:8px 18px;
+
+border-radius:50px;
+
+font-size:14px;
+
+font-weight:700;
+
+margin-bottom:20px;
+
+box-shadow:
+0 5px 15px rgba(0,0,0,.08);
+
+animation:glowBadge 2s infinite;
+
+}
+
+@keyframes glowBadge{
+
+0%{
+transform:scale(1);
+}
+
+50%{
+transform:scale(1.05);
+}
+
+100%{
+transform:scale(1);
+}
 
 }
