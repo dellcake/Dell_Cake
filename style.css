@@ -806,3 +806,31 @@ color:#777;
 font-size:15px;
 
 }
+.course-price{
+
+display:inline-block;
+
+margin:15px auto 20px;
+
+padding:12px 24px;
+
+background:rgba(255,255,255,.22);
+
+border:1px solid rgba(255,255,255,.35);
+
+backdrop-filter:blur(12px);
+
+-webkit-backdrop-filter:blur(12px);
+
+border-radius:50px;
+
+font-size:24px;
+
+font-weight:800;
+
+color:#fff;
+
+box-shadow:
+0 8px 20px rgba(0,0,0,.12);
+
+}
