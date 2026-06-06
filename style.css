@@ -796,35 +796,6 @@ transform:scale(1);
     transform:translate(-50%,-50%);
 }
 
-.intro-icon{
-    position:absolute;
-    font-size:34px;
-    animation:floatIntro 3s ease-in-out infinite;
-}
-
-.icon-a{
-    top:0;
-    left:50%;
-    transform:translateX(-50%);
-}
-
-.icon-b{
-    right:0;
-    top:50%;
-    transform:translateY(-50%);
-}
-
-.icon-c{
-    left:0;
-    top:50%;
-    transform:translateY(-50%);
-}
-
-.icon-d{
-    bottom:0;
-    left:50%;
-    transform:translateX(-50%);
-}
 
 @keyframes floatIntro{
     0%{
