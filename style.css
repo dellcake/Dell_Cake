@@ -388,7 +388,7 @@ transform:scale(1.05);
 }
 
 .logo-box img{
-    width:180px;
+    width:220px;
     max-width:100%;
     height:auto;
 
@@ -397,4 +397,31 @@ transform:scale(1.05);
     box-shadow:0 0 30px rgba(255,105,180,.35);
 
     animation:floatLogo 4s ease-in-out infinite;
+}
+@media (min-width: 992px){
+
+.container{
+
+    max-width:1200px;
+
+}
+.buttons{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:20px;
+
+}
+ .gallery-grid{
+
+    grid-template-columns:repeat(4,1fr);
+
+}   
+ .slide-card{
+
+    max-width:650px;
+
+}   
 }
