@@ -217,75 +217,30 @@ margin-bottom:15px;
 }
 .academy-camera{
 
-    position:absolute;
+    width:140px;
 
-    top:50%;
-    left:50%;
+    display:block;
 
-    width:260px;
+    margin:0 auto 20px;
 
-    transform:
-    translate(-50%,-50%);
+    filter:
+    drop-shadow(
+        0 10px 20px rgba(0,0,0,.15)
+    );
 
-    opacity:0;
 
-    z-index:1;
-
-    animation:
-    academyLogoMove 3s ease forwards;
 }
 
 .hero-content{
     position:relative;
     z-index:2;
 }
+@media (min-width:768px){
 
-@keyframes academyLogoMove{
+    .academy-camera{
 
-    0%{
-
-        opacity:0;
-
-        transform:
-        translate(-50%,-50%)
-        scale(.3);
+        width:180px;
 
     }
 
-    25%{
-
-        opacity:1;
-
-        transform:
-        translate(-50%,-50%)
-        scale(1);
-
-    }
-
-    60%{
-
-        opacity:1;
-
-        transform:
-        translate(-50%,-50%)
-        scale(.9);
-
-    }
-
-    100%{
-
-        opacity:.25;
-
-        width:90px;
-
-        top:20px;
-
-        right:20px;
-
-        left:auto;
-
-        transform:none;
-
-    }
-
-  }
+}
