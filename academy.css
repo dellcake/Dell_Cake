@@ -6,6 +6,9 @@
 
 /* HERO */
 .academy-hero{
+  position:relative;
+  overflow:hidden;
+  
   background:linear-gradient(135deg,#f01873,#ff7eb3);
   color:white;
   padding:40px 25px;
@@ -212,3 +215,77 @@ border-radius:50%;
 object-fit:cover;
 margin-bottom:15px;
 }
+.academy-camera{
+
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    width:260px;
+
+    transform:
+    translate(-50%,-50%);
+
+    opacity:0;
+
+    z-index:1;
+
+    animation:
+    academyLogoMove 3s ease forwards;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+
+@keyframes academyLogoMove{
+
+    0%{
+
+        opacity:0;
+
+        transform:
+        translate(-50%,-50%)
+        scale(.3);
+
+    }
+
+    25%{
+
+        opacity:1;
+
+        transform:
+        translate(-50%,-50%)
+        scale(1);
+
+    }
+
+    60%{
+
+        opacity:1;
+
+        transform:
+        translate(-50%,-50%)
+        scale(.9);
+
+    }
+
+    100%{
+
+        opacity:.25;
+
+        width:90px;
+
+        top:20px;
+
+        right:20px;
+
+        left:auto;
+
+        transform:none;
+
+    }
+
+  }
