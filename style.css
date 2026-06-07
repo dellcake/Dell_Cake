@@ -24,6 +24,14 @@ body{
     text-align:center;
 }
 
+/* LOGO */
+
+.logo-box img{
+    width:140px;
+    max-width:100%;
+    height:auto;
+}
+ 
 /* TITLE */
 
 .intro h1{
