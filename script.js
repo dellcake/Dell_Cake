@@ -2,6 +2,8 @@ const logo = document.getElementById("logoBox");
 const intro = document.getElementById("introBox");
 const buttons = document.getElementById("buttons");
 const contactText = document.getElementById("contactText");
+const gallerySection =
+document.getElementById("gallerySection");
 
 setTimeout(() => {
   logo.classList.remove("hidden");
@@ -22,6 +24,10 @@ setTimeout(() => {
   buttons.classList.add("show");
 
 }, 2800);
+
+setTimeout(() => {
+    gallerySection.classList.add("show");
+}, 3900);
 
 document.addEventListener("DOMContentLoaded", () => {
 
