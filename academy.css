@@ -229,7 +229,7 @@ margin-bottom:15px;
 
     display:block;
 
-    margin:0 auto 25px;
+    margin:0 auto 8px;
 
     filter:
     drop-shadow(
@@ -240,23 +240,26 @@ margin-bottom:15px;
 
 .hero-content{
 
-    max-width:650px;
+    max-width:700px;
 
     margin:0 auto;
 
-    padding:25px;
+    padding:30px 35px;
 
-    background:rgba(255,255,255,.65);
+    background:linear-gradient(
+        135deg,
+        #fff,
+        #fff8fb
+    );
 
-    backdrop-filter:blur(12px);
-    -webkit-backdrop-filter:blur(12px);
+    border-right:6px solid #f01873;
 
-    border:1px solid rgba(255,255,255,.8);
+    border-left:6px solid #ffb6cf;
 
-    border-radius:28px;
+    border-radius:0 30px 0 30px;
 
     box-shadow:
-    0 10px 30px rgba(0,0,0,.06);
+    0 15px 35px rgba(240,24,115,.08);
 
 }
 
@@ -266,7 +269,7 @@ margin-bottom:15px;
 
     font-size:clamp(30px,5vw,48px);
 
-    margin-bottom:12px;
+    margin-bottom:10px;
 
 }
 
@@ -279,6 +282,7 @@ margin-bottom:15px;
     font-size:17px;
 
 }
+
 @media (min-width:768px){
 
 .academy-camera{
