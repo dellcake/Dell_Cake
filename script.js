@@ -2,8 +2,41 @@ const logo = document.getElementById("logoBox");
 const intro = document.getElementById("introBox");
 const buttons = document.getElementById("buttons");
 const contactText = document.getElementById("contactText");
-const gallerySection =
-document.getElementById("gallerySection");
+const gallerySection = document.getElementById("gallerySection");
+const swiper = new Swiper('.promoSwiper', {
+
+    loop:true,
+
+    autoplay:{
+        delay:3500,
+        disableOnInteraction:false
+    },
+
+    pagination:{
+        el:'.swiper-pagination',
+        clickable:true
+    },
+
+    breakpoints:{
+
+        0:{
+            slidesPerView:1,
+            spaceBetween:15
+        },
+
+        768:{
+            slidesPerView:2,
+            spaceBetween:20
+        },
+
+        1200:{
+            slidesPerView:4,
+            spaceBetween:25
+        }
+
+    }
+
+});
 
 setTimeout(() => {
   logo.classList.remove("hidden");
