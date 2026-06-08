@@ -290,9 +290,9 @@ margin-bottom:15px;
 @media (min-width:768px){
 
 .academy-camera{
-    width:380px;
+    width:260px;
     display:block;
-    margin:0 auto 20px;
+    margin:0 auto -10px;
 }
 
 }
