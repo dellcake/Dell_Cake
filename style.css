@@ -546,3 +546,38 @@ transform:scale(1.05);
     font-size:17px;
 
 }
+.hero-image-section{
+
+    text-align:center;
+
+    margin:15px 0 35px;
+
+}
+
+.hero-image{
+
+    width:100%;
+
+    max-width:450px;
+
+    height:auto;
+
+    display:block;
+
+    margin:auto;
+
+    filter:
+    drop-shadow(
+        0 20px 35px rgba(0,0,0,.12)
+    );
+
+}
+@media (min-width:992px){
+
+    .hero-image{
+
+        max-width:650px;
+
+    }
+
+}
