@@ -80,123 +80,6 @@ body{
     100%{transform:translateY(0);}
 }
 
-/* SWIPER */
-
-.promoSwiper{
-    margin-top:20px;
-    padding-bottom:25px;
-}
-
-.swiper{
-    width:100%;
-    margin:0 auto;
-    overflow:hidden;
-}
-
-.swiper-slide{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-.slide-card{
-    width:100%;
-    min-height:190px;
-    max-width:none;
-
-
-    padding:30px 20px;
-
-    background:linear-gradient(
-        135deg,
-        #ffffff,
-        #fff4f8
-    );
-
-    border-radius:30px;
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,.08);
-
-    position:relative;
-    overflow:hidden;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-
-    transition:.3s;
-}
-
-.slide-card:hover{
-    transform:translateY(-5px);
-}
-
-.slide-card::before{
-    content:"❤";
-
-    position:absolute;
-
-    top:-30px;
-    right:-20px;
-
-    font-size:180px;
-
-    color:rgba(240,24,115,.05);
-
-    transform:rotate(-15deg);
-}
-
-.slide-icon{
-    font-size:65px;
-    color:#f01873;
-    margin-bottom:15px;
-
-    animation:floatIcon 3s ease-in-out infinite;
-}
-
-.slide-card h3{
-    color:#f01873;
-    font-size:24px;
-    margin-bottom:12px;
-}
-
-.slide-card p{
-    font-size:16px;
-    line-height:2;
-    color:#444;
-}
-
-.swiper-slide-active .slide-card{
-    animation:popCard .6s ease;
-}
-
-@keyframes popCard{
-    0%{
-        transform:scale(.85);
-        opacity:.5;
-    }
-    100%{
-        transform:scale(1);
-        opacity:1;
-    }
-}
-
-.swiper-pagination-bullet{
-    width:12px;
-    height:12px;
-    background:#ffc0d6;
-    opacity:1;
-}
-
-.swiper-pagination-bullet-active{
-    background:#f01873;
-    width:28px;
-    border-radius:20px;
-    transition:.3s;
-}
-
 /* BUTTONS */
 
 .buttons{
@@ -385,7 +268,7 @@ transform:scale(1.05);
 }
 
 .logo-box img{
-    width:220px;
+    width:140px;
     max-width:100%;
     height:auto;
 
