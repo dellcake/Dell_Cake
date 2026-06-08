@@ -354,3 +354,8 @@ margin-bottom:15px;
 body{
     padding-top:90px;
 }
+.course-container{
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
