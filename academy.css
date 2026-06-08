@@ -15,11 +15,16 @@
 
 .hero-content h1{
 
+    font-family:'Lalezar', cursive;
+
+    font-size:clamp(38px,6vw,60px);
+
     color:#f01873;
 
-    font-size:clamp(30px,5vw,48px);
+    text-shadow:
+        0 3px 10px rgba(240,24,115,.15);
 
-    margin-bottom:10px;
+    letter-spacing:1px;
 
 }
 
