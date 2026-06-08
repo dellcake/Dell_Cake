@@ -581,3 +581,9 @@ transform:scale(1.05);
     }
 
 }
+.site-logo-mini{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+}
