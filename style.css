@@ -444,3 +444,65 @@ transform:scale(1.05);
     }
 
 }
+.services-section{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:15px;
+
+    margin-top:20px;
+
+}
+
+.service-card{
+
+    background:white;
+
+    border-radius:25px;
+
+    padding:25px 15px;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    color:#f01873;
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.service-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.service-card i{
+
+    font-size:42px;
+
+    margin-bottom:12px;
+
+}
+
+.service-card h3{
+
+    font-size:18px;
+
+}
+@media (min-width:992px){
+
+    .services-section{
+
+        grid-template-columns:
+        repeat(4,1fr);
+
+    }
+
+}
