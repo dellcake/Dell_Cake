@@ -455,31 +455,65 @@ transform:scale(1.05);
 
     text-align:center;
 
-    margin:30px 0 25px;
+    margin:25px 0 35px;
 
 }
 
-.hero-section h1{
+.hero-badge{
 
-    font-size:48px;
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border-radius:30px;
+
+    background:rgba(240,24,115,.1);
 
     color:#f01873;
 
-    font-weight:800;
+    font-weight:700;
 
-    margin-bottom:12px;
+    margin-bottom:15px;
 
 }
 
-.hero-section p{
+.hero-title{
+
+    font-size:clamp(42px,8vw,72px);
+
+    font-weight:900;
+
+    color:#f01873;
+
+    margin-bottom:10px;
+
+    line-height:1.1;
+
+}
+
+.hero-slogan{
+
+    font-size:clamp(18px,3vw,28px);
+
+    color:#2f2f2f;
+
+    font-weight:800;
+
+    margin-bottom:18px;
+
+    line-height:1.8;
+
+}
+
+.hero-description{
 
     max-width:700px;
 
     margin:auto;
 
-    color:#555;
+    color:#666;
 
-    line-height:2;
+    line-height:2.2;
 
     font-size:17px;
 
