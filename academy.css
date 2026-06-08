@@ -324,13 +324,18 @@ margin-bottom:15px;
 .top-header{
 
     width:100%;
-
     max-width:1200px;
 
-    margin:0 auto 20px;
+    margin:0 auto;
 
 }
-
+.top-header{
+    position:sticky;
+    top:0;
+    left:0;
+    right:0;
+    z-index:9999;
+}
 .site-logo-mini img{
 
     width:60px;
