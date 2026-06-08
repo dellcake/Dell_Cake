@@ -25,11 +25,8 @@ body{
 }
 
 /* LOGO */
-
 .logo-box img{
-    width:140px;
-    max-width:100%;
-    height:auto;
+    width:120px;
 }
  
 /* TITLE */
@@ -504,5 +501,70 @@ transform:scale(1.05);
         repeat(4,1fr);
 
     }
+
+}
+.top-header{
+
+    position:sticky;
+    top:0;
+
+    z-index:9999;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:12px 15px;
+
+    background:rgba(255,255,255,.85);
+
+    backdrop-filter:blur(12px);
+
+    -webkit-backdrop-filter:blur(12px);
+
+    border-radius:0 0 20px 20px;
+
+    box-shadow:
+    0 5px 20px rgba(0,0,0,.06);
+
+}
+
+.site-logo-mini img{
+
+    width:60px;
+
+    border-radius:50%;
+
+    animation:floatLogo 4s ease-in-out infinite;
+
+}
+
+.academy-btn{
+
+    background:#f01873;
+
+    color:white;
+
+    text-decoration:none;
+
+    padding:10px 16px;
+
+    border-radius:15px;
+
+    font-size:14px;
+
+    font-weight:700;
+
+}
+
+.menu-btn{
+
+    border:none;
+
+    background:none;
+
+    font-size:28px;
+
+    cursor:pointer;
 
 }
