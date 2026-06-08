@@ -225,17 +225,16 @@ margin-bottom:15px;
 }
 .academy-camera{
 
-    width:140px;
+    width:260px;
 
     display:block;
 
-    margin:0 auto 15px;
+    margin:0 auto 25px;
 
     filter:
     drop-shadow(
-        0 10px 20px rgba(0,0,0,.15)
+        0 15px 30px rgba(0,0,0,.12)
     );
-
 
 }
 
@@ -246,7 +245,7 @@ margin-bottom:15px;
 @media (min-width:768px){
 
 .academy-camera{
-    width:300px;
+    width:380px;
     display:block;
     margin:0 auto 20px;
 }
