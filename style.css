@@ -92,7 +92,6 @@ body{
 
 .swiper{
     width:100%;
-    max-width:600px;
     margin:0 auto;
     overflow:hidden;
 }
@@ -105,8 +104,9 @@ body{
 
 .slide-card{
     width:100%;
-    max-width:420px;
-    min-height:220px;
+    min-height:190px;
+    max-width:none;
+
 
     padding:30px 20px;
 
@@ -424,4 +424,23 @@ transform:scale(1.05);
     max-width:650px;
 
 }   
+}
+@media (min-width:992px){
+
+    .promoSwiper{
+
+        width:100%;
+
+        max-width:1300px;
+
+        margin:30px auto;
+
+    }
+
+    .slide-card{
+
+        min-height:200px;
+
+    }
+
 }
