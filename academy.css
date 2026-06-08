@@ -39,9 +39,6 @@
 
 }
 
-/* STATS */
-
-
 /* COURSES */
 .courses-section{
   margin-top:40px;
@@ -320,3 +317,37 @@ margin-bottom:15px;
 
 }
 
+  /* HEADER FOR COURSE PAGES */
+
+.top-header{
+
+    width:100%;
+
+    max-width:1200px;
+
+    margin:0 auto 20px;
+
+}
+
+.site-logo-mini img{
+
+    width:60px;
+    height:60px;
+
+    object-fit:cover;
+
+}
+
+.academy-btn{
+
+    font-size:14px;
+
+    padding:10px 15px;
+
+}
+
+.menu-btn{
+
+    font-size:28px;
+
+}
