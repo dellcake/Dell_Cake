@@ -479,15 +479,43 @@ transform:scale(1.05);
 
 .hero-title{
 
-    font-size:clamp(42px,8vw,72px);
+    font-family:'Lalezar', cursive;
 
-    font-weight:900;
+    font-size:clamp(58px,10vw,95px);
 
     color:#f01873;
 
-    margin-bottom:10px;
+    line-height:1;
 
-    line-height:1.1;
+    margin-bottom:18px;
+
+    text-shadow:
+    0 4px 15px rgba(240,24,115,.18);
+
+    letter-spacing:1px;
+
+}
+
+.hero-title::after{
+
+    content:"";
+
+    display:block;
+
+    width:120px;
+
+    height:5px;
+
+    margin:12px auto 0;
+
+    border-radius:20px;
+
+    background:linear-gradient(
+        90deg,
+        #ffb6d2,
+        #f01873,
+        #ffb6d2
+    );
 
 }
 
