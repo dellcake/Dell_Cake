@@ -17,14 +17,13 @@
 
     font-family:'Lalezar', cursive;
 
-    font-size:clamp(38px,6vw,60px);
-
     color:#f01873;
 
-    text-shadow:
-        0 3px 10px rgba(240,24,115,.15);
+    font-size:clamp(38px,6vw,58px);
 
-    letter-spacing:1px;
+    margin-bottom:10px;
+
+    font-weight:normal;
 
 }
 
