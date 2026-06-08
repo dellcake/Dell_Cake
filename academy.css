@@ -6,25 +6,33 @@
 
 /* HERO */
 .academy-hero{
-  position:relative;
-  overflow:hidden;
-  
-  background:linear-gradient(135deg,#f01873,#ff7eb3);
-  color:white;
-  padding:40px 25px;
-  border-radius:30px;
-  text-align:center;
-  box-shadow:0 20px 40px rgba(240,24,115,.25);
+
+    text-align:center;
+
+    padding:20px 0 40px;
+
 }
 
 .hero-content h1{
-  font-size:clamp(28px,5vw,40px);
-  margin-bottom:10px;
+
+    color:#f01873;
+
+    font-size:clamp(30px,5vw,48px);
+
+    margin-bottom:10px;
+
 }
 
 .hero-content p{
-  opacity:.95;
-  line-height:2;
+
+    color:#666;
+
+    line-height:2;
+
+    max-width:500px;
+
+    margin:auto;
+
 }
 
 /* STATS */
@@ -237,10 +245,10 @@ margin-bottom:15px;
 }
 @media (min-width:768px){
 
-    .academy-camera{
-
-        width:180px;
-
-    }
+.academy-camera{
+    width:300px;
+    display:block;
+    margin:0 auto 20px;
+}
 
 }
