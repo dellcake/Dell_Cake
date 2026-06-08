@@ -390,7 +390,9 @@ transform:scale(1.05);
 
     position:sticky;
     top:0;
-
+    
+    position:relative;
+    
     z-index:9999;
 
     display:flex;
@@ -410,6 +412,7 @@ transform:scale(1.05);
     box-shadow:
     0 5px 20px rgba(0,0,0,.06);
 
+    
 }
 
 .site-logo-mini img{
@@ -586,4 +589,24 @@ transform:scale(1.05);
     align-items:center;
     justify-content:center;
     text-decoration:none;
+}
+.site-logo-mini{
+
+    position:absolute;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+}
+.top-header{
+
+    position:sticky;
+
+    top:0;
+
+    z-index:9999;
+
+    position:relative;
+
 }
