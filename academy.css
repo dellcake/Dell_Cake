@@ -354,6 +354,21 @@ margin-bottom:15px;
 
 .course-container{
     max-width:1200px;
-    margin:auto;
-    padding:20px;
+    margin:0 auto;
+    padding:100px 20px 20px;
+}
+  @media (min-width:992px){
+
+    .hero-info{
+        grid-template-columns:
+        repeat(3,1fr);
+    }
+
+    .course-features{
+        display:grid;
+        grid-template-columns:
+        repeat(2,1fr);
+        gap:15px;
+    }
+
 }
