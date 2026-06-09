@@ -63,18 +63,22 @@ setTimeout(() => {
 }, 3900);
 
 
-const menuBtn =
-document.querySelector(".menu-btn");
+document.addEventListener("DOMContentLoaded", () => {
 
-const sideMenu =
-document.querySelector("#sideMenu");
+    const menuBtn =
+    document.querySelector(".menu-btn");
 
-menuBtn.addEventListener(
-"click",
-()=>{
+    const sideMenu =
+    document.querySelector("#sideMenu");
 
-    sideMenu.classList.toggle(
-    "active"
-    );
+    if(menuBtn && sideMenu){
+
+        menuBtn.addEventListener("click", () => {
+
+            sideMenu.classList.toggle("active");
+
+        });
+
+    }
 
 });
