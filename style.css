@@ -666,8 +666,14 @@ transform:scale(1.05);
 
     height:100vh;
 
-    background:rgba(255,255,255,.75);
+background:
+linear-gradient(
+180deg,
+rgba(255,255,255,.88),
+rgba(255,245,248,.92)
+);
 
+border-left:1px solid rgba(255,255,255,.7);
     backdrop-filter:blur(25px);
 
     -webkit-backdrop-filter:blur(25px);
