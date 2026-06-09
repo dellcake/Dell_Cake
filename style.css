@@ -607,10 +607,11 @@ transform:scale(1.05);
     position:sticky;
     top:0;
 
+    z-index:9999;
+
     display:flex;
     align-items:center;
-
-    position:relative;
+    justify-content:space-between;
 
 }
 
