@@ -323,20 +323,25 @@ margin-bottom:15px;
 
 
 .site-logo-mini img{
-
-    width:60px;
-    height:60px;
-
-    object-fit:cover;
-
+    width:52px;
+    height:52px;
+    border-radius:50%;
 }
 
 .academy-btn{
+    background:#f01873;
+    color:white;
 
-    font-size:14px;
+    text-decoration:none;
 
-    padding:10px 15px;
+    padding:8px 14px;
+    border-radius:12px;
 
+    font-size:13px;
+    font-weight:700;
+
+    min-width:95px;
+    text-align:center;
 }
 
 .course-container{
