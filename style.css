@@ -745,3 +745,8 @@ transform:scale(1.05);
     color:#f01873;
 
 }
+.side-menu a i,
+.side-menu a svg{
+    color:#f01873 !important;
+    fill:#f01873 !important;
+}
