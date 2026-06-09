@@ -3,7 +3,7 @@ const intro = document.getElementById("introBox");
 const buttons = document.getElementById("buttons");
 const contactText = document.getElementById("contactText");
 const gallerySection = document.getElementById("gallerySection");
-const swiper = new Swiper('.promoSwiper', {
+
 
     loop:true,
 
@@ -62,31 +62,7 @@ setTimeout(() => {
     gallerySection.classList.add("show");
 }, 3900);
 
-document.addEventListener("DOMContentLoaded", () => {
 
-  new Swiper(".promoSwiper", {
-
-    effect: "slide",
-
-    loop: true,
-
-    grabCursor: true,
-
-    centeredSlides: true,
-
-    autoplay: {
-      delay: 3500,
-      disableOnInteraction: false,
-    },
-
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
-    }
-
-  });
-
-});
 const menuBtn =
 document.querySelector(".menu-btn");
 
