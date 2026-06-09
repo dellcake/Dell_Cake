@@ -618,19 +618,29 @@ transform:scale(1.05);
 
     position:fixed;
 
-    inset:0;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
 
-    background:rgba(0,0,0,.25);
+    background:rgba(0,0,0,.35);
 
-    backdrop-filter:blur(4px);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
 
     opacity:0;
-
     visibility:hidden;
 
     transition:.3s;
 
-    z-index:99990;
+    z-index:9998;
+
+}
+
+.menu-overlay.active{
+
+    opacity:1;
+    visibility:visible;
 
 }
 
@@ -656,14 +666,16 @@ transform:scale(1.05);
 
     height:100vh;
 
-    background:rgba(255,255,255,.92);
+    background:rgba(255,255,255,.75);
 
-    backdrop-filter:blur(18px);
+    backdrop-filter:blur(25px);
 
-    -webkit-backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(25px);
 
+     border-left:1px solid rgba(255,255,255,.5);
+    
     box-shadow:
-    -15px 0 40px rgba(0,0,0,.12);
+    -15px 0 40px rgba(0,0,0,.15);
 
     z-index:99999;
 
