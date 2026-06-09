@@ -56,8 +56,6 @@ if (gallerySection) {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-document.addEventListener("DOMContentLoaded", () => {
-
     const menuBtn =
     document.querySelector(".menu-btn");
 
@@ -74,9 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
             sideMenu.classList.toggle("active");
 
             if(overlay){
-
                 overlay.classList.toggle("active");
-
             }
 
         });
@@ -88,7 +84,6 @@ document.addEventListener("DOMContentLoaded", () => {
         overlay.addEventListener("click", () => {
 
             sideMenu.classList.remove("active");
-
             overlay.classList.remove("active");
 
         });
