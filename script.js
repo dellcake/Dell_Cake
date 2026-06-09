@@ -87,3 +87,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 });
+const menuBtn =
+document.querySelector(".menu-btn");
+
+const sideMenu =
+document.querySelector("#sideMenu");
+
+menuBtn.addEventListener(
+"click",
+()=>{
+
+    sideMenu.classList.toggle(
+    "active"
+    );
+
+});
