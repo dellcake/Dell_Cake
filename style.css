@@ -691,7 +691,7 @@ border-left:1px solid rgba(255,255,255,.7);
 
     flex-direction:column;
 
-    padding-top:100px;
+    padding-top:35px;
 }
 
 .side-menu.active{
@@ -803,5 +803,61 @@ border-left:1px solid rgba(255,255,255,.7);
     background:#fff2f7;
 
     color:#f01873;
+
+}
+/* MENU PROFILE */
+
+.menu-profile{
+
+    text-align:center;
+
+    padding:0 20px 25px;
+
+    margin-bottom:10px;
+
+    border-bottom:
+    1px solid rgba(240,24,115,.12);
+
+}
+
+.menu-profile img{
+
+    width:80px;
+
+    height:80px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    box-shadow:
+    0 8px 25px rgba(240,24,115,.18);
+
+    animation:
+    floatLogo 4s ease-in-out infinite;
+
+}
+
+.menu-profile h3{
+
+    margin-top:12px;
+
+    color:#f01873;
+
+    font-size:24px;
+
+    font-weight:800;
+
+}
+
+.menu-profile p{
+
+    margin-top:6px;
+
+    color:#777;
+
+    font-size:13px;
+
+    line-height:1.8;
 
 }
