@@ -5,16 +5,25 @@ const contactText = document.getElementById("contactText");
 const gallerySection = document.getElementById("gallerySection");
 
 
-    loop:true,
+  if(document.querySelector('.promoSwiper')){
 
-    autoplay:{
-        delay:3500,
-        disableOnInteraction:false
-    },
+    const swiper = new Swiper('.promoSwiper', {
 
-    pagination:{
-        el:'.swiper-pagination',
-        clickable:true
+        loop:true,
+
+        autoplay:{
+            delay:3500,
+            disableOnInteraction:false
+        },
+
+        pagination:{
+            el:'.swiper-pagination',
+            clickable:true
+        }
+
+    });
+
+}
     },
 
     breakpoints:{
@@ -38,30 +47,51 @@ const gallerySection = document.getElementById("gallerySection");
 
 });
 
-setTimeout(() => {
-  logo.classList.remove("hidden");
-  logo.classList.add("logoAnimate");
-}, 300);
+if (logo) {
 
-setTimeout(() => {
-  intro.classList.remove("hidden");
-  intro.classList.add("show");
-}, 1400);
+    setTimeout(() => {
 
-setTimeout(() => {
+        logo.classList.remove("hidden");
+        logo.classList.add("logoAnimate");
 
-  contactText.classList.remove("hidden");
-  contactText.classList.add("show");
+    }, 300);
 
-  buttons.classList.remove("hidden");
-  buttons.classList.add("show");
+}
 
-}, 2800);
+if (intro) {
 
-setTimeout(() => {
-    gallerySection.classList.add("show");
-}, 3900);
+    setTimeout(() => {
 
+        intro.classList.remove("hidden");
+        intro.classList.add("show");
+
+    }, 1400);
+
+}
+
+if (contactText && buttons) {
+
+    setTimeout(() => {
+
+        contactText.classList.remove("hidden");
+        contactText.classList.add("show");
+
+        buttons.classList.remove("hidden");
+        buttons.classList.add("show");
+
+    }, 2800);
+
+}
+
+if (gallerySection) {
+
+    setTimeout(() => {
+
+        gallerySection.classList.add("show");
+
+    }, 3900);
+
+}
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -78,7 +108,25 @@ document.addEventListener("DOMContentLoaded", () => {
             sideMenu.classList.toggle("active");
 
         });
+document.addEventListener("DOMContentLoaded", () => {
 
+    const menuBtn =
+    document.querySelector(".menu-btn");
+
+    const sideMenu =
+    document.querySelector("#sideMenu");
+
+    if(menuBtn && sideMenu){
+
+        menuBtn.addEventListener("click", () => {
+
+            sideMenu.classList.toggle("active");
+
+        });
+
+    }
+
+});
     }
 
 });
