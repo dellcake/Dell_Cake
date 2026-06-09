@@ -56,6 +56,8 @@ if (gallerySection) {
 
 document.addEventListener("DOMContentLoaded", () => {
 
+document.addEventListener("DOMContentLoaded", () => {
+
     const menuBtn =
     document.querySelector(".menu-btn");
 
@@ -65,28 +67,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const overlay =
     document.querySelector("#menuOverlay");
 
-    const closeBtn =
-    document.querySelector(".close-menu");
-
     if(menuBtn && sideMenu){
 
         menuBtn.addEventListener("click", () => {
 
-            sideMenu.classList.add("active");
+            sideMenu.classList.toggle("active");
 
-            overlay.classList.add("active");
+            if(overlay){
 
-        });
+                overlay.classList.toggle("active");
 
-    }
-
-    if(closeBtn){
-
-        closeBtn.addEventListener("click", () => {
-
-            sideMenu.classList.remove("active");
-
-            overlay.classList.remove("active");
+            }
 
         });
 
