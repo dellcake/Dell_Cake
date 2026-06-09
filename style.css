@@ -839,3 +839,12 @@ border-left:1px solid rgba(255,255,255,.7);
     line-height:1.8;
 
 }
+.side-menu a i{
+
+    width:22px;
+
+    font-size:18px;
+
+    color:#f01873;
+
+}
