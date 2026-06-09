@@ -747,7 +747,8 @@ border-left:1px solid rgba(255,255,255,.7);
     color:#f01873;
 
     transform:
-    translateX(-6px);
+    translateX(-8px)
+    scale(1.02);
 
     box-shadow:
     0 10px 25px rgba(240,24,115,.12);
@@ -800,19 +801,12 @@ border-left:1px solid rgba(255,255,255,.7);
 
 .menu-profile img{
 
-    width:80px;
+    width:95px;
+    height:95px;
 
-    height:80px;
+    border:4px solid white;
 
-    object-fit:cover;
-
-    border-radius:50%;
-
-    box-shadow:
-    0 8px 25px rgba(240,24,115,.18);
-
-    animation:
-    floatLogo 4s ease-in-out infinite;
+    background:white;
 
 }
 
