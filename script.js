@@ -56,14 +56,49 @@ if (gallerySection) {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    const menuBtn = document.querySelector(".menu-btn");
-    const sideMenu = document.querySelector("#sideMenu");
+    const menuBtn =
+    document.querySelector(".menu-btn");
 
-    if (menuBtn && sideMenu) {
+    const sideMenu =
+    document.querySelector("#sideMenu");
+
+    const overlay =
+    document.querySelector("#menuOverlay");
+
+    const closeBtn =
+    document.querySelector(".close-menu");
+
+    if(menuBtn && sideMenu){
 
         menuBtn.addEventListener("click", () => {
 
-            sideMenu.classList.toggle("active");
+            sideMenu.classList.add("active");
+
+            overlay.classList.add("active");
+
+        });
+
+    }
+
+    if(closeBtn){
+
+        closeBtn.addEventListener("click", () => {
+
+            sideMenu.classList.remove("active");
+
+            overlay.classList.remove("active");
+
+        });
+
+    }
+
+    if(overlay){
+
+        overlay.addEventListener("click", () => {
+
+            sideMenu.classList.remove("active");
+
+            overlay.classList.remove("active");
 
         });
 
