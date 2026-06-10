@@ -95,7 +95,9 @@ rel="stylesheet">
 
 <section class="order-form">
 
-<form id="orderForm">
+<form
+id="orderForm"
+enctype="multipart/form-data">
 
 <div class="form-group">
 
@@ -181,200 +183,133 @@ accept="image/*">
 </div>
 
 
-<div id="kidsFields" class="cake-extra-fields" style="display:none;">
+<input
+id="kidName"
+name="kidName"
+type="text">
 
-<h3>🧸 جزئیات کیک کودک</h3>
+<input
+id="kidAge"
+name="kidAge"
+type="number">
 
-<div class="form-group">
-<label>نام کودک</label>
-<input type="text">
-</div>
+<input
+id="kidCharacter"
+name="kidCharacter"
+type="text">
 
-<div class="form-group">
-<label>سن کودک</label>
-<input type="number">
-</div>
+<input
+id="kidColors"
+name="kidColors"
+type="text">
 
-<div class="form-group">
-<label>شخصیت کارتونی</label>
-<input type="text">
-</div>
+<input
+type="file"
+id="kidImage"
+name="kidImage"
+accept="image/*">
+    
 
-<div class="form-group">
-<label>رنگ‌های مورد نظر</label>
-<input type="text">
-</div>
+<input
+id="coupleNames"
+name="coupleNames"
+type="text">
 
-<div class="upload-box">
+<input
+id="engagementTheme"
+name="engagementTheme"
+type="text">
 
-<label class="upload-label">
+<input
+id="engagementText"
+name="engagementText"
+type="text">
 
-<i class="fas fa-camera"></i>
-
-<span>انتخاب عکس نمونه یا ایده</span>
-
-<input type="file">
-
-</label>
-
-</div>
-
-</div>
-
-
-<div id="engagementFields" class="cake-extra-fields" style="display:none;">
-
-<h3>💍 جزئیات کیک نامزدی</h3>
-
-<div class="form-group">
-<label>نام زوج</label>
-<input type="text">
-</div>
-
-<div class="form-group">
-<label>تم رنگی</label>
-<input type="text">
-</div>
-
-<div class="form-group">
-<label>متن روی کیک</label>
-<input type="text">
-</div>
-
-<div class="upload-box">
-
-<label class="upload-label">
-
-<i class="fas fa-camera"></i>
-
-<span>انتخاب عکس نمونه یا ایده</span>
-
-<input type="file">
-
-</label>
-
-</div>
-</div>
+<input
+type="file"
+id="engagementImage"
+name="engagementImage"
+accept="image/*">
 
 
-<div id="weddingFields" class="cake-extra-fields" style="display:none;">
+<select
+id="weddingFloors"
+name="weddingFloors">
 
-<h3>👰 جزئیات کیک عروسی</h3>
+<option value="1">1 طبقه</option>
+<option value="2">2 طبقه</option>
+<option value="3">3 طبقه</option>
+<option value="4">4 طبقه</option>
 
-<div class="form-group">
-<label>تعداد طبقات</label>
-
-<select>
-<option>1 طبقه</option>
-<option>2 طبقه</option>
-<option>3 طبقه</option>
-<option>4 طبقه</option>
 </select>
 
-</div>
+<input
+id="weddingTheme"
+name="weddingTheme"
+type="text">
 
-<div class="form-group">
-<label>تم مراسم</label>
-<input type="text">
-</div>
+<input
+id="weddingColors"
+name="weddingColors"
+type="text">
 
-<div class="form-group">
-<label>رنگ‌های مورد نظر</label>
-<input type="text">
-</div>
-
-<div class="upload-box">
-
-<label class="upload-label">
-
-<i class="fas fa-camera"></i>
-
-<span>انتخاب عکس نمونه یا ایده</span>
-
-<input type="file">
-
-</label>
-
-</div>
-
-</div>
+<input
+type="file"
+id="weddingImage"
+name="weddingImage"
+accept="image/*">
 
 
-<div id="customCakeFields" class="cake-extra-fields" style="display:none;">
+<input
+id="customTheme"
+name="customTheme"
+type="text">
 
-<h3>✨ جزئیات کیک سفارشی</h3>
+<input
+id="customColors"
+name="customColors"
+type="text">
 
-<div class="form-group">
-<label>موضوع کیک</label>
-<input type="text">
-</div>
+<input
+id="customText"
+name="customText"
+type="text">
 
-<div class="form-group">
-<label>رنگ‌های مورد نظر</label>
-<input type="text">
-</div>
-
-<div class="form-group">
-<label>متن روی کیک</label>
-<input type="text">
-</div>
-
-<div class="upload-box">
-
-<label class="upload-label">
-
-<i class="fas fa-camera"></i>
-
-<span>انتخاب عکس نمونه یا ایده</span>
-
-<input type="file">
-
-</label>
-
-</div>
-</div>
+<input
+type="file"
+id="customImage"
+name="customImage"
+accept="image/*">
 
 <div class="form-group">
 
-<label>تعداد نفرات</label>
+<label for="guestCount">تعداد نفرات</label>
 
-<select>
+<select
+id="guestCount"
+name="guestCount">
 
-<option>5 تا 10 نفر</option>
-<option>10 تا 20 نفر</option>
-<option>20 تا 40 نفر</option>
-<option>40 نفر به بالا</option>
+<option value="">انتخاب کنید</option>
+<option value="5-10">5 تا 10 نفر</option>
+<option value="10-20">10 تا 20 نفر</option>
+<option value="20-40">20 تا 40 نفر</option>
+<option value="40+">40 نفر به بالا</option>
 
 </select>
 
 </div>
-
-<div class="form-group">
-
-<label>تاریخ تحویل</label>
-
-<div class="date-input-box">
 
 <input
 type="text"
 id="deliveryDate"
+name="deliveryDate"
 placeholder="مثال: ۱۴۰۵/۰۳/۲۵">
 
-<i class="fas fa-calendar-alt"></i>
-
-</div>
-
-</div>
-
-<div class="form-group">
-
-<label>توضیحات سفارش</label>
-
 <textarea
+id="orderDescription"
+name="orderDescription"
 rows="5"
 placeholder="رنگ، طرح، شخصیت کارتونی یا هر توضیحی که دوست دارید..."></textarea>
-
-</div>
 
 <button type="submit" class="order-btn">
 
