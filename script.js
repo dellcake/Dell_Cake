@@ -91,3 +91,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+const cakeType =
+document.getElementById("cakeType");
+
+const customFields =
+document.getElementById("customCakeFields");
+
+if(cakeType){
+
+cakeType.addEventListener("change",()=>{
+
+if(cakeType.value === "custom"){
+
+customFields.style.display = "block";
+
+}else{
+
+customFields.style.display = "none";
+
+}
+
+});
+
+}
