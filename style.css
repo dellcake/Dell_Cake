@@ -703,14 +703,16 @@ transform:scale(1.05);
 }
 
 .menu-profile img{
-
     width:75px;
     height:75px;
 
-    border:4px solid white;
+    border-radius:50%;
+    object-fit:cover;
 
-    background:white;
+    border:none;
+    background:transparent;
 
+    box-shadow:0 8px 20px rgba(240,24,115,.18);
 }
 
 .menu-profile h3{
