@@ -924,3 +924,87 @@ font-size:18px;
 pointer-events:none;
 
 }
+.cake-extra-fields{
+
+background: rgba(255,255,255,.75);
+
+backdrop-filter: blur(10px);
+-webkit-backdrop-filter: blur(10px);
+
+padding:20px;
+
+margin-top:15px;
+
+border-radius:25px;
+
+border:2px solid rgba(240,24,115,.12);
+
+box-shadow:
+0 10px 30px rgba(240,24,115,.08);
+
+animation:showExtra .35s ease;
+
+}
+
+.cake-extra-fields h3{
+
+color:#f01873;
+
+font-size:20px;
+
+margin-bottom:18px;
+
+text-align:center;
+
+}
+
+.cake-extra-fields .form-group{
+
+margin-bottom:14px;
+
+}
+
+.cake-extra-fields input,
+.cake-extra-fields select{
+
+width:100%;
+
+padding:12px 14px;
+
+border-radius:14px;
+
+border:1px solid #ffd4e5;
+
+background:#fff;
+
+font-size:15px;
+
+outline:none;
+
+transition:.25s;
+
+}
+
+.cake-extra-fields input:focus,
+.cake-extra-fields select:focus{
+
+border-color:#f01873;
+
+box-shadow:
+0 0 0 4px rgba(240,24,115,.08);
+
+}
+
+@keyframes showExtra{
+
+from{
+opacity:0;
+transform:translateY(15px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
