@@ -99,38 +99,42 @@ rel="stylesheet">
 
 <div class="form-group">
 
-<label>نام و نام خانوادگی</label>
+<label for="customerName">نام و نام خانوادگی</label>
 
-<input type="text"
+<input
+id="customerName"
+name="customerName"
+type="text"
 placeholder="نام خود را وارد کنید">
 
 </div>
 
 <div class="form-group">
 
-<label>شماره تماس</label>
+<label for="customerPhone">شماره تماس</label>
 
-<input type="tel"
+<input
+id="customerPhone"
+name="customerPhone"
+type="tel"
 placeholder="09xxxxxxxxx">
 
 </div>
 
 <div class="form-group">
 
-<label>نوع کیک</label>
+<label for="cakeType">نوع کیک</label>
 
-<select id="cakeType">
+<select
+id="cakeType"
+name="cakeType">
 
 <option value="">انتخاب کنید</option>
 
 <option value="birthday">کیک تولد</option>
-
 <option value="engagement">کیک نامزدی</option>
-
 <option value="wedding">کیک عروسی</option>
-
 <option value="kids">کیک کودک</option>
-
 <option value="custom">کیک سفارشی</option>
 
 </select>
@@ -138,29 +142,31 @@ placeholder="09xxxxxxxxx">
 </div>
 
 
-<div id="birthdayFields" class="cake-extra-fields" style="display:none;">
+<input
+id="birthdayName"
+name="birthdayName"
+type="text">
 
-<h3>🎂 جزئیات کیک تولد</h3>
+<input
+id="birthdayAge"
+name="birthdayAge"
+type="number">
 
-<div class="form-group">
-<label>نام صاحب تولد</label>
-<input type="text">
-</div>
+<input
+id="birthdayColors"
+name="birthdayColors"
+type="text">
 
-<div class="form-group">
-<label>سن</label>
-<input type="number">
-</div>
+<input
+id="birthdayText"
+name="birthdayText"
+type="text">
 
-<div class="form-group">
-<label>رنگ‌های مورد نظر</label>
-<input type="text">
-</div>
-
-<div class="form-group">
-<label>متن روی کیک</label>
-<input type="text">
-</div>
+<input
+type="file"
+id="birthdayImage"
+name="birthdayImage"
+accept="image/*">
 
 <div class="upload-box">
 
@@ -170,11 +176,7 @@ placeholder="09xxxxxxxxx">
 
 <span>انتخاب عکس نمونه یا ایده</span>
 
-<input type="file">
-
 </label>
-
-</div>
 
 </div>
 
