@@ -752,3 +752,118 @@ transform:scale(1.05);
     color:#f01873 !important;
     fill:#f01873 !important;
 }
+.order-page{
+
+max-width:700px;
+
+margin:auto;
+
+padding:100px 20px 40px;
+
+}
+
+.order-hero{
+
+text-align:center;
+
+margin-bottom:30px;
+
+}
+
+.order-hero h1{
+
+font-family:'Lalezar',cursive;
+
+font-size:48px;
+
+color:#f01873;
+
+margin-bottom:10px;
+
+}
+
+.order-hero p{
+
+color:#666;
+
+line-height:2;
+
+}
+
+.order-form{
+
+background:white;
+
+padding:25px;
+
+border-radius:30px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.form-group{
+
+margin-bottom:18px;
+
+}
+
+.form-group label{
+
+display:block;
+
+margin-bottom:8px;
+
+font-weight:700;
+
+color:#444;
+
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+
+width:100%;
+
+padding:14px;
+
+border:1px solid #eee;
+
+border-radius:15px;
+
+outline:none;
+
+font-size:15px;
+
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+
+border-color:#f01873;
+
+}
+
+.order-btn{
+
+width:100%;
+
+background:#f01873;
+
+color:white;
+
+border:none;
+
+padding:16px;
+
+border-radius:18px;
+
+font-size:18px;
+
+font-weight:700;
+
+cursor:pointer;
+
+}
