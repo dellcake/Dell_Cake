@@ -94,20 +94,68 @@ document.addEventListener("DOMContentLoaded", () => {
 const cakeType =
 document.getElementById("cakeType");
 
+if(cakeType){
+
 const customFields =
 document.getElementById("customCakeFields");
 
-if(cakeType){
+const birthdayFields =
+document.getElementById("birthdayFields");
+
+const kidsFields =
+document.getElementById("kidsFields");
+
+const engagementFields =
+document.getElementById("engagementFields");
+
+const weddingFields =
+document.getElementById("weddingFields");
 
 cakeType.addEventListener("change",()=>{
+
+if(customFields)
+customFields.style.display = "none";
+
+if(birthdayFields)
+birthdayFields.style.display = "none";
+
+if(kidsFields)
+kidsFields.style.display = "none";
+
+if(engagementFields)
+engagementFields.style.display = "none";
+
+if(weddingFields)
+weddingFields.style.display = "none";
+
 
 if(cakeType.value === "custom"){
 
 customFields.style.display = "block";
 
-}else{
+}
 
-customFields.style.display = "none";
+if(cakeType.value === "birthday"){
+
+birthdayFields.style.display = "block";
+
+}
+
+if(cakeType.value === "kids"){
+
+kidsFields.style.display = "block";
+
+}
+
+if(cakeType.value === "engagement"){
+
+engagementFields.style.display = "block";
+
+}
+
+if(cakeType.value === "wedding"){
+
+weddingFields.style.display = "block";
 
 }
 
