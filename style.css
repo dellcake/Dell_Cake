@@ -896,3 +896,31 @@ transform:translateY(0);
 }
 
 }
+.date-input-box{
+
+position:relative;
+
+}
+
+.date-input-box input{
+
+padding-left:45px;
+
+}
+
+.date-input-box i{
+
+position:absolute;
+
+left:15px;
+top:50%;
+
+transform:translateY(-50%);
+
+color:#f01873;
+
+font-size:18px;
+
+pointer-events:none;
+
+}
