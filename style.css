@@ -925,19 +925,19 @@ pointer-events:none;
 
 }
 .cake-extra-fields{
-.cake-extra-fields{
 
-margin-top:15px;
+    background:#fff7fa;
 
-padding:20px;
+    padding:20px;
 
-background:#fff7fa;
+    margin-top:15px;
 
-border:2px dashed #ffb6d2;
+    border-radius:25px;
 
-border-radius:20px;
+    border:3px dashed #f01873;
 
-animation:fadeIn .4s ease;
+    box-shadow:
+    0 10px 25px rgba(240,24,115,.08);
 
 }
 
