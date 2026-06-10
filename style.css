@@ -926,23 +926,22 @@ pointer-events:none;
 }
 .cake-extra-fields{
 
-background: rgba(255,255,255,.75);
+    background:linear-gradient(
+    135deg,
+    #fff0f6,
+    #ffe4ef
+    );
 
-backdrop-filter: blur(10px);
--webkit-backdrop-filter: blur(10px);
+    padding:20px;
 
-padding:20px;
+    margin-top:15px;
 
-margin-top:15px;
+    border-radius:25px;
 
-border-radius:25px;
+    border:3px dashed #f01873;
 
-border:2px dashed #f7a7c8;
-    
-box-shadow:
-0 10px 30px rgba(240,24,115,.08);
-
-animation:showExtra .35s ease;
+    box-shadow:
+    0 10px 25px rgba(240,24,115,.08);
 
 }
 
