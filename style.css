@@ -1064,3 +1064,28 @@ font-size:15px;
 display:none;
 
 }
+.success-message{
+
+display:none;
+
+margin-top:20px;
+
+padding:20px;
+
+background:#f0fff4;
+
+border:2px solid #9be7b2;
+
+border-radius:20px;
+
+text-align:center;
+
+font-weight:700;
+
+line-height:2;
+
+color:#1f7a3f;
+
+animation:fadeIn .4s ease;
+
+}
