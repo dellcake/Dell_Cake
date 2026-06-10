@@ -162,3 +162,63 @@ weddingFields.style.display = "block";
 });
 
 }
+const orderForm =
+document.getElementById("orderForm");
+
+const successMessage =
+document.getElementById("successMessage");
+
+if(orderForm){
+
+orderForm.addEventListener("submit",(e)=>{
+
+e.preventDefault();
+
+const name =
+orderForm.querySelector('input[type="text"]');
+
+const phone =
+orderForm.querySelector('input[type="tel"]');
+
+const date =
+document.getElementById("deliveryDate");
+
+if(name.value.trim()===""){
+
+alert("نام و نام خانوادگی را وارد کنید");
+
+return;
+
+}
+
+if(phone.value.length !== 11){
+
+alert("شماره تماس معتبر وارد کنید");
+
+return;
+
+}
+
+if(date.value.trim()===""){
+
+alert("تاریخ تحویل را وارد کنید");
+
+return;
+
+}
+
+successMessage.style.display="block";
+
+orderForm.reset();
+
+window.scrollTo({
+
+top:document.body.scrollHeight,
+
+behavior:"smooth"
+
+});
+
+});
+
+}
