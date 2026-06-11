@@ -170,7 +170,7 @@ document.getElementById("successMessage");
 
 if(orderForm){
 
-orderForm.addEventListener("submit", (e) => {
+orderForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const name = document.getElementById("customerName");
@@ -188,8 +188,33 @@ orderForm.addEventListener("submit", (e) => {
     return;
   }
 
-  successMessage.style.display = "block";
-  orderForm.reset();
+  const formData = new FormData(orderForm);
+
+  try {
+    const res = await fetch("https://sql204.infinityfree.com/save-order.php", {
+      method: "POST",
+      body: formData
+    });
+
+    const result = await res.json();
+
+    if (result.status === "success") {
+      successMessage.style.display = "block";
+      orderForm.reset();
+
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+      });
+    } else {
+      alert("خطا در ثبت سفارش");
+    }
+
+  } catch (err) {
+    alert("مشکل در اتصال به سرور");
+    console.log(err);
+  }
+});
 
   window.scrollTo({
     top: document.body.scrollHeight,
