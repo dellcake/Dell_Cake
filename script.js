@@ -230,23 +230,19 @@ document.addEventListener("DOMContentLoaded", () => {
 const deliveryDate =
 document.getElementById("deliveryDate");
 
-const calendarIcon =
-document.getElementById("calendarIcon");
+const calendarBtn =
+document.getElementById("calendarBtn");
 
-if(deliveryDate && calendarIcon){
+if(calendarBtn && deliveryDate){
 
-calendarIcon.addEventListener("click",()=>{
+calendarBtn.addEventListener("click",()=>{
+
+deliveryDate.focus();
 
 if(deliveryDate.showPicker){
 
 deliveryDate.showPicker();
 
-}else{
-
-deliveryDate.focus();
-
-deliveryDate.click();
-
 }
 
 });
@@ -254,7 +250,6 @@ deliveryDate.click();
 }
 
 });
-
 /* تقویم شمسی */
 
 $(document).ready(function(){
