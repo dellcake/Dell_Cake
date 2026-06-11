@@ -162,69 +162,46 @@ weddingFields.style.display = "block";
 });
 
 }
-const orderForm =
-document.getElementById("orderForm");
-
-const successMessage =
-document.getElementById("successMessage");
-
-if(orderForm){
-
 orderForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-
-  const name = document.getElementById("customerName");
-  const phone = document.getElementById("customerPhone");
-
-  if (!name || name.value.trim() === "") {
-    alert("نام و نام خانوادگی را وارد کنید");
-    return;
-  }
-
-  const phonePattern = /^09\d{9}$/;
-
-  if (!phone || !phonePattern.test(phone.value.trim())) {
-    alert("شماره تماس را درست وارد کنید");
-    return;
-  }
 
   const formData = new FormData(orderForm);
 
   try {
-  const res = await fetch("http://dellcake.gt.tc/save-order.php", {
-  method: "POST",
-  body: formData
-});
+    const res = await fetch("https://dellcake.gt.tc/save-order.php", {
+      method: "POST",
+      body: formData
+    });
 
-const result = await res.json();
-console.log(result);
+    const text = await res.text();
+    console.log("SERVER RAW RESPONSE:", text);
 
-if (result.status === "success") {
-  successMessage.style.display = "block";
-  orderForm.reset();
+    let result;
+    try {
+      result = JSON.parse(text);
+    } catch (err) {
+      throw new Error("Invalid JSON from server");
+    }
 
-  window.scrollTo({
-    top: document.body.scrollHeight,
-    behavior: "smooth"
-  });
-} else {
-  alert("خطا در ثبت سفارش");
-}
+    if (result.status === "success") {
+      successMessage.style.display = "block";
+      orderForm.reset();
+
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+      });
+
+    } else {
+      alert("Server error: " + JSON.stringify(result));
+    }
+
   } catch (err) {
-    alert("مشکل در اتصال به سرور");
     console.log(err);
+    alert("مشکل واقعی سرور / CORS / HTTPS");
   }
 });
 
-}
-
-const formData = new FormData();
-
-formData.append("customerName", document.getElementById("customerName").value);
-formData.append("customerPhone", document.getElementById("customerPhone").value);
-formData.append("cakeType", document.getElementById("cakeType").value);
-formData.append("orderDescription", document.getElementById("orderDescription").value);
-formData.append("deliveryDate", document.getElementById("deliveryDate").value);
 
 /* باز شدن تقویم با کلیک روی آیکون */
 
