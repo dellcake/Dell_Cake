@@ -308,29 +308,56 @@ cakeType.selectedIndex
 ].text;
 
 const message =
+const deliveryTime =
+document.getElementById("deliveryTime");
+
+const cakeText =
+cakeType.options[
+cakeType.selectedIndex
+]?.text || "ثبت نشده";
+
+const guestCount =
+document.getElementById("guestCount");
+
+const message =
+
 `🎂 سفارش جدید دل‌کیک
 
-━━━━━━━━━━
+━━━━━━━━━━━━━━━━
 
-👤 نام و نام خانوادگی مشتری:
-${name.value}
+🧾 اطلاعات مشتری
+
+👤 نام و نام خانوادگی:
+${name.value || "ثبت نشده"}
 
 📞 شماره تماس:
-${phone.value}
+${phone.value || "ثبت نشده"}
 
-🍰 نوع سفارش:
+━━━━━━━━━━━━━━━━
+
+🍰 اطلاعات سفارش
+
+🎂 نوع کیک:
 ${cakeText}
 
+👥 تعداد نفرات:
+${guestCount?.value || "ثبت نشده"}
+
 📅 تاریخ تحویل:
-${date.value}
+${date.value || "ثبت نشده"}
 
 🕒 ساعت حدودی تحویل:
-${deliveryTime.value || "ثبت نشده"}
+${deliveryTime?.value || "ثبت نشده"}
 
-📝 توضیحات سفارش:
-${description.value || "ندارد"}
+━━━━━━━━━━━━━━━━
 
-━━━━━━━━━━`;
+📝 توضیحات مشتری
+
+${description.value || "توضیحی ثبت نشده"}
+
+━━━━━━━━━━━━━━━━
+
+💖 ارسال از سایت دل‌کیک`;
 
 const url =
 `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
