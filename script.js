@@ -215,7 +215,11 @@ deliveryDate.click();
 ثبت سفارش → بله
 ===================== */
 
-const orderForm=
+/* =====================
+ثبت سفارش → بله
+===================== */
+
+const orderForm =
 document.getElementById("orderForm");
 
 if(orderForm){
@@ -224,73 +228,74 @@ orderForm.addEventListener("submit",(e)=>{
 
 e.preventDefault();
 
-const name=
+const name =
 document.getElementById("customerName");
 
-const phone=
+const phone =
 document.getElementById("customerPhone");
 
-const cake=
+const cake =
 document.getElementById("cakeType");
 
-const guest=
+const guest =
 document.getElementById("guestCount");
 
-const date=
+const date =
 document.getElementById("deliveryDate");
 
-const time=
+const time =
 document.getElementById("deliveryTime");
 
-const description=
+const description =
 document.getElementById("orderDescription");
 
 
-if(!name?.value.trim()){
+if(!name.value.trim()){
 
 alert("نام و نام خانوادگی را وارد کنید");
+
 return;
 
 }
+
 
 if(!/^09\d{9}$/.test(phone.value.trim())){
 
-alert("شماره تماس صحیح نیست");
+alert("شماره تماس معتبر نیست");
+
 return;
 
 }
 
-if(!date?.value.trim()){
+
+if(!date.value.trim()){
 
 alert("تاریخ تحویل را انتخاب کنید");
+
 return;
 
 }
 
 
-const cakeText=
+const cakeText =
 cake.options[
 cake.selectedIndex
 ]?.text || "ثبت نشده";
 
 
-const message=
+const message =
 
 `🎂 سفارش جدید دل‌کیک
 
-━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━
 
-👤 نام و نام خانوادگی مشتری:
+👤 نام و نام خانوادگی:
 ${name.value}
 
 📞 شماره تماس:
 ${phone.value}
 
-━━━━━━━━━━━━━━━━
-
-🍰 اطلاعات سفارش
-
-🎂 نوع کیک:
+🍰 نوع کیک:
 ${cakeText}
 
 👥 تعداد نفرات:
@@ -302,18 +307,15 @@ ${date.value}
 🕒 ساعت حدودی تحویل:
 ${time?.value || "ثبت نشده"}
 
-━━━━━━━━━━━━━━━━
-
-📝 توضیحات سفارش
-
+📝 توضیحات سفارش:
 ${description?.value || "ثبت نشده"}
 
-━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━
 
-💖 ارسال از سایت دل‌کیک`;
+💖 ثبت شده از سایت دل‌کیک`;
 
 
-window.location.href=
+window.location.href =
 `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
 
 });
