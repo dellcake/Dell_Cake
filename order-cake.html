@@ -143,37 +143,49 @@ placeholder="09xxxxxxxxx">
 <h3>🎂 جزئیات کیک تولد</h3>
 
 <div class="form-group">
-<label>نام صاحب تولد</label>
-<input type="text">
+<label for="birthdayName">نام صاحب تولد</label>
+<input
+id="birthdayName"
+name="birthdayName"
+type="text">
 </div>
 
 <div class="form-group">
-<label>سن</label>
-<input type="number">
+<label for="birthdayAge">سن</label>
+<input
+id="birthdayAge"
+name="birthdayAge"
+type="number">
 </div>
 
 <div class="form-group">
-<label>رنگ‌های مورد نظر</label>
-<input type="text">
+<label for="birthdayColors">رنگ‌های مورد نظر</label>
+<input
+id="birthdayColors"
+name="birthdayColors"
+type="text">
 </div>
 
 <div class="form-group">
-<label>متن روی کیک</label>
-<input type="text">
+<label for="birthdayText">متن روی کیک</label>
+<input
+id="birthdayText"
+name="birthdayText"
+type="text">
 </div>
 
 <div class="upload-box">
-
 <label class="upload-label">
-
 <i class="fas fa-camera"></i>
-
 <span>انتخاب عکس نمونه یا ایده</span>
 
-<input type="file">
+<input
+type="file"
+id="birthdayImage"
+name="birthdayImage"
+accept="image/*">
 
 </label>
-
 </div>
 
 </div>
@@ -184,23 +196,35 @@ placeholder="09xxxxxxxxx">
 <h3>🧸 جزئیات کیک کودک</h3>
 
 <div class="form-group">
-<label>نام کودک</label>
-<input type="text">
+<label for="kidName">نام کودک</label>
+<input
+id="kidName"
+name="kidName"
+type="text">
 </div>
 
 <div class="form-group">
-<label>سن کودک</label>
-<input type="number">
+<label for="kidAge">سن کودک</label>
+<input
+id="kidAge"
+name="kidAge"
+type="number">
 </div>
 
 <div class="form-group">
-<label>شخصیت کارتونی</label>
-<input type="text">
+<label for="kidCharacter">شخصیت کارتونی</label>
+<input
+id="kidCharacter"
+name="kidCharacter"
+type="text">
 </div>
 
 <div class="form-group">
-<label>رنگ‌های مورد نظر</label>
-<input type="text">
+<label for="kidColors">رنگ‌های مورد نظر</label>
+<input
+id="kidColors"
+name="kidColors"
+type="text">
 </div>
 
 <div class="upload-box">
@@ -211,32 +235,44 @@ placeholder="09xxxxxxxxx">
 
 <span>انتخاب عکس نمونه یا ایده</span>
 
-<input type="file">
+<input
+type="file"
+id="kidImage"
+name="kidImage"
+accept="image/*">
 
 </label>
 
 </div>
 
 </div>
-
 
 <div id="engagementFields" class="cake-extra-fields" style="display:none;">
 
 <h3>💍 جزئیات کیک نامزدی</h3>
 
 <div class="form-group">
-<label>نام زوج</label>
-<input type="text">
+<label for="coupleNames">نام زوج</label>
+<input
+id="coupleNames"
+name="coupleNames"
+type="text">
 </div>
 
 <div class="form-group">
-<label>تم رنگی</label>
-<input type="text">
+<label for="engagementTheme">تم رنگی</label>
+<input
+id="engagementTheme"
+name="engagementTheme"
+type="text">
 </div>
 
 <div class="form-group">
-<label>متن روی کیک</label>
-<input type="text">
+<label for="engagementText">متن روی کیک</label>
+<input
+id="engagementText"
+name="engagementText"
+type="text">
 </div>
 
 <div class="upload-box">
@@ -247,38 +283,59 @@ placeholder="09xxxxxxxxx">
 
 <span>انتخاب عکس نمونه یا ایده</span>
 
-<input type="file">
+<input
+type="file"
+id="engagementImage"
+name="engagementImage"
+accept="image/*">
 
 </label>
 
 </div>
-</div>
 
+</div>
 
 <div id="weddingFields" class="cake-extra-fields" style="display:none;">
 
 <h3>👰 جزئیات کیک عروسی</h3>
 
 <div class="form-group">
-<label>تعداد طبقات</label>
 
-<select>
-<option>1 طبقه</option>
-<option>2 طبقه</option>
-<option>3 طبقه</option>
-<option>4 طبقه</option>
+<label for="weddingFloors">تعداد طبقات</label>
+
+<select
+id="weddingFloors"
+name="weddingFloors">
+
+<option value="1">1 طبقه</option>
+<option value="2">2 طبقه</option>
+<option value="3">3 طبقه</option>
+<option value="4">4 طبقه</option>
+
 </select>
 
 </div>
 
 <div class="form-group">
-<label>تم مراسم</label>
-<input type="text">
+
+<label for="weddingTheme">تم مراسم</label>
+
+<input
+id="weddingTheme"
+name="weddingTheme"
+type="text">
+
 </div>
 
 <div class="form-group">
-<label>رنگ‌های مورد نظر</label>
-<input type="text">
+
+<label for="weddingColors">رنگ‌های مورد نظر</label>
+
+<input
+id="weddingColors"
+name="weddingColors"
+type="text">
+
 </div>
 
 <div class="upload-box">
@@ -289,32 +346,53 @@ placeholder="09xxxxxxxxx">
 
 <span>انتخاب عکس نمونه یا ایده</span>
 
-<input type="file">
+<input
+type="file"
+id="weddingImage"
+name="weddingImage"
+accept="image/*">
 
 </label>
 
 </div>
 
 </div>
-
 
 <div id="customCakeFields" class="cake-extra-fields" style="display:none;">
 
 <h3>✨ جزئیات کیک سفارشی</h3>
 
 <div class="form-group">
-<label>موضوع کیک</label>
-<input type="text">
+
+<label for="customTheme">موضوع کیک</label>
+
+<input
+id="customTheme"
+name="customTheme"
+type="text">
+
 </div>
 
 <div class="form-group">
-<label>رنگ‌های مورد نظر</label>
-<input type="text">
+
+<label for="customColors">رنگ‌های مورد نظر</label>
+
+<input
+id="customColors"
+name="customColors"
+type="text">
+
 </div>
 
 <div class="form-group">
-<label>متن روی کیک</label>
-<input type="text">
+
+<label for="customText">متن روی کیک</label>
+
+<input
+id="customText"
+name="customText"
+type="text">
+
 </div>
 
 <div class="upload-box">
@@ -325,23 +403,43 @@ placeholder="09xxxxxxxxx">
 
 <span>انتخاب عکس نمونه یا ایده</span>
 
-<input type="file">
+<input
+type="file"
+id="customImage"
+name="customImage"
+accept="image/*">
 
 </label>
 
 </div>
+
 </div>
 
 <div class="form-group">
 
-<label>تعداد نفرات</label>
+<label for="guestCount">تعداد نفرات</label>
 
-<select>
+<select
+id="guestCount"
+name="guestCount">
 
-<option>5 تا 10 نفر</option>
-<option>10 تا 20 نفر</option>
-<option>20 تا 40 نفر</option>
-<option>40 نفر به بالا</option>
+<option value="">انتخاب کنید</option>
+
+<option value="5-10">
+5 تا 10 نفر
+</option>
+
+<option value="10-20">
+10 تا 20 نفر
+</option>
+
+<option value="20-40">
+20 تا 40 نفر
+</option>
+
+<option value="40-plus">
+40 نفر به بالا
+</option>
 
 </select>
 
@@ -349,13 +447,16 @@ placeholder="09xxxxxxxxx">
 
 <div class="form-group">
 
-<label>تاریخ تحویل</label>
+<label for="deliveryDate">
+تاریخ تحویل
+</label>
 
 <div class="date-input-box">
 
 <input
 type="text"
 id="deliveryDate"
+name="deliveryDate"
 placeholder="مثال: ۱۴۰۵/۰۳/۲۵">
 
 <i class="fas fa-calendar-alt"></i>
@@ -366,14 +467,15 @@ placeholder="مثال: ۱۴۰۵/۰۳/۲۵">
 
 <div class="form-group">
 
-<label>توضیحات سفارش</label>
+<label for="orderDescription">توضیحات سفارش</label>
 
 <textarea
+id="orderDescription"
+name="orderDescription"
 rows="5"
 placeholder="رنگ، طرح، شخصیت کارتونی یا هر توضیحی که دوست دارید..."></textarea>
 
 </div>
-
 <button type="submit" class="order-btn">
 
 ثبت سفارش
