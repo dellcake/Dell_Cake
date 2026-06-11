@@ -222,3 +222,34 @@ behavior:"smooth"
 });
 
 }
+/* باز شدن تقویم با کلیک روی آیکون */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+const deliveryDate =
+document.getElementById("deliveryDate");
+
+const calendarIcon =
+document.getElementById("calendarIcon");
+
+if(deliveryDate && calendarIcon){
+
+calendarIcon.addEventListener("click",()=>{
+
+if(deliveryDate.showPicker){
+
+deliveryDate.showPicker();
+
+}else{
+
+deliveryDate.focus();
+
+deliveryDate.click();
+
+}
+
+});
+
+}
+
+});
