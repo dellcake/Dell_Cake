@@ -163,44 +163,76 @@ weddingFields.style.display = "block";
 
 }
 orderForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+if(orderForm){
 
-  const formData = new FormData(orderForm);
+orderForm.addEventListener("submit",(e)=>{
 
-  try {
-    const res = await fetch("https://dellcake.gt.tc/save-order.php", {
-      method: "POST",
-      body: formData
-    });
+e.preventDefault();
 
-    const text = await res.text();
-    console.log("SERVER RAW RESPONSE:", text);
+const name =
+document.getElementById("customerName");
 
-    let result;
-    try {
-      result = JSON.parse(text);
-    } catch (err) {
-      throw new Error("Invalid JSON from server");
-    }
+const phone =
+document.getElementById("customerPhone");
 
-    if (result.status === "success") {
-      successMessage.style.display = "block";
-      orderForm.reset();
+const cakeType =
+document.getElementById("cakeType");
 
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: "smooth"
-      });
+const date =
+document.getElementById("deliveryDate");
 
-    } else {
-      alert("Server error: " + JSON.stringify(result));
-    }
+const description =
+document.getElementById("orderDescription");
 
-  } catch (err) {
-    console.log(err);
-    alert("مشکل واقعی سرور / CORS / HTTPS");
-  }
+if(!name.value.trim()){
+
+alert("نام را وارد کنید");
+return;
+
+}
+
+const phonePattern=/^09\d{9}$/;
+
+if(!phonePattern.test(phone.value.trim())){
+
+alert("شماره تماس معتبر نیست");
+return;
+
+}
+
+if(!date.value.trim()){
+
+alert("تاریخ تحویل را وارد کنید");
+return;
+
+}
+
+const message = `🎂 سفارش جدید دل‌کیک
+
+👤 نام:
+${name.value}
+
+📞 تماس:
+${phone.value}
+
+🍰 نوع کیک:
+${cakeType.value}
+
+📅 تاریخ تحویل:
+${date.value}
+
+📝 توضیحات:
+${description.value}
+`;
+
+const url =
+`https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
+
+window.location.href=url;
+
 });
+
+}
 
 
 /* باز شدن تقویم با کلیک روی آیکون */
