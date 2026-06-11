@@ -196,8 +196,8 @@ orderForm.addEventListener("submit", async (e) => {
       body: formData
     });
 
-    const result = await res.json();
-
+console.log(await res.text());
+      
     if (result.status === "success") {
       successMessage.style.display = "block";
       orderForm.reset();
