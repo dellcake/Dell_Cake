@@ -299,28 +299,41 @@ return;
 
 }
 
-const msg=
+const deliveryTime =
+document.getElementById("deliveryTime");
 
+const cakeText =
+cakeType.options[
+cakeType.selectedIndex
+].text;
+
+const message =
 `🎂 سفارش جدید دل‌کیک
 
-👤 ${name.value}
+━━━━━━━━━━
 
-📞 ${phone.value}
+👤 نام و نام خانوادگی مشتری:
+${name.value}
 
-🍰 ${cake?.options[cake.selectedIndex]?.text || "-"}
+📞 شماره تماس:
+${phone.value}
 
-📅 ${date.value}
+🍰 نوع سفارش:
+${cakeText}
 
-📝 ${desc?.value || "-"}`;
+📅 تاریخ تحویل:
+${date.value}
 
-window.open(
+🕒 ساعت حدودی تحویل:
+${deliveryTime.value || "ثبت نشده"}
 
-`https://ble.ir/dellcake_pv?text=${encodeURIComponent(msg)}`,
+📝 توضیحات سفارش:
+${description.value || "ندارد"}
 
-"_blank"
+━━━━━━━━━━`;
 
-);
+const url =
+`https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
 
-});
-
-}
+window.location.href =
+url;
