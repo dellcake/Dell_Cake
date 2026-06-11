@@ -191,7 +191,7 @@ orderForm.addEventListener("submit", async (e) => {
   const formData = new FormData(orderForm);
 
   try {
-   const res = await fetch("http://dellcake.gt.tc/save-order.php", {
+  const res = await fetch("http://dellcake.gt.tc/save-order.php", {
   method: "POST",
   body: formData
 });
@@ -202,16 +202,14 @@ console.log(result);
 if (result.status === "success") {
   successMessage.style.display = "block";
   orderForm.reset();
+
+  window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "smooth"
+  });
+} else {
+  alert("خطا در ثبت سفارش");
 }
-
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: "smooth"
-      });
-    } else {
-      alert("خطا در ثبت سفارش");
-    }
-
   } catch (err) {
     alert("مشکل در اتصال به سرور");
     console.log(err);
