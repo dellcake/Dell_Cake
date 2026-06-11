@@ -179,11 +179,11 @@ document.getElementById("customerName");
 
 const phone =
 document.getElementById("customerPhone");
-    
+
 const date =
 document.getElementById("deliveryDate");
 
-if(name.value.trim()===""){
+if(!name || name.value.trim()===""){
 
 alert("نام و نام خانوادگی را وارد کنید");
 
@@ -191,16 +191,17 @@ return;
 
 }
 
-const phonePattern = /^09\d{9}$/;
+const phonePattern=/^09\d{9}$/;
 
 if(!phonePattern.test(phone.value.trim())){
 
-alert("شماره تماس را به صورت 09xxxxxxxxx وارد کنید");
+alert("شماره تماس را درست وارد کنید");
 
 return;
 
 }
-if(date.value.trim()===""){
+
+if(!date || date.value.trim()===""){
 
 alert("تاریخ تحویل را وارد کنید");
 
@@ -208,17 +209,12 @@ return;
 
 }
 
-const formData = new FormData(orderForm);
+const formData=
+new FormData(orderForm);
 
-const orderData = {};
-
-for(const [key,value] of formData.entries()){
-
-orderData[key]=value;
-
-}
-
-console.log("سفارش ثبت شد:",orderData);
+console.log(
+Object.fromEntries(formData)
+);
 
 successMessage.style.display="block";
 
@@ -226,7 +222,8 @@ orderForm.reset();
 
 window.scrollTo({
 
-top:document.body.scrollHeight,
+top:
+document.body.scrollHeight,
 
 behavior:"smooth"
 
