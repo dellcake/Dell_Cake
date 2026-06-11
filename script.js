@@ -253,3 +253,55 @@ deliveryDate.click();
 }
 
 });
+
+/* تقویم شمسی */
+
+$(document).ready(function () {
+
+if ($("#deliveryDate").length) {
+
+$("#deliveryDate").persianDatepicker({
+
+format: "YYYY/MM/DD",
+
+initialValue: false,
+
+autoClose: true,
+
+observer: true,
+
+calendar: {
+persian: {
+locale: "fa"
+}
+},
+
+toolbox: {
+calendarSwitch: {
+enabled: false
+}
+}
+
+});
+
+}
+
+const calendarBtn =
+document.getElementById("calendarBtn");
+
+const deliveryDate =
+document.getElementById("deliveryDate");
+
+if(calendarBtn && deliveryDate){
+
+calendarBtn.addEventListener("click",()=>{
+
+deliveryDate.focus();
+
+deliveryDate.click();
+
+});
+
+}
+
+});
