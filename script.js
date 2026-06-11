@@ -175,11 +175,11 @@ orderForm.addEventListener("submit",(e)=>{
 e.preventDefault();
 
 const name =
-orderForm.querySelector('input[type="text"]');
+document.getElementById("customerName");
 
 const phone =
-orderForm.querySelector('input[type="tel"]');
-
+document.getElementById("customerPhone");
+    
 const date =
 document.getElementById("deliveryDate");
 
@@ -207,6 +207,18 @@ alert("تاریخ تحویل را وارد کنید");
 return;
 
 }
+
+const formData = new FormData(orderForm);
+
+const orderData = {};
+
+for(const [key,value] of formData.entries()){
+
+orderData[key]=value;
+
+}
+
+console.log("سفارش ثبت شد:",orderData);
 
 successMessage.style.display="block";
 
