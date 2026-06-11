@@ -216,11 +216,6 @@ orderForm.addEventListener("submit", async (e) => {
   }
 });
 
-  window.scrollTo({
-    top: document.body.scrollHeight,
-    behavior: "smooth"
-  });
-});
 }
 /* باز شدن تقویم با کلیک روی آیکون */
 
