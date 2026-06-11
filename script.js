@@ -191,7 +191,7 @@ orderForm.addEventListener("submit", async (e) => {
   const formData = new FormData(orderForm);
 
   try {
-    const res = await fetch("https://sql204.infinityfree.com/save-order.php", {
+    const res = await fetch("https://dellcake.gt.tc/save-order.php", {
       method: "POST",
       body: formData
     });
