@@ -289,7 +289,7 @@ enabled:false
 const calendarBtn =
 document.getElementById("calendarBtn");
 
-const deliveryDate =
+const dateInput =
 document.getElementById("deliveryDate");
 
 if(calendarBtn && deliveryDate){
@@ -303,5 +303,3 @@ deliveryDate.click();
 });
 
 }
-
-});
