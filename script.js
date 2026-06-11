@@ -257,19 +257,17 @@ deliveryDate.click();
 
 /* تقویم شمسی */
 
-$(document).ready(function () {
+$(document).ready(function(){
 
-if ($("#deliveryDate").length) {
+if($("#deliveryDate").length){
 
 $("#deliveryDate").persianDatepicker({
 
-format: "YYYY/MM/DD",
+format:"YYYY/MM/DD",
 
-initialValue: false,
+initialValue:false,
 
-autoClose: true,
-
-minDate: new persianDate().valueOf(),
+autoClose:true,
 
 calendar:{
 persian:{
