@@ -191,14 +191,15 @@ return;
 
 }
 
-if(phone.value.length !== 11){
+const phonePattern = /^09\d{9}$/;
 
-alert("شماره تماس معتبر وارد کنید");
+if(!phonePattern.test(phone.value.trim())){
+
+alert("شماره تماس را به صورت 09xxxxxxxxx وارد کنید");
 
 return;
 
 }
-
 if(date.value.trim()===""){
 
 alert("تاریخ تحویل را وارد کنید");
