@@ -1,6 +1,8 @@
-/* =========================
-   انیمیشن صفحه اصلی
-========================= */
+/* =====================
+انیمیشن صفحه اصلی
+===================== */
+
+window.addEventListener("load",()=>{
 
 const logo =
 document.getElementById("logoBox");
@@ -14,12 +16,12 @@ document.getElementById("buttons");
 const contactText =
 document.getElementById("contactText");
 
-const gallerySection =
+const gallery =
 document.getElementById("gallerySection");
 
-if (logo) {
+if(logo){
 
-setTimeout(() => {
+setTimeout(()=>{
 
 logo.classList.remove("hidden");
 logo.classList.add("logoAnimate");
@@ -28,9 +30,9 @@ logo.classList.add("logoAnimate");
 
 }
 
-if (intro) {
+if(intro){
 
-setTimeout(() => {
+setTimeout(()=>{
 
 intro.classList.remove("hidden");
 intro.classList.add("show");
@@ -39,12 +41,20 @@ intro.classList.add("show");
 
 }
 
-if (contactText && buttons) {
+if(contactText){
 
-setTimeout(() => {
+setTimeout(()=>{
 
 contactText.classList.remove("hidden");
 contactText.classList.add("show");
+
+},2800);
+
+}
+
+if(buttons){
+
+setTimeout(()=>{
 
 buttons.classList.remove("hidden");
 buttons.classList.add("show");
@@ -53,27 +63,24 @@ buttons.classList.add("show");
 
 }
 
-if (gallerySection) {
+if(gallery){
 
-setTimeout(() => {
+setTimeout(()=>{
 
-gallerySection.classList.add("show");
+gallery.classList.add("show");
 
 },3900);
 
 }
 
+});
 
-/* =========================
-   بعد از لود صفحه
-========================= */
+
+/* =====================
+منوی کناری
+===================== */
 
 document.addEventListener("DOMContentLoaded",()=>{
-
-
-/* =========================
-   منوی کناری
-========================= */
 
 const menuBtn =
 document.querySelector(".menu-btn");
@@ -84,65 +91,50 @@ document.getElementById("sideMenu");
 const overlay =
 document.getElementById("menuOverlay");
 
-if(menuBtn && sideMenu){
+if(menuBtn){
 
 menuBtn.addEventListener("click",()=>{
 
-sideMenu.classList.toggle("active");
+sideMenu?.classList.toggle("active");
 
-if(overlay){
-
-overlay.classList.toggle("active");
-
-}
+overlay?.classList.toggle("active");
 
 });
 
 }
 
-if(overlay){
+overlay?.addEventListener("click",()=>{
 
-overlay.addEventListener("click",()=>{
+sideMenu?.classList.remove("active");
 
-sideMenu.classList.remove("active");
-overlay.classList.remove("active");
+overlay?.classList.remove("active");
 
 });
 
-}
+});
 
 
-/* =========================
-   نمایش فیلدهای سفارش
-========================= */
+/* =====================
+نمایش فیلدهای کیک
+===================== */
 
 const cakeType =
 document.getElementById("cakeType");
 
 if(cakeType){
 
-const sections={
-
-birthday:
-document.getElementById("birthdayFields"),
-
-kids:
-document.getElementById("kidsFields"),
-
-engagement:
-document.getElementById("engagementFields"),
-
-wedding:
-document.getElementById("weddingFields"),
-
-custom:
-document.getElementById("customCakeFields")
-
-};
-
 cakeType.addEventListener("change",()=>{
 
-Object.values(sections).forEach(el=>{
+[
+"birthdayFields",
+"kidsFields",
+"engagementFields",
+"weddingFields",
+"customCakeFields"
+].forEach(id=>{
+
+const el =
+document.getElementById(id);
 
 if(el){
 
@@ -152,10 +144,28 @@ el.style.display="none";
 
 });
 
-if(sections[cakeType.value]){
+const target={
 
-sections[cakeType.value]
-.style.display="block";
+birthday:"birthdayFields",
+
+kids:"kidsFields",
+
+engagement:"engagementFields",
+
+wedding:"weddingFields",
+
+custom:"customCakeFields"
+
+};
+
+const section=
+document.getElementById(
+target[cakeType.value]
+);
+
+if(section){
+
+section.style.display="block";
 
 }
 
@@ -164,9 +174,9 @@ sections[cakeType.value]
 }
 
 
-/* =========================
-   تقویم شمسی
-========================= */
+/* =====================
+تقویم شمسی
+===================== */
 
 if(
 window.jQuery &&
@@ -197,17 +207,22 @@ enabled:false
 
 }
 
+
 const calendarBtn =
 document.getElementById("calendarBtn");
 
 const deliveryDate =
 document.getElementById("deliveryDate");
 
-if(calendarBtn && deliveryDate){
+if(
+calendarBtn &&
+deliveryDate
+){
 
 calendarBtn.addEventListener("click",()=>{
 
 deliveryDate.focus();
+
 deliveryDate.click();
 
 });
@@ -215,9 +230,9 @@ deliveryDate.click();
 }
 
 
-/* =========================
-   ثبت سفارش → بله
-========================= */
+/* =====================
+ثبت سفارش → بله
+===================== */
 
 const orderForm =
 document.getElementById("orderForm");
@@ -240,71 +255,67 @@ document.getElementById("cakeType");
 const date =
 document.getElementById("deliveryDate");
 
-const description =
+const desc =
 document.getElementById("orderDescription");
 
-
-if(!name.value.trim()){
-
-alert("نام و نام خانوادگی را وارد کنید");
-
-return;
-
-}
-
-
-const phoneRegex =
-/^09\d{9}$/;
-
 if(
-!phoneRegex.test(
-phone.value.trim()
-)
+!name ||
+!phone ||
+!date
 ){
 
-alert(
-"شماره تماس را صحیح وارد کنید"
-);
+return;
+
+}
+
+if(
+!name.value.trim()
+){
+
+alert("نام را وارد کنید");
 
 return;
 
 }
 
+if(
+!/^09\d{9}$/
+.test(phone.value)
+){
 
-if(!date.value.trim()){
-
-alert(
-"تاریخ تحویل را انتخاب کنید"
-);
+alert("شماره تماس صحیح نیست");
 
 return;
 
 }
 
+if(
+!date.value.trim()
+){
 
-const message =
+alert("تاریخ را انتخاب کنید");
+
+return;
+
+}
+
+const msg=
 
 `🎂 سفارش جدید دل‌کیک
 
-👤 نام:
-${name.value}
+👤 ${name.value}
 
-📞 شماره تماس:
-${phone.value}
+📞 ${phone.value}
 
-🍰 نوع کیک:
-${cake.options[cake.selectedIndex].text}
+🍰 ${cake?.options[cake.selectedIndex]?.text || "-"}
 
-📅 تاریخ تحویل:
-${date.value}
+📅 ${date.value}
 
-📝 توضیحات:
-${description.value || "-"}`;
-
+📝 ${desc?.value || "-"}`;
 
 window.open(
 
-`https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`,
+`https://ble.ir/dellcake_pv?text=${encodeURIComponent(msg)}`,
 
 "_blank"
 
@@ -313,105 +324,3 @@ window.open(
 });
 
 }
-
-
-});
-📞 تماس:
-${phone.value}
-
-🍰 نوع کیک:
-${cakeType.value}
-
-📅 تاریخ تحویل:
-${date.value}
-
-📝 توضیحات:
-${description.value}
-`;
-
-const url =
-`https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
-
-window.location.href=url;
-
-});
-
-}
-
-
-/* باز شدن تقویم با کلیک روی آیکون */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-const deliveryDate =
-document.getElementById("deliveryDate");
-
-const calendarBtn =
-document.getElementById("calendarBtn");
-
-if(calendarBtn && deliveryDate){
-
-calendarBtn.addEventListener("click",()=>{
-
-deliveryDate.focus();
-
-if(deliveryDate.showPicker){
-
-deliveryDate.showPicker();
-
-}
-
-});
-
-}
-
-});
-/* تقویم شمسی */
-
-$(document).ready(function(){
-
-if($("#deliveryDate").length){
-
-$("#deliveryDate").persianDatepicker({
-
-format:"YYYY/MM/DD",
-
-initialValue:false,
-
-autoClose:true,
-
-calendar:{
-persian:{
-locale:"fa"
-}
-},
-
-toolbox:{
-calendarSwitch:{
-enabled:false
-}
-}
-
-});
-
-}
-
-});
-const calendarBtn =
-document.getElementById("calendarBtn");
-
-const dateInput =
-document.getElementById("deliveryDate");
-
-if(calendarBtn && deliveryDate){
-
-calendarBtn.addEventListener("click",()=>{
-
-deliveryDate.focus();
-
-deliveryDate.click();
-
-});
-
-}
-console.log(document.getElementById("customerName"));
