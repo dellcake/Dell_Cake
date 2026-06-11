@@ -191,16 +191,18 @@ orderForm.addEventListener("submit", async (e) => {
   const formData = new FormData(orderForm);
 
   try {
-    const res = await fetch("https://dellcake.gt.tc/save-order.php", {
-      method: "POST",
-      body: formData
-    });
+   const res = await fetch("http://dellcake.gt.tc/save-order.php", {
+  method: "POST",
+  body: formData
+});
 
-console.log(await res.text());
-      
-    if (result.status === "success") {
-      successMessage.style.display = "block";
-      orderForm.reset();
+const result = await res.json();
+console.log(result);
+
+if (result.status === "success") {
+  successMessage.style.display = "block";
+  orderForm.reset();
+}
 
       window.scrollTo({
         top: document.body.scrollHeight,
