@@ -217,6 +217,15 @@ if (result.status === "success") {
 });
 
 }
+
+const formData = new FormData();
+
+formData.append("customerName", document.getElementById("customerName").value);
+formData.append("customerPhone", document.getElementById("customerPhone").value);
+formData.append("cakeType", document.getElementById("cakeType").value);
+formData.append("orderDescription", document.getElementById("orderDescription").value);
+formData.append("deliveryDate", document.getElementById("deliveryDate").value);
+
 /* باز شدن تقویم با کلیک روی آیکون */
 
 document.addEventListener("DOMContentLoaded", () => {
