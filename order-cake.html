@@ -20,6 +20,15 @@ rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap"
 rel="stylesheet">
 
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/persian-date@1.1.0/dist/persian-date.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+    
 </head>
 
 <body>
@@ -454,18 +463,21 @@ name="guestCount">
 <div class="date-input-box">
 
 <input
-type="date"
+type="text"
 id="deliveryDate"
-name="deliveryDate">
+name="deliveryDate"
+placeholder="مثال: ۱۴۰۵/۰۳/۲۵"
+readonly>
 
 <i
 class="fas fa-calendar-alt"
-id="calendarIcon">
+id="calendarBtn">
 </i>
 
 </div>
 
 </div>
+    
 <div class="form-group">
 
 <label for="orderDescription">توضیحات سفارش</label>
