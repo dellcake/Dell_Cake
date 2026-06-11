@@ -269,17 +269,17 @@ initialValue: false,
 
 autoClose: true,
 
-observer: true,
+minDate: new persianDate().valueOf(),
 
-calendar: {
-persian: {
-locale: "fa"
+calendar:{
+persian:{
+locale:"fa"
 }
 },
 
-toolbox: {
-calendarSwitch: {
-enabled: false
+toolbox:{
+calendarSwitch:{
+enabled:false
 }
 }
 
@@ -287,6 +287,7 @@ enabled: false
 
 }
 
+});
 const calendarBtn =
 document.getElementById("calendarBtn");
 
