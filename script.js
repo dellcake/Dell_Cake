@@ -307,3 +307,4 @@ deliveryDate.click();
 });
 
 }
+console.log(document.getElementById("customerName"));
