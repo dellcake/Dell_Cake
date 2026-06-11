@@ -170,67 +170,32 @@ document.getElementById("successMessage");
 
 if(orderForm){
 
-orderForm.addEventListener("submit",(e)=>{
+orderForm.addEventListener("submit", (e) => {
+  e.preventDefault();
 
-e.preventDefault();
+  const name = document.getElementById("customerName");
+  const phone = document.getElementById("customerPhone");
 
-const name =
-document.getElementById("customerName");
+  if (!name || name.value.trim() === "") {
+    alert("نام و نام خانوادگی را وارد کنید");
+    return;
+  }
 
-const phone =
-document.getElementById("customerPhone");
+  const phonePattern = /^09\d{9}$/;
 
-const date =
-document.getElementById("deliveryDate");
+  if (!phone || !phonePattern.test(phone.value.trim())) {
+    alert("شماره تماس را درست وارد کنید");
+    return;
+  }
 
-if(!name || name.value.trim()===""){
+  successMessage.style.display = "block";
+  orderForm.reset();
 
-alert("نام و نام خانوادگی را وارد کنید");
-
-return;
-
-}
-
-const phonePattern=/^09\d{9}$/;
-
-if(!phonePattern.test(phone.value.trim())){
-
-alert("شماره تماس را درست وارد کنید");
-
-return;
-
-}
-
-if(!date || date.value.trim()===""){
-
-alert("تاریخ تحویل را وارد کنید");
-
-return;
-
-}
-
-const formData=
-new FormData(orderForm);
-
-console.log(
-Object.fromEntries(formData)
-);
-
-successMessage.style.display="block";
-
-orderForm.reset();
-
-window.scrollTo({
-
-top:
-document.body.scrollHeight,
-
-behavior:"smooth"
-
+  window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "smooth"
+  });
 });
-
-});
-
 }
 /* باز شدن تقویم با کلیک روی آیکون */
 
