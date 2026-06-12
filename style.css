@@ -1142,3 +1142,12 @@ color:#1f7a3f;
 animation:fadeIn .4s ease;
 
 }
+
+
+#introBox,
+#contactText,
+#buttons,
+#gallerySection{
+    opacity:1 !important;
+    transform:none !important;
+}
