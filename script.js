@@ -218,10 +218,19 @@ ${description?.value || "ثبت نشده"}
             /* ================= FETCH ================= */
 
             try {
+                
+      /* نمایش فوری پیام موفقیت */
+                
+                if (successMessage) {
+                    successMessage.style.display = "block";
+                    successMessage.scrollIntoView({ behavior: "smooth" });
+                }
 
+   /* ذخیره سفارش در گوگل شیت */
+                
                 await fetch("https://script.google.com/macros/s/AKfycbzikTh4NWHAJ8SVdl43w7TbGaN5ovYilxFQxQwIUHGdK8SFflPqyHhQ9WOHE8Y5eIlY/exec", {
                     method: "POST",
-                /*   headers: {  "Content-Type": "application/json" } */
+    
                     body: JSON.stringify({
                         name: name.value,
                         phone: phoneValue,
@@ -233,10 +242,8 @@ ${description?.value || "ثبت نشده"}
                     })
                 });
 
-                if (successMessage) {
-                    successMessage.style.display = "block";
-                    successMessage.scrollIntoView({ behavior: "smooth" });
-                }
+                
+    /* انتقال به بله بعد از 2 ثانیه */
 
                 setTimeout(() => {
                     window.location.href =
