@@ -219,7 +219,7 @@ ${description?.value || "ثبت نشده"}
 
             try {
 
-                await fetch("https://script.google.com/macros/s/AKfycbyKJtwVP2B1HeA-3qaKSNZ2TTtd95zA3CX2gGgGoWrbIT346oGP46cYaEGuo3Ob62T7/exec", {
+                await fetch("https://script.google.com/macros/s/AKfycbzikTh4NWHAJ8SVdl43w7TbGaN5ovYilxFQxQwIUHGdK8SFflPqyHhQ9WOHE8Y5eIlY/exec", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
