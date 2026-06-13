@@ -171,6 +171,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const cake =
                 document.getElementById("cakeType");
 
+            const weight =
+               document.getElementById("cakeWeight");
+
             const guest =
                 document.getElementById("guestCount");
 
@@ -221,6 +224,9 @@ ${phone.value}
 
 🍰 نوع کیک:
 ${cakeText}
+
+⚖️ وزن کیک:
+${weight?.value || "ثبت نشده"} کیلوگرم
 
 👥 تعداد نفرات:
 ${guest?.value || "ثبت نشده"}
