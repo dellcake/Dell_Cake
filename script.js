@@ -248,7 +248,7 @@ ${description?.value || "ثبت نشده"}
                 setTimeout(() => {
                     window.location.href =
                         `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
-                }, 2000);
+                }, 1000);
 
             } catch (error) {
                 console.error(error);
