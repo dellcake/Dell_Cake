@@ -221,9 +221,7 @@ ${description?.value || "ثبت نشده"}
 
                 await fetch("https://script.google.com/macros/s/AKfycbzikTh4NWHAJ8SVdl43w7TbGaN5ovYilxFQxQwIUHGdK8SFflPqyHhQ9WOHE8Y5eIlY/exec", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                /*   headers: {  "Content-Type": "application/json" } */
                     body: JSON.stringify({
                         name: name.value,
                         phone: phoneValue,
