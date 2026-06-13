@@ -152,7 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const phone = document.getElementById("customerPhone");
             const cake = document.getElementById("cakeType");
             const weight = document.getElementById("cakeWeight");
-            const guest = document.getElementById("guestCount");
             const date = document.getElementById("deliveryDate");
             const time = document.getElementById("deliveryTime");
             const description = document.getElementById("orderDescription");
@@ -203,9 +202,6 @@ ${cakeText}
 ⚖️ وزن:
 ${weight?.value || "ثبت نشده"} کیلوگرم
 
-👥 تعداد:
-${guest?.value || "ثبت نشده"}
-
 📅 تاریخ:
 ${date.value}
 
@@ -233,7 +229,6 @@ ${description?.value || "ثبت نشده"}
                         phone: phoneValue,
                         cake: cakeText,
                         weight: weight?.value || "",
-                        guest: guest?.value || "",
                         date: date.value,
                         time: time?.value || "",
                         description: description?.value || ""
