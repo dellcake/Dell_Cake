@@ -211,11 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const cakeText =
-                cake.options[cake.selectedIndex]?.text || "ثبت نشده";
-
-            const message = `🎂 سفارش جدید دل‌کیک
-
 fetch(
     "https://script.google.com/macros/s/AKfycbyKJtwVP2B1HeA-3qaKSNZ2TTtd95zA3CX2gGgGoWrbIT346oGP46cYaEGuo3Ob62T7/exec",
     {
@@ -253,6 +248,11 @@ fetch(
     alert("خطا در ثبت سفارش");
 
 });
+            
+            const cakeText =
+                cake.options[cake.selectedIndex]?.text || "ثبت نشده";
+
+            const message = `🎂 سفارش جدید دل‌کیک
 
 ━━━━━━━━━━━━━━━━
 
