@@ -158,95 +158,59 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (orderForm) {
 
-        orderForm.addEventListener("submit", (e) => {
+orderForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-            e.preventDefault();
+    const name = document.getElementById("customerName");
+    const phone = document.getElementById("customerPhone");
+    const cake = document.getElementById("cakeType");
+    const weight = document.getElementById("cakeWeight");
+    const guest = document.getElementById("guestCount");
+    const date = document.getElementById("deliveryDate");
+    const time = document.getElementById("deliveryTime");
+    const description = document.getElementById("orderDescription");
+    const successMessage = document.getElementById("successMessage");
 
-            const name =
-                document.getElementById("customerName");
+    if (!name?.value.trim()) return alert("نام را وارد کنید");
+    if (!/^09\d{9}$/.test(phone?.value.trim())) return alert("شماره تماس معتبر نیست");
+    if (!cake?.value) return alert("نوع کیک را انتخاب کنید");
+    if (!date?.value.trim()) return alert("تاریخ را انتخاب کنید");
 
-            const phone =
-                document.getElementById("customerPhone");
+    const cakeText =
+        cake.options[cake.selectedIndex]?.text || "ثبت نشده";
 
-            const cake =
-                document.getElementById("cakeType");
+    const message = `🎂 سفارش جدید دل‌کیک
+${name.value}
+${phone.value}`;
 
-            const weight =
-               document.getElementById("cakeWeight");
+    try {
+        await fetch("YOUR_SCRIPT_URL", {
+            method: "POST",
+            body: JSON.stringify({
+                name: name.value,
+                phone: phone.value,
+                cake: cakeText,
+                weight: weight?.value || "",
+                guest: guest?.value || "",
+                date: date.value,
+                time: time?.value || "",
+                description: description?.value || ""
+            })
+        });
 
-            const guest =
-                document.getElementById("guestCount");
+        if (successMessage) {
+            successMessage.style.display = "block";
+        }
 
-            const date =
-                document.getElementById("deliveryDate");
+        setTimeout(() => {
+            window.location.href =
+                `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
+        }, 1500);
 
-            const time =
-                document.getElementById("deliveryTime");
-
-            const description =
-                document.getElementById("orderDescription");
-
-            const successMessage =
-                document.getElementById("successMessage");
-
-            
-
-            if (!name || !name.value.trim()) {
-                alert("نام و نام خانوادگی را وارد کنید");
-                return;
-            }
-
-            if (!phone || !/^09\\d{9}$/.test(phone.value.trim())) {
-                alert("شماره تماس معتبر نیست");
-                return;
-            }
-
-            if (!cake || !cake.value) {
-                alert("نوع کیک را انتخاب کنید");
-                return;
-            }
-
-            if (!date || !date.value.trim()) {
-                alert("تاریخ تحویل را انتخاب کنید");
-                return;
-            }
-
-fetch(
-    "https://script.google.com/macros/s/AKfycbyKJtwVP2B1HeA-3qaKSNZ2TTtd95zA3CX2gGgGoWrbIT346oGP46cYaEGuo3Ob62T7/exec",
-    {
-        method: "POST",
-        body: JSON.stringify({
-            name: name.value,
-            phone: phone.value,
-            cake: cakeText,
-            weight: weight?.value || "",
-            guest: guest?.value || "",
-            date: date.value,
-            time: time?.value || "",
-            description: description?.value || ""
-        })
+    } catch (err) {
+        console.error(err);
+        alert("خطا در ثبت سفارش");
     }
-)
-.then(() => {
-
-    if (success) {
-        success.style.display = "block";
-    }
-
-    setTimeout(() => {
-
-        window.location.href =
-            `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
-
-    }, 2000);
-
-})
-.catch(error => {
-
-    console.error(error);
-
-    alert("خطا در ثبت سفارش");
-
 });
             
             const cakeText =
