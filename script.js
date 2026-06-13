@@ -189,6 +189,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const successMessage =
                 document.getElementById("successMessage");
 
+            
+
             if (!name || !name.value.trim()) {
                 alert("نام و نام خانوادگی را وارد کنید");
                 return;
@@ -213,6 +215,44 @@ document.addEventListener("DOMContentLoaded", () => {
                 cake.options[cake.selectedIndex]?.text || "ثبت نشده";
 
             const message = `🎂 سفارش جدید دل‌کیک
+
+fetch(
+    "https://script.google.com/macros/s/AKfycbyKJtwVP2B1HeA-3qaKSNZ2TTtd95zA3CX2gGgGoWrbIT346oGP46cYaEGuo3Ob62T7/exec",
+    {
+        method: "POST",
+        body: JSON.stringify({
+            name: name.value,
+            phone: phone.value,
+            cake: cakeText,
+            weight: weight?.value || "",
+            guest: guest?.value || "",
+            date: date.value,
+            time: time?.value || "",
+            description: description?.value || ""
+        })
+    }
+)
+.then(() => {
+
+    if (success) {
+        success.style.display = "block";
+    }
+
+    setTimeout(() => {
+
+        window.location.href =
+            `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
+
+    }, 2000);
+
+})
+.catch(error => {
+
+    console.error(error);
+
+    alert("خطا در ثبت سفارش");
+
+});
 
 ━━━━━━━━━━━━━━━━
 
