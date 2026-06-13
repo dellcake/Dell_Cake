@@ -172,7 +172,7 @@ orderForm.addEventListener("submit", async (e) => {
     const successMessage = document.getElementById("successMessage");
 
     if (!name?.value.trim()) return alert("نام را وارد کنید");
-    if (!/^09\d{9}$/.test(phone?.value.trim())) return alert("شماره تماس معتبر نیست");
+    if (!phone || !/^09\d{9}$/.test(phone.value.trim())) {  alert("شماره تماس معتبر نیست"); return;  }
     if (!cake?.value) return alert("نوع کیک را انتخاب کنید");
     if (!date?.value.trim()) return alert("تاریخ را انتخاب کنید");
 
