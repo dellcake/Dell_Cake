@@ -302,7 +302,7 @@ body: JSON.stringify({
                 setTimeout(() => {
                     window.location.href =
                         `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
-                }, 1000);
+                }, 500);
 
             } catch (error) {
                 console.error(error);
