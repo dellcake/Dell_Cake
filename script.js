@@ -228,18 +228,25 @@ ${description?.value || "ثبت نشده"}
 
    /* ذخیره سفارش در گوگل شیت */
                 
-                await fetch("https://script.google.com/macros/s/AKfycbzikTh4NWHAJ8SVdl43w7TbGaN5ovYilxFQxQwIUHGdK8SFflPqyHhQ9WOHE8Y5eIlY/exec", {
-                    method: "POST",
+  await fetch("https://script.google.com/macros/s/AKfycbzikTh4NWHAJ8SVdl43w7TbGaN5ovYilxFQxQwIUHGdK8SFflPqyHhQ9WOHE8Y5eIlY/exec", {
+       method: "POST",
     
-                    body: JSON.stringify({
-                        name: name.value,
-                        phone: phoneValue,
-                        cake: cakeText,
-                        weight: weight?.value || "",
-                        date: date.value,
-                        time: time?.value || "",
-                        description: description?.value || ""
-                    })
+body: JSON.stringify({
+    name: name.value,
+    phone: phoneValue,
+    cake: cakeText,
+
+    flavor: flavor,
+    filling: filling,
+    design: design,
+    colors: colors,
+    cakeText: cakeTextOnCake,
+
+    weight: weight?.value || "",
+    date: date.value,
+    time: time?.value || "",
+    description: description?.value || ""
+})
                 });
 
                 
