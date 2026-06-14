@@ -334,4 +334,9 @@ try {
     console.error(error);
     alert("خطا در ثبت سفارش");
 }
-    });
+
+        }); // پایان submit
+
+    } // پایان if (orderForm)
+
+}); // پایان DOMContentLoaded
