@@ -285,63 +285,52 @@ ${description?.value || "ثبت نشده"}
 ━━━━━━━━━━━━━━━━━━
 
 💖 Dell Cake`;
-            /* ================= FETCH ================= */
+/* ================= FETCH ================= */
 
-            try {
-                
-      /* نمایش فوری پیام موفقیت */
-                
-                if (successMessage) {
-                    successMessage.style.display = "block";
-                    successMessage.scrollIntoView({ behavior: "smooth" });
-                }
+try {
 
-   /* ذخیره سفارش در گوگل شیت */
-                
-  await fetch("https://script.google.com/macros/s/AKfycbzikTh4NWHAJ8SVdl43w7TbGaN5ovYilxFQxQwIUHGdK8SFflPqyHhQ9WOHE8Y5eIlY/exec", {
-       method: "POST",
-    
-body: const formData = new FormData();
-
-// 🔹 متن‌ها
-formData.append("name", name.value);
-formData.append("phone", phoneValue);
-formData.append("cake", cakeText);
-formData.append("flavor", flavor);
-formData.append("filling", filling);
-formData.append("design", design);
-formData.append("colors", colors);
-formData.append("cakeText", cakeTextOnCake);
-formData.append("weight", weight?.value || "");
-formData.append("date", date.value);
-formData.append("time", time?.value || "");
-formData.append("description", description?.value || "");        
-
-// 🔹 فایل تصویر (این قسمت مهمه)
-const imageInput = document.getElementById("birthdayImage")?.files[0]
-  || document.getElementById("kidImage")?.files[0]
-  || document.getElementById("engagementImage")?.files[0]
-  || document.getElementById("weddingImage")?.files[0]
-  || document.getElementById("customImage")?.files[0];
-
-if (imageInput) {
-  formData.append("image", imageInput);
-}
-                });
-
-                
-    /* انتقال به بله بعد از 1 ثانیه */
-
-                setTimeout(() => {
-                    window.location.href =
-                        `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
-                }, 500);
-
-            } catch (error) {
-                console.error(error);
-                alert("خطا در ثبت سفارش");
-            }
-        });
+    // ================= 1. نمایش پیام موفقیت =================
+    if (successMessage) {
+        successMessage.style.display = "block";
+        successMessage.scrollIntoView({ behavior: "smooth" });
     }
 
-});
+    // ================= 2. ساخت FormData =================
+    const formData = new FormData();
+
+    // متن‌ها
+    formData.append("name", name.value);
+    formData.append("phone", phoneValue);
+    formData.append("cake", cakeText);
+    formData.append("flavor", flavor);
+    formData.append("filling", filling);
+    formData.append("design", design);
+    formData.append("colors", colors);
+    formData.append("cakeText", cakeTextOnCake);
+    formData.append("weight", weight?.value || "");
+    formData.append("date", date.value);
+    formData.append("time", time?.value || "");
+    formData.append("description", description?.value || "");
+
+    // ================= 3. عکس =================
+    // (همان imageFile که بالاتر ساختی)
+    if (imageFile) {
+        formData.append("image", imageFile);
+    }
+
+    // ================= 4. ارسال به گوگل =================
+    await fetch("https://script.google.com/macros/s/AKfycbzikTh4NWHAJ8SVdl43w7TbGaN5ovYilxFQxQwIUHGdK8SFflPqyHhQ9WOHE8Y5eIlY/exec", {
+        method: "POST",
+        body: formData
+    });
+
+    // ================= 5. ارسال به بله =================
+    setTimeout(() => {
+        window.location.href =
+            `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
+    }, 500);
+
+} catch (error) {
+    console.error(error);
+    alert("خطا در ثبت سفارش");
+}
