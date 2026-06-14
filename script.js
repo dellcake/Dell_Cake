@@ -301,22 +301,32 @@ ${description?.value || "ثبت نشده"}
   await fetch("https://script.google.com/macros/s/AKfycbzikTh4NWHAJ8SVdl43w7TbGaN5ovYilxFQxQwIUHGdK8SFflPqyHhQ9WOHE8Y5eIlY/exec", {
        method: "POST",
     
-body: JSON.stringify({
-    name: name.value,
-    phone: phoneValue,
-    cake: cakeText,
+body: const formData = new FormData();
 
-    flavor: flavor,
-    filling: filling,
-    design: design,
-    colors: colors,
-    cakeText: cakeTextOnCake,
+// 🔹 متن‌ها
+formData.append("name", name.value);
+formData.append("phone", phoneValue);
+formData.append("cake", cakeText);
+formData.append("flavor", flavor);
+formData.append("filling", filling);
+formData.append("design", design);
+formData.append("colors", colors);
+formData.append("cakeText", cakeTextOnCake);
+formData.append("weight", weight?.value || "");
+formData.append("date", date.value);
+formData.append("time", time?.value || "");
+formData.append("description", description?.value || "");        
 
-    weight: weight?.value || "",
-    date: date.value,
-    time: time?.value || "",
-    description: description?.value || ""
-})
+// 🔹 فایل تصویر (این قسمت مهمه)
+const imageInput = document.getElementById("birthdayImage")?.files[0]
+  || document.getElementById("kidImage")?.files[0]
+  || document.getElementById("engagementImage")?.files[0]
+  || document.getElementById("weddingImage")?.files[0]
+  || document.getElementById("customImage")?.files[0];
+
+if (imageInput) {
+  formData.append("image", imageInput);
+}
                 });
 
                 
