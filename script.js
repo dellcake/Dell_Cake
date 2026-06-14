@@ -242,7 +242,62 @@ switch (cake.value) {
         break;
 }
             
-          const message = `🎂 سفارش جدید دل‌کیک
+
+/* ================= FETCH ================= */
+
+try {
+
+    // ================= 1. نمایش پیام موفقیت =================
+    if (successMessage) {
+        successMessage.style.display = "block";
+        successMessage.scrollIntoView({ behavior: "smooth" });
+    }
+
+    // ================= 2. ساخت FormData =================
+    const formData = new FormData();
+
+    // متن‌ها
+    formData.append("name", name.value);
+    formData.append("phone", phoneValue);
+    formData.append("cake", cakeText);
+    formData.append("flavor", flavor);
+    formData.append("filling", filling);
+    formData.append("design", design);
+    formData.append("colors", colors);
+    formData.append("cakeText", cakeTextOnCake);
+    formData.append("weight", weight?.value || "");
+    formData.append("date", date.value);
+    formData.append("time", time?.value || "");
+    formData.append("description", description?.value || "");
+
+    // ================= 3. عکس =================
+    // (همان imageFile که بالاتر ساختی)
+    if (imageFile) {
+        formData.append("image", imageFile);
+    }
+
+    // ================= 4. ارسال به گوگل =================
+    const response = await fetch(
+    "script.google.com/macros/s/AKfycbzikTh4NWHAJ8SVdl43w7TbGaN5ovYilxFQxQwIUHGdK8SFflPqyHhQ9WOHE8Y5eIlY/exec",
+    {
+        method: "POST",
+        body: formData
+    }
+);
+
+const result = await response.json();
+
+const imageUrl = result.imageUrl || "";
+
+    file.setSharing(
+  DriveApp.Access.ANYONE_WITH_LINK,
+  DriveApp.Permission.VIEW
+);
+    imageUrl =
+`https://drive.google.com/uc?export=view&id=${file.getId()}`;
+ 
+    // ================= 5. ارسال به بله =================
+            const message = `🎂 سفارش جدید دل‌کیک
 
 ━━━━━━━━━━━━━━━━━━
 
@@ -282,49 +337,14 @@ ${time?.value || "ثبت نشده"}
 📝 توضیحات:
 ${description?.value || "ثبت نشده"}
 
+📷 تصویر نمونه:
+${imageUrl || "ارسال نشده"}
+
 ━━━━━━━━━━━━━━━━━━
 
 💖 Dell Cake`;
-/* ================= FETCH ================= */
-
-try {
-
-    // ================= 1. نمایش پیام موفقیت =================
-    if (successMessage) {
-        successMessage.style.display = "block";
-        successMessage.scrollIntoView({ behavior: "smooth" });
-    }
-
-    // ================= 2. ساخت FormData =================
-    const formData = new FormData();
-
-    // متن‌ها
-    formData.append("name", name.value);
-    formData.append("phone", phoneValue);
-    formData.append("cake", cakeText);
-    formData.append("flavor", flavor);
-    formData.append("filling", filling);
-    formData.append("design", design);
-    formData.append("colors", colors);
-    formData.append("cakeText", cakeTextOnCake);
-    formData.append("weight", weight?.value || "");
-    formData.append("date", date.value);
-    formData.append("time", time?.value || "");
-    formData.append("description", description?.value || "");
-
-    // ================= 3. عکس =================
-    // (همان imageFile که بالاتر ساختی)
-    if (imageFile) {
-        formData.append("image", imageFile);
-    }
-
-    // ================= 4. ارسال به گوگل =================
-    await fetch("https://script.google.com/macros/s/AKfycbzikTh4NWHAJ8SVdl43w7TbGaN5ovYilxFQxQwIUHGdK8SFflPqyHhQ9WOHE8Y5eIlY/exec", {
-        method: "POST",
-        body: formData
-    });
-
-    // ================= 5. ارسال به بله =================
+    
+    
     setTimeout(() => {
         window.location.href =
             `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
