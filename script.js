@@ -250,12 +250,12 @@ body: JSON.stringify({
                 });
 
                 
-    /* انتقال به بله بعد از 2 ثانیه */
+    /* انتقال به بله بعد از 0.5 ثانیه */
 
                 setTimeout(() => {
                     window.location.href =
                         `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
-                }, 1000);
+                }, 500);
 
             } catch (error) {
                 console.error(error);
