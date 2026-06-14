@@ -186,6 +186,53 @@ document.addEventListener("DOMContentLoaded", () => {
             const cakeText =
                 cake.options[cake.selectedIndex]?.text || "ثبت نشده";
 
+let flavor = "";
+let filling = "";
+let design = "";
+let colors = "";
+let cakeTextOnCake = "";
+
+switch (cake.value) {
+
+    case "birthday":
+        flavor = document.getElementById("birthdayFlavor")?.value || "";
+        filling = document.getElementById("birthdayFilling")?.value || "";
+        design = document.getElementById("birthdayDesign")?.value || "";
+        colors = document.getElementById("birthdayColors")?.value || "";
+        cakeTextOnCake = document.getElementById("birthdayText")?.value || "";
+        break;
+
+    case "kids":
+        flavor = document.getElementById("kidFlavor")?.value || "";
+        filling = document.getElementById("kidFilling")?.value || "";
+        design = document.getElementById("kidDesign")?.value || "";
+        colors = document.getElementById("kidColors")?.value || "";
+        break;
+
+    case "engagement":
+        flavor = document.getElementById("engagementFlavor")?.value || "";
+        filling = document.getElementById("engagementFilling")?.value || "";
+        design = document.getElementById("engagementDesign")?.value || "";
+        colors = document.getElementById("engagementTheme")?.value || "";
+        cakeTextOnCake = document.getElementById("engagementText")?.value || "";
+        break;
+
+    case "wedding":
+        flavor = document.getElementById("weddingFlavor")?.value || "";
+        filling = document.getElementById("weddingFilling")?.value || "";
+        design = document.getElementById("weddingDesign")?.value || "";
+        colors = document.getElementById("weddingColors")?.value || "";
+        break;
+
+    case "custom":
+        flavor = document.getElementById("customFlavor")?.value || "";
+        filling = document.getElementById("customFilling")?.value || "";
+        design = document.getElementById("customDesign")?.value || "";
+        colors = document.getElementById("customColors")?.value || "";
+        cakeTextOnCake = document.getElementById("customText")?.value || "";
+        break;
+}
+            
             const message = `🎂 سفارش جدید دل‌کیک
 
 ━━━━━━━━━━━━━━━━
