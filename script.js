@@ -156,7 +156,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const time = document.getElementById("deliveryTime");
             const description = document.getElementById("orderDescription");
             const successMessage = document.getElementById("successMessage");
+const birthdayImage = document.getElementById("birthdayImage")?.files[0];
+const kidImage = document.getElementById("kidImage")?.files[0];
+const engagementImage = document.getElementById("engagementImage")?.files[0];
+const weddingImage = document.getElementById("weddingImage")?.files[0];
+const customImage = document.getElementById("customImage")?.files[0];
 
+const imageFile =
+birthdayImage || kidImage || engagementImage || weddingImage || customImage;
+
+            
             /* ================= VALIDATION ================= */
 
             if (!name?.value.trim()) {
