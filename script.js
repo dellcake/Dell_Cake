@@ -247,16 +247,13 @@ switch (cake.value) {
 
 try {
 
-    // ================= 1. نمایش پیام موفقیت =================
     if (successMessage) {
         successMessage.style.display = "block";
         successMessage.scrollIntoView({ behavior: "smooth" });
     }
 
-    // ================= 2. ساخت FormData =================
     const formData = new FormData();
 
-    // متن‌ها
     formData.append("name", name.value);
     formData.append("phone", phoneValue);
     formData.append("cake", cakeText);
@@ -270,32 +267,23 @@ try {
     formData.append("time", time?.value || "");
     formData.append("description", description?.value || "");
 
-    // ================= 3. عکس =================
-    // (همان imageFile که بالاتر ساختی)
     if (imageFile) {
         formData.append("image", imageFile);
     }
 
-    // ================= 4. ارسال به گوگل =================
     const response = await fetch(
-    "https://script.google.com/macros/s/AKfycbzikTh4NWHAJ8SVdl43w7TbGaN5ovYilxFQxQwIUHGdK8SFflPqyHhQ9WOHE8Y5eIlY/exec",
-    {
-        method: "POST",
-        body: formData
-    }
-);
+        "https://script.google.com/macros/s/AKfycbzikTh4NWHAJ8SVdl43w7TbGaN5ovYilxFQxQwIUHGdK8SFflPqyHhQ9WOHE8Y5eIlY/exec",
+        {
+            method: "POST",
+            body: formData
+        }
+    );
 
-const result = await response.json();
+    const result = await response.json();
 
-const imageUrl = result.imageUrl || "";
+    const imageUrl = result.imageUrl || "";
 
-    file.setSharing(
-  DriveApp.Access.ANYONE_WITH_LINK,
-  DriveApp.Permission.VIEW
-);
-    imageUrl =
-`https://drive.google.com/uc?export=view&id=${file.getId()}`;
- 
+     
     // ================= 5. ارسال به بله =================
             const message = `🎂 سفارش جدید دل‌کیک
 
