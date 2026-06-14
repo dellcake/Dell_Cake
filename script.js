@@ -334,3 +334,4 @@ try {
     console.error(error);
     alert("خطا در ثبت سفارش");
 }
+    });
