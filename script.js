@@ -1,14 +1,30 @@
-document.addEventListener("DOMContentLoaded", () => {
+(function () {
+    "use strict";
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+        try {
+            initMenu();
+            initAnimations();
+            initCakeType();
+            initCalendar();
+            initForm();
+        } catch (err) {
+            console.error("Init error:", err);
+        }
+
+    });
 
     /* =========================
-       منوی کناری
+       منوی کناری (SAFE)
     ========================= */
 
-    const menuBtn = document.querySelector(".menu-btn");
-    const sideMenu = document.getElementById("sideMenu");
-    const overlay = document.getElementById("menuOverlay");
+    function initMenu() {
+        const menuBtn = document.querySelector(".menu-btn");
+        const sideMenu = document.getElementById("sideMenu");
+        const overlay = document.getElementById("menuOverlay");
 
-    if (menuBtn && sideMenu && overlay) {
+        if (!menuBtn || !sideMenu || !overlay) return;
 
         menuBtn.addEventListener("click", () => {
             sideMenu.classList.toggle("active");
@@ -19,53 +35,40 @@ document.addEventListener("DOMContentLoaded", () => {
             sideMenu.classList.remove("active");
             overlay.classList.remove("active");
         });
-
     }
 
     /* =========================
-       انیمیشن صفحه اصلی
+       انیمیشن‌ها (SAFE)
     ========================= */
 
-    const intro = document.getElementById("introBox");
-    const contactText = document.getElementById("contactText");
-    const buttons = document.getElementById("buttons");
-    const gallery = document.getElementById("gallerySection");
+    function initAnimations() {
+        const items = [
+            "introBox",
+            "contactText",
+            "buttons",
+            "gallerySection"
+        ];
 
-    if (intro) {
-        setTimeout(() => {
-            intro.classList.add("show");
-            intro.classList.remove("hidden");
-        }, 500);
-    }
+        const delays = [500, 1000, 1500, 2000];
 
-    if (contactText) {
-        setTimeout(() => {
-            contactText.classList.add("show");
-            contactText.classList.remove("hidden");
-        }, 1000);
-    }
+        items.forEach((id, i) => {
+            const el = document.getElementById(id);
+            if (!el) return;
 
-    if (buttons) {
-        setTimeout(() => {
-            buttons.classList.add("show");
-            buttons.classList.remove("hidden");
-        }, 1500);
-    }
-
-    if (gallery) {
-        setTimeout(() => {
-            gallery.classList.add("show");
-            gallery.classList.remove("hidden");
-        }, 2000);
+            setTimeout(() => {
+                el.classList.add("show");
+                el.classList.remove("hidden");
+            }, delays[i]);
+        });
     }
 
     /* =========================
-       نمایش فیلدهای نوع کیک
+       فیلدهای کیک (SAFE)
     ========================= */
 
-    const cakeType = document.getElementById("cakeType");
-
-    if (cakeType) {
+    function initCakeType() {
+        const cakeType = document.getElementById("cakeType");
+        if (!cakeType) return;
 
         const sections = {
             birthday: "birthdayFields",
@@ -78,225 +81,113 @@ document.addEventListener("DOMContentLoaded", () => {
         cakeType.addEventListener("change", () => {
 
             Object.values(sections).forEach(id => {
-                const section = document.getElementById(id);
-
-                if (section) {
-                    section.style.display = "none";
-                }
+                const el = document.getElementById(id);
+                if (el) el.style.display = "none";
             });
 
-            const selectedSection =
-                document.getElementById(
-                    sections[cakeType.value]
-                );
-
-            if (selectedSection) {
-                selectedSection.style.display = "block";
-            }
-
+            const selected = document.getElementById(sections[cakeType.value]);
+            if (selected) selected.style.display = "block";
         });
-
     }
 
     /* =========================
-       تقویم شمسی
+       تقویم (SAFE)
     ========================= */
 
-    if (
-        window.jQuery &&
-        $("#deliveryDate").length &&
-        $.fn.persianDatepicker
-    ) {
+    function initCalendar() {
+
+        if (!window.jQuery) return;
+        if (!$("#deliveryDate").length) return;
+        if (!$.fn.persianDatepicker) return;
 
         $("#deliveryDate").persianDatepicker({
             format: "YYYY/MM/DD",
             initialValue: false,
             autoClose: true,
             calendar: {
-                persian: {
-                    locale: "fa"
-                }
-            },
-            toolbox: {
-                calendarSwitch: {
-                    enabled: false
-                }
+                persian: { locale: "fa" }
             }
         });
 
-    }
+        const btn = document.getElementById("calendarBtn");
+        const input = document.getElementById("deliveryDate");
 
-    const calendarBtn =
-        document.getElementById("calendarBtn");
-
-    const deliveryDate =
-        document.getElementById("deliveryDate");
-
-    if (calendarBtn && deliveryDate) {
-
-        calendarBtn.addEventListener("click", () => {
-
-            deliveryDate.focus();
-
-            const picker =
-                $(deliveryDate).data("datepicker");
-
-            if (picker) {
-                picker.show();
-            }
-
-        });
-
-    }
-
-});
-
-/* =========================
-   ثبت سفارش
-========================= */
-
-const orderForm = document.getElementById("orderForm");
-
-if (orderForm) {
-
-    orderForm.addEventListener("submit", function (e) {
-
-        e.preventDefault();
-        shareOrder();
-
-    });
-
-}
-
-function getValue(id) {
-
-    const el = document.getElementById(id);
-    return el ? el.value.trim() : "";
-
-}
-
-function shareOrder()   {
-
-    const name = getValue("customerName");
-    const phone = getValue("customerPhone");
-    const type = getValue("cakeType");
-
-    const weight = getValue("cakeWeight");
-    const date = getValue("deliveryDate");
-    const time = getValue("deliveryTime");
-    const desc = getValue("orderDescription");
-
-    if (!name || !phone || !type) {
-        alert("لطفاً نام، شماره تماس و نوع کیک را تکمیل کنید 💗");
-        return;
-    }
-
-    const typeMap = {
-        birthday: "کیک تولد 🎂",
-        kids: "کیک کودک 🧸",
-        engagement: "کیک نامزدی 💍",
-        wedding: "کیک عروسی 👰",
-        custom: "کیک سفارشی ✨"
-    };
-
-    let message = "💗 سفارش جدید دل‌کیک\n\n";
-
-    message += `👤 نام: ${name}\n`;
-    message += `📞 شماره تماس: ${phone}\n`;
-    message += `🎂 نوع کیک: ${typeMap[type] || type}\n\n`;
-
-    message += "🍰 جزئیات کیک\n";
-    message += "──────────────\n";
-
-    const fields = {
-
-        birthday: [
-            ["طعم", "birthdayFlavor"],
-            ["فیلینگ", "birthdayFilling"],
-            ["سبک طراحی", "birthdayDesign"],
-            ["رنگ‌ها", "birthdayColors"],
-            ["متن روی کیک", "birthdayText"]
-        ],
-
-        kids: [
-            ["طعم", "kidFlavor"],
-            ["فیلینگ", "kidFilling"],
-            ["سبک طراحی", "kidDesign"],
-            ["شخصیت کارتونی", "kidCharacter"],
-            ["رنگ‌ها", "kidColors"]
-        ],
-
-        engagement: [
-            ["طعم", "engagementFlavor"],
-            ["فیلینگ", "engagementFilling"],
-            ["سبک طراحی", "engagementDesign"],
-            ["تم رنگی", "engagementTheme"],
-            ["متن روی کیک", "engagementText"]
-        ],
-
-        wedding: [
-            ["تعداد طبقات", "weddingFloors"],
-            ["طعم", "weddingFlavor"],
-            ["فیلینگ", "weddingFilling"],
-            ["سبک طراحی", "weddingDesign"],
-            ["تم مراسم", "weddingTheme"],
-            ["رنگ‌ها", "weddingColors"]
-        ],
-
-        custom: [
-            ["موضوع کیک", "customTheme"],
-            ["طعم", "customFlavor"],
-            ["فیلینگ", "customFilling"],
-            ["سبک طراحی", "customDesign"],
-            ["رنگ‌ها", "customColors"],
-            ["متن روی کیک", "customText"]
-        ]
-
-    };
-
-    const selectedFields = fields[type] || [];
-
-    selectedFields.forEach(([label, id]) => {
-
-        const value = getValue(id);
-
-        if (value) {
-            message += `• ${label}: ${value}\n`;
+        if (btn && input) {
+            btn.addEventListener("click", () => {
+                input.focus();
+                const picker = $(input).data("datepicker");
+                if (picker) picker.show();
+            });
         }
-
-    });
-
-    message += "\n🚚 اطلاعات تحویل\n";
-    message += "──────────────\n";
-
-    if (weight) message += `⚖️ وزن: ${weight} کیلوگرم\n`;
-    if (date) message += `📅 تاریخ تحویل: ${date}\n`;
-    if (time) message += `⏰ ساعت تحویل: ${time}\n`;
-
-    if (desc) {
-        message += "\n📝 توضیحات سفارش\n";
-        message += "──────────────\n";
-        message += `${desc}\n`;
     }
-    
-    const baleUrl =
-        `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
 
-    const isMobile =
-        /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    /* =========================
+       فرم سفارش (CRASH PROOF)
+    ========================= */
 
-    if (isMobile && navigator.share) {
+    function initForm() {
+        const form = document.getElementById("orderForm");
+        if (!form) return;
 
-        navigator.share({
-            title: "سفارش دل‌کیک",
-            text: message
-        }).catch(err => {
-            console.log("Share cancelled:", err);
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            shareOrderSafe();
         });
-
-    } else {
-
-        window.open(baleUrl, "_blank");
-
     }
-}
+
+    function getValue(id) {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : "";
+    }
+
+    function shareOrderSafe() {
+
+        try {
+
+            const name = getValue("customerName");
+            const phone = getValue("customerPhone");
+            const type = getValue("cakeType");
+
+            if (!name || !phone || !type) {
+                alert("لطفاً اطلاعات ضروری را کامل کنید 💗");
+                return;
+            }
+
+            const typeMap = {
+                birthday: "کیک تولد 🎂",
+                kids: "کیک کودک 🧸",
+                engagement: "کیک نامزدی 💍",
+                wedding: "کیک عروسی 👰",
+                custom: "کیک سفارشی ✨"
+            };
+
+            let message =
+                "💗 سفارش جدید دل‌کیک\n\n" +
+                `👤 نام: ${name}\n` +
+                `📞 شماره: ${phone}\n` +
+                `🎂 نوع: ${typeMap[type] || type}\n\n`;
+
+            const url =
+                "https://ble.ir/dellcake_pv?text=" +
+                encodeURIComponent(message);
+
+            if (navigator.share) {
+                navigator.share({
+                    title: "سفارش دل‌کیک",
+                    text: message
+                }).catch(() => {});
+            } else {
+                window.open(url, "_blank");
+            }
+
+            // PDF جدا و امن (اگر وجود داشت)
+            if (typeof window.createOrderPDF === "function") {
+                window.createOrderPDF({ name, phone, type });
+            }
+
+        } catch (err) {
+            console.error("shareOrder error:", err);
+        }
+    }
+
+})();
