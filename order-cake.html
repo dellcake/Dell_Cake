@@ -627,28 +627,205 @@ onclick="shareOrder()">
 <script src="js/order-popup.js"></script>
 
     <script>
-function shareOrder() {
 
-  const text = `
-سلام 👋
+function shareOrder(){
 
-من می‌خواهم یک سفارش کیک برای دل‌کیک ثبت کنم 🍰💗
-لطفاً سفارش من را بررسی کنید.
+const customerName =
+document.getElementById('customerName').value;
+
+const customerPhone =
+document.getElementById('customerPhone').value;
+
+const cakeType =
+document.getElementById('cakeType');
+
+const cakeTypeText =
+cakeType.options[cakeType.selectedIndex].text;
+
+const cakeWeight =
+document.getElementById('cakeWeight').value;
+
+const deliveryDate =
+document.getElementById('deliveryDate').value;
+
+const deliveryTime =
+document.getElementById('deliveryTime').value;
+
+const orderDescription =
+document.getElementById('orderDescription').value;
+
+let details = '';
+
+switch(cakeType.value){
+
+case 'birthday':
+
+details += `
+🎂 نوع سفارش: کیک تولد
+
+🍰 طعم:
+${document.getElementById('birthdayFlavor').value}
+
+🥛 فیلینگ:
+${document.getElementById('birthdayFilling').value}
+
+🎨 سبک طراحی:
+${document.getElementById('birthdayDesign').value}
+
+🌈 رنگ ها:
+${document.getElementById('birthdayColors').value}
+
+📝 متن روی کیک:
+${document.getElementById('birthdayText').value}
 `;
 
-  if (navigator.share) {
+break;
 
-    navigator.share({
-      title: 'سفارش کیک دل‌کیک',
-      text: text
-    });
+case 'kids':
 
-  } else {
+details += `
+🧸 نوع سفارش: کیک کودک
 
-    alert('امکان اشتراک‌گذاری در این دستگاه وجود ندارد.');
+🍰 طعم:
+${document.getElementById('kidFlavor').value}
 
-  }
+🥛 فیلینگ:
+${document.getElementById('kidFilling').value}
+
+🎨 سبک طراحی:
+${document.getElementById('kidDesign').value}
+
+🐻 شخصیت کارتونی:
+${document.getElementById('kidCharacter').value}
+
+🌈 رنگ ها:
+${document.getElementById('kidColors').value}
+`;
+
+break;
+
+case 'engagement':
+
+details += `
+💍 نوع سفارش: کیک نامزدی
+
+🍰 طعم:
+${document.getElementById('engagementFlavor').value}
+
+🥛 فیلینگ:
+${document.getElementById('engagementFilling').value}
+
+🎨 سبک طراحی:
+${document.getElementById('engagementDesign').value}
+
+🎨 تم رنگی:
+${document.getElementById('engagementTheme').value}
+
+📝 متن روی کیک:
+${document.getElementById('engagementText').value}
+`;
+
+break;
+
+case 'wedding':
+
+details += `
+👰 نوع سفارش: کیک عروسی
+
+🏛 تعداد طبقات:
+${document.getElementById('weddingFloors').value}
+
+🍰 طعم:
+${document.getElementById('weddingFlavor').value}
+
+🥛 فیلینگ:
+${document.getElementById('weddingFilling').value}
+
+🎨 سبک طراحی:
+${document.getElementById('weddingDesign').value}
+
+💒 تم مراسم:
+${document.getElementById('weddingTheme').value}
+
+🌈 رنگ ها:
+${document.getElementById('weddingColors').value}
+`;
+
+break;
+
+case 'custom':
+
+details += `
+✨ نوع سفارش: کیک سفارشی
+
+🎯 موضوع:
+${document.getElementById('customTheme').value}
+
+🍰 طعم:
+${document.getElementById('customFlavor').value}
+
+🥛 فیلینگ:
+${document.getElementById('customFilling').value}
+
+🎨 سبک طراحی:
+${document.getElementById('customDesign').value}
+
+🌈 رنگ ها:
+${document.getElementById('customColors').value}
+
+📝 متن روی کیک:
+${document.getElementById('customText').value}
+`;
+
+break;
+
 }
+
+const message = `
+
+💗 سفارش جدید دل‌کیک 💗
+
+👤 نام مشتری:
+${customerName}
+
+📞 شماره تماس:
+${customerPhone}
+
+🍰 نوع کیک:
+${cakeTypeText}
+
+⚖️ وزن:
+${cakeWeight} کیلوگرم
+
+📅 تاریخ تحویل:
+${deliveryDate}
+
+⏰ ساعت تحویل:
+${deliveryTime}
+
+${details}
+
+📋 توضیحات تکمیلی:
+
+${orderDescription}
+
+`;
+
+if(navigator.share){
+
+navigator.share({
+title:'سفارش دل‌کیک',
+text:message
+});
+
+}else{
+
+alert('امکان اشتراک گذاری در این دستگاه وجود ندارد.');
+
+}
+
+}
+
     </script>
     
 </body>
