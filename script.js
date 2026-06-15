@@ -136,35 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-
-    /* =========================
-       ثبت سفارش (FIXED کامل)
-    ========================= */
-
-    const orderForm = document.getElementById("orderForm");
-
-    if (orderForm) {
-
-        orderForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-
-            const name = document.getElementById("customerName");
-            const phone = document.getElementById("customerPhone");
-            const cake = document.getElementById("cakeType");
-            const weight = document.getElementById("cakeWeight");
-            const date = document.getElementById("deliveryDate");
-            const time = document.getElementById("deliveryTime");
-            const description = document.getElementById("orderDescription");
-            const successMessage = document.getElementById("successMessage");
-const birthdayImage = document.getElementById("birthdayImage")?.files[0];
-const kidImage = document.getElementById("kidImage")?.files[0];
-const engagementImage = document.getElementById("engagementImage")?.files[0];
-const weddingImage = document.getElementById("weddingImage")?.files[0];
-const customImage = document.getElementById("customImage")?.files[0];
-
-const imageFile =
-birthdayImage || kidImage || engagementImage || weddingImage || customImage;
-
             
             /* ================= VALIDATION ================= */
 
@@ -252,37 +223,6 @@ try {
         successMessage.scrollIntoView({ behavior: "smooth" });
     }
 
-    const formData = new FormData();
-
-    formData.append("name", name.value);
-    formData.append("phone", phoneValue);
-    formData.append("cake", cakeText);
-    formData.append("flavor", flavor);
-    formData.append("filling", filling);
-    formData.append("design", design);
-    formData.append("colors", colors);
-    formData.append("cakeText", cakeTextOnCake);
-    formData.append("weight", weight?.value || "");
-    formData.append("date", date.value);
-    formData.append("time", time?.value || "");
-    formData.append("description", description?.value || "");
-
-    if (imageFile) {
-        formData.append("image", imageFile);
-    }
-
-    const response = await fetch(
-        "https://script.google.com/macros/s/AKfycbzikTh4NWHAJ8SVdl43w7TbGaN5ovYilxFQxQwIUHGdK8SFflPqyHhQ9WOHE8Y5eIlY/exec",
-        {
-            method: "POST",
-            body: formData
-        }
-    );
-
-    const result = await response.json();
-
-    const imageUrl = result.imageUrl || "";
-
      
     // ================= 5. ارسال به بله =================
             const message = `🎂 سفارش جدید دل‌کیک
@@ -325,20 +265,12 @@ ${time?.value || "ثبت نشده"}
 📝 توضیحات:
 ${description?.value || "ثبت نشده"}
 
-📷 تصویر نمونه:
-${imageUrl || "ارسال نشده"}
-
 ━━━━━━━━━━━━━━━━━━
 
 💖 Dell Cake`;
     
     
-    setTimeout(() => {
-        window.location.href =
-            `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
-    }, 500);
-
-} catch (error) {
+ catch (error) {
     console.error(error);
     alert("خطا در ثبت سفارش");
 }
