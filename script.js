@@ -279,6 +279,17 @@ function shareOrder()   {
         message += `${desc}\n`;
     }
 
+createOrderPDF({
+    name,
+    phone,
+    type: typeMap[type] || type,
+    weight,
+    date,
+    time,
+    desc,
+    message
+});
+    
     const baleUrl =
         `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
 
