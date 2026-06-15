@@ -1213,3 +1213,81 @@ animation:fadeIn .4s ease;
     color:#e91e63;
     font-weight:800;
 }
+/* =========================
+   Share Modal (DellCake Style)
+========================= */
+
+.share-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.share-modal.hidden {
+    display: none;
+}
+
+.share-box {
+    background: #fff0f6;
+    width: 85%;
+    max-width: 320px;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(255, 105, 180, 0.3);
+    animation: pop .25s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.share-box h2 {
+    color: #ff4d88;
+    font-family: Vazirmatn;
+}
+
+.share-box p {
+    font-size: 13px;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.share-btn {
+    width: 100%;
+    padding: 12px;
+    margin: 6px 0;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.telegram {
+    background: #e6f2ff;
+    color: #0077cc;
+}
+
+.bale {
+    background: #ffe6f0;
+    color: #d1006f;
+}
+
+.sms {
+    background: #f2f2f2;
+    color: #333;
+}
+
+.share-close {
+    margin-top: 10px;
+    background: transparent;
+    border: none;
+    color: #999;
+    cursor: pointer;
+}
