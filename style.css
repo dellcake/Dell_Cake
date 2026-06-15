@@ -846,26 +846,34 @@ border-color:#f01873;
 
 }
 
-.order-btn{
+.order-submit-btn{
+    width:100%;
+    border:none;
+    border-radius:16px;
+    padding:16px;
+    margin-top:20px;
 
-width:100%;
+    background:linear-gradient(135deg,#ff6cab,#ff8ec7);
 
-background:#f01873;
+    color:#fff;
+    font-family:'Vazirmatn',sans-serif;
+    font-size:16px;
+    font-weight:700;
 
-color:white;
+    cursor:pointer;
 
-border:none;
+    box-shadow:0 8px 25px rgba(255,108,171,.35);
 
-padding:16px;
+    transition:.3s;
+}
 
-border-radius:18px;
+.order-submit-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 30px rgba(255,108,171,.45);
+}
 
-font-size:18px;
-
-font-weight:700;
-
-cursor:pointer;
-
+.order-submit-btn:active{
+    transform:scale(.98);
 }
 #customCakeFields{
 
