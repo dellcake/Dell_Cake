@@ -617,6 +617,31 @@ placeholder="رنگ، طرح، شخصیت کارتونی یا هر توضیحی 
 
 <script src="script.js"></script>
 <script src="js/order-popup.js"></script>
+
+    <script>
+function shareOrder() {
+
+  const text = `
+سلام 👋
+
+من می‌خواهم یک سفارش کیک برای دل‌کیک ثبت کنم 🍰💗
+لطفاً سفارش من را بررسی کنید.
+`;
+
+  if (navigator.share) {
+
+    navigator.share({
+      title: 'سفارش کیک دل‌کیک',
+      text: text
+    });
+
+  } else {
+
+    alert('امکان اشتراک‌گذاری در این دستگاه وجود ندارد.');
+
+  }
+}
+    </script>
     
 </body>
 </html>
