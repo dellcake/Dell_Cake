@@ -190,10 +190,14 @@ const baleUrl =
     `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
 
 /* =========================
-   Mobile Share API
+   Mobile = Share
+   Desktop = Bale
 ========================= */
 
-if (navigator.share) {
+const isMobile =
+    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+if (isMobile && navigator.share) {
 
     navigator.share({
         title: "سفارش دل‌کیک",
@@ -205,18 +209,6 @@ if (navigator.share) {
 
 } else {
 
-    /* =========================
-       Fallback
-    ========================= */
-
-    navigator.clipboard.writeText(message)
-        .catch(() => {});
-
-    alert(
-        "متن سفارش کپی شد 💗\nپس از باز شدن پیام‌رسان آن را ارسال کنید."
-    );
-
     window.open(baleUrl, "_blank");
 
-}
 }
