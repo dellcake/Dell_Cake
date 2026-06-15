@@ -175,7 +175,7 @@ function getValue(id) {
 
 }
 
-function shareOrder()
+function shareOrder()   {
 
     const name = getValue("customerName");
     const phone = getValue("customerPhone");
