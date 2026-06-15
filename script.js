@@ -164,3 +164,15 @@ if(orderForm){
     });
 
 }
+const baleUrl =
+`https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
+
+if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+
+    window.location.href = baleUrl;
+
+} else {
+
+    window.open(baleUrl, "_blank");
+
+}
