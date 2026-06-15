@@ -1213,17 +1213,14 @@ animation:fadeIn .4s ease;
     color:#e91e63;
     font-weight:800;
 }
+
 /* =========================
-   Share Modal (DellCake Style)
+   SHARE APP SHEET - DELCAKE
 ========================= */
 
 .share-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     z-index: 9999;
 }
 
@@ -1231,46 +1228,76 @@ animation:fadeIn .4s ease;
     display: none;
 }
 
-.share-box {
+/* پس‌زمینه blur */
+.share-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(6px);
+    animation: fadeIn .2s ease;
+}
+
+/* خود sheet */
+.share-sheet {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    max-width: 420px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
     background: #fff0f6;
-    width: 85%;
-    max-width: 320px;
-    border-radius: 20px;
-    padding: 20px;
+    border-radius: 22px 22px 0 0;
+    padding: 18px 18px 25px;
+    box-shadow: 0 -10px 40px rgba(255, 105, 180, 0.25);
+    animation: slideUp .35s ease forwards;
+}
+
+/* handle بالا */
+.share-handle {
+    width: 45px;
+    height: 5px;
+    background: #ffb6d5;
+    border-radius: 10px;
+    margin: 0 auto 12px;
+}
+
+/* متن */
+.share-sheet h2 {
     text-align: center;
-    box-shadow: 0 10px 40px rgba(255, 105, 180, 0.3);
-    animation: pop .25s ease;
-}
-
-@keyframes pop {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-
-.share-box h2 {
-    color: #ff4d88;
+    color: #ff3d8d;
     font-family: Vazirmatn;
 }
 
-.share-box p {
+.share-sheet p {
+    text-align: center;
     font-size: 13px;
+    color: #666;
     margin-bottom: 15px;
-    color: #555;
 }
 
+/* دکمه‌ها */
 .share-btn {
     width: 100%;
-    padding: 12px;
-    margin: 6px 0;
+    padding: 14px;
+    margin: 8px 0;
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     font-size: 14px;
-    cursor: pointer;
     font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.2s;
 }
 
+.share-btn:active {
+    transform: scale(0.97);
+}
+
+/* رنگ‌ها */
 .telegram {
-    background: #e6f2ff;
+    background: #e8f3ff;
     color: #0077cc;
 }
 
@@ -1284,10 +1311,23 @@ animation:fadeIn .4s ease;
     color: #333;
 }
 
+/* بستن */
 .share-close {
+    width: 100%;
     margin-top: 10px;
     background: transparent;
     border: none;
     color: #999;
-    cursor: pointer;
+    font-size: 13px;
+}
+
+/* انیمیشن‌ها */
+@keyframes slideUp {
+    from { transform: translate(-50%, 100%); }
+    to { transform: translate(-50%, 0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
