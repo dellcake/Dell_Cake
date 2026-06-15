@@ -294,25 +294,11 @@ function shareOrder() {
     const baleUrl =
         `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
 
-    const isMobile =
-        /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (isMobile && navigator.share) {
-
-        navigator.share({
-            title: "سفارش دل‌کیک",
-            text: message
-        }).catch(err => {
-            console.log("Share cancelled:", err);
-        });
-
-    } else {
 
         openShareModal(message);
 
     }
 
-        }
 
 let currentMessage = "";
 
