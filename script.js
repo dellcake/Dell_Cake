@@ -150,3 +150,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+
+const orderForm = document.getElementById("orderForm");
+
+if(orderForm){
+
+    orderForm.addEventListener("submit", function(e){
+
+        e.preventDefault();
+
+        shareOrder();
+
+    });
+
+}
