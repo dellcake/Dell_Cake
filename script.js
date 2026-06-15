@@ -308,7 +308,7 @@ function shareOrder() {
 
     } else {
 
-        window.open(baleUrl, "_blank");
+        openShareModal(message);
 
     }
 
