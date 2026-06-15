@@ -359,3 +359,17 @@ async function generateInvoicePDF(data) {
     const pdfBytes = await pdfDoc.save();
     return pdfBytes;
 }
+
+function downloadPDF(bytes) {
+    const blob = new Blob([bytes], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "dellcake-invoice.pdf";
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+    return blob;
+}
