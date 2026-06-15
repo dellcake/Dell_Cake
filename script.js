@@ -219,3 +219,4 @@ if (navigator.share) {
     window.open(baleUrl, "_blank");
 
 }
+}
