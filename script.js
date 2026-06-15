@@ -295,9 +295,21 @@ function shareOrder() {
         `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
 
 
-        openShareModal(message);
+        function openShareModal(message) {
 
+    currentMessage = message;
+
+    const modal = document.getElementById("shareModal");
+
+    if (!modal) {
+        alert("خطا در باز شدن پنجره اشتراک‌گذاری");
+        return;
     }
+
+    modal.classList.remove("hidden");
+
+    vibrate?.();
+        }
 
 
 let currentMessage = "";
