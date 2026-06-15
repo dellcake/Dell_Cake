@@ -151,65 +151,165 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+/* =========================
+   ثبت سفارش
+========================= */
+
 const orderForm = document.getElementById("orderForm");
 
 if (orderForm) {
 
     orderForm.addEventListener("submit", function (e) {
+
         e.preventDefault();
         shareOrder();
+
     });
+
+}
+
+function getValue(id) {
+
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : "";
 
 }
 
 function shareOrder() {
 
-    const name = document.getElementById("customerName").value;
-    const phone = document.getElementById("customerPhone").value;
-    const type = document.getElementById("cakeType").value;
-    const weight = document.getElementById("cakeWeight").value;
-    const date = document.getElementById("deliveryDate").value;
-    const time = document.getElementById("deliveryTime").value;
-    const desc = document.getElementById("orderDescription").value;
+    const name = getValue("customerName");
+    const phone = getValue("customerPhone");
+    const type = getValue("cakeType");
 
-    let message =
-`💗 سفارش جدید دل‌کیک
+    const weight = getValue("cakeWeight");
+    const date = getValue("deliveryDate");
+    const time = getValue("deliveryTime");
+    const desc = getValue("orderDescription");
 
-👤 نام: ${name}
-📞 تلفن: ${phone}
-🎂 نوع کیک: ${type}
-⚖️ وزن: ${weight} کیلو
-📅 تاریخ تحویل: ${date}
-⏰ ساعت: ${time}
+    if (!name || !phone || !type) {
 
-📝 توضیحات:
-${desc}
-`;
+        alert("لطفاً نام، شماره تماس و نوع کیک را تکمیل کنید 💗");
+        return;
 
-const baleUrl =
-    `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
+    }
 
-/* =========================
-   Mobile = Share
-   Desktop = Bale
-========================= */
+    const typeMap = {
+        birthday: "کیک تولد 🎂",
+        kids: "کیک کودک 🧸",
+        engagement: "کیک نامزدی 💍",
+        wedding: "کیک عروسی 👰",
+        custom: "کیک سفارشی ✨"
+    };
 
-const isMobile =
-    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    let message = "💗 سفارش جدید دل‌کیک\n\n";
 
-if (isMobile && navigator.share) {
+    message += `👤 نام: ${name}\n`;
+    message += `📞 شماره تماس: ${phone}\n`;
+    message += `🎂 نوع کیک: ${typeMap[type] || type}\n\n`;
 
-    navigator.share({
-        title: "سفارش دل‌کیک",
-        text: message
-    })
-    .catch(err => {
-        console.log("Share cancelled:", err);
+    message += "🍰 جزئیات کیک\n";
+    message += "──────────────\n";
+
+    const fields = {
+
+        birthday: [
+            ["طعم", "birthdayFlavor"],
+            ["فیلینگ", "birthdayFilling"],
+            ["سبک طراحی", "birthdayDesign"],
+            ["رنگ‌ها", "birthdayColors"],
+            ["متن روی کیک", "birthdayText"]
+        ],
+
+        kids: [
+            ["طعم", "kidFlavor"],
+            ["فیلینگ", "kidFilling"],
+            ["سبک طراحی", "kidDesign"],
+            ["شخصیت کارتونی", "kidCharacter"],
+            ["رنگ‌ها", "kidColors"]
+        ],
+
+        engagement: [
+            ["طعم", "engagementFlavor"],
+            ["فیلینگ", "engagementFilling"],
+            ["سبک طراحی", "engagementDesign"],
+            ["تم رنگی", "engagementTheme"],
+            ["متن روی کیک", "engagementText"]
+        ],
+
+        wedding: [
+            ["تعداد طبقات", "weddingFloors"],
+            ["طعم", "weddingFlavor"],
+            ["فیلینگ", "weddingFilling"],
+            ["سبک طراحی", "weddingDesign"],
+            ["تم مراسم", "weddingTheme"],
+            ["رنگ‌ها", "weddingColors"]
+        ],
+
+        custom: [
+            ["موضوع کیک", "customTheme"],
+            ["طعم", "customFlavor"],
+            ["فیلینگ", "customFilling"],
+            ["سبک طراحی", "customDesign"],
+            ["رنگ‌ها", "customColors"],
+            ["متن روی کیک", "customText"]
+        ]
+
+    };
+
+    const selectedFields = fields[type] || [];
+
+    selectedFields.forEach(([label, id]) => {
+
+        const value = getValue(id);
+
+        if (value) {
+            message += `• ${label}: ${value}\n`;
+        }
+
     });
 
-} else {
+    message += "\n🚚 اطلاعات تحویل\n";
+    message += "──────────────\n";
 
-    window.open(baleUrl, "_blank");
+    if (weight) {
+        message += `⚖️ وزن: ${weight} کیلوگرم\n`;
+    }
 
-}
-}
+    if (date) {
+        message += `📅 تاریخ تحویل: ${date}\n`;
+    }
+
+    if (time) {
+        message += `⏰ ساعت تحویل: ${time}\n`;
+    }
+
+    if (desc) {
+
+        message += "\n📝 توضیحات سفارش\n";
+        message += "──────────────\n";
+        message += `${desc}\n`;
+
+    }
+
+    const baleUrl =
+        `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
+
+    const isMobile =
+        /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isMobile && navigator.share) {
+
+        navigator.share({
+            title: "سفارش دل‌کیک",
+            text: message
+        }).catch(err => {
+            console.log("Share cancelled:", err);
+        });
+
+    } else {
+
+        window.open(baleUrl, "_blank");
+
+    }
+
+        }
