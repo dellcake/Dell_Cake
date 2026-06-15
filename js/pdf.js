@@ -1,40 +1,32 @@
-console.log("DellCake PDF Module Loaded 💗");
+window.createOrderPDF = async function (data) {
+    try {
+        if (!window.pdfLib && !window.PDFLib) return;
 
-async function createOrderPDF(data) {
+        const pdfDoc = await PDFLib.PDFDocument.create();
+        const page = pdfDoc.addPage([595, 842]);
 
-    const pdfDoc = await PDFLib.PDFDocument.create();
+        page.drawText("سفارش دل‌کیک 💗", {
+            x: 200,
+            y: 800,
+            size: 18,
+        });
 
-    const page = pdfDoc.addPage([595, 842]);
+        page.drawText(`نام: ${data.name}`, { x: 50, y: 750, size: 12 });
+        page.drawText(`شماره: ${data.phone}`, { x: 50, y: 730, size: 12 });
 
-    page.drawText("DellCake Test PDF 💗", {
-        x: 180,
-        y: 750,
-        size: 20
-    });
+        const bytes = await pdfDoc.save();
 
-    const pdfBytes = await pdfDoc.save();
+        const blob = new Blob([bytes], { type: "application/pdf" });
+        const url = URL.createObjectURL(blob);
 
-    const blob = new Blob(
-        [pdfBytes],
-        { type: "application/pdf" }
-    );
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "dellcake.pdf";
+        a.click();
 
-    const url = URL.createObjectURL(blob);
+        URL.revokeObjectURL(url);
 
-    const a = document.createElement("a");
-
-    a.href = url;
-
-    a.download = "dellcake-test.pdf";
-
-    a.click();
-
-    URL.revokeObjectURL(url);
-
-}
-
-window.testPDF = () => {
-
-    createOrderPDF({});
-
+    } catch (err) {
+        console.error("PDF error:", err);
+    }
 };
