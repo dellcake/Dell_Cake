@@ -153,26 +153,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const orderForm = document.getElementById("orderForm");
 
-if(orderForm){
+if (orderForm) {
 
-    orderForm.addEventListener("submit", function(e){
-
+    orderForm.addEventListener("submit", function (e) {
         e.preventDefault();
-
         shareOrder();
-
     });
 
 }
-const baleUrl =
-`https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
 
-if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+function shareOrder() {
 
-    window.location.href = baleUrl;
+    const name = document.getElementById("customerName").value;
+    const phone = document.getElementById("customerPhone").value;
+    const type = document.getElementById("cakeType").value;
+    const weight = document.getElementById("cakeWeight").value;
+    const date = document.getElementById("deliveryDate").value;
+    const time = document.getElementById("deliveryTime").value;
+    const desc = document.getElementById("orderDescription").value;
 
-} else {
+    let message =
+`💗 سفارش جدید دل‌کیک
 
-    window.open(baleUrl, "_blank");
+👤 نام: ${name}
+📞 تلفن: ${phone}
+🎂 نوع کیک: ${type}
+⚖️ وزن: ${weight} کیلو
+📅 تاریخ تحویل: ${date}
+⏰ ساعت: ${time}
 
+📝 توضیحات:
+${desc}
+`;
+
+    const baleUrl = `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
+
+    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        window.location.href = baleUrl;
+    } else {
+        window.open(baleUrl, "_blank");
+    }
 }
