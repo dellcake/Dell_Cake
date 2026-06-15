@@ -302,11 +302,23 @@ function shareOrder() {
 
 let currentMessage = "";
 
+/* ویبره موبایل */
+function vibrate() {
+    if (navigator.vibrate) {
+        navigator.vibrate(50);
+    }
+}
+
 /* باز کردن مودال */
 function openShareModal(message) {
+
     currentMessage = message;
 
-    document.getElementById("shareModal").classList.remove("hidden");
+    const modal = document.getElementById("shareModal");
+
+    modal.classList.remove("hidden");
+
+    vibrate();
 }
 
 /* بستن مودال */
@@ -314,19 +326,17 @@ function closeShareModal() {
     document.getElementById("shareModal").classList.add("hidden");
 }
 
-/* تلگرام */
+/* لینک‌ها */
 function openTelegram() {
     const url = `https://t.me/share/url?text=${encodeURIComponent(currentMessage)}`;
     window.open(url, "_blank");
 }
 
-/* بله */
 function openBale() {
     const url = `https://ble.ir/dellcake_pv?text=${encodeURIComponent(currentMessage)}`;
     window.open(url, "_blank");
 }
 
-/* پیامک */
 function openSMS() {
     const phone = "09102768171";
     const url = `sms:${phone}?body=${encodeURIComponent(currentMessage)}`;
@@ -336,16 +346,13 @@ function openSMS() {
 /* events */
 document.addEventListener("DOMContentLoaded", () => {
 
-    document.getElementById("closeShare")
-        ?.addEventListener("click", closeShareModal);
+    document.getElementById("closeShare")?.addEventListener("click", closeShareModal);
 
-    document.getElementById("shareTelegram")
-        ?.addEventListener("click", openTelegram);
+    document.getElementById("shareTelegram")?.addEventListener("click", openTelegram);
+    document.getElementById("shareBale")?.addEventListener("click", openBale);
+    document.getElementById("shareSMS")?.addEventListener("click", openSMS);
 
-    document.getElementById("shareBale")
-        ?.addEventListener("click", openBale);
-
-    document.getElementById("shareSMS")
-        ?.addEventListener("click", openSMS);
+    /* بستن با کلیک روی بک‌دراپ */
+    document.querySelector(".share-backdrop")?.addEventListener("click", closeShareModal);
 
 });
