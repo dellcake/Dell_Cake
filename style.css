@@ -1053,78 +1053,7 @@ transform:translateY(0);
 }
 
 }
-/* Upload Box */
 
-.upload-box{
-
-margin-top:10px;
-
-}
-
-.upload-label{
-
-display:flex;
-
-flex-direction:column;
-
-align-items:center;
-
-justify-content:center;
-
-gap:10px;
-
-padding:25px;
-
-border:2px dashed #f7a7c8;
-
-border-radius:20px;
-
-background:linear-gradient(
-135deg,
-#fff,
-#fff6fa
-);
-
-cursor:pointer;
-
-transition:.3s;
-
-}
-
-.upload-label:hover{
-
-transform:translateY(-3px);
-
-border-color:#f01873;
-
-box-shadow:
-0 8px 25px rgba(240,24,115,.12);
-
-}
-
-.upload-label i{
-
-font-size:34px;
-
-color:#f01873;
-
-}
-
-.upload-label span{
-
-color:#f01873;
-
-font-weight:700;
-
-font-size:15px;
-
-}
-
-.upload-label input{
-
-display:none;
-
-}
 .success-message{
 
 display:none;
