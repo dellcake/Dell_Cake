@@ -175,7 +175,7 @@ function getValue(id) {
 
 }
 
-async function shareOrder() {
+function shareOrder()
 
     const name = getValue("customerName");
     const phone = getValue("customerPhone");
@@ -279,30 +279,6 @@ async function shareOrder() {
         message += `${desc}\n`;
     }
 
-    /* ======================================================
-       🧁 فقط این بخش جدید اضافه شده (PDF)
-    ====================================================== */
-
-    try {
-
-        const pdfBytes = await generateSimpleInvoicePDF({
-            name,
-            phone,
-            type: typeMap[type] || type,
-            weight,
-            date,
-            time,
-            desc
-        });
-
-        downloadPDF(pdfBytes);
-
-    } catch (err) {
-        console.log("PDF error:", err);
-    }
-
-    /* ====================================================== */
-
     const baleUrl =
         `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
 
@@ -323,63 +299,4 @@ async function shareOrder() {
         window.open(baleUrl, "_blank");
 
     }
-}
-
-async function generateInvoicePDF(data) {
-
-    const pdfDoc = await PDFLib.PDFDocument.create();
-    const page = pdfDoc.addPage([595, 842]); // A4
-
-    const { width, height } = page.getSize();
-
-    // عنوان
-    page.drawText("پیش‌فاکتور دل‌کیک 💗", {
-        x: 180,
-        y: height - 60,
-        size: 20,
-        color: PDFLib.rgb(0.95, 0.1, 0.45),
-    });
-
-    let y = height - 120;
-
-    function addLine(text) {
-        page.drawText(text, {
-            x: 50,
-            y: y,
-            size: 12,
-            color: PDFLib.rgb(0.2, 0.2, 0.2),
-        });
-        y -= 22;
-    }
-
-    addLine(`نام: ${data.name}`);
-    addLine(`شماره: ${data.phone}`);
-    addLine(`نوع کیک: ${data.type}`);
-    addLine(`وزن: ${data.weight || "-"}`);
-    addLine(`تاریخ: ${data.date || "-"}`);
-    addLine(`ساعت: ${data.time || "-"}`);
-
-    addLine("────────────");
-
-    if (data.desc) {
-        addLine("توضیحات:");
-        addLine(data.desc);
-    }
-
-    const pdfBytes = await pdfDoc.save();
-    return pdfBytes;
-}
-
-function downloadPDF(bytes) {
-    const blob = new Blob([bytes], { type: "application/pdf" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "dellcake-invoice.pdf";
-    a.click();
-
-    URL.revokeObjectURL(url);
-
-    return blob;
 }
