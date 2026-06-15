@@ -324,7 +324,6 @@ async function shareOrder() {
 
     }
 }
-import { PDFDocument, rgb } from "pdf-lib";
 
 async function generateInvoicePDF(data) {
 
