@@ -1,6 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
+       جلوگیری از اجرای دوباره
+    ========================= */
+    if (window.__DELCAKE_INIT__) return;
+    window.__DELCAKE_INIT__ = true;
+
+    /* =========================
        منوی کناری
     ========================= */
     const menuBtn = document.querySelector(".menu-btn");
@@ -20,26 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       انیمیشن صفحه
+       نمایش فیلدهای کیک (FIXED)
     ========================= */
-    const animate = (id, delay) => {
-        const el = document.getElementById(id);
-        if (!el) return;
 
-        setTimeout(() => {
-            el.classList.add("show");
-            el.classList.remove("hidden");
-        }, delay);
-    };
-
-    animate("introBox", 500);
-    animate("contactText", 1000);
-    animate("buttons", 1500);
-    animate("gallerySection", 2000);
-
-    /* =========================
-       نمایش فیلدهای کیک
-    ========================= */
     const cakeType = document.getElementById("cakeType");
 
     const sections = {
@@ -50,65 +39,62 @@ document.addEventListener("DOMContentLoaded", () => {
         custom: "customCakeFields"
     };
 
-    function hideAllCakeSections() {
+    function hideAll() {
         Object.values(sections).forEach(id => {
             const el = document.getElementById(id);
             if (el) el.style.display = "none";
         });
     }
 
-    function showSelectedSection(value) {
+    function showSelected(value) {
         const el = document.getElementById(sections[value]);
         if (el) el.style.display = "block";
     }
 
     if (cakeType) {
         cakeType.addEventListener("change", (e) => {
-            hideAllCakeSections();
-            showSelectedSection(e.target.value);
+            hideAll();
+            showSelected(e.target.value);
         });
     }
 
     /* =========================
-       تقویم شمسی (SAFE INIT)
+       تقویم شمسی (FIXED + SAFE)
     ========================= */
 
     function initCalendar() {
-        try {
-            if (window.jQuery && $.fn.persianDatepicker) {
-                const el = $("#deliveryDate");
 
-                if (el.length) {
-                    el.persianDatepicker({
-                        format: "YYYY/MM/DD",
-                        initialValue: false,
-                        autoClose: true,
-                        calendar: {
-                            persian: { locale: "fa" }
-                        },
-                        toolbox: {
-                            calendarSwitch: { enabled: false }
-                        }
-                    });
+        if (!window.jQuery) return;
+        if (!$.fn || !$.fn.persianDatepicker) return;
+
+        const $el = $("#deliveryDate");
+        if (!$el.length) return;
+
+        try {
+            $el.persianDatepicker({
+                format: "YYYY/MM/DD",
+                initialValue: false,
+                autoClose: true,
+                calendar: {
+                    persian: { locale: "fa" }
                 }
+            });
+
+            const btn = document.getElementById("calendarBtn");
+
+            if (btn) {
+                btn.addEventListener("click", () => {
+                    $el.focus();
+                    const picker = $el.data("datepicker");
+                    if (picker) picker.show();
+                });
             }
+
         } catch (err) {
-            console.log("Calendar init failed:", err);
+            console.error("Datepicker error:", err);
         }
     }
 
     initCalendar();
-
-    const calendarBtn = document.getElementById("calendarBtn");
-    const deliveryDate = document.getElementById("deliveryDate");
-
-    if (calendarBtn && deliveryDate) {
-        calendarBtn.addEventListener("click", () => {
-            deliveryDate.focus();
-
-            const picker = $(deliveryDate).data("datepicker");
-            if (picker) picker.show();
-        });
-    }
 
 });
