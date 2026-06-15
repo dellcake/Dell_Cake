@@ -186,11 +186,36 @@ function shareOrder() {
 ${desc}
 `;
 
-    const baleUrl = `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
+const baleUrl =
+    `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
 
-    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        window.location.href = baleUrl;
-    } else {
-        window.open(baleUrl, "_blank");
-    }
+/* =========================
+   Mobile Share API
+========================= */
+
+if (navigator.share) {
+
+    navigator.share({
+        title: "سفارش دل‌کیک",
+        text: message
+    })
+    .catch(err => {
+        console.log("Share cancelled:", err);
+    });
+
+} else {
+
+    /* =========================
+       Fallback
+    ========================= */
+
+    navigator.clipboard.writeText(message)
+        .catch(() => {});
+
+    alert(
+        "متن سفارش کپی شد 💗\nپس از باز شدن پیام‌رسان آن را ارسال کنید."
+    );
+
+    window.open(baleUrl, "_blank");
+
 }
