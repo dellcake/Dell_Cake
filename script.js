@@ -175,7 +175,7 @@ function getValue(id) {
 
 }
 
-function shareOrder() {
+async function shareOrder() {
 
     const name = getValue("customerName");
     const phone = getValue("customerPhone");
@@ -187,10 +187,8 @@ function shareOrder() {
     const desc = getValue("orderDescription");
 
     if (!name || !phone || !type) {
-
         alert("لطفاً نام، شماره تماس و نوع کیک را تکمیل کنید 💗");
         return;
-
     }
 
     const typeMap = {
@@ -271,25 +269,39 @@ function shareOrder() {
     message += "\n🚚 اطلاعات تحویل\n";
     message += "──────────────\n";
 
-    if (weight) {
-        message += `⚖️ وزن: ${weight} کیلوگرم\n`;
-    }
-
-    if (date) {
-        message += `📅 تاریخ تحویل: ${date}\n`;
-    }
-
-    if (time) {
-        message += `⏰ ساعت تحویل: ${time}\n`;
-    }
+    if (weight) message += `⚖️ وزن: ${weight} کیلوگرم\n`;
+    if (date) message += `📅 تاریخ تحویل: ${date}\n`;
+    if (time) message += `⏰ ساعت تحویل: ${time}\n`;
 
     if (desc) {
-
         message += "\n📝 توضیحات سفارش\n";
         message += "──────────────\n";
         message += `${desc}\n`;
-
     }
+
+    /* ======================================================
+       🧁 فقط این بخش جدید اضافه شده (PDF)
+    ====================================================== */
+
+    try {
+
+        const pdfBytes = await generateSimpleInvoicePDF({
+            name,
+            phone,
+            type: typeMap[type] || type,
+            weight,
+            date,
+            time,
+            desc
+        });
+
+        downloadPDF(pdfBytes);
+
+    } catch (err) {
+        console.log("PDF error:", err);
+    }
+
+    /* ====================================================== */
 
     const baleUrl =
         `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
@@ -311,8 +323,7 @@ function shareOrder() {
         window.open(baleUrl, "_blank");
 
     }
-
-        }
+}
 import { PDFDocument, rgb } from "pdf-lib";
 
 async function generateInvoicePDF(data) {
