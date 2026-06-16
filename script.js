@@ -3,14 +3,14 @@ document.addEventListener("DOMContentLoaded", () => {
     /* =========================
        SAFE QUERY HELPER
     ========================= */
-    const $ = (id) => document.getElementById(id);
-
+const getEl = (id) => document.getElementById(id);
+    
     /* =========================
        MENU
     ========================= */
     const menuBtn = document.querySelector(".menu-btn");
-    const sideMenu = $("sideMenu");
-    const overlay = $("menuOverlay");
+    const sideMenu = getEl("sideMenu");
+    const overlay = getEl("menuOverlay");
 
     if (menuBtn && sideMenu && overlay) {
         menuBtn.addEventListener("click", () => {
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /* =========================
        CAKE TYPE SWITCH (FIXED)
     ========================= */
-    const cakeType = $("cakeType");
+    const cakeType = getEl("cakeType");
 
     if (cakeType) {
         const map = {
@@ -53,32 +53,34 @@ document.addEventListener("DOMContentLoaded", () => {
     /* =========================
        CALENDAR FIX (SAFE INIT)
     ========================= */
-    const deliveryDate = $("deliveryDate");
-    const calendarBtn = $("calendarBtn");
+const deliveryDate = getEl("deliveryDate");
+const calendarBtn = getEl("calendarBtn");
 
-    if (window.jQuery && deliveryDate && $.fn.persianDatepicker) {
+if (
+    window.jQuery &&
+    window.jQuery.fn &&
+    window.jQuery.fn.persianDatepicker &&
+    deliveryDate
+) {
 
-        const $input = window.jQuery(deliveryDate);
+    const picker = window.jQuery(deliveryDate).persianDatepicker({
+        format: "YYYY/MM/DD",
+        initialValue: false,
+        autoClose: true
+    });
 
-        $input.persianDatepicker({
-            format: "YYYY/MM/DD",
-            autoClose: true,
-            initialValue: false
+    if (calendarBtn) {
+
+        calendarBtn.addEventListener("click", () => {
+
+            deliveryDate.removeAttribute("readonly");
+            deliveryDate.focus();
+
         });
 
-        if (calendarBtn) {
-            calendarBtn.addEventListener("click", () => {
-                deliveryDate.focus();
-
-                const picker = $input.data("datepicker");
-
-                // هیچ reliance به show() نداریم (نسخه‌ها فرق دارند)
-                if (picker && picker.open) {
-                    picker.open();
-                }
-            });
-        }
     }
+
+}
 
     /* =========================
        FORM SUBMIT
