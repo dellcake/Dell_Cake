@@ -350,3 +350,11 @@ document.addEventListener("DOMContentLoaded", () => {
         ?.addEventListener("click", openSMS);
 
 });
+
+function downloadInvoicePDF(message) {
+    if (window.generateInvoicePDF) {
+        window.generateInvoicePDF(message);
+    } else {
+        console.warn("PDF module not loaded");
+    }
+}
