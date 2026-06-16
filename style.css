@@ -1271,32 +1271,27 @@ animation:fadeIn .4s ease;
 }
 
 .share-btn{
-    width:100%;
+.share-btn{
     display:flex;
     align-items:center;
     gap:14px;
 
-    padding:16px;
+    width:100%;
+    padding:16px 18px;
 
     border:none;
     border-radius:18px;
 
-    background:#fff;
-
-    margin:10px 0;
+    font-size:16px;
+    font-weight:700;
 
     cursor:pointer;
-
-    box-shadow:
-    0 8px 25px rgba(0,0,0,.06);
-
-    transition:.25s;
 }
 
 .share-btn:hover{
     transform:translateY(-2px);
 }
-
+    
 .share-btn i{
     font-size:26px;
 }
@@ -1304,6 +1299,7 @@ animation:fadeIn .4s ease;
 .share-btn img{
     width:26px;
     height:26px;
+    object-fit:contain;
 }
 
 /* تلگرام */
