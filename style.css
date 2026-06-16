@@ -1315,6 +1315,13 @@ animation:fadeIn .4s ease;
 
 .share-btn.telegram{
     border-right:4px solid #27A5E7;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ffffff,
+        #f2f9ff
+    );
 }
 
 .share-btn.telegram i{
@@ -1325,16 +1332,37 @@ animation:fadeIn .4s ease;
 
 .share-btn.bale{
     border-right:4px solid #29c26a;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ffffff,
+        #f5fff8
+    );
 }
 
 .share-btn.bale i{
     color:#29c26a;
 }
 
+.bale-icon{
+    width:28px;
+    height:28px;
+    object-fit:contain;
+    flex-shrink:0;
+}
+
 /* پیامک */
 
 .share-btn.sms{
     border-right:4px solid #ff6cab;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ffffff,
+        #fff4f8
+    );
 }
 
 .share-btn.sms i{
