@@ -1270,11 +1270,6 @@ animation:fadeIn .4s ease;
     font-weight:700;
 }
 
-.share-info small{
-    font-size:12px;
-    color:#888;
-}
-
 .share-btn{
     width:100%;
     display:flex;
