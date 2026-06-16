@@ -1372,6 +1372,48 @@ animation:fadeIn .4s ease;
     color:#ff6cab;
 }
 
+.share-close{
+    width:100%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    margin-top:16px;
+    padding:14px;
+
+    border:none;
+    border-radius:16px;
+
+    background:#ffffff;
+
+    color:#666;
+
+    font-size:15px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    box-shadow:
+    0 4px 14px rgba(0,0,0,.06);
+
+    transition:.25s;
+}
+
+.share-close i{
+    font-size:16px;
+}
+
+.share-close:hover{
+    background:#fff5f8;
+    color:#f01873;
+}
+
+.share-close:active{
+    transform:scale(.97);
+}
+
 .share-title{
     text-align:center;
     color:#f01873;
