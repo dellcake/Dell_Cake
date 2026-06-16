@@ -1259,36 +1259,84 @@ animation:fadeIn .4s ease;
     color: #555;
 }
 
-.share-btn {
-    width: 100%;
-    padding: 12px;
-    margin: 6px 0;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    cursor: pointer;
-    font-weight: bold;
+.share-info{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
 }
 
-.telegram {
-    background: #e6f2ff;
-    color: #0077cc;
+.share-info strong{
+    font-size:15px;
+    font-weight:700;
 }
 
-.bale {
-    background: #ffe6f0;
-    color: #d1006f;
+.share-info small{
+    font-size:12px;
+    color:#888;
 }
 
-.sms {
-    background: #f2f2f2;
-    color: #333;
+.share-btn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:14px;
+
+    padding:16px;
+
+    border:none;
+    border-radius:18px;
+
+    background:#fff;
+
+    margin:10px 0;
+
+    cursor:pointer;
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,.06);
+
+    transition:.25s;
 }
 
-.share-close {
-    margin-top: 10px;
-    background: transparent;
-    border: none;
-    color: #999;
-    cursor: pointer;
+.share-btn:hover{
+    transform:translateY(-2px);
+}
+
+.share-btn i{
+    font-size:26px;
+}
+
+.share-btn img{
+    width:26px;
+    height:26px;
+}
+
+/* تلگرام */
+
+.share-btn.telegram{
+    border-right:4px solid #27A5E7;
+}
+
+.share-btn.telegram i{
+    color:#27A5E7;
+}
+
+/* بله */
+
+.share-btn.bale{
+    border-right:4px solid #29c26a;
+}
+
+.share-btn.bale i{
+    color:#29c26a;
+}
+
+/* پیامک */
+
+.share-btn.sms{
+    border-right:4px solid #ff6cab;
+}
+
+.share-btn.sms i{
+    color:#ff6cab;
 }
