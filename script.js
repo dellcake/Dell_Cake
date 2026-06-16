@@ -1,5 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    const orderForm = document.getElementById("orderForm");
+
+    if (orderForm) {
+        orderForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            alert("submit فعال شد"); // تست
+            shareOrder();
+        });
+    }
+
+});
     /* =========================
        منوی کناری
     ========================= */
@@ -155,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
    ثبت سفارش
 ========================= */
 
-const orderForm = document.getElementById("orderForm");
+//const orderForm = document.getElementById("orderForm");
 
 if (orderForm) {
 
