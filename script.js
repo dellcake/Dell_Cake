@@ -177,6 +177,8 @@ function getValue(id) {
 
 function shareOrder() {
 
+alert("shareOrder اجرا شد");
+    
     const name = getValue("customerName");
     const phone = getValue("customerPhone");
     const type = getValue("cakeType");
