@@ -1323,6 +1323,14 @@ animation:fadeIn .4s ease;
     color:#27A5E7;
 }
 
+.telegram-icon{
+    width:28px;
+    height:28px;
+    object-fit:contain;
+    flex-shrink:0;
+}
+
+
 /* بله */
 
 .share-btn.bale{
