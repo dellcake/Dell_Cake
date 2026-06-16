@@ -1324,8 +1324,8 @@ animation:fadeIn .4s ease;
 }
 
 .telegram-icon{
-    width:28px;
-    height:28px;
+    width:30px;
+    height:30px;
     object-fit:contain;
     flex-shrink:0;
 }
