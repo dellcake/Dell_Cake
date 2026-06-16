@@ -294,7 +294,10 @@ function shareOrder() {
     const baleUrl =
         `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
 
-        openShareModal(message);
+        downloadInvoicePDF(msg);
+setTimeout(() => {
+    openShareModal(msg);
+}, 800);
 
         }
 
