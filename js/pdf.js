@@ -1,32 +1,55 @@
-window.createOrderPDF = async function (data) {
-    try {
-        if (!window.pdfLib && !window.PDFLib) return;
+function generateInvoicePDF(data) {
 
-        const pdfDoc = await PDFLib.PDFDocument.create();
-        const page = pdfDoc.addPage([595, 842]);
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF("p", "mm", "a4");
 
-        page.drawText("سفارش دل‌کیک 💗", {
-            x: 200,
-            y: 800,
-            size: 18,
-        });
+    const pageWidth = 210;
+    const pageHeight = 297;
 
-        page.drawText(`نام: ${data.name}`, { x: 50, y: 750, size: 12 });
-        page.drawText(`شماره: ${data.phone}`, { x: 50, y: 730, size: 12 });
+    // بک‌گراند فاکتور
+    const bg = "/Dell_Cake/images/invoice-bg.jpg";
+    const logo = "/Dell_Cake/images/logo/sweet-.png";
 
-        const bytes = await pdfDoc.save();
+    doc.addImage(bg, "JPG", 0, 0, pageWidth, pageHeight);
 
-        const blob = new Blob([bytes], { type: "application/pdf" });
-        const url = URL.createObjectURL(blob);
+    // لوگو
+    doc.addImage(logo, "PNG", 150, 10, 40, 40);
 
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "dellcake.pdf";
-        a.click();
+    // تنظیم فونت پیش‌فرض (پیشنهاد: بعداً فونت فارسی اضافه کنیم)
+    doc.setFont("helvetica", "normal");
 
-        URL.revokeObjectURL(url);
+    // عنوان
+    doc.setFontSize(16);
+    doc.text("پیش‌فاکتور دل‌کیک", 105, 25, { align: "center" });
 
-    } catch (err) {
-        console.error("PDF error:", err);
-    }
-};
+    // اطلاعات مشتری
+    doc.setFontSize(12);
+
+    let y = 60;
+
+    const line = (label, value) => {
+        if (!value) return;
+        doc.text(`${label}: ${value}`, 190, y, { align: "right" });
+        y += 10;
+    };
+
+    line("نام مشتری", data.name);
+    line("شماره تماس", data.phone);
+    line("نوع کیک", data.type);
+    line("وزن", data.weight + " کیلوگرم");
+    line("تاریخ تحویل", data.date);
+    line("ساعت تحویل", data.time);
+
+    y += 10;
+
+    doc.text("جزئیات سفارش:", 190, y, { align: "right" });
+    y += 10;
+
+    (data.details || []).forEach(item => {
+        doc.text(`• ${item}`, 185, y, { align: "right" });
+        y += 8;
+    });
+
+    // دانلود فایل
+    doc.save(`DellCake-Invoice-${data.name}.pdf`);
+}
