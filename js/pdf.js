@@ -7,8 +7,8 @@ function generateInvoicePDF(data) {
     const pageHeight = 297;
 
     // بک‌گراند فاکتور
-    const bg = "/Dell_Cake/images/invoice-bg.jpg";
-    const logo = "/Dell_Cake/images/logo/sweet-.png";
+    const bg = "/images/pdf/invoice-bg.jpg";
+    const logo = "/images/logo/sweet-.png";
 
     doc.addImage(bg, "JPG", 0, 0, pageWidth, pageHeight);
 
