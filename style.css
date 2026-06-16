@@ -1382,3 +1382,14 @@ animation:fadeIn .4s ease;
     margin-top:8px;
     margin-bottom:18px;
 }
+.share-logo{
+    width:70px;
+    height:70px;
+    display:block;
+    margin:0 auto 12px;
+
+    border-radius:50%;
+
+    box-shadow:
+    0 6px 18px rgba(240,24,115,.18);
+}
