@@ -1340,3 +1340,17 @@ animation:fadeIn .4s ease;
 .share-btn.sms i{
     color:#ff6cab;
 }
+
+.share-title{
+    text-align:center;
+    color:#f01873;
+    font-size:22px;
+    font-weight:800;
+}
+
+.share-subtitle{
+    text-align:center;
+    color:#777;
+    margin-top:8px;
+    margin-bottom:18px;
+}
