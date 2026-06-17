@@ -1,4 +1,4 @@
-
+document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
        انیمیشن صفحه اصلی
