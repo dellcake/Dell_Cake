@@ -1,6 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
-
-    /* =========================
+   /* =========================
        منوی کناری
     ========================= */
 
@@ -20,4 +18,4 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("active");
         });
 
-    }
+    
