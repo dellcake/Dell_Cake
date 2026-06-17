@@ -1175,45 +1175,26 @@ animation:fadeIn .4s ease;
 }
 
 .photo-notice{
-    display:flex;
-    align-items:flex-start;
-    gap:10px;
-
     margin:20px 0;
-
-    padding:14px 16px;
-
-    background:#fff7fb;
-
-    border:1px solid #ffd1e6;
-
-    border-right:4px solid #ff6cab;
-
-    border-radius:14px;
-
-    color:#7a4560;
-
-    font-size:14px;
-
-    line-height:1.9;
-}
-
-.photo-notice i{
-    color:#ff6cab;
-    margin-top:4px;
-    flex-shrink:0;
 }
 
 .sample-highlight{
     display:block;
-    margin-top:10px;
-    padding:8px 12px;
-    background:#fff0f6;
-    border-radius:10px;
-    color:#e91e63;
-    font-weight:800;
-}
 
+    padding:12px 14px;
+
+    background:#fff0f6;
+
+    border:1px dashed #ff9fc5;
+
+    border-radius:12px;
+
+    color:#e91e63;
+
+    font-weight:700;
+
+    line-height:2;
+}
 /* =========================
    Share Modal (DellCake Style)
 ========================= */
