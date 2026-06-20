@@ -43,3 +43,20 @@ function closeAcademyPopup() {
     }
 
 }
+window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+        const popup =
+            document.getElementById("academyPopup");
+
+        console.log("popup:", popup);
+
+        console.log(
+            "display:",
+            getComputedStyle(popup).display
+        );
+
+    }, 1000);
+
+});
