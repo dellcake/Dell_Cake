@@ -21,7 +21,10 @@ rel="stylesheet">
 </head>
 
 <body>
-    
+
+ <div id="header-container"></div>
+ <div id="side-menu-container"></div>
+ 
 <div class="background-hearts"></div>
 
 <div class="container">
@@ -183,6 +186,20 @@ rel="stylesheet">
     <script src="js/menu.js"></script>
     <script src="js/homepage-animation.js"></script>
     <script src="js/academy-popup.js"></script>
-    
+
+<script src="js/load-components.js"></script>
+
+<script>
+loadComponent(
+    "header-container",
+    "components/header.html"
+);
+ loadComponent(
+    "side-menu-container",
+    "components/side-menu.html"
+);
+ 
+</script>
+ 
 </body>
 </html>
