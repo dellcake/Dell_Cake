@@ -1,0 +1,39 @@
+.order-tabs{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.tab-btn{
+    padding:10px 16px;
+    border:none;
+    border-radius:14px;
+
+    background:#fff;
+    color:#f01873;
+
+    font-weight:700;
+    cursor:pointer;
+
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+
+    transition:.25s;
+}
+
+.tab-btn:hover{
+    transform:translateY(-2px);
+}
+
+.tab-btn.active{
+    background:linear-gradient(135deg,#ff6cab,#ff8ec7);
+    color:#fff;
+}
+
+.tab-content{
+    display:none;
+}
+
+.tab-content.active{
+    display:block;
+}
