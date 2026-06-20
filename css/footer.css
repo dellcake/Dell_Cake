@@ -1,95 +1,68 @@
 .dk-footer{
     margin-top:80px;
-    padding:25px 18px;
-    background:#f6f7fb;
-    border-top:1px solid #eee;
-    font-family: Vazirmatn;
-}
-
-/* کارت‌ها */
-.dk-footer-card{
+    padding:30px 15px;
     background:#fff;
-    border-radius:18px;
-    padding:18px;
-    margin-bottom:15px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.05);
+    border-top:1px solid #eee;
 }
 
-/* برند */
+.dk-footer-grid{
+    display:grid;
+    gap:15px;
+}
+
+.dk-footer-card{
+    background:#fafafa;
+    border-radius:20px;
+    padding:20px;
+}
+
 .dk-brand{
     text-align:center;
 }
 
 .dk-footer-logo{
-    width:70px;
-    margin-bottom:10px;
+    width:80px;
+    display:block;
+    margin:0 auto 10px;
 }
 
 .dk-footer-card h3{
     color:#f01873;
-    margin:10px 0;
+    margin-bottom:10px;
 }
 
-.dk-footer-card p{
-    color:#777;
-    font-size:13px;
-    line-height:2;
-}
-
-/* تیتر سکشن‌ها */
 .dk-footer-card h4{
-    font-size:14px;
-    color:#333;
     margin-bottom:12px;
-    font-weight:800;
+    color:#333;
 }
 
-/* لینک‌ها */
 .dk-footer-card a{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:8px 0;
+    display:block;
     text-decoration:none;
     color:#555;
-    font-size:14px;
-    transition:.2s;
+    padding:8px 0;
 }
 
 .dk-footer-card a:hover{
     color:#f01873;
 }
 
-/* سوشال */
-.dk-footer-social{
-    display:flex;
-    justify-content:center;
-    gap:12px;
-    margin:15px 0;
-}
-
-.dk-footer-social a{
-    width:38px;
-    height:38px;
-    background:#fff;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow:0 4px 12px rgba(0,0,0,0.08);
-    color:#555;
-    transition:.2s;
-}
-
-.dk-footer-social a:hover{
-    color:#f01873;
-    transform:translateY(-2px);
-}
-
-/* پایین */
 .dk-footer-bottom{
     text-align:center;
-    font-size:12px;
+    margin-top:20px;
+    padding-top:15px;
+    border-top:1px solid #eee;
     color:#888;
-    padding:10px 0;
+    font-size:13px;
+}
+
+@media(min-width:768px){
+
+    .dk-footer-grid{
+
+        grid-template-columns:
+        repeat(3,1fr);
+
+    }
+
 }
