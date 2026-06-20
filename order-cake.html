@@ -124,6 +124,20 @@ href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-dat
 
 </section>
 
+<div class="order-tabs">
+
+    <button class="tab-btn active" data-tab="cake">
+        🎂 سفارش کیک
+    </button>
+
+    <button class="tab-btn" data-tab="cookies">
+        🍪 سفارش شیرینی
+    </button>
+
+</div>
+
+<div class="tab-content active" id="cakeTab">
+    
 <section class="order-form">
 
 <form id="orderForm">
@@ -552,6 +566,52 @@ class="order-submit-btn">
 </section>
 
 </div>
+
+   <div class="tab-content" id="cookiesTab">
+
+    <section class="order-form">
+
+        <form id="cookieForm">
+
+            <div class="form-group">
+                <label>نام و نام خانوادگی</label>
+                <input type="text" id="cookieName">
+            </div>
+
+            <div class="form-group">
+                <label>شماره تماس</label>
+                <input type="tel" id="cookiePhone">
+            </div>
+
+            <div class="form-group">
+                <label>نوع شیرینی</label>
+                <select id="cookieType">
+                    <option>شیرینی خشک</option>
+                    <option>شیرینی تر</option>
+                    <option>کوکی</option>
+                    <option>ماکارون</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>طعم‌ها</label>
+                <input id="cookieFlavors">
+            </div>
+
+            <div class="form-group">
+                <label>توضیحات</label>
+                <textarea id="cookieDesc"></textarea>
+            </div>
+
+            <button class="order-submit-btn" type="submit">
+                ثبت سفارش شیرینی 🍪
+            </button>
+
+        </form>
+
+    </section>
+
+</div> 
 
 <div id="menuOverlay" class="menu-overlay"></div>
     
