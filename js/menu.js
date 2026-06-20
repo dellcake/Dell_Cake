@@ -1,14 +1,8 @@
    /* =========================
        منوی کناری
     ========================= */
-document.addEventListener(
-    "componentsLoaded",
-    () => {
 
-        const menuBtn =
-            document.querySelector(".menu-btn");
-
- const menuBtn = document.querySelector(".menu-btn");
+    const menuBtn = document.querySelector(".menu-btn");
     const sideMenu = document.getElementById("sideMenu");
     const overlay = document.getElementById("menuOverlay");
 
@@ -25,7 +19,3 @@ document.addEventListener(
         });
 
     }
-
-    }
-);
-   
