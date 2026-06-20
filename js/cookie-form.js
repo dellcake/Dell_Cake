@@ -8,29 +8,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
         e.preventDefault();
 
-        const name = document.getElementById("cookieName").value.trim();
-        const phone = document.getElementById("cookiePhone").value.trim();
-        const type = document.getElementById("cookieType").value;
-        const flavors = document.getElementById("cookieFlavors").value.trim();
-        const desc = document.getElementById("cookieDesc").value.trim();
+        const name =
+            document.getElementById("cookieName")?.value.trim();
+
+        const phone =
+            document.getElementById("cookiePhone")?.value.trim();
+
+        const type =
+            document.getElementById("cookieType")?.value;
+
+        const flavors =
+            document.getElementById("cookieFlavors")?.value.trim();
+
+        const desc =
+            document.getElementById("cookieDesc")?.value.trim();
 
         if (!name || !phone || !type) {
-            alert("لطفاً اطلاعات ضروری را کامل کنید 💗");
+
+            alert("لطفاً نام، شماره تماس و نوع شیرینی را تکمیل کنید 💗");
             return;
+
         }
 
         let message = "💗 سفارش جدید شیرینی دل‌کیک\n\n";
 
         message += `👤 نام: ${name}\n`;
-        message += `📞 شماره: ${phone}\n`;
-        message += `🍪 نوع: ${type}\n`;
+        message += `📞 شماره تماس: ${phone}\n`;
+        message += `🍪 نوع شیرینی: ${type}\n`;
 
-        if (flavors) message += `🍫 طعم‌ها: ${flavors}\n`;
-        if (desc) message += `📝 توضیحات: ${desc}\n`;
+        if (flavors) {
+            message += `🍫 طعم‌ها: ${flavors}\n`;
+        }
 
-        const url = `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
+        if (desc) {
+            message += `📝 توضیحات: ${desc}\n`;
+        }
 
-        window.open(url, "_blank");
+        // استفاده از مودال فعلی سایت
+        openShareModal(message);
 
     });
 
