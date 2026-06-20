@@ -1,7 +1,45 @@
+document.addEventListener("DOMContentLoaded", async () => {
+
+    try {
+
+        const response = await fetch("components/academy-popup.html");
+
+        const html = await response.text();
+
+        document.body.insertAdjacentHTML(
+            "beforeend",
+            html
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Popup load error:",
+            error
+        );
+
+    }
+
+});
+
 function openAcademyPopup() {
-    document.getElementById("academyPopup").style.display = "flex";
+
+    const popup =
+        document.getElementById("academyPopup");
+
+    if (popup) {
+        popup.style.display = "flex";
+    }
+
 }
 
 function closeAcademyPopup() {
-    document.getElementById("academyPopup").style.display = "none";
+
+    const popup =
+        document.getElementById("academyPopup");
+
+    if (popup) {
+        popup.style.display = "none";
+    }
+
 }
