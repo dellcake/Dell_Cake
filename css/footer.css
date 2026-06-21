@@ -7,7 +7,14 @@
 
 .dk-footer-grid{
     display:grid;
+    grid-template-columns:1fr;
     gap:15px;
+}
+
+@media (min-width:768px){
+    .dk-footer-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
 }
 
 .dk-footer-card{
@@ -55,14 +62,5 @@
     color:#888;
     font-size:13px;
 }
-
-@media(min-width:768px){
-
-    .dk-footer-grid{
-
-        grid-template-columns:
-        repeat(3,1fr);
-
-    }
 
 }
