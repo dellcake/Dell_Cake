@@ -1,19 +1,15 @@
 .dk-footer{
 
-    position:relative;
+    background:#fff;
 
-    margin-top:120px;
+    padding:35px 22px 18px;
 
-    background:#ffffff;
-
-    border-radius:40px 40px 0 0;
-
-    padding:0 20px 30px;
+    border:none;
 
     box-shadow:
-    0 -10px 40px rgba(240,24,115,.08);
-}
+    0 -10px 40px rgba(240,24,115,.06);
 
+}
 /* موج */
 
 .footer-wave{
@@ -217,4 +213,28 @@
     color:#888;
 
     font-size:13px;
+}
+.dk-footer-top{
+    position:relative;
+}
+
+.dk-footer-top::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:120px;
+    height:120px;
+
+    background:
+    radial-gradient(
+      rgba(240,24,115,.12),
+      transparent 70%
+    );
+
+    top:-30px;
+    right:-30px;
+
+    border-radius:50%;
 }
