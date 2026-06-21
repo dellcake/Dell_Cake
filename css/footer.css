@@ -103,3 +103,33 @@
     }
 
 }
+.footer-contact{
+    margin-top:30px;
+    padding-top:25px;
+    border-top:1px solid #eee;
+}
+
+.dk-footer .contact-text{
+    margin-bottom:20px;
+}
+
+.dk-footer .buttons{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+    margin-top:0;
+}
+
+.dk-footer .card{
+    margin:0;
+    font-size:16px;
+}
+
+@media(min-width:768px){
+
+    .dk-footer .buttons{
+        grid-template-columns:
+        repeat(2,1fr);
+    }
+
+}
