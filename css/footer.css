@@ -64,3 +64,42 @@
 }
 
 }
+.footer-contact-section{
+    margin-top:30px;
+    padding-top:25px;
+    border-top:1px solid #eee;
+}
+
+.footer-contact-section h4{
+    text-align:center;
+    color:#f01873;
+    margin-bottom:20px;
+    font-size:18px;
+}
+
+.footer-social-cards{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+}
+
+/* ظاهر کارت‌ها فقط داخل فوتر */
+
+.footer-social-cards .card{
+    margin:0;
+    font-size:16px;
+    padding:14px 18px;
+}
+
+.footer-social-cards .social-icon{
+    font-size:26px;
+}
+
+@media(min-width:768px){
+
+    .footer-social-cards{
+        grid-template-columns:
+        repeat(2,1fr);
+    }
+
+}
