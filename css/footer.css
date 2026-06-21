@@ -1,11 +1,39 @@
 .dk-footer{
 
-    margin-top:80px;
-    padding:45px 18px 25px;
+    position:relative;
 
-    background:#fff;
+    margin-top:120px;
 
-    border-top:1px solid #f1d9e3;
+    background:#ffffff;
+
+    border-radius:40px 40px 0 0;
+
+    padding:0 20px 30px;
+
+    box-shadow:
+    0 -10px 40px rgba(240,24,115,.08);
+}
+
+/* موج */
+
+.footer-wave{
+
+    position:absolute;
+
+    top:-90px;
+    left:0;
+
+    width:100%;
+
+    height:90px;
+
+    overflow:hidden;
+}
+
+.footer-wave svg{
+
+    width:100%;
+    height:100%;
 }
 
 /* برند */
@@ -14,23 +42,29 @@
 
     text-align:center;
 
+    padding-top:40px;
+
     margin-bottom:35px;
 }
 
 .dk-footer-logo{
 
-    width:90px;
+    width:95px;
 
     margin-bottom:12px;
+
+    filter:
+    drop-shadow(
+    0 10px 25px rgba(240,24,115,.18));
 }
 
 .dk-footer-brand h2{
 
     color:#f01873;
 
-    margin-bottom:8px;
+    font-size:34px;
 
-    font-size:30px;
+    margin-bottom:10px;
 }
 
 .dk-footer-brand p{
@@ -40,62 +74,54 @@
     line-height:2;
 }
 
-/* گرید */
+/* کارت ها */
 
 .dk-footer-grid{
 
     display:grid;
 
-    grid-template-columns:1fr;
-
     gap:18px;
 }
 
-@media(min-width:768px){
-
-    .dk-footer-grid{
-
-        grid-template-columns:
-        repeat(3,1fr);
-    }
-
-}
-
-/* کارت */
-
 .dk-footer-card{
 
-    background:#fff7fa;
+    background:
+    linear-gradient(
+    135deg,
+    #fff7fa,
+    #ffffff);
 
-    border:1px solid #ffe2ee;
+    border:1px solid #ffe0ec;
 
-    border-radius:24px;
+    border-radius:25px;
 
     padding:22px;
 
     box-shadow:
-    0 8px 25px rgba(240,24,115,.06);
+    0 10px 30px rgba(240,24,115,.05);
+
+    transition:.3s;
+}
+
+.dk-footer-card:hover{
+
+    transform:translateY(-4px);
 }
 
 .dk-footer-card h3{
 
     color:#f01873;
 
-    margin-bottom:18px;
+    margin-bottom:15px;
 
-    font-size:18px;
-}
-
-.dk-footer-card h3 i{
-
-    margin-left:8px;
+    font-size:19px;
 }
 
 .dk-footer-card p{
 
     color:#666;
 
-    line-height:2;
+    line-height:2.1;
 }
 
 .dk-footer-card a{
@@ -120,12 +146,12 @@
     color:#f01873;
 }
 
-/* آیکون بله */
+/* بله */
 
 .footer-bale-icon{
 
-    width:20px;
-    height:20px;
+    width:22px;
+    height:22px;
 }
 
 /* شبکه اجتماعی */
@@ -136,23 +162,21 @@
 
     justify-content:center;
 
-    flex-wrap:wrap;
-
-    gap:14px;
+    gap:15px;
 
     margin-top:30px;
 }
 
 .dk-footer-social a{
 
-    width:52px;
-    height:52px;
+    width:56px;
+    height:56px;
 
     background:#fff7fa;
 
-    border:1px solid #ffd6e6;
+    border:1px solid #ffd7e7;
 
-    border-radius:16px;
+    border-radius:18px;
 
     display:flex;
 
@@ -160,42 +184,43 @@
 
     justify-content:center;
 
-    text-decoration:none;
-
     color:#f01873;
 
-    font-size:22px;
+    font-size:24px;
 
-    transition:.25s;
+    text-decoration:none;
+
+    transition:.3s;
 }
 
 .dk-footer-social a:hover{
 
-    transform:translateY(-4px);
+    transform:
+    translateY(-5px)
+    rotate(5deg);
 
     box-shadow:
-    0 8px 20px rgba(240,24,115,.15);
+    0 10px 25px rgba(240,24,115,.15);
 }
 
 .dk-footer-social img{
 
     width:24px;
-    height:24px;
 }
 
 /* کپی رایت */
 
 .dk-footer-bottom{
 
-    margin-top:30px;
-
-    padding-top:18px;
-
-    border-top:1px solid #f1d9e3;
-
     text-align:center;
 
-    color:#777;
+    margin-top:30px;
+
+    padding-top:20px;
+
+    border-top:1px solid #f3d6e3;
+
+    color:#888;
 
     font-size:13px;
 }
