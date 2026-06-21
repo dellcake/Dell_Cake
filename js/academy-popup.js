@@ -50,6 +50,15 @@ window.addEventListener("load", () => {
         const popup =
             document.getElementById("academyPopup");
 
+        if (!popup) {
+
+            console.warn(
+                "academyPopup not found"
+            );
+
+            return;
+        }
+
         console.log("popup:", popup);
 
         console.log(
