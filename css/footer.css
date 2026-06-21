@@ -1,111 +1,228 @@
+
 .dk-footer{
+
     margin-top:80px;
-    padding:30px 15px;
-    background:#fff;
-    border-top:1px solid #eee;
-}
-
-/* بخش‌های اصلی فوتر */
-
-.dk-footer-grid{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:15px;
-}
-
-@media (min-width:768px){
-
-    .dk-footer-grid{
-        grid-template-columns:repeat(3,1fr);
-    }
-
-}
-
-.dk-footer-card{
-    background:#fafafa;
-    border-radius:20px;
     padding:20px;
+
 }
 
-.dk-brand{
+.dk-footer-wrapper{
+
+    max-width:1200px;
+    margin:auto;
+
+    background:
+    linear-gradient(
+    180deg,
+    #ffffff,
+    #fff7fa
+    );
+
+    border-radius:35px;
+
+    padding:35px 25px;
+
+    box-shadow:
+    0 15px 50px rgba(240,24,115,.08);
+
+    border:1px solid rgba(240,24,115,.08);
+
+}
+
+/* برند */
+
+.dk-footer-brand{
+
     text-align:center;
+    margin-bottom:35px;
+
 }
 
 .dk-footer-logo{
-    width:80px;
-    display:block;
-    margin:0 auto 10px;
+
+    width:95px;
+    height:95px;
+
+    border-radius:50%;
+
+    box-shadow:
+    0 8px 25px rgba(240,24,115,.15);
+
+    margin-bottom:15px;
+
 }
 
-.dk-footer-card h3{
+.dk-footer-brand h2{
+
     color:#f01873;
-    margin-bottom:10px;
-}
-
-.dk-footer-card h4{
-    margin-bottom:12px;
-    color:#333;
-}
-
-.dk-footer-card a{
-    display:block;
-    text-decoration:none;
-    color:#555;
-    padding:8px 0;
-    transition:.2s;
-}
-
-.dk-footer-card a:hover{
-    color:#f01873;
-}
-
-/* راه های ارتباطی */
-
-.footer-contact{
-    margin-top:30px;
-    padding-top:25px;
-    border-top:1px solid #eee;
-}
-
-.dk-footer .contact-text{
-    text-align:center;
-    color:#555;
-    line-height:2;
-    margin-bottom:20px;
-}
-
-.dk-footer .contact-text span{
-    color:#f01873;
+    font-size:34px;
     font-weight:800;
+
+    margin-bottom:10px;
+
 }
 
-.dk-footer .buttons{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:12px;
-    margin-top:0;
+.dk-footer-brand p{
+
+    color:#666;
+    line-height:2;
+
 }
 
-.dk-footer .card{
-    margin:0;
-    font-size:16px;
+/* سکشن ها */
+
+.dk-footer-section{
+
+    background:#fff;
+
+    border-radius:22px;
+
+    padding:20px;
+
+    margin-bottom:15px;
+
+    box-shadow:
+    0 5px 20px rgba(0,0,0,.04);
+
 }
 
-@media (min-width:768px){
+.dk-footer-section h3{
 
-    .dk-footer .buttons{
-        grid-template-columns:repeat(2,1fr);
-    }
+    color:#f01873;
+
+    font-size:18px;
+
+    margin-bottom:15px;
+
+}
+
+.dk-footer-section h3 i{
+
+    margin-left:8px;
+
+}
+
+.dk-footer-section a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    text-decoration:none;
+
+    color:#555;
+
+    padding:12px 0;
+
+    transition:.25s;
+
+}
+
+.dk-footer-section a:hover{
+
+    color:#f01873;
+
+    transform:translateX(-4px);
+
+}
+
+/* سوشال */
+
+.dk-footer-social{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    margin:30px 0;
+
+}
+
+.dk-footer-social a{
+
+    width:55px;
+    height:55px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:#fff;
+
+    border-radius:18px;
+
+    text-decoration:none;
+
+    color:#f01873;
+
+    font-size:22px;
+
+    box-shadow:
+    0 5px 20px rgba(0,0,0,.05);
+
+    transition:.25s;
+
+}
+
+.dk-footer-social a:hover{
+
+    transform:translateY(-4px);
 
 }
 
 /* کپی رایت */
 
 .dk-footer-bottom{
+
     text-align:center;
-    margin-top:25px;
-    padding-top:15px;
-    border-top:1px solid #eee;
-    color:#888;
-    font-size:13px;
+
+    padding:20px;
+
+    border-top:
+    1px solid #eee;
+
+    color:#777;
+
+    font-size:14px;
+
+}
+
+/* دسکتاپ */
+
+@media(min-width:992px){
+
+    .dk-footer-wrapper{
+
+        display:grid;
+
+        grid-template-columns:
+        repeat(3,1fr);
+
+        gap:20px;
+
+    }
+
+    .dk-footer-brand{
+
+        grid-column:1 / -1;
+
+    }
+
+    .dk-footer-social{
+
+        grid-column:1 / -1;
+
+    }
+
+    .dk-footer-bottom{
+
+        grid-column:1 / -1;
+
+    }
+
 }
