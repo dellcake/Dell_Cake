@@ -9,6 +9,7 @@
 <title>قوانین ثبت سفارش | دل‌کیک</title>
 
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/academy-popup.css">
 <link rel="stylesheet" href="css/footer.css">
 <link rel="stylesheet" href="css/order-rules.css">
 
@@ -31,10 +32,13 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         <img src="images/logo/sweet-.png" alt="دل کیک">
     </a>
 
-    <a href="order-cake.html" class="academy-btn">
-        ثبت سفارش
-    </a>
+<a href="#"
+   class="academy-btn"
+   onclick="openAcademyPopup(); return false;">
 
+    ثبت‌نام دوره
+</a>
+    
 </header>
 
 <div id="sideMenu" class="side-menu">
@@ -58,20 +62,41 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         خانه
     </a>
 
+    <a href="#"
+       onclick="openAcademyPopup(); return false;">
+
+          <i class="fas fa-graduation-cap"></i>
+
+    آکادمی دل‌کیک
+
+    </a>
+
+
     <a href="order-cake.html">
         <i class="fas fa-cake-candles"></i>
         سفارش کیک و شیرینی
     </a>
 
-    <a href="order-rules.html">
-        <i class="fas fa-file-contract"></i>
-        قوانین سفارش
-    </a>
+<a href="index.html#gallerySection">
+
+    <i class="fas fa-images"></i>
+
+    نمونه کارها
+
+</a>
 
     <a href="tel:09102768171">
         <i class="fas fa-phone"></i>
         تماس با ما
     </a>
+
+    <a href="#">
+
+    <i class="fas fa-user"></i>
+
+    ورود / عضویت
+
+</a>
 
 </div>
 
@@ -240,6 +265,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 <div id="footer-container"></div>
 
 <script src="js/menu.js"></script>
+<script src="js/academy-popup.js"></script>
 <script src="js/load-components.js"></script>
 
 <script>
