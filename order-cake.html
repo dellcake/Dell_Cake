@@ -753,6 +753,56 @@ class="order-submit-btn">
             </div>
 
             <div class="form-group">
+
+    <label for="cookieDeliveryDate">
+        تاریخ تحویل
+    </label>
+
+    <div class="date-input-box">
+
+        <input
+            type="text"
+            id="cookieDeliveryDate"
+            name="cookieDeliveryDate"
+            placeholder="مثال: ۱۴۰۵/۰۳/۲۵"
+            readonly>
+
+        <i
+            class="fas fa-calendar-alt"
+            id="cookieCalendarBtn">
+        </i>
+
+    </div>
+
+</div>
+
+<div class="form-group">
+
+    <label for="cookieDeliveryTime">
+        ساعت حدودی تحویل
+    </label>
+
+    <select
+        id="cookieDeliveryTime"
+        name="cookieDeliveryTime">
+
+        <option value="">
+            انتخاب ساعت
+        </option>
+
+        <option>۸ تا ۱۰ صبح</option>
+        <option>۱۰ تا ۱۲ ظهر</option>
+        <option>۱۲ تا ۱۴</option>
+        <option>۱۴ تا ۱۶</option>
+        <option>۱۶ تا ۱۸</option>
+        <option>۱۸ تا ۲۰</option>
+        <option>۲۰ تا ۲۲</option>
+
+    </select>
+
+</div>
+            
+            <div class="form-group">
                 <label>توضیحات</label>
                 <textarea id="cookieDesc"></textarea>
             </div>
