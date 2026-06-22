@@ -1,56 +1,69 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    /* =========================
-       تقویم شمسی
-    ========================= */
+    function initPersianDatePicker(
+        inputId,
+        buttonId
+    ){
 
-    if (
-        window.jQuery &&
-        $("#deliveryDate").length &&
-        $.fn.persianDatepicker
-    ) {
+        const input =
+            document.getElementById(inputId);
 
-        $("#deliveryDate").persianDatepicker({
-            format: "YYYY/MM/DD",
-            initialValue: false,
-            autoClose: true,
-            calendar: {
-                persian: {
-                    locale: "fa"
+        const button =
+            document.getElementById(buttonId);
+
+        if (
+            window.jQuery &&
+            input &&
+            $.fn.persianDatepicker
+        ) {
+
+            $(input).persianDatepicker({
+                format: "YYYY/MM/DD",
+                initialValue: false,
+                autoClose: true,
+                calendar: {
+                    persian: {
+                        locale: "fa"
+                    }
+                },
+                toolbox: {
+                    calendarSwitch: {
+                        enabled: false
+                    }
                 }
-            },
-            toolbox: {
-                calendarSwitch: {
-                    enabled: false
+            });
+
+        }
+
+        if (button && input) {
+
+            button.addEventListener("click", () => {
+
+                input.focus();
+
+                const picker =
+                    $(input).data("datepicker");
+
+                if (picker) {
+                    picker.show();
                 }
-            }
-        });
+
+            });
+
+        }
 
     }
 
-    const calendarBtn =
-        document.getElementById("calendarBtn");
+    /* تقویم فرم کیک */
+    initPersianDatePicker(
+        "deliveryDate",
+        "calendarBtn"
+    );
 
-    const deliveryDate =
-        document.getElementById("deliveryDate");
-
-    if (calendarBtn && deliveryDate) {
-
-        calendarBtn.addEventListener("click", () => {
-
-            deliveryDate.focus();
-
-            const picker =
-                $(deliveryDate).data("datepicker");
-
-            if (picker) {
-                picker.show();
-            }
-
-        });
-
-    }
+    /* تقویم فرم شیرینی */
+    initPersianDatePicker(
+        "cookieDeliveryDate",
+        "cookieCalendarBtn"
+    );
 
 });
-
-
