@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>پنل مدیریت — دل‌کیک</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Lalezar&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --pink:       #e8789a;
+      --pink-dark:  #c4556f;
+      --pink-light: #fce8ef;
+      --cream:      #fdf6f0;
+      --brown:      #6b3d2a;
+      --brown-light:#a07060;
+      --green:      #27ae60;
+      --green-bg:   #eafaf1;
+      --yellow:     #f39c12;
+      --yellow-bg:  #fef9e7;
+      --blue:       #2980b9;
+      --blue-bg:    #ebf5fb;
+      --red:        #e74c3c;
+      --red-bg:     #fdedec;
+      --gray:       #7f8c8d;
+      --gray-light: #f4f4f4;
+      --border:     #ede0d8;
+      --shadow:     0 2px 12px rgba(232,120,154,0.10);
+      --radius:     14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: var(--cream);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      background: linear-gradient(135deg, var(--pink-dark), var(--pink));
+      color: #fff;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 16px rgba(196,85,111,0.25);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-family: 'Lalezar', cursive;
+      font-size: 1.6rem;
+      letter-spacing: 1px;
+    }
+    .logo span { opacity: .7; font-size: 0.9rem; margin-right: 8px; font-family: 'Vazirmatn', sans-serif; font-weight: 400; }
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+    .btn-icon {
+      background: rgba(255,255,255,.2);
+      border: none;
+      color: #fff;
+      border-radius: 50%;
+      width: 38px; height: 38px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .btn-icon:hover { background: rgba(255,255,255,.35); }
+
+    /* ─── LAYOUT ─── */
+    .layout {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ─── SIDEBAR ─── */
+    aside {
+      width: 220px;
+      background: #fff;
+      border-left: 1px solid var(--border);
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: .92rem;
+      font-weight: 500;
+      color: var(--brown-light);
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: right;
+      transition: all .2s;
+    }
+    .nav-item:hover { background: var(--pink-light); color: var(--pink-dark); }
+    .nav-item.active { background: var(--pink-light); color: var(--pink-dark); font-weight: 700; }
+    .nav-item .icon { font-size: 1.1rem; }
+    .nav-section {
+      font-size: .75rem;
+      color: var(--gray);
+      padding: 14px 14px 4px;
+      font-weight: 600;
+      letter-spacing: .5px;
+    }
+
+    /* ─── MAIN ─── */
+    main {
+      flex: 1;
+      padding: 28px 24px;
+      overflow-y: auto;
+    }
+
+    /* ─── STATS ─── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border: 1px solid var(--border);
+    }
+    .stat-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .stat-card:nth-child(1) .stat-icon { background: var(--pink-light); }
+    .stat-card:nth-child(2) .stat-icon { background: var(--yellow-bg); }
+    .stat-card:nth-child(3) .stat-icon { background: var(--green-bg); }
+    .stat-card:nth-child(4) .stat-icon { background: var(--blue-bg); }
+    .stat-label { font-size: .78rem; color: var(--gray); }
+    .stat-value { font-size: 1.6rem; font-weight: 700; color: var(--brown); line-height: 1.1; }
+    .stat-sub { font-size: .75rem; color: var(--green); font-weight: 600; }
+
+    /* ─── TOOLBAR ─── */
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 10px 40px 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: .9rem;
+      background: #fff;
+      outline: none;
+      transition: border .2s;
+    }
+    .search-box input:focus { border-color: var(--pink); }
+    .search-box .search-icon {
+      position: absolute;
+      right: 12px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+    }
+    .filter-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--gray);
+      transition: all .2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--pink);
+      color: var(--pink-dark);
+      background: var(--pink-light);
+    }
+    .btn-add {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: .9rem;
+      font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      transition: opacity .2s;
+    }
+    .btn-add:hover { opacity: .88; }
+
+    /* ─── TABLE ─── */
+    .table-wrap {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
+    }
+    thead th {
+      background: var(--pink-light);
+      color: var(--pink-dark);
+      font-weight: 700;
+      padding: 14px 16px;
+      text-align: right;
+      border-bottom: 2px solid var(--border);
+      font-size: .82rem;
+      white-space: nowrap;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--gray-light);
+      transition: background .15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #fdf6f0; }
+    td {
+      padding: 13px 16px;
+      vertical-align: middle;
+    }
+    .order-id { font-weight: 700; color: var(--pink-dark); font-size: .82rem; }
+    .customer-name { font-weight: 600; }
+    .customer-phone { color: var(--gray); font-size: .82rem; direction: ltr; text-align: right; }
+    .order-type {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 600;
+    }
+    .type-cake { background: #fce8ef; color: var(--pink-dark); }
+    .type-pastry { background: #fef5e7; color: #d4880e; }
+    .date-cell { color: var(--gray); font-size: .82rem; }
+    .price-cell { font-weight: 700; color: var(--brown); }
+
+    /* ─── STATUS BADGE ─── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .2s;
+      border: none;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+    .badge:hover { opacity: .85; }
+    .badge-pending  { background: var(--yellow-bg); color: var(--yellow); }
+    .badge-confirm  { background: var(--blue-bg);   color: var(--blue); }
+    .badge-making   { background: #f4ecff;           color: #8e44ad; }
+    .badge-sent     { background: var(--green-bg);   color: var(--green); }
+    .badge-done     { background: #e8f5e9;           color: #1a7a3a; }
+    .badge-cancel   { background: var(--red-bg);     color: var(--red); }
+
+    /* ─── ACTIONS ─── */
+    .actions { display: flex; gap: 6px; }
+    .act-btn {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-size: .9rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+    }
+    .act-btn:hover { background: var(--pink-light); border-color: var(--pink); }
+    .act-btn.del:hover { background: var(--red-bg); border-color: var(--red); }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.4);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 18px;
+      width: 540px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,.2);
+    }
+    .modal-header {
+      padding: 22px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-header h3 { font-size: 1.1rem; color: var(--brown); }
+    .modal-close {
+      background: var(--gray-light);
+      border: none;
+      border-radius: 50%;
+      width: 34px; height: 34px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-body { padding: 20px 24px; }
+    .form-row { margin-bottom: 16px; }
+    .form-row label { display: block; font-size: .85rem; font-weight: 600; color: var(--brown); margin-bottom: 6px; }
+    .form-row input, .form-row select, .form-row textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: .9rem;
+      outline: none;
+      transition: border .2s;
+    }
+    .form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color: var(--pink); }
+    .form-row textarea { resize: vertical; height: 80px; }
+    .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .modal-footer {
+      padding: 16px 24px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .btn-cancel-modal {
+      padding: 10px 20px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: .9rem;
+    }
+    .btn-save {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    /* ─── DETAIL MODAL ─── */
+    .detail-row { display: flex; justify-content: space-between; padding: 11px 0; border-bottom: 1px dashed var(--border); font-size: .9rem; }
+    .detail-row:last-child { border: none; }
+    .detail-label { color: var(--gray); }
+    .detail-val { font-weight: 600; color: var(--brown); }
+
+    /* ─── STATUS STEPPER ─── */
+    .stepper { display: flex; gap: 0; margin: 18px 0; direction: ltr; }
+    .step {
+      flex: 1;
+      text-align: center;
+      font-size: .7rem;
+      padding: 8px 4px;
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: all .2s;
+      background: #fff;
+      color: var(--gray);
+      font-family: 'Vazirmatn', sans-serif;
+      font-weight: 600;
+    }
+    .step:first-child { border-radius: 10px 0 0 10px; }
+    .step:last-child  { border-radius: 0 10px 10px 0; }
+    .step.done    { background: var(--green-bg); color: var(--green); border-color: var(--green); }
+    .step.current { background: var(--pink-light); color: var(--pink-dark); border-color: var(--pink); }
+    .step-dot { font-size: 1rem; display: block; margin-bottom: 2px; }
+
+    /* ─── EMPTY ─── */
+    .empty {
+      text-align: center;
+      padding: 48px;
+      color: var(--gray);
+    }
+    .empty .emoji { font-size: 3rem; display: block; margin-bottom: 12px; }
+
+    /* ─── TOAST ─── */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--brown);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: .9rem;
+      font-weight: 600;
+      transition: transform .3s;
+      z-index: 999;
+      pointer-events: none;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ─── PAGINATION ─── */
+    .pagination {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .page-btn {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--gray);
+      transition: all .2s;
+    }
+    .page-btn.active, .page-btn:hover { background: var(--pink); border-color: var(--pink); color: #fff; }
+
+    @media (max-width: 900px) {
+      aside { display: none; }
+      .stats { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .stats { grid-template-columns: 1fr; }
+      main { padding: 16px; }
+      td:nth-child(5), th:nth-child(5),
+      td:nth-child(6), th:nth-child(6) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">🎂 دل‌کیک <span>پنل مدیریت</span></div>
+  <div class="header-actions">
+    <button class="btn-icon" title="اعلان‌ها">🔔</button>
+    <button class="btn-icon" title="برگشت به سایت" onclick="window.open('index.html')">🏠</button>
+    <button class="btn-icon" title="خروج">👤</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="nav-section">منو</div>
+    <button class="nav-item active"><span class="icon">📋</span> سفارش‌ها</button>
+    <button class="nav-item"><span class="icon">🎂</span> محصولات</button>
+    <button class="nav-item"><span class="icon">👥</span> مشتریان</button>
+    <button class="nav-item"><span class="icon">📊</span> گزارش‌ها</button>
+    <div class="nav-section">تنظیمات</div>
+    <button class="nav-item"><span class="icon">⚙️</span> پیکربندی</button>
+    <button class="nav-item"><span class="icon">📱</span> پیام‌رسان</button>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div>
+          <div class="stat-label">کل سفارش‌ها</div>
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-sub">امروز</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏳</div>
+        <div>
+          <div class="stat-label">در انتظار تأیید</div>
+          <div class="stat-value" id="stat-pending">0</div>
+          <div class="stat-sub">نیاز به بررسی</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div>
+          <div class="stat-label">تحویل داده شده</div>
+          <div class="stat-value" id="stat-done">0</div>
+          <div class="stat-sub">این ماه</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div>
+          <div class="stat-label">درآمد (تومان)</div>
+          <div class="stat-value" id="stat-revenue">0</div>
+          <div class="stat-sub">این ماه</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <div class="search-box">
+        <input type="text" id="search" placeholder="جستجو نام، تلفن یا شماره سفارش..." oninput="renderTable()"/>
+        <span class="search-icon">🔍</span>
+      </div>
+      <div class="filter-btns">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter(this)">همه</button>
+        <button class="filter-btn" data-filter="pending" onclick="setFilter(this)">⏳ در انتظار</button>
+        <button class="filter-btn" data-filter="confirm" onclick="setFilter(this)">🔵 تأیید شده</button>
+        <button class="filter-btn" data-filter="making" onclick="setFilter(this)">🟣 در حال ساخت</button>
+        <button class="filter-btn" data-filter="sent" onclick="setFilter(this)">🟢 ارسال شده</button>
+        <button class="filter-btn" data-filter="done" onclick="setFilter(this)">✅ تحویل داده</button>
+        <button class="filter-btn" data-filter="cancel" onclick="setFilter(this)">❌ لغو شده</button>
+      </div>
+      <button class="btn-add" onclick="openAddModal()">＋ سفارش جدید</button>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>مشتری</th>
+            <th>نوع</th>
+            <th>جزئیات</th>
+            <th>تاریخ تحویل</th>
+            <th>قیمت (تومان)</th>
+            <th>وضعیت</th>
+            <th>عملیات</th>
+          </tr>
+        </thead>
+        <tbody id="orders-body"></tbody>
+      </table>
+      <div id="empty-state" class="empty" style="display:none">
+        <span class="emoji">🎂</span>
+        سفارشی با این فیلتر یافت نشد
+      </div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+
+  </main>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="modal-edit">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">سفارش جدید</h3>
+      <button class="modal-close" onclick="closeModal('modal-edit')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id"/>
+      <div class="form-2col">
+        <div class="form-row">
+          <label>نام مشتری</label>
+          <input type="text" id="edit-name" placeholder="مثلاً: فاطمه احمدی"/>
+        </div>
+        <div class="form-row">
+          <label>شماره تلفن</label>
+          <input type="text" id="edit-phone" placeholder="09..." dir="ltr"/>
+        </div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row">
+          <label>نوع سفارش</label>
+          <select id="edit-type">
+            <option value="cake">🎂 کیک</option>
+            <option value="pastry">🥐 شیرینی</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>وضعیت</label>
+          <select id="edit-status">
+            <option value="pending">⏳ در انتظار تأیید</option>
+            <option value="confirm">🔵 تأیید شده</option>
+            <option value="making">🟣 در حال ساخت</option>
+            <option value="sent">🟢 ارسال شده</option>
+            <option value="done">✅ تحویل داده شده</option>
+            <option value="cancel">❌ لغو شده</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-2col">
+        <div class="form-row">
+          <label>قیمت (تومان)</label>
+          <input type="number" id="edit-price" placeholder="مثلاً: 350000"/>
+        </div>
+        <div class="form-row">
+          <label>تاریخ تحویل</label>
+          <input type="text" id="edit-date" placeholder="مثلاً: ۱۴۰۴/۰۴/۰۱"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>توضیحات سفارش</label>
+        <textarea id="edit-desc" placeholder="جزئیات کیک، طعم، طبقه، نوشته روی کیک و..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel-modal" onclick="closeModal('modal-edit')">انصراف</button>
+      <button class="btn-save" onclick="saveOrder()">💾 ذخیره سفارش</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal-detail">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>جزئیات سفارش</h3>
+      <button class="modal-close" onclick="closeModal('modal-detail')">✕</button>
+    </div>
+    <div class="modal-body" id="detail-content"></div>
+    <div class="modal-footer">
+      <button class="btn-cancel-modal" onclick="closeModal('modal-detail')">بستن</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+  /* ─── DATA ─── */
+  const STATUS_MAP = {
+    pending: { label: 'در انتظار تأیید', cls: 'badge-pending', icon: '⏳' },
+    confirm: { label: 'تأیید شده',       cls: 'badge-confirm', icon: '🔵' },
+    making:  { label: 'در حال ساخت',     cls: 'badge-making',  icon: '🟣' },
+    sent:    { label: 'ارسال شده',        cls: 'badge-sent',    icon: '🟢' },
+    done:    { label: 'تحویل داده شده',   cls: 'badge-done',    icon: '✅' },
+    cancel:  { label: 'لغو شده',          cls: 'badge-cancel',  icon: '❌' },
+  };
+  const STATUS_ORDER = ['pending','confirm','making','sent','done'];
+
+  let orders = JSON.parse(localStorage.getItem('dellcake_orders') || 'null') || [
+    { id:'DC-1001', name:'فاطمه احمدی',    phone:'09121234567', type:'cake',   status:'pending', price:450000, date:'۱۴۰۴/۰۴/۰۵', desc:'کیک تولد ۳ طبقه، طعم شکلاتی، نوشته: تولدت مبارک مامان' },
+    { id:'DC-1002', name:'رضا کریمی',      phone:'09351112233', type:'pastry', status:'confirm', price:280000, date:'۱۴۰۴/۰۴/۰۳', desc:'شیرینی مخلوط ۱ کیلو' },
+    { id:'DC-1003', name:'زهرا محمدی',     phone:'09209876543', type:'cake',   status:'making',  price:620000, date:'۱۴۰۴/۰۴/۰۶', desc:'کیک عروسی ۵ طبقه، سفید و طلایی' },
+    { id:'DC-1004', name:'علی نصیری',      phone:'09155556677', type:'cake',   status:'sent',    price:380000, date:'۱۴۰۴/۰۴/۰۲', desc:'کیک تولد، تم فوتبالی' },
+    { id:'DC-1005', name:'مریم حسینی',     phone:'09331234000', type:'pastry', status:'done',    price:150000, date:'۱۴۰۴/۰۳/۳۰', desc:'باقلوا نیم کیلو' },
+    { id:'DC-1006', name:'امیر رضایی',     phone:'09107778899', type:'cake',   status:'cancel',  price:500000, date:'—',            desc:'لغو شد' },
+    { id:'DC-1007', name:'نگار صادقی',     phone:'09214445566', type:'cake',   status:'pending', price:320000, date:'۱۴۰۴/۰۴/۰۷', desc:'کیک تولد دخترونه، تم تک‌شاخ' },
+    { id:'DC-1008', name:'حسین کمالی',     phone:'09368889900', type:'pastry', status:'confirm', price:200000, date:'۱۴۰۴/۰۴/۰۴', desc:'شیرینی نخودچی ۰.۵ کیلو' },
+  ];
+
+  let currentFilter = 'all';
+  let currentPage   = 1;
+  const PAGE_SIZE   = 7;
+
+  function save() { localStorage.setItem('dellcake_orders', JSON.stringify(orders)); }
+
+  /* ─── STATS ─── */
+  function updateStats() {
+    document.getElementById('stat-total').textContent   = orders.length;
+    document.getElementById('stat-pending').textContent = orders.filter(o=>o.status==='pending').length;
+    document.getElementById('stat-done').textContent    = orders.filter(o=>o.status==='done').length;
+    const rev = orders.filter(o=>o.status!=='cancel').reduce((s,o)=>s+Number(o.price||0),0);
+    document.getElementById('stat-revenue').textContent = rev.toLocaleString('fa-IR');
+  }
+
+  /* ─── FILTER ─── */
+  function setFilter(btn) {
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    currentPage   = 1;
+    renderTable();
+  }
+
+  /* ─── RENDER TABLE ─── */
+  function renderTable() {
+    const q = document.getElementById('search').value.trim().toLowerCase();
+    let list = orders.filter(o => {
+      const matchFilter = currentFilter === 'all' || o.status === currentFilter;
+      const matchQ = !q || o.name.includes(q) || o.phone.includes(q) || o.id.toLowerCase().includes(q);
+      return matchFilter && matchQ;
+    });
+
+    const total  = list.length;
+    const pages  = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    currentPage  = Math.min(currentPage, pages);
+    const sliced = list.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
+
+    const tbody = document.getElementById('orders-body');
+    const empty = document.getElementById('empty-state');
+
+    if (sliced.length === 0) {
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+      tbody.innerHTML = sliced.map(o => {
+        const s = STATUS_MAP[o.status];
+        const typeLabel = o.type === 'cake' ? '<span class="order-type type-cake">🎂 کیک</span>'
+                                             : '<span class="order-type type-pastry">🥐 شیرینی</span>';
+        return `<tr>
+          <td><span class="order-id">${o.id}</span></td>
+          <td>
+            <div class="customer-name">${o.name}</div>
+            <div class="customer-phone">${o.phone}</div>
+          </td>
+          <td>${typeLabel}</td>
+          <td style="max-width:160px;font-size:.8rem;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${o.desc||'—'}</td>
+          <td class="date-cell">${o.date||'—'}</td>
+          <td class="price-cell">${Number(o.price||0).toLocaleString('fa-IR')}</td>
+          <td>
+            <button class="badge ${s.cls}" onclick="cycleStatus('${o.id}')" title="کلیک برای تغییر وضعیت">
+              ${s.icon} ${s.label}
+            </button>
+          </td>
+          <td>
+            <div class="actions">
+              <button class="act-btn" title="جزئیات" onclick="showDetail('${o.id}')">👁</button>
+              <button class="act-btn" title="ویرایش"  onclick="openEditModal('${o.id}')">✏️</button>
+              <button class="act-btn del" title="حذف" onclick="deleteOrder('${o.id}')">🗑</button>
+            </div>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    // pagination
+    const pg = document.getElementById('pagination');
+    pg.innerHTML = '';
+    if (pages > 1) {
+      for (let i=1; i<=pages; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'page-btn' + (i===currentPage?' active':'');
+        btn.textContent = String(i);
+        btn.onclick = () => { currentPage = i; renderTable(); };
+        pg.appendChild(btn);
+      }
+    }
+
+    updateStats();
+  }
+
+  /* ─── CYCLE STATUS ─── */
+  function cycleStatus(id) {
+    const o = orders.find(x=>x.id===id);
+    if (!o || o.status === 'cancel') return;
+    const idx = STATUS_ORDER.indexOf(o.status);
+    o.status = STATUS_ORDER[Math.min(idx+1, STATUS_ORDER.length-1)];
+    save();
+    renderTable();
+    toast('وضعیت سفارش به «' + STATUS_MAP[o.status].label + '» تغییر یافت');
+  }
+
+  /* ─── DELETE ─── */
+  function deleteOrder(id) {
+    if (!confirm('آیا از حذف این سفارش مطمئن هستید؟')) return;
+    orders = orders.filter(x=>x.id!==id);
+    save();
+    renderTable();
+    toast('سفارش حذف شد');
+  }
+
+  /* ─── ADD MODAL ─── */
+  function openAddModal() {
+    document.getElementById('modal-title').textContent = 'سفارش جدید';
+    document.getElementById('edit-id').value    = '';
+    document.getElementById('edit-name').value  = '';
+    document.getElementById('edit-phone').value = '';
+    document.getElementById('edit-type').value  = 'cake';
+    document.getElementById('edit-status').value= 'pending';
+    document.getElementById('edit-price').value = '';
+    document.getElementById('edit-date').value  = '';
+    document.getElementById('edit-desc').value  = '';
+    openModal('modal-edit');
+  }
+
+  function openEditModal(id) {
+    const o = orders.find(x=>x.id===id);
+    if (!o) return;
+    document.getElementById('modal-title').textContent = 'ویرایش سفارش ' + o.id;
+    document.getElementById('edit-id').value    = o.id;
+    document.getElementById('edit-name').value  = o.name;
+    document.getElementById('edit-phone').value = o.phone;
+    document.getElementById('edit-type').value  = o.type;
+    document.getElementById('edit-status').value= o.status;
+    document.getElementById('edit-price').value = o.price;
+    document.getElementById('edit-date').value  = o.date;
+    document.getElementById('edit-desc').value  = o.desc;
+    openModal('modal-edit');
+  }
+
+  function saveOrder() {
+    const id    = document.getElementById('edit-id').value;
+    const name  = document.getElementById('edit-name').value.trim();
+    const phone = document.getElementById('edit-phone').value.trim();
+    if (!name || !phone) { toast('لطفاً نام و شماره تلفن را وارد کنید'); return; }
+
+    const data = {
+      name,
+      phone,
+      type:   document.getElementById('edit-type').value,
+      status: document.getElementById('edit-status').value,
+      price:  document.getElementById('edit-price').value,
+      date:   document.getElementById('edit-date').value,
+      desc:   document.getElementById('edit-desc').value,
+    };
+
+    if (id) {
+      const o = orders.find(x=>x.id===id);
+      Object.assign(o, data);
+      toast('سفارش با موفقیت ویرایش شد ✅');
+    } else {
+      const newId = 'DC-' + (1000 + orders.length + 1);
+      orders.unshift({ id: newId, ...data });
+      toast('سفارش جدید ثبت شد 🎂');
+    }
+    save();
+    closeModal('modal-edit');
+    renderTable();
+  }
+
+  /* ─── DETAIL MODAL ─── */
+  function showDetail(id) {
+    const o = orders.find(x=>x.id===id);
+    if (!o) return;
+    const s = STATUS_MAP[o.status];
+    const stepperHTML = STATUS_ORDER.map(st => {
+      const idx_cur = STATUS_ORDER.indexOf(o.status);
+      const idx_st  = STATUS_ORDER.indexOf(st);
+      let cls = '';
+      if (idx_st < idx_cur) cls = 'done';
+      else if (idx_st === idx_cur) cls = 'current';
+      return `<div class="step ${cls}"><span class="step-dot">${STATUS_MAP[st].icon}</span>${STATUS_MAP[st].label}</div>`;
+    }).join('');
+
+    document.getElementById('detail-content').innerHTML = `
+      <div class="stepper">${stepperHTML}</div>
+      <div class="detail-row"><span class="detail-label">شماره سفارش</span><span class="detail-val">${o.id}</span></div>
+      <div class="detail-row"><span class="detail-label">نام مشتری</span><span class="detail-val">${o.name}</span></div>
+      <div class="detail-row"><span class="detail-label">شماره تلفن</span><span class="detail-val" dir="ltr">${o.phone}</span></div>
+      <div class="detail-row"><span class="detail-label">نوع سفارش</span><span class="detail-val">${o.type==='cake'?'🎂 کیک':'🥐 شیرینی'}</span></div>
+      <div class="detail-row"><span class="detail-label">وضعیت</span><span class="detail-val">${s.icon} ${s.label}</span></div>
+      <div class="detail-row"><span class="detail-label">تاریخ تحویل</span><span class="detail-val">${o.date||'—'}</span></div>
+      <div class="detail-row"><span class="detail-label">قیمت</span><span class="detail-val">${Number(o.price||0).toLocaleString('fa-IR')} تومان</span></div>
+      <div class="detail-row"><span class="detail-label">توضیحات</span><span class="detail-val" style="max-width:60%;text-align:left">${o.desc||'—'}</span></div>
+    `;
+    openModal('modal-detail');
+  }
+
+  /* ─── MODAL HELPERS ─── */
+  function openModal(id)  { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+  document.querySelectorAll('.modal-overlay').forEach(el => {
+    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+  });
+
+  /* ─── TOAST ─── */
+  let toastTimer;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+  }
+
+  /* ─── INIT ─── */
+  renderTable();
+</script>
+</body>
+  </html>
