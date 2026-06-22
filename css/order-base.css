@@ -769,14 +769,54 @@ animation:fadeIn .4s ease;
 
     display:flex;
 
-    align-items:center;
+    align-items:flex-start;
 
     gap:10px;
 
-    margin-top:25px;
+    margin:25px 0;
+
+    padding:14px 16px;
+
+    background:#fff7fa;
+
+    border:1px solid #ffd3e3;
+
+    border-radius:16px;
+
+    font-size:14px;
+
+    line-height:2;
 
     color:#555;
 
-    font-size:15px;
+}
+
+.rules-check input{
+
+    margin-top:4px;
+
+    accent-color:#f01873;
+
+    width:18px;
+
+    height:18px;
+
+    flex-shrink:0;
+
+}
+
+.rules-check a{
+
+    color:#f01873;
+
+    font-weight:700;
+
+    text-decoration:none;
+
+}
+
+.rules-check a:hover{
+
+    text-decoration:underline;
 
 }
