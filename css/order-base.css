@@ -386,19 +386,6 @@ animation:fadeIn .4s ease;
   transform: scale(1.05);
 }
 
-/* Top Notice */
-.top-notice {
-  width: 100%;
-  background: #ffe4ec;
-  color: #c2185b;
-  text-align: center;
-  padding: 10px;
-  font-size: 13px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  animation: slideDown 0.4s ease;
-}
-
 /* Hidden */
 .hidden {
   display: none;
