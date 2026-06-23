@@ -1,620 +1,371 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>پنل مدیریت — دل‌کیک</title>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Lalezar&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --pink:       #e8789a;
-      --pink-dark:  #c4556f;
-      --pink-light: #fce8ef;
-      --cream:      #fdf6f0;
-      --brown:      #6b3d2a;
-      --brown-light:#a07060;
-      --green:      #27ae60;
-      --green-bg:   #eafaf1;
-      --yellow:     #f39c12;
-      --yellow-bg:  #fef9e7;
-      --blue:       #2980b9;
-      --blue-bg:    #ebf5fb;
-      --red:        #e74c3c;
-      --red-bg:     #fdedec;
-      --gray:       #7f8c8d;
-      --gray-light: #f4f4f4;
-      --border:     #ede0d8;
-      --shadow:     0 2px 12px rgba(232,120,154,0.10);
-      --radius:     14px;
-    }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>پنل مدیریت — دل‌کیک</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=Lalezar&display=swap" rel="stylesheet"/>
+<style>
+*,::before,::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pink:#e8789a;--pink-d:#c4556f;--pink-l:#fce8ef;--pink-2:#f9d0df;
+  --cream:#fdf6f0;--brown:#6b3d2a;--brown-l:#a07060;
+  --green:#10b981;--green-bg:#ecfdf5;
+  --yellow:#f59e0b;--yellow-bg:#fffbeb;
+  --blue:#2563eb;--blue-bg:#eff6ff;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;
+  --red:#ef4444;--red-bg:#fef2f2;
+  --ink:#1e293b;--ink-s:#475569;--ink-f:#94a3b8;
+  --surface:#f8fafc;--border:#e2e8f0;
+  --white:#ffffff;
+  --r-sm:12px;--r-md:18px;--r-lg:24px;--r-xl:28px;
+  --sh-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh-md:0 4px 16px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.04);
+  --sh-lg:0 20px 48px rgba(0,0,0,.10),0 4px 12px rgba(0,0,0,.06);
+  --sh-pink:0 8px 24px rgba(228,120,154,.22);
+}
+body{font-family:'Vazirmatn',sans-serif;background:var(--surface);color:var(--ink);min-height:100svh;overflow-x:hidden}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── AMBIENT ── */
+.ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:linear-gradient(155deg,#fff8fb 0%,#fdf0f5 40%,#f8f4ff 100%)}
+.orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;animation:float 12s ease-in-out infinite}
+.orb1{width:480px;height:480px;top:-140px;right:-100px;background:radial-gradient(circle,rgba(232,120,154,.35),transparent 70%)}
+.orb2{width:380px;height:380px;bottom:-100px;left:-80px;background:radial-gradient(circle,rgba(196,85,111,.22),transparent 70%);animation-delay:-4s}
+.orb3{width:300px;height:300px;top:45%;left:38%;background:radial-gradient(circle,rgba(124,58,237,.15),transparent 70%);animation-delay:-7s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(14px,18px) scale(1.04)}}
 
-    body {
-      font-family: 'Vazirmatn', sans-serif;
-      background: var(--cream);
-      color: #333;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+/* ── LAYOUT ── */
+.app{display:flex;min-height:100svh;position:relative;z-index:1;max-width:1600px;margin:auto;padding:1rem;gap:1.25rem}
+@media(max-width:1023px){.app{flex-direction:column;padding:.75rem;gap:.75rem}}
 
-    /* ─── HEADER ─── */
-    header {
-      background: linear-gradient(135deg, var(--pink-dark), var(--pink));
-      color: #fff;
-      padding: 0 24px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 16px rgba(196,85,111,0.25);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .logo {
-      font-family: 'Lalezar', cursive;
-      font-size: 1.6rem;
-      letter-spacing: 1px;
-    }
-    .logo span { opacity: .7; font-size: 0.9rem; margin-right: 8px; font-family: 'Vazirmatn', sans-serif; font-weight: 400; }
-    .header-actions { display: flex; gap: 10px; align-items: center; }
-    .btn-icon {
-      background: rgba(255,255,255,.2);
-      border: none;
-      color: #fff;
-      border-radius: 50%;
-      width: 38px; height: 38px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      display: flex; align-items: center; justify-content: center;
-      transition: background .2s;
-    }
-    .btn-icon:hover { background: rgba(255,255,255,.35); }
+/* ── PANEL BASE ── */
+.panel{background:rgba(255,255,255,.85);backdrop-filter:blur(24px) saturate(1.2);-webkit-backdrop-filter:blur(24px) saturate(1.2);border:1px solid rgba(255,255,255,.9);border-radius:var(--r-xl);box-shadow:var(--sh-md);position:relative;overflow:hidden}
+.panel::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.9) 0%,transparent 50%);pointer-events:none}
 
-    /* ─── LAYOUT ─── */
-    .layout {
-      display: flex;
-      flex: 1;
-      min-height: 0;
-    }
+/* ── SIDEBAR ── */
+.sidebar{width:268px;min-width:268px;display:flex;flex-direction:column;gap:.5rem;padding:1.25rem 1rem;position:sticky;top:1rem;max-height:calc(100svh - 2rem);overflow-y:auto}
+@media(max-width:1023px){
+  .sidebar{position:fixed;top:0;right:-280px;width:280px;min-width:0;height:100svh;max-height:none;border-radius:0 0 0 var(--r-xl);z-index:300;transition:right .3s cubic-bezier(.4,0,.2,1);padding:1.5rem 1rem}
+  .sidebar.open{right:0;box-shadow:var(--sh-lg)}
+}
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:299;backdrop-filter:blur(2px)}
+body.drawer-open .drawer-overlay{display:block}
 
-    /* ─── SIDEBAR ─── */
-    aside {
-      width: 220px;
-      background: #fff;
-      border-left: 1px solid var(--border);
-      padding: 20px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: .92rem;
-      font-weight: 500;
-      color: var(--brown-light);
-      border: none;
-      background: none;
-      width: 100%;
-      text-align: right;
-      transition: all .2s;
-    }
-    .nav-item:hover { background: var(--pink-light); color: var(--pink-dark); }
-    .nav-item.active { background: var(--pink-light); color: var(--pink-dark); font-weight: 700; }
-    .nav-item .icon { font-size: 1.1rem; }
-    .nav-section {
-      font-size: .75rem;
-      color: var(--gray);
-      padding: 14px 14px 4px;
-      font-weight: 600;
-      letter-spacing: .5px;
-    }
+.logo-box{display:flex;align-items:center;gap:.75rem;padding:.5rem .25rem 1rem;border-bottom:1px solid var(--border);margin-bottom:.5rem}
+.logo-icon{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--pink),var(--pink-d));display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:var(--sh-pink);flex-shrink:0}
+.logo-text{font-family:'Lalezar',cursive;font-size:1.25rem;color:var(--brown);line-height:1}
+.logo-sub{font-size:.7rem;color:var(--ink-f);font-weight:500}
 
-    /* ─── MAIN ─── */
-    main {
-      flex: 1;
-      padding: 28px 24px;
-      overflow-y: auto;
-    }
+.nav-section{font-size:.68rem;font-weight:700;color:var(--ink-f);letter-spacing:.6px;padding:.75rem .75rem .25rem;text-transform:uppercase}
+.nav-link{display:flex;align-items:center;gap:.75rem;padding:.7rem .85rem;border-radius:var(--r-md);font-size:.88rem;font-weight:500;color:var(--ink-s);cursor:pointer;transition:all .2s;border:none;background:none;width:100%;text-align:right;position:relative}
+.nav-link:hover{background:var(--pink-l);color:var(--pink-d)}
+.nav-link.active{background:linear-gradient(135deg,var(--pink-l),rgba(124,58,237,.08));color:var(--pink-d);font-weight:700;box-shadow:0 4px 16px rgba(232,120,154,.15)}
+.nav-link.active::before{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);width:3px;height:60%;border-radius:2px;background:var(--pink-d)}
+.nav-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.05rem;background:var(--surface);transition:all .2s;flex-shrink:0}
+.nav-link.active .nav-ico{background:var(--pink);color:#fff;box-shadow:var(--sh-pink)}
 
-    /* ─── STATS ─── */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-    .stat-card {
-      background: #fff;
-      border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: var(--shadow);
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      border: 1px solid var(--border);
-    }
-    .stat-icon {
-      width: 52px; height: 52px;
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem;
-      flex-shrink: 0;
-    }
-    .stat-card:nth-child(1) .stat-icon { background: var(--pink-light); }
-    .stat-card:nth-child(2) .stat-icon { background: var(--yellow-bg); }
-    .stat-card:nth-child(3) .stat-icon { background: var(--green-bg); }
-    .stat-card:nth-child(4) .stat-icon { background: var(--blue-bg); }
-    .stat-label { font-size: .78rem; color: var(--gray); }
-    .stat-value { font-size: 1.6rem; font-weight: 700; color: var(--brown); line-height: 1.1; }
-    .stat-sub { font-size: .75rem; color: var(--green); font-weight: 600; }
+.status-box{margin-top:auto;padding:.9rem;border-radius:var(--r-md);background:linear-gradient(135deg,var(--green-bg),rgba(16,185,129,.08));border:1px solid rgba(16,185,129,.2)}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.5}}
 
-    /* ─── TOOLBAR ─── */
-    .toolbar {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .search-box {
-      flex: 1;
-      min-width: 200px;
-      position: relative;
-    }
-    .search-box input {
-      width: 100%;
-      padding: 10px 40px 10px 14px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-family: 'Vazirmatn', sans-serif;
-      font-size: .9rem;
-      background: #fff;
-      outline: none;
-      transition: border .2s;
-    }
-    .search-box input:focus { border-color: var(--pink); }
-    .search-box .search-icon {
-      position: absolute;
-      right: 12px; top: 50%;
-      transform: translateY(-50%);
-      color: var(--gray);
-    }
-    .filter-btns { display: flex; gap: 8px; flex-wrap: wrap; }
-    .filter-btn {
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: 1.5px solid var(--border);
-      background: #fff;
-      cursor: pointer;
-      font-family: 'Vazirmatn', sans-serif;
-      font-size: .85rem;
-      font-weight: 500;
-      color: var(--gray);
-      transition: all .2s;
-    }
-    .filter-btn:hover, .filter-btn.active {
-      border-color: var(--pink);
-      color: var(--pink-dark);
-      background: var(--pink-light);
-    }
-    .btn-add {
-      padding: 10px 20px;
-      background: linear-gradient(135deg, var(--pink), var(--pink-dark));
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-family: 'Vazirmatn', sans-serif;
-      font-size: .9rem;
-      font-weight: 600;
-      display: flex; align-items: center; gap: 6px;
-      transition: opacity .2s;
-    }
-    .btn-add:hover { opacity: .88; }
+/* ── MAIN ── */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;gap:1rem}
 
-    /* ─── TABLE ─── */
-    .table-wrap {
-      background: #fff;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      overflow: hidden;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: .88rem;
-    }
-    thead th {
-      background: var(--pink-light);
-      color: var(--pink-dark);
-      font-weight: 700;
-      padding: 14px 16px;
-      text-align: right;
-      border-bottom: 2px solid var(--border);
-      font-size: .82rem;
-      white-space: nowrap;
-    }
-    tbody tr {
-      border-bottom: 1px solid var(--gray-light);
-      transition: background .15s;
-    }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: #fdf6f0; }
-    td {
-      padding: 13px 16px;
-      vertical-align: middle;
-    }
-    .order-id { font-weight: 700; color: var(--pink-dark); font-size: .82rem; }
-    .customer-name { font-weight: 600; }
-    .customer-phone { color: var(--gray); font-size: .82rem; direction: ltr; text-align: right; }
-    .order-type {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: .78rem;
-      font-weight: 600;
-    }
-    .type-cake { background: #fce8ef; color: var(--pink-dark); }
-    .type-pastry { background: #fef5e7; color: #d4880e; }
-    .date-cell { color: var(--gray); font-size: .82rem; }
-    .price-cell { font-weight: 700; color: var(--brown); }
+/* ── HEADER ── */
+.header{display:flex;align-items:center;gap:.75rem;padding:.85rem 1.25rem}
+.menu-btn{display:none;background:none;border:none;cursor:pointer;padding:.4rem;border-radius:10px;font-size:1.3rem;color:var(--ink-s);transition:background .2s}
+.menu-btn:hover{background:var(--pink-l)}
+@media(max-width:1023px){.menu-btn{display:flex;align-items:center;justify-content:center}}
+.page-title-wrap{flex:1;min-width:0}
+.page-title{font-size:1.2rem;font-weight:800;color:var(--ink);line-height:1.2}
+.page-sub{font-size:.75rem;color:var(--ink-f);margin-top:1px}
+.header-actions{display:flex;align-items:center;gap:.5rem}
+.hbtn{width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--ink-s);transition:all .2s;position:relative}
+.hbtn:hover{background:var(--pink-l);border-color:var(--pink-2);color:var(--pink-d)}
+.notif-badge{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid var(--white)}
 
-    /* ─── STATUS BADGE ─── */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: .78rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity .2s;
-      border: none;
-      font-family: 'Vazirmatn', sans-serif;
-    }
-    .badge:hover { opacity: .85; }
-    .badge-pending  { background: var(--yellow-bg); color: var(--yellow); }
-    .badge-confirm  { background: var(--blue-bg);   color: var(--blue); }
-    .badge-making   { background: #f4ecff;           color: #8e44ad; }
-    .badge-sent     { background: var(--green-bg);   color: var(--green); }
-    .badge-done     { background: #e8f5e9;           color: #1a7a3a; }
-    .badge-cancel   { background: var(--red-bg);     color: var(--red); }
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem}
+@media(max-width:1100px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.stats-grid{grid-template-columns:1fr}}
+.stat-card{padding:1.1rem 1.25rem;display:flex;align-items:center;gap:1rem;cursor:default;transition:transform .2s,box-shadow .2s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--sh-lg)}
+.stat-ico{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.stat-ico-pink{background:linear-gradient(135deg,var(--pink),var(--pink-d));box-shadow:var(--sh-pink)}
+.stat-ico-green{background:linear-gradient(135deg,#34d399,var(--green));box-shadow:0 8px 24px rgba(16,185,129,.25)}
+.stat-ico-blue{background:linear-gradient(135deg,#60a5fa,var(--blue));box-shadow:0 8px 24px rgba(37,99,235,.25)}
+.stat-ico-purple{background:linear-gradient(135deg,#a78bfa,var(--purple));box-shadow:0 8px 24px rgba(124,58,237,.25)}
+.stat-lbl{font-size:.73rem;color:var(--ink-f);font-weight:500}
+.stat-val{font-size:1.65rem;font-weight:800;color:var(--ink);line-height:1.1;margin:.1rem 0}
+.stat-trend{font-size:.72rem;font-weight:600;color:var(--green)}
+.stat-trend.down{color:var(--red)}
 
-    /* ─── ACTIONS ─── */
-    .actions { display: flex; gap: 6px; }
-    .act-btn {
-      width: 32px; height: 32px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: #fff;
-      cursor: pointer;
-      font-size: .9rem;
-      display: flex; align-items: center; justify-content: center;
-      transition: all .2s;
-    }
-    .act-btn:hover { background: var(--pink-light); border-color: var(--pink); }
-    .act-btn.del:hover { background: var(--red-bg); border-color: var(--red); }
+/* ── SPARK ── */
+.spark{width:100%;height:32px;margin-top:.5rem;overflow:visible}
+.spark-line{stroke-dasharray:200;stroke-dashoffset:200;animation:draw 1.2s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
 
-    /* ─── MODAL ─── */
-    .modal-overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,.4);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: #fff;
-      border-radius: 18px;
-      width: 540px;
-      max-width: 95vw;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,.2);
-    }
-    .modal-header {
-      padding: 22px 24px 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .modal-header h3 { font-size: 1.1rem; color: var(--brown); }
-    .modal-close {
-      background: var(--gray-light);
-      border: none;
-      border-radius: 50%;
-      width: 34px; height: 34px;
-      cursor: pointer;
-      font-size: 1rem;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .modal-body { padding: 20px 24px; }
-    .form-row { margin-bottom: 16px; }
-    .form-row label { display: block; font-size: .85rem; font-weight: 600; color: var(--brown); margin-bottom: 6px; }
-    .form-row input, .form-row select, .form-row textarea {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      font-family: 'Vazirmatn', sans-serif;
-      font-size: .9rem;
-      outline: none;
-      transition: border .2s;
-    }
-    .form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color: var(--pink); }
-    .form-row textarea { resize: vertical; height: 80px; }
-    .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .modal-footer {
-      padding: 16px 24px 20px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-    .btn-cancel-modal {
-      padding: 10px 20px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      background: #fff;
-      cursor: pointer;
-      font-family: 'Vazirmatn', sans-serif;
-      font-size: .9rem;
-    }
-    .btn-save {
-      padding: 10px 24px;
-      background: linear-gradient(135deg, var(--pink), var(--pink-dark));
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-family: 'Vazirmatn', sans-serif;
-      font-size: .9rem;
-      font-weight: 700;
-    }
+/* ── CONTENT AREA ── */
+.content{flex:1}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:1.1rem;flex-wrap:wrap}
+.section-title{font-size:1rem;font-weight:700;color:var(--ink)}
+.section-sub{font-size:.75rem;color:var(--ink-f);margin-top:1px}
 
-    /* ─── DETAIL MODAL ─── */
-    .detail-row { display: flex; justify-content: space-between; padding: 11px 0; border-bottom: 1px dashed var(--border); font-size: .9rem; }
-    .detail-row:last-child { border: none; }
-    .detail-label { color: var(--gray); }
-    .detail-val { font-weight: 600; color: var(--brown); }
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.1rem;border-radius:var(--r-sm);font-family:'Vazirmatn',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,var(--pink),var(--pink-d));color:#fff;box-shadow:var(--sh-pink)}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+.btn-ghost{background:var(--white);border:1.5px solid var(--border);color:var(--ink-s)}
+.btn-ghost:hover{border-color:var(--pink-2);background:var(--pink-l);color:var(--pink-d)}
+.btn-danger{background:var(--red-bg);border:1.5px solid #fecaca;color:var(--red)}
+.btn-danger:hover{background:#fee2e2}
+.btn-sm{padding:.4rem .8rem;font-size:.78rem}
+.btn-icon-only{width:34px;height:34px;padding:0;border-radius:10px;justify-content:center}
 
-    /* ─── STATUS STEPPER ─── */
-    .stepper { display: flex; gap: 0; margin: 18px 0; direction: ltr; }
-    .step {
-      flex: 1;
-      text-align: center;
-      font-size: .7rem;
-      padding: 8px 4px;
-      border: 1.5px solid var(--border);
-      cursor: pointer;
-      transition: all .2s;
-      background: #fff;
-      color: var(--gray);
-      font-family: 'Vazirmatn', sans-serif;
-      font-weight: 600;
-    }
-    .step:first-child { border-radius: 10px 0 0 10px; }
-    .step:last-child  { border-radius: 0 10px 10px 0; }
-    .step.done    { background: var(--green-bg); color: var(--green); border-color: var(--green); }
-    .step.current { background: var(--pink-light); color: var(--pink-dark); border-color: var(--pink); }
-    .step-dot { font-size: 1rem; display: block; margin-bottom: 2px; }
+/* ── SEARCH + FILTER ── */
+.toolbar{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem}
+.search-wrap{position:relative;flex:1;min-width:180px}
+.search-wrap input{width:100%;padding:.65rem 2.4rem .65rem 1rem;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:'Vazirmatn',sans-serif;font-size:.88rem;background:var(--white);outline:none;transition:border .2s;color:var(--ink)}
+.search-wrap input:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(232,120,154,.12)}
+.search-icon{position:absolute;right:.8rem;top:50%;transform:translateY(-50%);color:var(--ink-f);font-size:.95rem}
+.filter-tabs{display:flex;gap:.4rem;flex-wrap:wrap}
+.ftab{padding:.45rem 1rem;border-radius:20px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;font-family:'Vazirmatn',sans-serif;font-size:.8rem;font-weight:600;color:var(--ink-f);transition:all .2s}
+.ftab:hover,.ftab.on{border-color:var(--pink);color:var(--pink-d);background:var(--pink-l)}
 
-    /* ─── EMPTY ─── */
-    .empty {
-      text-align: center;
-      padding: 48px;
-      color: var(--gray);
-    }
-    .empty .emoji { font-size: 3rem; display: block; margin-bottom: 12px; }
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:640px}
+thead th{background:var(--pink-l);color:var(--pink-d);font-weight:700;padding:.85rem 1rem;text-align:right;border-bottom:2px solid var(--pink-2);font-size:.78rem;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--surface);transition:background .15s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:rgba(252,232,239,.4)}
+td{padding:.85rem 1rem;vertical-align:middle}
+.col-id{font-weight:700;color:var(--pink-d);font-size:.78rem;font-family:monospace}
+.col-name{font-weight:600;color:var(--ink)}
+.col-sub{font-size:.76rem;color:var(--ink-f);margin-top:1px}
 
-    /* ─── TOAST ─── */
-    #toast {
-      position: fixed;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--brown);
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-size: .9rem;
-      font-weight: 600;
-      transition: transform .3s;
-      z-index: 999;
-      pointer-events: none;
-    }
-    #toast.show { transform: translateX(-50%) translateY(0); }
+/* ── CHIPS / BADGES ── */
+.chip{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .8rem;border-radius:20px;font-size:.75rem;font-weight:700;white-space:nowrap}
+.chip-ok{background:var(--green-bg);color:#065f46;border:1px solid #a7f3d0}
+.chip-wait{background:var(--yellow-bg);color:#92400e;border:1px solid #fde68a}
+.chip-blue{background:var(--blue-bg);color:#1e40af;border:1px solid #bfdbfe}
+.chip-purple{background:var(--purple-bg);color:#5b21b6;border:1px solid #ddd6fe}
+.chip-fail{background:var(--red-bg);color:#991b1b;border:1px solid #fecaca}
+.chip-cake{background:var(--pink-l);color:var(--pink-d);border:1px solid var(--pink-2)}
+.chip-pastry{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}
+.chip-clickable{cursor:pointer;transition:opacity .2s}
+.chip-clickable:hover{opacity:.8}
 
-    /* ─── PAGINATION ─── */
-    .pagination {
-      display: flex;
-      gap: 6px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .page-btn {
-      width: 36px; height: 36px;
-      border-radius: 8px;
-      border: 1.5px solid var(--border);
-      background: #fff;
-      cursor: pointer;
-      font-family: 'Vazirmatn', sans-serif;
-      font-size: .88rem;
-      font-weight: 600;
-      color: var(--gray);
-      transition: all .2s;
-    }
-    .page-btn.active, .page-btn:hover { background: var(--pink); border-color: var(--pink); color: #fff; }
+/* ── ACTIONS ── */
+.row-actions{display:flex;gap:.4rem}
+.act-btn{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.act-btn:hover{background:var(--pink-l);border-color:var(--pink-2)}
+.act-btn.del:hover{background:var(--red-bg);border-color:#fecaca}
 
-    @media (max-width: 900px) {
-      aside { display: none; }
-      .stats { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 600px) {
-      .stats { grid-template-columns: 1fr; }
-      main { padding: 16px; }
-      td:nth-child(5), th:nth-child(5),
-      td:nth-child(6), th:nth-child(6) { display: none; }
-    }
-  </style>
+/* ── CARDS (courses) ── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.course-card{padding:1.25rem;border-radius:var(--r-lg);background:var(--white);border:1.5px solid var(--border);transition:all .2s;cursor:default}
+.course-card:hover{border-color:var(--pink-2);box-shadow:var(--sh-md);transform:translateY(-2px)}
+.course-thumb{width:100%;height:140px;border-radius:var(--r-sm);background:linear-gradient(135deg,var(--pink-l),#f8e8ff);display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:1rem;overflow:hidden}
+.course-title{font-size:.95rem;font-weight:700;color:var(--ink);margin-bottom:.35rem}
+.course-desc{font-size:.8rem;color:var(--ink-s);line-height:1.55;margin-bottom:.75rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.course-meta{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+.course-price{font-size:1rem;font-weight:800;color:var(--pink-d)}
+.course-price .old{font-size:.75rem;color:var(--ink-f);text-decoration:line-through;font-weight:400;margin-right:.25rem}
+.course-actions{display:flex;gap:.4rem;margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--surface)}
+
+/* ── GALLERY ── */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.75rem}
+.gallery-item{border-radius:var(--r-sm);overflow:hidden;border:2px solid var(--border);aspect-ratio:1;background:var(--pink-l);display:flex;align-items:center;justify-content:center;font-size:2rem;position:relative;cursor:pointer;transition:all .2s}
+.gallery-item:hover{border-color:var(--pink);transform:scale(1.02)}
+.gallery-item img{width:100%;height:100%;object-fit:cover}
+.gallery-del{position:absolute;top:.3rem;left:.3rem;background:rgba(239,68,68,.9);color:#fff;border:none;border-radius:6px;width:24px;height:24px;font-size:.7rem;cursor:pointer;display:none;align-items:center;justify-content:center}
+.gallery-item:hover .gallery-del{display:flex}
+
+/* ── FORM ── */
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:.82rem;font-weight:600;color:var(--brown);margin-bottom:.4rem}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:.65rem 1rem;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:'Vazirmatn',sans-serif;font-size:.88rem;color:var(--ink);background:var(--white);outline:none;transition:border .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(232,120,154,.1)}
+.form-group textarea{resize:vertical;min-height:90px}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:520px){.form-2col{grid-template-columns:1fr}}
+.form-hint{font-size:.73rem;color:var(--ink-f);margin-top:.3rem}
+
+/* ── MODAL ── */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:400;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--white);border-radius:var(--r-xl);width:560px;max-width:100%;max-height:90svh;overflow-y:auto;box-shadow:var(--sh-lg);animation:modal-in .25s ease-out}
+@keyframes modal-in{from{opacity:0;transform:scale(.95) translateY(8px)}}
+.modal-header{padding:1.25rem 1.5rem 1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--white);z-index:1}
+.modal-title{font-size:1.05rem;font-weight:800;color:var(--brown)}
+.modal-close{background:var(--surface);border:none;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.modal-close:hover{background:var(--pink-l)}
+.modal-body{padding:1.25rem 1.5rem}
+.modal-footer{padding:1rem 1.5rem 1.25rem;border-top:1px solid var(--border);display:flex;gap:.6rem;justify-content:flex-end}
+
+/* ── DETAIL ROWS ── */
+.d-row{display:flex;justify-content:space-between;align-items:center;padding:.75rem 0;border-bottom:1px dashed var(--border);font-size:.88rem;gap:1rem}
+.d-row:last-child{border-bottom:none}
+.d-label{color:var(--ink-f);flex-shrink:0}
+.d-val{font-weight:600;color:var(--ink);text-align:left}
+.stepper{display:flex;margin:1rem 0;direction:ltr;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.step{flex:1;text-align:center;padding:.5rem .3rem;font-size:.68rem;font-weight:600;color:var(--ink-f);background:var(--surface);border-right:1px solid var(--border);transition:all .2s}
+.step:last-child{border-right:none}
+.step.done{background:var(--green-bg);color:#065f46}
+.step.cur{background:var(--pink-l);color:var(--pink-d)}
+.step-icon{display:block;font-size:.95rem;margin-bottom:2px}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--ink-f)}
+.empty-state .emoji{font-size:3rem;display:block;margin-bottom:.75rem}
+
+/* ── TOAST ── */
+#toast-stack{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:900;display:flex;flex-direction:column;gap:.5rem;align-items:center;pointer-events:none;min-width:220px}
+.toast{background:var(--brown);color:#fff;padding:.7rem 1.4rem;border-radius:30px;font-size:.88rem;font-weight:600;animation:toast-in .3s ease-out;white-space:nowrap}
+.toast.success{background:var(--green)}
+.toast.error{background:var(--red)}
+@keyframes toast-in{from{opacity:0;transform:translateY(10px)}}
+@keyframes toast-out{to{opacity:0;transform:translateY(10px)}}
+
+/* ── SETTINGS ── */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--surface)}
+.toggle-row:last-child{border-bottom:none}
+.toggle{position:relative;width:42px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-ui{position:absolute;inset:0;border-radius:12px;background:#ddd;transition:.2s;cursor:pointer}
+.toggle-ui::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;right:3px;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.toggle input:checked+.toggle-ui{background:var(--pink)}
+.toggle input:checked+.toggle-ui::before{right:auto;left:3px}
+
+/* ── PAGE TRANSITIONS ── */
+#page-root{animation:page-in .3s ease-out}
+@keyframes page-in{from{opacity:0;transform:translateY(8px)}}
+.anim-stagger>*{animation:stagger-in .4s ease-out backwards}
+.anim-stagger>*:nth-child(1){animation-delay:.05s}
+.anim-stagger>*:nth-child(2){animation-delay:.1s}
+.anim-stagger>*:nth-child(3){animation-delay:.15s}
+.anim-stagger>*:nth-child(4){animation-delay:.2s}
+@keyframes stagger-in{from{opacity:0;transform:translateY(12px)}}
+
+/* ── ANALYTICS BARS ── */
+.bar-chart{display:flex;align-items:flex-end;gap:.5rem;height:120px;margin-top:1rem}
+.bar-col{display:flex;flex-direction:column;align-items:center;flex:1;gap:.4rem}
+.bar-fill{width:100%;border-radius:6px 6px 0 0;background:linear-gradient(to top,var(--pink-d),var(--pink));animation:bar-grow .8s ease-out backwards;transform-origin:bottom}
+@keyframes bar-grow{from{transform:scaleY(0)}}
+.bar-label{font-size:.68rem;color:var(--ink-f);white-space:nowrap}
+.progress-track{height:8px;background:var(--surface);border-radius:4px;overflow:hidden;margin-top:.3rem}
+.progress-fill{height:100%;border-radius:4px;animation:prog-fill 1s ease-out backwards}
+@keyframes prog-fill{from{width:0}}
+
+/* ── PAGINATION ── */
+.pagination{display:flex;gap:.4rem;justify-content:center;margin-top:1rem}
+.pg-btn{width:34px;height:34px;border-radius:9px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;font-family:'Vazirmatn',sans-serif;font-size:.82rem;font-weight:600;color:var(--ink-f);transition:all .2s}
+.pg-btn:hover,.pg-btn.on{background:var(--pink);border-color:var(--pink);color:#fff}
+
+/* ── MINI STAT ── */
+.mini-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:1rem}
+@media(max-width:640px){.mini-stats{grid-template-columns:repeat(2,1fr)}}
+.mini-stat{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-md);padding:1rem;text-align:center}
+.mini-stat-val{font-size:1.3rem;font-weight:800;color:var(--ink);margin:.25rem 0}
+.mini-stat-lbl{font-size:.73rem;color:var(--ink-f)}
+
+@media print{.sidebar,.header,.modal-backdrop,#toast-stack,.menu-btn{display:none!important}.main{padding:0}.panel{box-shadow:none;border:1px solid #ddd}}
+</style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header>
-  <div class="logo">🎂 دل‌کیک <span>پنل مدیریت</span></div>
-  <div class="header-actions">
-    <button class="btn-icon" title="اعلان‌ها">🔔</button>
-    <button class="btn-icon" title="برگشت به سایت" onclick="window.open('index.html')">🏠</button>
-    <button class="btn-icon" title="خروج">👤</button>
-  </div>
-</header>
-
-<div class="layout">
-
-  <!-- SIDEBAR -->
-  <aside>
-    <div class="nav-section">منو</div>
-    <button class="nav-item active"><span class="icon">📋</span> سفارش‌ها</button>
-    <button class="nav-item"><span class="icon">🎂</span> محصولات</button>
-    <button class="nav-item"><span class="icon">👥</span> مشتریان</button>
-    <button class="nav-item"><span class="icon">📊</span> گزارش‌ها</button>
-    <div class="nav-section">تنظیمات</div>
-    <button class="nav-item"><span class="icon">⚙️</span> پیکربندی</button>
-    <button class="nav-item"><span class="icon">📱</span> پیام‌رسان</button>
-  </aside>
-
-  <!-- MAIN -->
-  <main>
-
-    <!-- STATS -->
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-icon">📋</div>
-        <div>
-          <div class="stat-label">کل سفارش‌ها</div>
-          <div class="stat-value" id="stat-total">0</div>
-          <div class="stat-sub">امروز</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">⏳</div>
-        <div>
-          <div class="stat-label">در انتظار تأیید</div>
-          <div class="stat-value" id="stat-pending">0</div>
-          <div class="stat-sub">نیاز به بررسی</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">✅</div>
-        <div>
-          <div class="stat-label">تحویل داده شده</div>
-          <div class="stat-value" id="stat-done">0</div>
-          <div class="stat-sub">این ماه</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">💰</div>
-        <div>
-          <div class="stat-label">درآمد (تومان)</div>
-          <div class="stat-value" id="stat-revenue">0</div>
-          <div class="stat-sub">این ماه</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TOOLBAR -->
-    <div class="toolbar">
-      <div class="search-box">
-        <input type="text" id="search" placeholder="جستجو نام، تلفن یا شماره سفارش..." oninput="renderTable()"/>
-        <span class="search-icon">🔍</span>
-      </div>
-      <div class="filter-btns">
-        <button class="filter-btn active" data-filter="all" onclick="setFilter(this)">همه</button>
-        <button class="filter-btn" data-filter="pending" onclick="setFilter(this)">⏳ در انتظار</button>
-        <button class="filter-btn" data-filter="confirm" onclick="setFilter(this)">🔵 تأیید شده</button>
-        <button class="filter-btn" data-filter="making" onclick="setFilter(this)">🟣 در حال ساخت</button>
-        <button class="filter-btn" data-filter="sent" onclick="setFilter(this)">🟢 ارسال شده</button>
-        <button class="filter-btn" data-filter="done" onclick="setFilter(this)">✅ تحویل داده</button>
-        <button class="filter-btn" data-filter="cancel" onclick="setFilter(this)">❌ لغو شده</button>
-      </div>
-      <button class="btn-add" onclick="openAddModal()">＋ سفارش جدید</button>
-    </div>
-
-    <!-- TABLE -->
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>مشتری</th>
-            <th>نوع</th>
-            <th>جزئیات</th>
-            <th>تاریخ تحویل</th>
-            <th>قیمت (تومان)</th>
-            <th>وضعیت</th>
-            <th>عملیات</th>
-          </tr>
-        </thead>
-        <tbody id="orders-body"></tbody>
-      </table>
-      <div id="empty-state" class="empty" style="display:none">
-        <span class="emoji">🎂</span>
-        سفارشی با این فیلتر یافت نشد
-      </div>
-    </div>
-
-    <div class="pagination" id="pagination"></div>
-
-  </main>
+<div class="ambient" aria-hidden="true">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
 </div>
+<div class="drawer-overlay" onclick="closeSidebar()"></div>
 
-<!-- ADD/EDIT MODAL -->
-<div class="modal-overlay" id="modal-edit">
+<div class="app">
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside class="sidebar panel" id="sidebar">
+  <div class="logo-box">
+    <div class="logo-icon">🎂</div>
+    <div>
+      <div class="logo-text">دل‌کیک</div>
+      <div class="logo-sub">پنل مدیریت</div>
+    </div>
+  </div>
+
+  <p class="nav-section">منوی اصلی</p>
+  <button class="nav-link active" data-nav="dashboard"><span class="nav-ico">📊</span>داشبورد</button>
+  <button class="nav-link" data-nav="orders"><span class="nav-ico">📋</span>سفارش‌ها</button>
+  <button class="nav-link" data-nav="courses"><span class="nav-ico">🎓</span>دوره‌های آموزشی</button>
+  <button class="nav-link" data-nav="gallery"><span class="nav-ico">🖼️</span>گالری تصاویر</button>
+  <button class="nav-link" data-nav="customers"><span class="nav-ico">👥</span>مشتریان</button>
+  <button class="nav-link" data-nav="analytics"><span class="nav-ico">📈</span>گزارش‌ها</button>
+
+  <p class="nav-section">مدیریت</p>
+  <button class="nav-link" data-nav="content"><span class="nav-ico">✏️</span>مدیریت محتوا</button>
+  <button class="nav-link" data-nav="settings"><span class="nav-ico">⚙️</span>تنظیمات</button>
+
+  <div class="status-box" style="margin-top:1.5rem">
+    <div style="display:flex;align-items:center;gap:.6rem">
+      <div class="status-dot"></div>
+      <div>
+        <div style="font-size:.72rem;color:#065f46;font-weight:700">سایت آنلاین</div>
+        <div style="font-size:.7rem;color:var(--ink-f)">آخرین به‌روزرسانی: همین الان</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="main">
+
+  <!-- HEADER -->
+  <header class="header panel">
+    <button class="menu-btn" id="menu-btn" onclick="openSidebar()" aria-label="منو">☰</button>
+    <div class="page-title-wrap">
+      <div class="page-title" id="page-title">داشبورد</div>
+      <div class="page-sub" id="page-sub">خوش آمدید، مدیر دل‌کیک</div>
+    </div>
+    <div class="header-actions">
+      <button class="hbtn" title="اعلان‌ها" onclick="toast('اعلان جدید وجود ندارد')">
+        🔔<span class="notif-badge"></span>
+      </button>
+      <button class="hbtn" title="وب‌سایت" onclick="toast('در حال باز کردن سایت...')">🏠</button>
+      <button class="hbtn" title="پروفایل" onclick="navigateTo('settings')">👤</button>
+    </div>
+  </header>
+
+  <!-- PAGE ROOT -->
+  <div id="page-root" class="content panel" style="padding:1.5rem">
+    <!-- pages render here -->
+  </div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ═══════════ MODALS ═══════════ -->
+
+<!-- Order Modal -->
+<div class="modal-backdrop" id="modal-order">
   <div class="modal">
     <div class="modal-header">
-      <h3 id="modal-title">سفارش جدید</h3>
-      <button class="modal-close" onclick="closeModal('modal-edit')">✕</button>
+      <span class="modal-title" id="mo-title">سفارش جدید</span>
+      <button class="modal-close" onclick="closeModal('modal-order')">✕</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="edit-id"/>
+      <input type="hidden" id="mo-id"/>
       <div class="form-2col">
-        <div class="form-row">
-          <label>نام مشتری</label>
-          <input type="text" id="edit-name" placeholder="مثلاً: فاطمه احمدی"/>
-        </div>
-        <div class="form-row">
-          <label>شماره تلفن</label>
-          <input type="text" id="edit-phone" placeholder="09..." dir="ltr"/>
-        </div>
+        <div class="form-group"><label>نام مشتری</label><input id="mo-name" placeholder="فاطمه احمدی"/></div>
+        <div class="form-group"><label>شماره تلفن</label><input id="mo-phone" placeholder="09..." dir="ltr"/></div>
       </div>
       <div class="form-2col">
-        <div class="form-row">
-          <label>نوع سفارش</label>
-          <select id="edit-type">
-            <option value="cake">🎂 کیک</option>
-            <option value="pastry">🥐 شیرینی</option>
-          </select>
+        <div class="form-group"><label>نوع سفارش</label>
+          <select id="mo-type"><option value="cake">🎂 کیک</option><option value="pastry">🥐 شیرینی</option></select>
         </div>
-        <div class="form-row">
-          <label>وضعیت</label>
-          <select id="edit-status">
+        <div class="form-group"><label>وضعیت</label>
+          <select id="mo-status">
             <option value="pending">⏳ در انتظار تأیید</option>
             <option value="confirm">🔵 تأیید شده</option>
             <option value="making">🟣 در حال ساخت</option>
@@ -625,285 +376,764 @@
         </div>
       </div>
       <div class="form-2col">
-        <div class="form-row">
-          <label>قیمت (تومان)</label>
-          <input type="number" id="edit-price" placeholder="مثلاً: 350000"/>
-        </div>
-        <div class="form-row">
-          <label>تاریخ تحویل</label>
-          <input type="text" id="edit-date" placeholder="مثلاً: ۱۴۰۴/۰۴/۰۱"/>
-        </div>
+        <div class="form-group"><label>قیمت (تومان)</label><input id="mo-price" type="number" placeholder="350000"/></div>
+        <div class="form-group"><label>تاریخ تحویل</label><input id="mo-date" placeholder="۱۴۰۴/۰۴/۰۱"/></div>
       </div>
-      <div class="form-row">
-        <label>توضیحات سفارش</label>
-        <textarea id="edit-desc" placeholder="جزئیات کیک، طعم، طبقه، نوشته روی کیک و..."></textarea>
-      </div>
+      <div class="form-group"><label>توضیحات</label><textarea id="mo-desc" placeholder="طعم، طبقه، نوشته روی کیک..."></textarea></div>
     </div>
     <div class="modal-footer">
-      <button class="btn-cancel-modal" onclick="closeModal('modal-edit')">انصراف</button>
-      <button class="btn-save" onclick="saveOrder()">💾 ذخیره سفارش</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-order')">انصراف</button>
+      <button class="btn btn-primary" onclick="saveOrder()">💾 ذخیره سفارش</button>
     </div>
   </div>
 </div>
 
-<!-- DETAIL MODAL -->
-<div class="modal-overlay" id="modal-detail">
+<!-- Order Detail Modal -->
+<div class="modal-backdrop" id="modal-order-detail">
   <div class="modal">
     <div class="modal-header">
-      <h3>جزئیات سفارش</h3>
-      <button class="modal-close" onclick="closeModal('modal-detail')">✕</button>
+      <span class="modal-title">جزئیات سفارش</span>
+      <button class="modal-close" onclick="closeModal('modal-order-detail')">✕</button>
     </div>
-    <div class="modal-body" id="detail-content"></div>
+    <div class="modal-body" id="order-detail-body"></div>
     <div class="modal-footer">
-      <button class="btn-cancel-modal" onclick="closeModal('modal-detail')">بستن</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-order-detail')">بستن</button>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
-<div id="toast"></div>
+<!-- Course Modal -->
+<div class="modal-backdrop" id="modal-course">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="mc-title">دوره جدید</span>
+      <button class="modal-close" onclick="closeModal('modal-course')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="mc-id"/>
+      <div class="form-group"><label>عنوان دوره</label><input id="mc-title-inp" placeholder="کیک‌پزی پیشرفته"/></div>
+      <div class="form-group"><label>توضیحات کوتاه</label><textarea id="mc-desc" placeholder="در این دوره یاد می‌گیرید..."></textarea></div>
+      <div class="form-2col">
+        <div class="form-group"><label>قیمت (تومان)</label><input id="mc-price" type="number" placeholder="1200000"/></div>
+        <div class="form-group"><label>قیمت با تخفیف (تومان)</label><input id="mc-sale" type="number" placeholder="890000"/></div>
+      </div>
+      <div class="form-2col">
+        <div class="form-group"><label>مدت دوره</label><input id="mc-dur" placeholder="۸ جلسه"/></div>
+        <div class="form-group"><label>سطح دوره</label>
+          <select id="mc-level"><option value="مقدماتی">مقدماتی</option><option value="متوسط">متوسط</option><option value="پیشرفته">پیشرفته</option></select>
+        </div>
+      </div>
+      <div class="form-2col">
+        <div class="form-group"><label>آیکن دوره (ایموجی)</label><input id="mc-icon" placeholder="🎂" maxlength="4"/></div>
+        <div class="form-group"><label>وضعیت انتشار</label>
+          <select id="mc-pub"><option value="1">✅ منتشر شده</option><option value="0">📝 پیش‌نویس</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-course')">انصراف</button>
+      <button class="btn btn-primary" onclick="saveCourse()">💾 ذخیره دوره</button>
+    </div>
+  </div>
+</div>
+
+<!-- Customer Modal -->
+<div class="modal-backdrop" id="modal-customer">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="mcu-title">مشتری جدید</span>
+      <button class="modal-close" onclick="closeModal('modal-customer')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="mcu-id"/>
+      <div class="form-2col">
+        <div class="form-group"><label>نام و نام‌خانوادگی</label><input id="mcu-name" placeholder="فاطمه احمدی"/></div>
+        <div class="form-group"><label>شماره تلفن</label><input id="mcu-phone" placeholder="09..." dir="ltr"/></div>
+      </div>
+      <div class="form-group"><label>آدرس</label><textarea id="mcu-addr" placeholder="آدرس تحویل..."></textarea></div>
+      <div class="form-group"><label>یادداشت</label><input id="mcu-note" placeholder="علاقه‌مند به کیک شکلاتی"/></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-customer')">انصراف</button>
+      <button class="btn btn-primary" onclick="saveCustomer()">💾 ذخیره</button>
+    </div>
+  </div>
+</div>
+
+<!-- Content Modal -->
+<div class="modal-backdrop" id="modal-content">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="mct-title">ویرایش محتوا</span>
+      <button class="modal-close" onclick="closeModal('modal-content')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="mct-key"/>
+      <div class="form-group"><label>عنوان</label><input id="mct-title-inp"/></div>
+      <div class="form-group"><label>محتوا / توضیحات</label><textarea id="mct-body" style="min-height:140px"></textarea></div>
+      <div class="form-group"><label>وضعیت نمایش</label>
+        <select id="mct-vis"><option value="1">✅ فعال</option><option value="0">🚫 غیرفعال</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-content')">انصراف</button>
+      <button class="btn btn-primary" onclick="saveContent()">💾 ذخیره</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-stack"></div>
 
 <script>
-  /* ─── DATA ─── */
-  const STATUS_MAP = {
-    pending: { label: 'در انتظار تأیید', cls: 'badge-pending', icon: '⏳' },
-    confirm: { label: 'تأیید شده',       cls: 'badge-confirm', icon: '🔵' },
-    making:  { label: 'در حال ساخت',     cls: 'badge-making',  icon: '🟣' },
-    sent:    { label: 'ارسال شده',        cls: 'badge-sent',    icon: '🟢' },
-    done:    { label: 'تحویل داده شده',   cls: 'badge-done',    icon: '✅' },
-    cancel:  { label: 'لغو شده',          cls: 'badge-cancel',  icon: '❌' },
-  };
-  const STATUS_ORDER = ['pending','confirm','making','sent','done'];
+// ═══════════════════════════════════════════
+//  DATA STORE
+// ═══════════════════════════════════════════
+function ls(k, d) { try { return JSON.parse(localStorage.getItem('dc_' + k) || 'null') || d } catch { return d } }
+function ss(k, v) { try { localStorage.setItem('dc_' + k, JSON.stringify(v)) } catch {} }
 
-  let orders = JSON.parse(localStorage.getItem('dellcake_orders') || 'null') || [
-    { id:'DC-1001', name:'فاطمه احمدی',    phone:'09121234567', type:'cake',   status:'pending', price:450000, date:'۱۴۰۴/۰۴/۰۵', desc:'کیک تولد ۳ طبقه، طعم شکلاتی، نوشته: تولدت مبارک مامان' },
-    { id:'DC-1002', name:'رضا کریمی',      phone:'09351112233', type:'pastry', status:'confirm', price:280000, date:'۱۴۰۴/۰۴/۰۳', desc:'شیرینی مخلوط ۱ کیلو' },
-    { id:'DC-1003', name:'زهرا محمدی',     phone:'09209876543', type:'cake',   status:'making',  price:620000, date:'۱۴۰۴/۰۴/۰۶', desc:'کیک عروسی ۵ طبقه، سفید و طلایی' },
-    { id:'DC-1004', name:'علی نصیری',      phone:'09155556677', type:'cake',   status:'sent',    price:380000, date:'۱۴۰۴/۰۴/۰۲', desc:'کیک تولد، تم فوتبالی' },
-    { id:'DC-1005', name:'مریم حسینی',     phone:'09331234000', type:'pastry', status:'done',    price:150000, date:'۱۴۰۴/۰۳/۳۰', desc:'باقلوا نیم کیلو' },
-    { id:'DC-1006', name:'امیر رضایی',     phone:'09107778899', type:'cake',   status:'cancel',  price:500000, date:'—',            desc:'لغو شد' },
-    { id:'DC-1007', name:'نگار صادقی',     phone:'09214445566', type:'cake',   status:'pending', price:320000, date:'۱۴۰۴/۰۴/۰۷', desc:'کیک تولد دخترونه، تم تک‌شاخ' },
-    { id:'DC-1008', name:'حسین کمالی',     phone:'09368889900', type:'pastry', status:'confirm', price:200000, date:'۱۴۰۴/۰۴/۰۴', desc:'شیرینی نخودچی ۰.۵ کیلو' },
-  ];
+let ORDERS = ls('orders', [
+  { id:'DC-1001', name:'فاطمه احمدی',    phone:'09121234567', type:'cake',   status:'pending', price:450000, date:'۱۴۰۴/۰۴/۰۵', desc:'کیک تولد ۳ طبقه شکلاتی، نوشته: تولدت مبارک مامان' },
+  { id:'DC-1002', name:'رضا کریمی',      phone:'09351112233', type:'pastry', status:'confirm', price:280000, date:'۱۴۰۴/۰۴/۰۳', desc:'شیرینی مخلوط ۱ کیلو' },
+  { id:'DC-1003', name:'زهرا محمدی',     phone:'09209876543', type:'cake',   status:'making',  price:620000, date:'۱۴۰۴/۰۴/۰۶', desc:'کیک عروسی ۵ طبقه، سفید و طلایی' },
+  { id:'DC-1004', name:'علی نصیری',      phone:'09155556677', type:'cake',   status:'sent',    price:380000, date:'۱۴۰۴/۰۴/۰۲', desc:'کیک تولد تم فوتبالی' },
+  { id:'DC-1005', name:'مریم حسینی',     phone:'09331234000', type:'pastry', status:'done',    price:150000, date:'۱۴۰۳/۱۲/۲۸', desc:'باقلوا نیم کیلو' },
+  { id:'DC-1006', name:'امیر رضایی',     phone:'09107778899', type:'cake',   status:'cancel',  price:500000, date:'—',            desc:'لغو شد، پیش‌پرداخت بازگشت داده شد' },
+  { id:'DC-1007', name:'نگار صادقی',     phone:'09214445566', type:'cake',   status:'pending', price:320000, date:'۱۴۰۴/۰۴/۰۷', desc:'کیک تولد دخترونه تم تک‌شاخ' },
+  { id:'DC-1008', name:'حسین کمالی',     phone:'09368889900', type:'pastry', status:'confirm', price:200000, date:'۱۴۰۴/۰۴/۰۴', desc:'شیرینی نخودچی ۰.۵ کیلو' },
+])
 
-  let currentFilter = 'all';
-  let currentPage   = 1;
-  const PAGE_SIZE   = 7;
+let COURSES = ls('courses', [
+  { id:'CR-01', icon:'🎂', title:'کیک‌پزی مقدماتی',       desc:'آموزش کامل پایه‌های کیک‌پزی حرفه‌ای از صفر تا صد برای مبتدیان', price:1200000, sale:890000, dur:'۸ جلسه', level:'مقدماتی', pub:1 },
+  { id:'CR-02', icon:'🍰', title:'کیک‌پزی پیشرفته',       desc:'تکنیک‌های حرفه‌ای تزئین، فوندانت، ویفر و انواع رویه‌های کیک', price:2500000, sale:1800000, dur:'۱۲ جلسه', level:'پیشرفته', pub:1 },
+  { id:'CR-03', icon:'🥐', title:'شیرینی‌پزی سنتی',       desc:'آموزش شیرینی‌های اصیل ایرانی؛ باقلوا، نان برنجی، کلوچه و بیشتر', price:980000, sale:0, dur:'۶ جلسه', level:'مقدماتی', pub:1 },
+  { id:'CR-04', icon:'🧁', title:'کاپ‌کیک و مینی‌کیک',   desc:'آموزش طراحی و تزئین کاپ‌کیک برای مجالس و مهمانی‌ها', price:750000, sale:590000, dur:'۴ جلسه', level:'متوسط', pub:0 },
+])
 
-  function save() { localStorage.setItem('dellcake_orders', JSON.stringify(orders)); }
+let CUSTOMERS = ls('customers', [
+  { id:'CU-01', name:'فاطمه احمدی',  phone:'09121234567', addr:'تهران، پونک', note:'طرفدار کیک شکلاتی', orders:3 },
+  { id:'CU-02', name:'رضا کریمی',    phone:'09351112233', addr:'تهران، سعادت‌آباد', note:'', orders:1 },
+  { id:'CU-03', name:'زهرا محمدی',   phone:'09209876543', addr:'تهران، جردن', note:'کیک عروسی سفارش داد', orders:2 },
+  { id:'CU-04', name:'علی نصیری',    phone:'09155556677', addr:'تهران، تجریش', note:'', orders:1 },
+  { id:'CU-05', name:'مریم حسینی',   phone:'09331234000', addr:'تهران، نیاوران', note:'مشتری قدیمی', orders:5 },
+])
 
-  /* ─── STATS ─── */
-  function updateStats() {
-    document.getElementById('stat-total').textContent   = orders.length;
-    document.getElementById('stat-pending').textContent = orders.filter(o=>o.status==='pending').length;
-    document.getElementById('stat-done').textContent    = orders.filter(o=>o.status==='done').length;
-    const rev = orders.filter(o=>o.status!=='cancel').reduce((s,o)=>s+Number(o.price||0),0);
-    document.getElementById('stat-revenue').textContent = rev.toLocaleString('fa-IR');
-  }
+let CONTENT = ls('content', [
+  { key:'hero_title', title:'تیتر اصلی سایت', body:'عشق رو در هر کیک حس کن 🎂', vis:1 },
+  { key:'hero_sub',   title:'زیرتیتر اصلی',   body:'دل‌کیک، سفارش آنلاین کیک و شیرینی تازه با تحویل در تهران', vis:1 },
+  { key:'about',      title:'درباره ما',       body:'دل‌کیک با بیش از ۵ سال تجربه در حوزه شیرینی‌پزی حرفه‌ای، با استفاده از مواد اولیه باکیفیت و طرز تهیه‌های اصیل، بهترین کیک‌ها را برای خاطره‌سازی شما آماده می‌کند.', vis:1 },
+  { key:'academy_intro', title:'معرفی آکادمی', body:'در آکادمی دل‌کیک، از مبتدی تا حرفه‌ای را آموزش می‌دهیم. کلاس‌ها هم حضوری و هم آنلاین برگزار می‌شوند.', vis:1 },
+  { key:'rules',      title:'قوانین سفارش',    body:'حداقل ۲ روز قبل از مناسبت سفارش دهید. پیش‌پرداخت ۵۰٪ الزامی است. لغو سفارش تا ۴۸ ساعت قبل امکان‌پذیر است.', vis:1 },
+  { key:'footer_tel', title:'شماره تماس',      body:'09121234567', vis:1 },
+  { key:'instagram',  title:'آدرس اینستاگرام', body:'@dell_cake', vis:1 },
+])
 
-  /* ─── FILTER ─── */
-  function setFilter(btn) {
-    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    currentFilter = btn.dataset.filter;
-    currentPage   = 1;
-    renderTable();
-  }
+// Gallery images (emoji placeholders since we can't embed real images)
+let GALLERY = ls('gallery', [
+  {id:'G1', emoji:'🎂', label:'کیک تولد'}, {id:'G2', emoji:'🍰', label:'کیک عروسی'},
+  {id:'G3', emoji:'🧁', label:'کاپ‌کیک'}, {id:'G4', emoji:'🥐', label:'شیرینی'},
+  {id:'G5', emoji:'🎂', label:'کیک شکلاتی'}, {id:'G6', emoji:'🍮', label:'دسر'},
+])
 
-  /* ─── RENDER TABLE ─── */
-  function renderTable() {
-    const q = document.getElementById('search').value.trim().toLowerCase();
-    let list = orders.filter(o => {
-      const matchFilter = currentFilter === 'all' || o.status === currentFilter;
-      const matchQ = !q || o.name.includes(q) || o.phone.includes(q) || o.id.toLowerCase().includes(q);
-      return matchFilter && matchQ;
-    });
+function saveAll() {
+  ss('orders', ORDERS); ss('courses', COURSES)
+  ss('customers', CUSTOMERS); ss('content', CONTENT); ss('gallery', GALLERY)
+}
 
-    const total  = list.length;
-    const pages  = Math.max(1, Math.ceil(total / PAGE_SIZE));
-    currentPage  = Math.min(currentPage, pages);
-    const sliced = list.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
+// ═══════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════
+const PAGE_META = {
+  dashboard: { title:'داشبورد', sub:'خوش آمدید، مدیر دل‌کیک' },
+  orders:    { title:'سفارش‌ها', sub:'مدیریت و پیگیری سفارش‌های مشتریان' },
+  courses:   { title:'دوره‌های آموزشی', sub:'مدیریت کلاس‌ها و محتوای آکادمی دل‌کیک' },
+  gallery:   { title:'گالری تصاویر', sub:'مدیریت عکس‌های سایت و نمونه کارها' },
+  customers: { title:'مشتریان', sub:'لیست و مدیریت مشتریان دل‌کیک' },
+  analytics: { title:'گزارش‌ها', sub:'آمار فروش و عملکرد سایت' },
+  content:   { title:'مدیریت محتوا', sub:'ویرایش متون، عناوین و اطلاعات سایت' },
+  settings:  { title:'تنظیمات', sub:'پیکربندی پنل و پروفایل مدیر' },
+}
 
-    const tbody = document.getElementById('orders-body');
-    const empty = document.getElementById('empty-state');
+let curPage = null
+let orderFilter = 'all', orderQ = '', orderPage = 1
 
-    if (sliced.length === 0) {
-      tbody.innerHTML = '';
-      empty.style.display = 'block';
-    } else {
-      empty.style.display = 'none';
-      tbody.innerHTML = sliced.map(o => {
-        const s = STATUS_MAP[o.status];
-        const typeLabel = o.type === 'cake' ? '<span class="order-type type-cake">🎂 کیک</span>'
-                                             : '<span class="order-type type-pastry">🥐 شیرینی</span>';
-        return `<tr>
-          <td><span class="order-id">${o.id}</span></td>
-          <td>
-            <div class="customer-name">${o.name}</div>
-            <div class="customer-phone">${o.phone}</div>
-          </td>
-          <td>${typeLabel}</td>
-          <td style="max-width:160px;font-size:.8rem;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${o.desc||'—'}</td>
-          <td class="date-cell">${o.date||'—'}</td>
-          <td class="price-cell">${Number(o.price||0).toLocaleString('fa-IR')}</td>
-          <td>
-            <button class="badge ${s.cls}" onclick="cycleStatus('${o.id}')" title="کلیک برای تغییر وضعیت">
-              ${s.icon} ${s.label}
-            </button>
-          </td>
-          <td>
-            <div class="actions">
-              <button class="act-btn" title="جزئیات" onclick="showDetail('${o.id}')">👁</button>
-              <button class="act-btn" title="ویرایش"  onclick="openEditModal('${o.id}')">✏️</button>
-              <button class="act-btn del" title="حذف" onclick="deleteOrder('${o.id}')">🗑</button>
+function navigateTo(page) {
+  if (!PAGE_META[page]) return
+  curPage = page
+  document.querySelectorAll('[data-nav]').forEach(n => n.classList.toggle('active', n.dataset.nav === page))
+  document.getElementById('page-title').textContent = PAGE_META[page].title
+  document.getElementById('page-sub').textContent   = PAGE_META[page].sub
+  const root = document.getElementById('page-root')
+  root.style.animation = 'none'; root.offsetHeight; root.style.animation = ''
+  root.innerHTML = pages[page]()
+  closeSidebar()
+}
+
+function openSidebar()  { document.getElementById('sidebar').classList.add('open'); document.body.classList.add('drawer-open') }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.body.classList.remove('drawer-open') }
+
+document.querySelectorAll('[data-nav]').forEach(n => n.addEventListener('click', () => navigateTo(n.dataset.nav)))
+
+// ═══════════════════════════════════════════
+//  STATUS HELPERS
+// ═══════════════════════════════════════════
+const STATUS = {
+  pending: { label:'در انتظار تأیید', cls:'chip-wait',   icon:'⏳' },
+  confirm: { label:'تأیید شده',       cls:'chip-blue',   icon:'🔵' },
+  making:  { label:'در حال ساخت',     cls:'chip-purple', icon:'🟣' },
+  sent:    { label:'ارسال شده',        cls:'chip-ok',     icon:'🟢' },
+  done:    { label:'تحویل داده شده',   cls:'chip-ok',     icon:'✅' },
+  cancel:  { label:'لغو شده',          cls:'chip-fail',   icon:'❌' },
+}
+const STATUS_FLOW = ['pending','confirm','making','sent','done']
+
+// ═══════════════════════════════════════════
+//  PAGES
+// ═══════════════════════════════════════════
+const pages = {
+
+// ── DASHBOARD ──
+dashboard() {
+  const total = ORDERS.length
+  const pending = ORDERS.filter(o=>o.status==='pending').length
+  const done    = ORDERS.filter(o=>o.status==='done').length
+  const rev     = ORDERS.filter(o=>o.status!=='cancel').reduce((s,o)=>s+Number(o.price||0),0)
+  const courses = COURSES.filter(c=>c.pub).length
+  const recentOrders = [...ORDERS].reverse().slice(0,5)
+  return `
+  <div class="anim-stagger">
+    <div class="stats-grid anim-stagger" style="margin-bottom:1.25rem">
+      <div class="stat-card panel" style="padding:1.1rem 1.25rem">
+        <div class="stat-ico stat-ico-pink">📋</div>
+        <div style="flex:1">
+          <div class="stat-lbl">کل سفارش‌ها</div>
+          <div class="stat-val">${total.toLocaleString('fa-IR')}</div>
+          <div class="stat-trend">↑ این ماه</div>
+          <svg class="spark" viewBox="0 0 120 32"><path class="spark-line" d="M0 24 L20 20 L40 22 L60 14 L80 16 L100 10 L120 8" fill="none" stroke="#e8789a" stroke-width="2.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div class="stat-card panel" style="padding:1.1rem 1.25rem">
+        <div class="stat-ico stat-ico-purple">⏳</div>
+        <div style="flex:1">
+          <div class="stat-lbl">در انتظار تأیید</div>
+          <div class="stat-val">${pending.toLocaleString('fa-IR')}</div>
+          <div class="stat-trend" style="color:var(--yellow)">نیاز به بررسی</div>
+        </div>
+      </div>
+      <div class="stat-card panel" style="padding:1.1rem 1.25rem">
+        <div class="stat-ico stat-ico-green">✅</div>
+        <div style="flex:1">
+          <div class="stat-lbl">تحویل داده شده</div>
+          <div class="stat-val">${done.toLocaleString('fa-IR')}</div>
+          <div class="stat-trend">↑ خوب</div>
+        </div>
+      </div>
+      <div class="stat-card panel" style="padding:1.1rem 1.25rem">
+        <div class="stat-ico stat-ico-blue">💰</div>
+        <div style="flex:1">
+          <div class="stat-lbl">درآمد (تومان)</div>
+          <div class="stat-val" style="font-size:1.2rem">${rev.toLocaleString('fa-IR')}</div>
+          <div class="stat-trend">↑ این ماه</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:1rem;flex-wrap:wrap">
+      <div>
+        <div class="section-head"><div><div class="section-title">آخرین سفارش‌ها</div></div><button class="btn btn-ghost btn-sm" onclick="navigateTo('orders')">مشاهده همه ←</button></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>مشتری</th><th>نوع</th><th>وضعیت</th><th>قیمت</th></tr></thead>
+            <tbody>${recentOrders.map(o=>`
+              <tr>
+                <td class="col-id">${o.id}</td>
+                <td><div class="col-name">${o.name}</div><div class="col-sub">${o.phone}</div></td>
+                <td><span class="chip ${o.type==='cake'?'chip-cake':'chip-pastry'}">${o.type==='cake'?'🎂 کیک':'🥐 شیرینی'}</span></td>
+                <td><span class="chip ${STATUS[o.status].cls}">${STATUS[o.status].icon} ${STATUS[o.status].label}</span></td>
+                <td style="font-weight:700;color:var(--pink-d)">${Number(o.price).toLocaleString('fa-IR')}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="section-head"><div class="section-title">خلاصه آکادمی</div></div>
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          ${COURSES.slice(0,4).map(c=>`
+          <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--border)">
+            <span style="font-size:1.5rem">${c.icon}</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:600;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.title}</div>
+              <div style="font-size:.72rem;color:var(--ink-f)">${c.dur} · ${c.level}</div>
             </div>
-          </td>
-        </tr>`;
-      }).join('');
-    }
+            <span class="chip ${c.pub?'chip-ok':'chip-wait'}">${c.pub?'فعال':'پیش‌نویس'}</span>
+          </div>`).join('')}
+          <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center" onclick="navigateTo('courses')">مدیریت دوره‌ها ←</button>
+        </div>
+      </div>
+    </div>
+  </div>`
+},
 
-    // pagination
-    const pg = document.getElementById('pagination');
-    pg.innerHTML = '';
-    if (pages > 1) {
-      for (let i=1; i<=pages; i++) {
-        const btn = document.createElement('button');
-        btn.className = 'page-btn' + (i===currentPage?' active':'');
-        btn.textContent = String(i);
-        btn.onclick = () => { currentPage = i; renderTable(); };
-        pg.appendChild(btn);
-      }
-    }
+// ── ORDERS ──
+orders() {
+  const filtered = ORDERS.filter(o => {
+    const mf = orderFilter==='all' || o.status===orderFilter
+    const mq = !orderQ || o.name.includes(orderQ) || o.phone.includes(orderQ) || o.id.includes(orderQ)
+    return mf && mq
+  })
+  const pages = Math.max(1, Math.ceil(filtered.length/8))
+  orderPage = Math.min(orderPage, pages)
+  const rows = filtered.slice((orderPage-1)*8, orderPage*8)
+  return `
+  <div class="section-head">
+    <div><div class="section-title">مدیریت سفارش‌ها</div><div class="section-sub">${filtered.length} سفارش</div></div>
+    <button class="btn btn-primary" onclick="openOrderModal()">＋ سفارش جدید</button>
+  </div>
+  <div class="toolbar">
+    <div class="search-wrap"><span class="search-icon">🔍</span><input placeholder="جستجو نام، تلفن، شناسه..." value="${orderQ}" oninput="orderQ=this.value;orderPage=1;re()"/></div>
+    <div class="filter-tabs">
+      ${['all','pending','confirm','making','sent','done','cancel'].map(f=>`<button class="ftab ${orderFilter===f?'on':''}" onclick="orderFilter='${f}';orderPage=1;re()">${{all:'همه',pending:'⏳ انتظار',confirm:'🔵 تأیید',making:'🟣 ساخت',sent:'🟢 ارسال',done:'✅ تحویل',cancel:'❌ لغو'}[f]}</button>`).join('')}
+    </div>
+  </div>
+  ${rows.length===0?`<div class="empty-state"><span class="emoji">🎂</span>سفارشی یافت نشد</div>`:`
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>مشتری</th><th>نوع</th><th>جزئیات</th><th>تاریخ</th><th>قیمت</th><th>وضعیت</th><th>عملیات</th></tr></thead>
+      <tbody>${rows.map(o=>`<tr>
+        <td class="col-id">${o.id}</td>
+        <td><div class="col-name">${o.name}</div><div class="col-sub">${o.phone}</div></td>
+        <td><span class="chip ${o.type==='cake'?'chip-cake':'chip-pastry'}">${o.type==='cake'?'🎂 کیک':'🥐 شیرینی'}</span></td>
+        <td style="font-size:.78rem;color:var(--ink-s);max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${o.desc||'—'}</td>
+        <td style="font-size:.8rem;color:var(--ink-f)">${o.date||'—'}</td>
+        <td style="font-weight:700;color:var(--pink-d);white-space:nowrap">${Number(o.price).toLocaleString('fa-IR')}</td>
+        <td><button class="chip ${STATUS[o.status].cls} chip-clickable" onclick="cycleStatus('${o.id}')" title="کلیک برای تغییر">${STATUS[o.status].icon} ${STATUS[o.status].label}</button></td>
+        <td><div class="row-actions">
+          <button class="act-btn" title="جزئیات" onclick="showOrderDetail('${o.id}')">👁</button>
+          <button class="act-btn" title="ویرایش" onclick="openOrderModal('${o.id}')">✏️</button>
+          <button class="act-btn del" title="حذف" onclick="delOrder('${o.id}')">🗑</button>
+        </div></td>
+      </tr>`).join('')}</tbody>
+    </table>
+  </div>
+  ${pages>1?`<div class="pagination">${Array.from({length:pages},(_,i)=>`<button class="pg-btn ${orderPage===i+1?'on':''}" onclick="orderPage=${i+1};re()">${(i+1).toLocaleString('fa-IR')}</button>`).join('')}</div>`:''}`}
+  `
+},
 
-    updateStats();
+// ── COURSES ──
+courses() {
+  return `
+  <div class="section-head">
+    <div><div class="section-title">دوره‌های آموزشی آکادمی دل‌کیک</div><div class="section-sub">${COURSES.length} دوره · ${COURSES.filter(c=>c.pub).length} منتشر شده</div></div>
+    <button class="btn btn-primary" onclick="openCourseModal()">＋ دوره جدید</button>
+  </div>
+  <div class="cards-grid">${COURSES.map(c=>`
+    <div class="course-card">
+      <div class="course-thumb">${c.icon}</div>
+      <div class="course-title">${c.title}</div>
+      <div class="course-desc">${c.desc}</div>
+      <div class="course-meta">
+        <div>
+          <span class="chip chip-purple" style="font-size:.72rem">${c.level}</span>
+          <span class="chip chip-blue" style="font-size:.72rem;margin-right:.3rem">⏱ ${c.dur}</span>
+        </div>
+        <span class="chip ${c.pub?'chip-ok':'chip-wait'}">${c.pub?'✅ فعال':'📝 پیش‌نویس'}</span>
+      </div>
+      <div style="margin-top:.75rem">
+        <span class="course-price">
+          ${c.sale?Number(c.sale).toLocaleString('fa-IR'):Number(c.price).toLocaleString('fa-IR')} تومان
+          ${c.sale?`<span class="old">${Number(c.price).toLocaleString('fa-IR')}</span>`:''}
+        </span>
+      </div>
+      <div class="course-actions">
+        <button class="btn btn-ghost btn-sm" style="flex:1;justify-content:center" onclick="openCourseModal('${c.id}')">✏️ ویرایش</button>
+        <button class="btn btn-ghost btn-sm" onclick="toggleCoursePublish('${c.id}')">${c.pub?'📝 پیش‌نویس':'✅ انتشار'}</button>
+        <button class="btn btn-danger btn-sm btn-icon-only" onclick="delCourse('${c.id}')">🗑</button>
+      </div>
+    </div>`).join('')}
+  </div>`
+},
+
+// ── GALLERY ──
+gallery() {
+  return `
+  <div class="section-head">
+    <div><div class="section-title">گالری تصاویر</div><div class="section-sub">${GALLERY.length} تصویر</div></div>
+    <button class="btn btn-primary" onclick="addGalleryItem()">＋ افزودن تصویر</button>
+  </div>
+  <div style="background:rgba(252,232,239,.3);border:2px dashed var(--pink-2);border-radius:var(--r-md);padding:1.25rem;text-align:center;margin-bottom:1rem;cursor:pointer" onclick="addGalleryItem()">
+    <div style="font-size:2rem;margin-bottom:.4rem">📁</div>
+    <div style="font-size:.88rem;color:var(--ink-s);font-weight:500">کلیک کنید یا فایل تصویر را اینجا رها کنید</div>
+    <div style="font-size:.75rem;color:var(--ink-f);margin-top:.25rem">JPG، PNG، WEBP — حداکثر ۵ مگابایت</div>
+  </div>
+  <div class="gallery-grid">${GALLERY.map(g=>`
+    <div class="gallery-item">
+      <span style="font-size:2.5rem">${g.emoji}</span>
+      <button class="gallery-del" onclick="delGallery('${g.id}')">✕</button>
+      <div style="position:absolute;bottom:0;right:0;left:0;background:rgba(0,0,0,.5);color:#fff;font-size:.68rem;padding:.25rem .4rem;text-align:center">${g.label}</div>
+    </div>`).join('')}
+  </div>`
+},
+
+// ── CUSTOMERS ──
+customers() {
+  return `
+  <div class="section-head">
+    <div><div class="section-title">مشتریان دل‌کیک</div><div class="section-sub">${CUSTOMERS.length} مشتری ثبت‌شده</div></div>
+    <button class="btn btn-primary" onclick="openCustomerModal()">＋ مشتری جدید</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>نام</th><th>تلفن</th><th>آدرس</th><th>یادداشت</th><th>سفارش</th><th>عملیات</th></tr></thead>
+      <tbody>${CUSTOMERS.map(c=>`<tr>
+        <td class="col-id">${c.id}</td>
+        <td class="col-name">${c.name}</td>
+        <td style="direction:ltr;text-align:right;font-size:.82rem;color:var(--ink-s)">${c.phone}</td>
+        <td style="font-size:.8rem;color:var(--ink-s)">${c.addr||'—'}</td>
+        <td style="font-size:.78rem;color:var(--ink-f)">${c.note||'—'}</td>
+        <td><span class="chip chip-blue">${(c.orders||0).toLocaleString('fa-IR')} سفارش</span></td>
+        <td><div class="row-actions">
+          <button class="act-btn" onclick="openCustomerModal('${c.id}')">✏️</button>
+          <button class="act-btn del" onclick="delCustomer('${c.id}')">🗑</button>
+        </div></td>
+      </tr>`).join('')}</tbody>
+    </table>
+  </div>`
+},
+
+// ── ANALYTICS ──
+analytics() {
+  const total  = ORDERS.length
+  const done   = ORDERS.filter(o=>o.status==='done').length
+  const rev    = ORDERS.filter(o=>o.status!=='cancel').reduce((s,o)=>s+Number(o.price||0),0)
+  const cakes  = ORDERS.filter(o=>o.type==='cake').length
+  const pastry = ORDERS.filter(o=>o.type==='pastry').length
+  const bars   = [65,45,80,55,90,70,95]
+  const days   = ['ش','ی','د','س','چ','پ','ج']
+  return `
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.25rem">
+    <div class="mini-stat"><div style="font-size:1.5rem">📋</div><div class="mini-stat-val">${total.toLocaleString('fa-IR')}</div><div class="mini-stat-lbl">کل سفارش</div></div>
+    <div class="mini-stat"><div style="font-size:1.5rem">✅</div><div class="mini-stat-val">${done.toLocaleString('fa-IR')}</div><div class="mini-stat-lbl">تحویل شده</div></div>
+    <div class="mini-stat"><div style="font-size:1.5rem">👥</div><div class="mini-stat-val">${CUSTOMERS.length.toLocaleString('fa-IR')}</div><div class="mini-stat-lbl">مشتریان</div></div>
+    <div class="mini-stat"><div style="font-size:1.5rem">💰</div><div class="mini-stat-val" style="font-size:1rem">${rev.toLocaleString('fa-IR')}</div><div class="mini-stat-lbl">درآمد (تومان)</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+    <div style="background:var(--surface);border-radius:var(--r-md);padding:1.25rem;border:1px solid var(--border)">
+      <div class="section-title" style="margin-bottom:.75rem">فروش هفتگی (نمونه)</div>
+      <div class="bar-chart">${bars.map((h,i)=>`
+        <div class="bar-col">
+          <div class="bar-fill" style="height:${h}%;animation-delay:${i*.1}s"></div>
+          <div class="bar-label">${days[i]}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div style="background:var(--surface);border-radius:var(--r-md);padding:1.25rem;border:1px solid var(--border)">
+      <div class="section-title" style="margin-bottom:.75rem">ترکیب سفارش‌ها</div>
+      <div style="space-y:.75rem">
+        ${[['🎂 کیک',cakes,total,'var(--pink)'],['🥐 شیرینی',pastry,total,'var(--yellow)']].map(([l,n,t,c])=>`
+        <div style="margin-bottom:.85rem">
+          <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.35rem">
+            <span style="font-weight:600">${l}</span>
+            <span style="color:var(--ink-f)">${n} (${t?Math.round(n/t*100):0}٪)</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width:${t?n/t*100:0}%;background:${c}"></div></div>
+        </div>`).join('')}
+        ${[['در انتظار',ORDERS.filter(o=>o.status==='pending').length,'var(--yellow)'],['در حال ساخت',ORDERS.filter(o=>o.status==='making').length,'var(--purple)'],['تحویل شده',done,'var(--green)']].map(([l,n,c])=>`
+        <div style="margin-bottom:.85rem">
+          <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.35rem">
+            <span style="font-weight:600">${l}</span>
+            <span style="color:var(--ink-f)">${n}</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width:${total?n/total*100:0}%;background:${c}"></div></div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>
+  <div style="background:var(--surface);border-radius:var(--r-md);padding:1.25rem;border:1px solid var(--border)">
+    <div class="section-title" style="margin-bottom:.75rem">وضعیت دوره‌های آموزشی</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem">
+      ${COURSES.map(c=>`<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);padding:.85rem;display:flex;align-items:center;gap:.6rem">
+        <span style="font-size:1.5rem">${c.icon}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.title}</div>
+          <div style="font-size:.72rem;color:var(--ink-f)">${c.sale?Number(c.sale).toLocaleString('fa-IR'):Number(c.price).toLocaleString('fa-IR')} تومان</div>
+        </div>
+        <span class="chip ${c.pub?'chip-ok':'chip-wait'}" style="font-size:.68rem">${c.pub?'فعال':'—'}</span>
+      </div>`).join('')}
+    </div>
+  </div>`
+},
+
+// ── CONTENT ──
+content() {
+  return `
+  <div class="section-head">
+    <div><div class="section-title">مدیریت محتوای سایت</div><div class="section-sub">ویرایش متن‌ها، عناوین و اطلاعات تماس</div></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>بخش</th><th>محتوا</th><th>نمایش</th><th>عملیات</th></tr></thead>
+      <tbody>${CONTENT.map(c=>`<tr>
+        <td><div class="col-name">${c.title}</div><div class="col-sub" style="font-family:monospace;font-size:.7rem">${c.key}</div></td>
+        <td style="font-size:.82rem;color:var(--ink-s);max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.body}</td>
+        <td><span class="chip ${c.vis?'chip-ok':'chip-fail'}">${c.vis?'✅ فعال':'🚫 غیرفعال'}</span></td>
+        <td><div class="row-actions">
+          <button class="act-btn" onclick="openContentModal('${c.key}')">✏️ ویرایش</button>
+        </div></td>
+      </tr>`).join('')}</tbody>
+    </table>
+  </div>`
+},
+
+// ── SETTINGS ──
+settings() {
+  return `
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+    <div style="background:var(--surface);border-radius:var(--r-lg);padding:1.25rem;border:1px solid var(--border)">
+      <div class="section-title" style="margin-bottom:1rem">👤 حساب مدیر</div>
+      <div class="form-group"><label>نام</label><input value="مدیر دل‌کیک" id="s-name"/></div>
+      <div class="form-group"><label>ایمیل</label><input value="admin@dellcake.ir" dir="ltr" id="s-email"/></div>
+      <div class="form-group"><label>شماره تماس</label><input value="09121234567" dir="ltr" id="s-phone"/></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="toast('تنظیمات ذخیره شد ✅','success')">💾 ذخیره تغییرات</button>
+    </div>
+    <div style="background:var(--surface);border-radius:var(--r-lg);padding:1.25rem;border:1px solid var(--border)">
+      <div class="section-title" style="margin-bottom:1rem">🔔 اعلان‌ها</div>
+      ${[['ایمیل سفارش جدید',true],['پیامک تأیید',true],['هشدار موجودی',false],['گزارش روزانه',true]].map(([l,on],i)=>`
+      <div class="toggle-row">
+        <span style="font-size:.88rem;font-weight:600">${l}</span>
+        <label class="toggle"><input type="checkbox" ${on?'checked':''}><span class="toggle-ui"></span></label>
+      </div>`).join('')}
+    </div>
+    <div style="background:var(--surface);border-radius:var(--r-lg);padding:1.25rem;border:1px solid var(--border);grid-column:1/-1">
+      <div class="section-title" style="margin-bottom:1rem">🔗 اتصال پیام‌رسان‌ها</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem">
+        ${[['📱 تلگرام','BOT_TOKEN وارد کنید'],['💬 بله','API Key بله'],['📲 پیامک','کد API SMS']].map(([l,ph])=>`
+        <div>
+          <div style="font-weight:600;font-size:.85rem;margin-bottom:.4rem">${l}</div>
+          <div style="display:flex;gap:.4rem">
+            <input placeholder="${ph}" style="flex:1;padding:.55rem .8rem;border:1.5px solid var(--border);border-radius:10px;font-family:'Vazirmatn',sans-serif;font-size:.82rem;outline:none" dir="ltr"/>
+            <button class="btn btn-ghost btn-sm" onclick="toast('اتصال آزمایش شد')">تست</button>
+          </div>
+        </div>`).join('')}
+      </div>
+      <button class="btn btn-primary" style="margin-top:1rem" onclick="toast('تنظیمات ارتباطی ذخیره شد ✅','success')">💾 ذخیره</button>
+    </div>
+    <div style="background:var(--red-bg);border-radius:var(--r-lg);padding:1.25rem;border:1px solid #fecaca;grid-column:1/-1">
+      <div class="section-title" style="color:var(--red);margin-bottom:.5rem">⚠️ منطقه خطرناک</div>
+      <div style="font-size:.85rem;color:var(--ink-s);margin-bottom:.85rem">این عملیات‌ها برگشت‌ناپذیر هستند. با احتیاط استفاده کنید.</div>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+        <button class="btn btn-danger" onclick="if(confirm('آیا مطمئنید؟'))toast('پشتیبان‌گیری انجام شد','success')">📦 پشتیبان‌گیری از داده‌ها</button>
+        <button class="btn btn-danger" onclick="if(confirm('همه داده‌ها پاک می‌شوند. مطمئنید؟')){localStorage.clear();location.reload()}">🗑 پاک کردن همه داده‌ها</button>
+      </div>
+    </div>
+  </div>`
+},
+
+}// end pages
+
+// ═══════════════════════════════════════════
+//  ORDERS CRUD
+// ═══════════════════════════════════════════
+function re() { navigateTo('orders') }
+
+function openOrderModal(id) {
+  const o = id ? ORDERS.find(x=>x.id===id) : null
+  document.getElementById('mo-title').textContent = o ? 'ویرایش سفارش '+o.id : 'سفارش جدید'
+  document.getElementById('mo-id').value    = o?.id||''
+  document.getElementById('mo-name').value  = o?.name||''
+  document.getElementById('mo-phone').value = o?.phone||''
+  document.getElementById('mo-type').value  = o?.type||'cake'
+  document.getElementById('mo-status').value= o?.status||'pending'
+  document.getElementById('mo-price').value = o?.price||''
+  document.getElementById('mo-date').value  = o?.date||''
+  document.getElementById('mo-desc').value  = o?.desc||''
+  openModal('modal-order')
+}
+
+function saveOrder() {
+  const id   = document.getElementById('mo-id').value
+  const name = document.getElementById('mo-name').value.trim()
+  const phone= document.getElementById('mo-phone').value.trim()
+  if(!name||!phone){ toast('نام و شماره تلفن الزامی است','error'); return }
+  const data = { name, phone,
+    type:   document.getElementById('mo-type').value,
+    status: document.getElementById('mo-status').value,
+    price:  Number(document.getElementById('mo-price').value)||0,
+    date:   document.getElementById('mo-date').value,
+    desc:   document.getElementById('mo-desc').value,
   }
+  if(id) { Object.assign(ORDERS.find(x=>x.id===id), data); toast('سفارش ویرایش شد ✅','success') }
+  else   { data.id='DC-'+(1000+ORDERS.length+1); ORDERS.unshift(data); toast('سفارش جدید ثبت شد 🎂','success') }
+  saveAll(); closeModal('modal-order'); re()
+}
 
-  /* ─── CYCLE STATUS ─── */
-  function cycleStatus(id) {
-    const o = orders.find(x=>x.id===id);
-    if (!o || o.status === 'cancel') return;
-    const idx = STATUS_ORDER.indexOf(o.status);
-    o.status = STATUS_ORDER[Math.min(idx+1, STATUS_ORDER.length-1)];
-    save();
-    renderTable();
-    toast('وضعیت سفارش به «' + STATUS_MAP[o.status].label + '» تغییر یافت');
+function cycleStatus(id) {
+  const o = ORDERS.find(x=>x.id===id)
+  if(!o || o.status==='cancel') return
+  const i = STATUS_FLOW.indexOf(o.status)
+  o.status = STATUS_FLOW[Math.min(i+1, STATUS_FLOW.length-1)]
+  saveAll(); toast('وضعیت به «'+STATUS[o.status].label+'» تغییر کرد'); re()
+}
+
+function delOrder(id) {
+  if(!confirm('این سفارش حذف شود؟')) return
+  ORDERS = ORDERS.filter(x=>x.id!==id); saveAll(); toast('سفارش حذف شد'); re()
+}
+
+function showOrderDetail(id) {
+  const o = ORDERS.find(x=>x.id===id); if(!o) return
+  const s = STATUS[o.status]
+  const flow = STATUS_FLOW.map((st,i)=>{
+    const cur = STATUS_FLOW.indexOf(o.status)
+    return `<div class="step ${i<cur?'done':i===cur?'cur':''}">${STATUS[st].icon}<br/>${STATUS[st].label.split(' ')[0]}</div>`
+  }).join('')
+  document.getElementById('order-detail-body').innerHTML = `
+    <div class="stepper">${flow}</div>
+    ${[['شناسه',o.id],['نام مشتری',o.name],['تلفن',`<span dir="ltr">${o.phone}</span>`],
+       ['نوع',o.type==='cake'?'🎂 کیک':'🥐 شیرینی'],['وضعیت',`${s.icon} ${s.label}`],
+       ['تاریخ تحویل',o.date||'—'],['قیمت',Number(o.price).toLocaleString('fa-IR')+' تومان'],['توضیحات',o.desc||'—']
+    ].map(([l,v])=>`<div class="d-row"><span class="d-label">${l}</span><span class="d-val">${v}</span></div>`).join('')}
+  `
+  openModal('modal-order-detail')
+}
+
+// ═══════════════════════════════════════════
+//  COURSES CRUD
+// ═══════════════════════════════════════════
+function openCourseModal(id) {
+  const c = id ? COURSES.find(x=>x.id===id) : null
+  document.getElementById('mc-title').textContent    = c ? 'ویرایش دوره' : 'دوره جدید'
+  document.getElementById('mc-id').value             = c?.id||''
+  document.getElementById('mc-title-inp').value      = c?.title||''
+  document.getElementById('mc-desc').value           = c?.desc||''
+  document.getElementById('mc-price').value          = c?.price||''
+  document.getElementById('mc-sale').value           = c?.sale||''
+  document.getElementById('mc-dur').value            = c?.dur||''
+  document.getElementById('mc-level').value          = c?.level||'مقدماتی'
+  document.getElementById('mc-icon').value           = c?.icon||'🎂'
+  document.getElementById('mc-pub').value            = c?.pub!=null?String(c.pub):'1'
+  openModal('modal-course')
+}
+
+function saveCourse() {
+  const id = document.getElementById('mc-id').value
+  const title = document.getElementById('mc-title-inp').value.trim()
+  if(!title){ toast('عنوان دوره الزامی است','error'); return }
+  const data = { title,
+    desc:  document.getElementById('mc-desc').value,
+    price: Number(document.getElementById('mc-price').value)||0,
+    sale:  Number(document.getElementById('mc-sale').value)||0,
+    dur:   document.getElementById('mc-dur').value,
+    level: document.getElementById('mc-level').value,
+    icon:  document.getElementById('mc-icon').value||'🎂',
+    pub:   Number(document.getElementById('mc-pub').value),
   }
+  if(id) { Object.assign(COURSES.find(x=>x.id===id), data); toast('دوره ویرایش شد ✅','success') }
+  else   { data.id='CR-'+(COURSES.length+10); COURSES.push(data); toast('دوره جدید اضافه شد 🎓','success') }
+  saveAll(); closeModal('modal-course'); navigateTo('courses')
+}
 
-  /* ─── DELETE ─── */
-  function deleteOrder(id) {
-    if (!confirm('آیا از حذف این سفارش مطمئن هستید؟')) return;
-    orders = orders.filter(x=>x.id!==id);
-    save();
-    renderTable();
-    toast('سفارش حذف شد');
+function toggleCoursePublish(id) {
+  const c = COURSES.find(x=>x.id===id)
+  c.pub = c.pub?0:1; saveAll()
+  toast(c.pub?'دوره منتشر شد ✅':'دوره به پیش‌نویس تغییر کرد','success')
+  navigateTo('courses')
+}
+
+function delCourse(id) {
+  if(!confirm('این دوره حذف شود؟')) return
+  COURSES = COURSES.filter(x=>x.id!==id); saveAll(); toast('دوره حذف شد'); navigateTo('courses')
+}
+
+// ═══════════════════════════════════════════
+//  CUSTOMERS CRUD
+// ═══════════════════════════════════════════
+function openCustomerModal(id) {
+  const c = id ? CUSTOMERS.find(x=>x.id===id) : null
+  document.getElementById('mcu-title').textContent = c?'ویرایش مشتری':'مشتری جدید'
+  document.getElementById('mcu-id').value    = c?.id||''
+  document.getElementById('mcu-name').value  = c?.name||''
+  document.getElementById('mcu-phone').value = c?.phone||''
+  document.getElementById('mcu-addr').value  = c?.addr||''
+  document.getElementById('mcu-note').value  = c?.note||''
+  openModal('modal-customer')
+}
+
+function saveCustomer() {
+  const id   = document.getElementById('mcu-id').value
+  const name = document.getElementById('mcu-name').value.trim()
+  if(!name){ toast('نام الزامی است','error'); return }
+  const data = { name,
+    phone: document.getElementById('mcu-phone').value,
+    addr:  document.getElementById('mcu-addr').value,
+    note:  document.getElementById('mcu-note').value,
+    orders:0,
   }
+  if(id) { const cu=CUSTOMERS.find(x=>x.id===id); data.orders=cu.orders; Object.assign(cu,data); toast('مشتری ویرایش شد ✅','success') }
+  else   { data.id='CU-'+(CUSTOMERS.length+10); CUSTOMERS.push(data); toast('مشتری جدید ثبت شد 👥','success') }
+  saveAll(); closeModal('modal-customer'); navigateTo('customers')
+}
 
-  /* ─── ADD MODAL ─── */
-  function openAddModal() {
-    document.getElementById('modal-title').textContent = 'سفارش جدید';
-    document.getElementById('edit-id').value    = '';
-    document.getElementById('edit-name').value  = '';
-    document.getElementById('edit-phone').value = '';
-    document.getElementById('edit-type').value  = 'cake';
-    document.getElementById('edit-status').value= 'pending';
-    document.getElementById('edit-price').value = '';
-    document.getElementById('edit-date').value  = '';
-    document.getElementById('edit-desc').value  = '';
-    openModal('modal-edit');
-  }
+function delCustomer(id) {
+  if(!confirm('این مشتری حذف شود؟')) return
+  CUSTOMERS = CUSTOMERS.filter(x=>x.id!==id); saveAll(); toast('مشتری حذف شد'); navigateTo('customers')
+}
 
-  function openEditModal(id) {
-    const o = orders.find(x=>x.id===id);
-    if (!o) return;
-    document.getElementById('modal-title').textContent = 'ویرایش سفارش ' + o.id;
-    document.getElementById('edit-id').value    = o.id;
-    document.getElementById('edit-name').value  = o.name;
-    document.getElementById('edit-phone').value = o.phone;
-    document.getElementById('edit-type').value  = o.type;
-    document.getElementById('edit-status').value= o.status;
-    document.getElementById('edit-price').value = o.price;
-    document.getElementById('edit-date').value  = o.date;
-    document.getElementById('edit-desc').value  = o.desc;
-    openModal('modal-edit');
-  }
+// ═══════════════════════════════════════════
+//  CONTENT CRUD
+// ═══════════════════════════════════════════
+function openContentModal(key) {
+  const c = CONTENT.find(x=>x.key===key); if(!c) return
+  document.getElementById('mct-title').textContent   = 'ویرایش: '+c.title
+  document.getElementById('mct-key').value           = c.key
+  document.getElementById('mct-title-inp').value     = c.title
+  document.getElementById('mct-body').value          = c.body
+  document.getElementById('mct-vis').value           = String(c.vis)
+  openModal('modal-content')
+}
 
-  function saveOrder() {
-    const id    = document.getElementById('edit-id').value;
-    const name  = document.getElementById('edit-name').value.trim();
-    const phone = document.getElementById('edit-phone').value.trim();
-    if (!name || !phone) { toast('لطفاً نام و شماره تلفن را وارد کنید'); return; }
+function saveContent() {
+  const key = document.getElementById('mct-key').value
+  const c   = CONTENT.find(x=>x.key===key); if(!c) return
+  c.title = document.getElementById('mct-title-inp').value
+  c.body  = document.getElementById('mct-body').value
+  c.vis   = Number(document.getElementById('mct-vis').value)
+  saveAll(); toast('محتوا ذخیره شد ✅','success'); closeModal('modal-content'); navigateTo('content')
+}
 
-    const data = {
-      name,
-      phone,
-      type:   document.getElementById('edit-type').value,
-      status: document.getElementById('edit-status').value,
-      price:  document.getElementById('edit-price').value,
-      date:   document.getElementById('edit-date').value,
-      desc:   document.getElementById('edit-desc').value,
-    };
+// ═══════════════════════════════════════════
+//  GALLERY
+// ═══════════════════════════════════════════
+const EMOJIS = ['🎂','🍰','🧁','🥐','🍮','🍩','🎉','🌸','✨','💝']
+function addGalleryItem() {
+  const labels = ['کیک تولد','کیک عروسی','کاپ‌کیک','شیرینی','دسر','کیک شکلاتی','کیک تزئینی','سفارشی']
+  const item = { id:'G'+(Date.now()), emoji: EMOJIS[Math.floor(Math.random()*EMOJIS.length)], label: labels[Math.floor(Math.random()*labels.length)] }
+  GALLERY.push(item); saveAll(); toast('تصویر اضافه شد 🖼️','success'); navigateTo('gallery')
+}
+function delGallery(id) {
+  if(!confirm('این تصویر حذف شود؟')) return
+  GALLERY = GALLERY.filter(x=>x.id!==id); saveAll(); toast('تصویر حذف شد'); navigateTo('gallery')
+}
 
-    if (id) {
-      const o = orders.find(x=>x.id===id);
-      Object.assign(o, data);
-      toast('سفارش با موفقیت ویرایش شد ✅');
-    } else {
-      const newId = 'DC-' + (1000 + orders.length + 1);
-      orders.unshift({ id: newId, ...data });
-      toast('سفارش جدید ثبت شد 🎂');
-    }
-    save();
-    closeModal('modal-edit');
-    renderTable();
-  }
+// ═══════════════════════════════════════════
+//  MODAL HELPERS
+// ═══════════════════════════════════════════
+function openModal(id)  { document.getElementById(id).classList.add('open') }
+function closeModal(id) { document.getElementById(id).classList.remove('open') }
+document.querySelectorAll('.modal-backdrop').forEach(el => el.addEventListener('click', e => { if(e.target===el) el.classList.remove('open') }))
 
-  /* ─── DETAIL MODAL ─── */
-  function showDetail(id) {
-    const o = orders.find(x=>x.id===id);
-    if (!o) return;
-    const s = STATUS_MAP[o.status];
-    const stepperHTML = STATUS_ORDER.map(st => {
-      const idx_cur = STATUS_ORDER.indexOf(o.status);
-      const idx_st  = STATUS_ORDER.indexOf(st);
-      let cls = '';
-      if (idx_st < idx_cur) cls = 'done';
-      else if (idx_st === idx_cur) cls = 'current';
-      return `<div class="step ${cls}"><span class="step-dot">${STATUS_MAP[st].icon}</span>${STATUS_MAP[st].label}</div>`;
-    }).join('');
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+function toast(msg, type='info') {
+  const el = document.createElement('div')
+  el.className = `toast ${type}`; el.textContent = msg
+  document.getElementById('toast-stack').appendChild(el)
+  setTimeout(()=>{ el.style.animation='toast-out .3s ease-out forwards'; setTimeout(()=>el.remove(),300) }, 2800)
+}
 
-    document.getElementById('detail-content').innerHTML = `
-      <div class="stepper">${stepperHTML}</div>
-      <div class="detail-row"><span class="detail-label">شماره سفارش</span><span class="detail-val">${o.id}</span></div>
-      <div class="detail-row"><span class="detail-label">نام مشتری</span><span class="detail-val">${o.name}</span></div>
-      <div class="detail-row"><span class="detail-label">شماره تلفن</span><span class="detail-val" dir="ltr">${o.phone}</span></div>
-      <div class="detail-row"><span class="detail-label">نوع سفارش</span><span class="detail-val">${o.type==='cake'?'🎂 کیک':'🥐 شیرینی'}</span></div>
-      <div class="detail-row"><span class="detail-label">وضعیت</span><span class="detail-val">${s.icon} ${s.label}</span></div>
-      <div class="detail-row"><span class="detail-label">تاریخ تحویل</span><span class="detail-val">${o.date||'—'}</span></div>
-      <div class="detail-row"><span class="detail-label">قیمت</span><span class="detail-val">${Number(o.price||0).toLocaleString('fa-IR')} تومان</span></div>
-      <div class="detail-row"><span class="detail-label">توضیحات</span><span class="detail-val" style="max-width:60%;text-align:left">${o.desc||'—'}</span></div>
-    `;
-    openModal('modal-detail');
-  }
-
-  /* ─── MODAL HELPERS ─── */
-  function openModal(id)  { document.getElementById(id).classList.add('open'); }
-  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-  document.querySelectorAll('.modal-overlay').forEach(el => {
-    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
-  });
-
-  /* ─── TOAST ─── */
-  let toastTimer;
-  function toast(msg) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
-  }
-
-  /* ─── INIT ─── */
-  renderTable();
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+navigateTo('dashboard')
 </script>
 </body>
   </html>
