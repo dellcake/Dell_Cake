@@ -16,7 +16,7 @@ signInWithPopup
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 const adminEmail =
-"ایمیل-خودت@gmail.com";
+"sobhanrahimisrj@gmail.com";
 
 document
 .getElementById("googleLogin")
