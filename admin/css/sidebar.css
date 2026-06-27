@@ -1,1 +1,843 @@
+/* =====================================================
+        Dell Cake CMS
+        Sidebar
+===================================================== */
 
+@import url("variables.css");
+
+/* ===========================
+        Sidebar
+=========================== */
+
+.sidebar{
+
+    position:fixed;
+
+    top:0;
+
+    right:0;
+
+    width:var(--sidebar-width);
+
+    height:100vh;
+
+    background:rgba(255,255,255,.82);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border-left:1px solid var(--border-light);
+
+    box-shadow:var(--shadow-md);
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    z-index:1000;
+
+    transition:all var(--transition);
+
+}
+
+/* ===========================
+        Header
+=========================== */
+
+.sidebar-header{
+
+    padding:26px 22px;
+
+    border-bottom:1px solid var(--border-light);
+
+}
+
+.sidebar-brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+}
+
+.sidebar-logo-box{
+
+    width:62px;
+
+    height:62px;
+
+    border-radius:20px;
+
+    background:linear-gradient(
+        135deg,
+        var(--primary-light),
+        #ffffff
+    );
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    box-shadow:var(--shadow-sm);
+
+    flex-shrink:0;
+
+}
+
+.sidebar-logo{
+
+    width:46px;
+
+    height:46px;
+
+    object-fit:contain;
+
+}
+
+.sidebar-brand-text{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.sidebar-brand-text h2{
+
+    font-size:22px;
+
+    font-weight:800;
+
+    color:var(--text);
+
+}
+
+.sidebar-brand-text span{
+
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:var(--text-light);
+
+    letter-spacing:.4px;
+
+}
+
+.sidebar-close{
+
+    display:none;
+
+}
+
+/* ===========================
+        Admin Card
+=========================== */
+
+.admin-card{
+
+    margin:24px 18px;
+
+    padding:18px;
+
+    background:var(--surface);
+
+    border:1px solid var(--border-light);
+
+    border-radius:var(--radius-lg);
+
+    box-shadow:var(--shadow-xs);
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    transition:all var(--transition);
+
+}
+
+.admin-card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:var(--shadow-sm);
+
+}
+
+.admin-avatar{
+
+    position:relative;
+
+    flex-shrink:0;
+
+}
+
+.admin-avatar img{
+
+    width:58px;
+
+    height:58px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:3px solid var(--primary-light);
+
+}
+
+.online-dot{
+
+    position:absolute;
+
+    bottom:2px;
+
+    left:2px;
+
+    width:14px;
+
+    height:14px;
+
+    background:var(--success);
+
+    border-radius:50%;
+
+    border:3px solid #fff;
+
+}
+
+.admin-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.admin-info h3{
+
+    font-size:15px;
+
+    font-weight:700;
+
+    color:var(--text);
+
+}
+
+.admin-info span{
+
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:var(--text-light);
+
+}
+
+
+/* ===========================
+        Menu
+=========================== */
+
+.sidebar-menu{
+
+    flex:1;
+
+    padding:0 16px;
+
+    overflow-y:auto;
+
+}
+
+.menu-title{
+
+    display:block;
+
+    margin:8px 10px 18px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    color:var(--text-soft);
+
+    text-transform:uppercase;
+
+    letter-spacing:.8px;
+
+}
+
+.menu-item{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:14px 18px;
+
+    margin-bottom:8px;
+
+    border-radius:16px;
+
+    transition:all var(--transition-fast);
+
+}
+
+.menu-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.menu-left i{
+
+    width:22px;
+
+    text-align:center;
+
+    font-size:18px;
+
+    color:var(--primary-dark);
+
+}
+
+.menu-left span{
+
+    font-size:15px;
+
+    font-weight:600;
+
+    color:var(--text);
+
+}
+
+
+/* ===========================
+        Hover
+=========================== */
+
+.menu-item:hover{
+
+    background:var(--primary-soft);
+
+    transform:translateX(-4px);
+
+}
+
+.menu-item:hover .menu-left i{
+
+    color:var(--primary);
+
+}
+
+
+/* ===========================
+        Active Item
+=========================== */
+
+.menu-item.active{
+
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+    );
+
+    box-shadow:var(--shadow-sm);
+
+}
+
+.menu-item.active .menu-left i,
+
+.menu-item.active .menu-left span{
+
+    color:#fff;
+
+}
+
+
+/* ===========================
+        Badge
+=========================== */
+
+.menu-badge{
+
+    min-width:24px;
+
+    height:24px;
+
+    padding:0 8px;
+
+    border-radius:999px;
+
+    background:var(--danger);
+
+    color:#fff;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+/* =====================================================
+        Sidebar Footer
+===================================================== */
+
+.sidebar-footer{
+
+    padding:20px 18px 24px;
+
+    border-top:1px solid var(--border-light);
+
+}
+
+
+/* ===========================
+        Version
+=========================== */
+
+.sidebar-version{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    margin-bottom:18px;
+
+    padding:14px;
+
+    background:var(--surface-2);
+
+    border-radius:16px;
+
+}
+
+.version-icon{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    background:var(--primary-light);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:var(--primary-dark);
+
+    font-size:18px;
+
+}
+
+.version-text{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.version-text span{
+
+    font-size:14px;
+
+    font-weight:700;
+
+    color:var(--text);
+
+}
+
+.version-text small{
+
+    margin-top:2px;
+
+    color:var(--text-light);
+
+    font-size:11px;
+
+}
+
+
+/* ===========================
+        Logout Button
+=========================== */
+
+.logout-btn{
+
+    width:100%;
+
+    height:52px;
+
+    border-radius:16px;
+
+    background:linear-gradient(
+        135deg,
+        #ff6b81,
+        #ff4d6d
+    );
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:12px;
+
+    font-size:15px;
+
+    font-weight:700;
+
+    transition:all var(--transition);
+
+    box-shadow:var(--shadow-sm);
+
+}
+
+.logout-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:var(--shadow-md);
+
+}
+
+.logout-btn i{
+
+    font-size:18px;
+
+}
+
+
+/* =====================================================
+        Mobile Overlay
+===================================================== */
+
+.sidebar-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.35);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:all var(--transition);
+
+    z-index:999;
+
+}
+
+.sidebar-overlay.show{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+
+/* =====================================================
+        Tablet
+===================================================== */
+
+@media (max-width:1100px){
+
+.sidebar{
+
+    width:250px;
+
+}
+
+}
+
+
+/* =====================================================
+        Mobile
+===================================================== */
+
+@media (max-width:768px){
+
+.sidebar{
+
+    right:-100%;
+
+    width:290px;
+
+}
+
+.sidebar.show{
+
+    right:0;
+
+}
+
+.sidebar-close{
+
+    display:flex;
+
+    position:absolute;
+
+    top:20px;
+
+    left:18px;
+
+    width:38px;
+
+    height:38px;
+
+    border-radius:50%;
+
+    background:var(--primary-soft);
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:var(--primary-dark);
+
+}
+
+}
+
+/* =====================================================
+        Collapsed Sidebar (Desktop)
+===================================================== */
+
+.sidebar.collapsed{
+
+    width:90px;
+
+}
+
+.sidebar.collapsed .sidebar-brand-text,
+
+.sidebar.collapsed .admin-info,
+
+.sidebar.collapsed .menu-title,
+
+.sidebar.collapsed .menu-left span,
+
+.sidebar.collapsed .menu-badge,
+
+.sidebar.collapsed .version-text{
+
+    display:none;
+
+}
+
+.sidebar.collapsed .sidebar-brand{
+
+    justify-content:center;
+
+}
+
+.sidebar.collapsed .admin-card{
+
+    justify-content:center;
+
+    padding:16px;
+
+}
+
+.sidebar.collapsed .menu-item{
+
+    justify-content:center;
+
+    padding:16px;
+
+}
+
+.sidebar.collapsed .menu-left{
+
+    justify-content:center;
+
+    width:100%;
+
+}
+
+.sidebar.collapsed .logout-btn{
+
+    justify-content:center;
+
+}
+
+.sidebar.collapsed .logout-btn span{
+
+    display:none;
+
+}
+
+
+/* =====================================================
+        Scrollbar
+===================================================== */
+
+.sidebar-menu::-webkit-scrollbar{
+
+    width:6px;
+
+}
+
+.sidebar-menu::-webkit-scrollbar-track{
+
+    background:transparent;
+
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb{
+
+    background:var(--primary-light);
+
+    border-radius:999px;
+
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb:hover{
+
+    background:var(--primary);
+
+}
+
+
+/* =====================================================
+        Animation
+===================================================== */
+
+.menu-item,
+
+.admin-card,
+
+.logout-btn,
+
+.sidebar{
+
+    transition:all .30s ease;
+
+}
+
+
+/* =====================================================
+        Focus
+===================================================== */
+
+.menu-item:focus-visible,
+
+.logout-btn:focus-visible{
+
+    outline:3px solid rgba(244,143,177,.35);
+
+    outline-offset:3px;
+
+}
+
+
+/* =====================================================
+        Responsive
+===================================================== */
+
+@media (max-width:992px){
+
+    .sidebar{
+
+        width:280px;
+
+    }
+
+}
+
+
+@media (max-width:768px){
+
+    .sidebar{
+
+        right:-100%;
+
+        width:300px;
+
+        max-width:85vw;
+
+    }
+
+    .sidebar.show{
+
+        right:0;
+
+    }
+
+    .sidebar.collapsed{
+
+        width:300px;
+
+    }
+
+    .sidebar.collapsed .sidebar-brand-text,
+
+    .sidebar.collapsed .admin-info,
+
+    .sidebar.collapsed .menu-title,
+
+    .sidebar.collapsed .menu-left span,
+
+    .sidebar.collapsed .menu-badge,
+
+    .sidebar.collapsed .version-text,
+
+    .sidebar.collapsed .logout-btn span{
+
+        display:block;
+
+    }
+
+    .sidebar.collapsed .menu-item{
+
+        justify-content:space-between;
+
+    }
+
+    .sidebar.collapsed .menu-left{
+
+        justify-content:flex-start;
+
+    }
+
+}
+
+
+/* =====================================================
+        End
+===================================================== */
