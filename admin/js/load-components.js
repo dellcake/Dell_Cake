@@ -17,30 +17,38 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     initializeLayout();
 
+    /* -------------------------------
+       Load Modules After Components
+    -------------------------------- */
+
+    await import("./sidebar.js");
+
+    await import("./dashboard.js");
+
 });
 
 
 /* =====================================================
-        Load HTML Component
+        Load Component
 ===================================================== */
 
-async function loadComponent(selector, url){
+async function loadComponent(selector,url){
 
-    const container = document.querySelector(selector);
+    const container=document.querySelector(selector);
 
     if(!container) return;
 
     try{
 
-        const response = await fetch(url);
+        const response=await fetch(url);
 
         if(!response.ok){
 
-            throw new Error(url);
+            throw new Error(response.status);
 
         }
 
-        container.innerHTML = await response.text();
+        container.innerHTML=await response.text();
 
     }
 
@@ -48,7 +56,7 @@ async function loadComponent(selector, url){
 
         console.error(
 
-            "Component Load Error:",
+            "Component Error:",
 
             error
 
@@ -60,14 +68,14 @@ async function loadComponent(selector, url){
 
 
 /* =====================================================
-        Initialize Layout
+        Layout Init
 ===================================================== */
 
 function initializeLayout(){
 
     setPageTitle();
 
-    setActiveSidebar();
+    setActiveMenu();
 
 }
 
@@ -78,20 +86,21 @@ function initializeLayout(){
 
 function setPageTitle(){
 
-    const pageTitle =
+    const title=document.getElementById("pageTitle");
 
-        document.getElementById("pageTitle");
+    if(!title) return;
 
-    if(!pageTitle) return;
-
-    const path =
+    const page=
 
         window.location.pathname
+
         .split("/")
+
         .pop()
+
         .replace(".html","");
 
-    const titles={
+    const pages={
 
         dashboard:"داشبورد مدیریت",
 
@@ -111,9 +120,9 @@ function setPageTitle(){
 
     };
 
-    pageTitle.textContent =
+    title.textContent=
 
-        titles[path] ||
+        pages[page] ||
 
         "پنل مدیریت";
 
@@ -121,15 +130,17 @@ function setPageTitle(){
 
 
 /* =====================================================
-        Active Sidebar Menu
+        Active Menu
 ===================================================== */
 
-function setActiveSidebar(){
+function setActiveMenu(){
 
-    const current =
+    const current=
 
         window.location.pathname
+
         .split("/")
+
         .pop();
 
     document
