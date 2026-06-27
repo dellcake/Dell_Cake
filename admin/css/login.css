@@ -300,32 +300,7 @@ border:1px solid var(--border);
 
 box-shadow:var(--shadow);
 
-animation:
-cardShow .8s ease;
-
-}
-
-@keyframes cardShow{
-
-from{
-
-opacity:0;
-
-transform:
-translateY(40px)
-scale(.95);
-
-}
-
-to{
-
-opacity:1;
-
-transform:
-translateY(0)
-scale(1);
-
-}
+animation:none;
 
 }
 
