@@ -21,9 +21,16 @@ document.addEventListener("DOMContentLoaded", async () => {
        Load Modules After Components
     -------------------------------- */
 
-    await import("../sidebar/sidebar.js");
+const sidebarModule =
+await import("../sidebar/sidebar.js");
 
+sidebarModule.initSidebar();
+
+        
+const dashboardModule =
 await import("../dashboard/dashboard.js");
+
+dashboardModule.initDashboard();
 
 });
 
