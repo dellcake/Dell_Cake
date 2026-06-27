@@ -1,143 +1,404 @@
 /* =====================================================
         Dell Cake CMS
-        Dashboard
+        Dashboard Core
 ===================================================== */
 
-import { auth } from "../firebase/firebase-config.js";
+import { auth } from "./firebase-auth.js";
 
 import {
 
     onAuthStateChanged,
+
     signOut
 
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
 
 /* =====================================================
-        Elements
+        Admin Config
 ===================================================== */
 
-const ordersCount =
-    document.getElementById("ordersCount");
-
-const customersCount =
-    document.getElementById("customersCount");
-
-const productsCount =
-    document.getElementById("productsCount");
-
-const revenueCount =
-    document.getElementById("revenueCount");
-
-const todayOrders =
-    document.getElementById("todayOrders");
-
-const todayIncome =
-    document.getElementById("todayIncome");
-
-const todayUsers =
-    document.getElementById("todayUsers");
+const ADMIN_EMAIL = "sobhanrahimisrj@gmail.com";
 
 
 /* =====================================================
-        Dashboard State
+        Dashboard Entry Point
 ===================================================== */
 
-const dashboard={
+export function initDashboard(){
 
-    orders:0,
+    initializeDashboard();
 
-    customers:0,
+}
 
-    products:0,
+/* =====================================================
+        Initialize
+===================================================== */
 
-    revenue:0,
+function initializeDashboard(){
 
-    todayOrders:0,
+    authGuard();
 
-    todayIncome:0,
+    startClock();
 
-    todayUsers:0
+    setPersianDate();
+
+    bindEvents();
+
+}
+/* =====================================================
+        Authentication Guard
+===================================================== */
+
+function authGuard(){
+
+    onAuthStateChanged(auth,(user)=>{
+
+        if(!user){
+
+            window.location.href="login.html";
+
+            return;
+
+        }
+
+        if(user.email !== ADMIN_EMAIL){
+
+            signOut(auth);
+
+            alert("شما اجازه ورود به این پنل را ندارید.");
+
+            window.location.href="../index.html";
+
+            return;
+
+        }
+
+        loadAdmin(user);
+
+    });
+
+}
+
+
+/* =====================================================
+        Admin Information
+===================================================== */
+
+function loadAdmin(user){
+
+    const avatar=document.getElementById("adminAvatar");
+
+    const dropdownAvatar=document.getElementById("dropdownAvatar");
+
+    const name=document.getElementById("adminName");
+
+    const dropdownName=document.getElementById("dropdownName");
+
+    const email=document.getElementById("dropdownEmail");
+
+
+    if(avatar && user.photoURL){
+
+        avatar.src=user.photoURL;
+
+    }
+
+    if(dropdownAvatar && user.photoURL){
+
+        dropdownAvatar.src=user.photoURL;
+
+    }
+
+    if(name){
+
+        name.textContent=
+
+            user.displayName || "مدیر";
+
+    }
+
+    if(dropdownName){
+
+        dropdownName.textContent=
+
+            user.displayName || "مدیر";
+
+    }
+
+    if(email){
+
+        email.textContent=user.email;
+
+    }
+        loadDashboard();
+}
+/* =====================================================
+        Clock
+===================================================== */
+
+function startClock(){
+
+    const clock=document.getElementById("liveClock");
+
+    if(!clock) return;
+
+    updateClock();
+
+    setInterval(updateClock,1000);
+
+}
+
+function updateClock(){
+
+    const now=new Date();
+
+    const time=now.toLocaleTimeString("fa-IR",{
+
+        hour:"2-digit",
+
+        minute:"2-digit"
+
+    });
+
+    const clock=document.getElementById("liveClock");
+
+    if(clock){
+
+        clock.textContent=time;
+
+    }
+
+}
+
+
+/* =====================================================
+        Persian Date
+===================================================== */
+
+function setPersianDate(){
+
+    const date=document.getElementById("persianDate");
+
+    if(!date) return;
+
+    const today=new Date();
+
+    date.textContent=
+
+        today.toLocaleDateString("fa-IR",{
+
+            year:"numeric",
+
+            month:"long",
+
+            day:"numeric",
+
+            weekday:"long"
+
+        });
+
+}
+/* =====================================================
+        Events
+===================================================== */
+
+function bindEvents(){
+
+    bindProfileDropdown();
+
+    bindNotificationPanel();
+
+    bindLogout();
+        
+    bindSearch();
+
+}
+
+
+/* =====================================================
+        Profile Dropdown
+===================================================== */
+
+function bindProfileDropdown(){
+
+    const profile=
+
+        document.getElementById("adminProfile");
+
+    const dropdown=
+
+        document.getElementById("profileDropdown");
+
+    if(!profile || !dropdown) return;
+
+    profile.addEventListener("click",(e)=>{
+
+        e.stopPropagation();
+
+        dropdown.classList.toggle("show");
+
+    });
+
+    document.addEventListener("click",()=>{
+
+        dropdown.classList.remove("show");
+
+    });
+
+}
+/* =====================================================
+        Logout
+===================================================== */
+
+function bindLogout(){
+
+    const logout=
+
+        document.getElementById("logoutBtn");
+
+    if(!logout) return;
+
+    logout.addEventListener("click",async()=>{
+
+        try{
+
+            await signOut(auth);
+
+            window.location.href="login.html";
+
+        }
+
+        catch(error){
+
+            console.error(error);
+
+        }
+
+    });
+
+}
+/* =====================================================
+        Search
+===================================================== */
+
+function bindSearch(){
+
+    const input=
+
+        document.getElementById("globalSearch");
+
+    const box=
+
+        document.getElementById("searchResultBox");
+
+    if(!input || !box) return;
+
+    input.addEventListener("focus",()=>{
+
+        box.classList.add("show");
+
+    });
+
+    document.addEventListener("click",(e)=>{
+
+        if(
+
+            !box.contains(e.target) &&
+
+            e.target!==input
+
+        ){
+
+            box.classList.remove("show");
+
+        }
+
+    });
+
+}
+/* =====================================================
+        Dashboard Data
+===================================================== */
+
+const dashboardState = {
+
+    orders: 0,
+
+    customers: 0,
+
+    products: 0,
+
+    revenue: 0
 
 };
 
+
 /* =====================================================
-        Authentication
+        Load Dashboard
 ===================================================== */
 
-const ADMIN_EMAIL =
+async function loadDashboard(){
 
-"sobhanrahimisrj@gmail.com";
+    updateStatistics();
 
-
-onAuthStateChanged(auth,(user)=>{
-
-    if(!user){
-
-        window.location.href="login.html";
-
-        return;
-
-    }
-
-    if(user.email !== ADMIN_EMAIL){
-
-        signOut(auth);
-
-        alert("شما اجازه ورود به پنل مدیریت را ندارید.");
-
-        window.location.href="../index.html";
-
-        return;
-
-    }
-
-    loadAdminProfile(user);
-
-    loadDashboard();
-
-});
+}
 
 
 /* =====================================================
-        Admin Profile
+        Update Statistics
 ===================================================== */
 
-function loadAdminProfile(user){
+function updateStatistics(){
 
-    const profileImage =
+    setValue("ordersCount", dashboardState.orders);
 
-        document.querySelector(".profile-image img");
+    setValue("customersCount", dashboardState.customers);
 
-    const profileName =
+    setValue("productsCount", dashboardState.products);
 
-        document.querySelector(".profile-info h4");
+    setValue("revenueCount", dashboardState.revenue);
 
-    const profileRole =
-
-        document.querySelector(".profile-info span");
+}
 
 
-    if(profileImage && user.photoURL){
+/* =====================================================
+        Helpers
+===================================================== */
 
-        profileImage.src = user.photoURL;
+function setValue(id,value){
 
-    }
+    const element=document.getElementById(id);
 
-    if(profileName){
+    if(!element) return;
 
-        profileName.textContent =
+    element.textContent=value;
 
-        user.displayName || "مدیر";
+}
 
-    }
 
-    if(profileRole){
+/* =====================================================
+        Public Refresh
+===================================================== */
 
-        profileRole.textContent =
+export function refreshDashboard(data){
 
-        "مدیر سایت";
+    dashboardState.orders=
 
-    }
+        data.orders ?? dashboardState.orders;
+
+    dashboardState.customers=
+
+        data.customers ?? dashboardState.customers;
+
+    dashboardState.products=
+
+        data.products ?? dashboardState.products;
+
+    dashboardState.revenue=
+
+        data.revenue ?? dashboardState.revenue;
+
+    updateStatistics();
 
 }
