@@ -3,7 +3,7 @@
         Dashboard Core
 ===================================================== */
 
-import { auth } from "./firebase-auth.js";
+import { auth } from "../../../js/firebase-auth.js";
 
 import {
 
