@@ -1,21 +1,25 @@
-<!-- =======================================
-            Header
-======================================== -->
+<!-- ==========================================
+        Dell Cake CMS Header
+========================================== -->
 
 <header class="admin-header">
 
+    <!-- ==========================
+            Left Section
+    =========================== -->
+
     <div class="header-left">
 
-        <!-- Mobile Menu -->
+        <!-- Mobile Toggle -->
 
         <button
             id="menuToggle"
-            class="menu-toggle">
+            class="menu-toggle"
+            aria-label="باز کردن منو">
 
             <i class="fa-solid fa-bars"></i>
 
         </button>
-
 
         <!-- Page Title -->
 
@@ -27,7 +31,7 @@
 
             </h1>
 
-            <span>
+            <span id="pageSubtitle">
 
                 Dell Cake Management System
 
@@ -37,30 +41,39 @@
 
     </div>
 
-
+    <!-- ==========================
+            Center Section
+    =========================== -->
 
     <div class="header-center">
-
-        <!-- Search Box -->
 
         <div class="search-box">
 
             <i class="fa-solid fa-magnifying-glass"></i>
 
             <input
-                type="text"
+
                 id="globalSearch"
-                placeholder="جستجو در پنل...">
+
+                type="search"
+
+                autocomplete="off"
+
+                spellcheck="false"
+
+                placeholder="جستجو در سفارش‌ها، محصولات، کاربران ...">
 
         </div>
 
     </div>
 
-
+    <!-- ==========================
+            Right Section
+    =========================== -->
 
     <div class="header-right">
 
-        <!-- Date -->
+        <!-- Persian Date -->
 
         <div class="header-date">
 
@@ -74,8 +87,7 @@
 
         </div>
 
-
-        <!-- Time -->
+        <!-- Live Clock -->
 
         <div class="header-time">
 
@@ -88,16 +100,25 @@
             </span>
 
         </div>
-
-      <!-- Notifications -->
+                <!-- ==========================
+                Notifications
+        =========================== -->
 
         <button
+
+            id="notificationBtn"
+
             class="header-icon notification-btn"
-            id="notificationBtn">
+
+            aria-label="اعلان‌ها">
 
             <i class="fa-regular fa-bell"></i>
 
-            <span class="notification-badge">
+            <span
+
+                id="notificationBadge"
+
+                class="notification-badge">
 
                 0
 
@@ -106,154 +127,274 @@
         </button>
 
 
-        <!-- Admin Profile -->
+        <!-- ==========================
+                Admin Profile
+        =========================== -->
 
         <div
-            class="admin-profile"
-            id="adminProfile">
+
+            id="adminProfile"
+
+            class="admin-profile">
+
+            <!-- Avatar -->
 
             <div class="profile-image">
 
                 <img
+
+                    id="adminAvatar"
+
                     src="../images/logo/sweet-.png"
+
                     alt="Admin">
 
                 <span class="online-status"></span>
 
             </div>
 
+
+            <!-- Profile Info -->
+
             <div class="profile-info">
 
-                <h4>
+                <h4 id="adminName">
 
-                    سبحان رحیمی
+                    در حال بارگذاری...
 
                 </h4>
 
-                <span>
+                <span id="adminRole">
 
-                    مدیر دل‌کیک
+                    مدیر سیستم
 
                 </span>
 
             </div>
+
+
+            <!-- Dropdown Arrow -->
 
             <i class="fa-solid fa-chevron-down"></i>
 
         </div>
 
+    </div>
 
-        <!-- Profile Dropdown -->
+<!-- ==========================================
+        Profile Dropdown
+========================================== -->
 
-        <div
-            class="profile-dropdown"
-            id="profileDropdown">
+<div
 
-            <a href="#">
+    id="profileDropdown"
 
-                <i class="fa-regular fa-user"></i>
+    class="profile-dropdown">
 
-                پروفایل مدیر
+    <!-- Profile Header -->
 
-            </a>
+    <div class="dropdown-profile">
 
-            <a href="../settings/index.html">
+        <img
 
-                <i class="fa-solid fa-gear"></i>
+            id="dropdownAvatar"
 
-                تنظیمات
+            src="../images/logo/sweet-.png"
 
-            </a>
+            alt="Admin">
 
-            <a href="#">
+        <div>
 
-                <i class="fa-solid fa-key"></i>
+            <h4 id="dropdownName">
 
-                تغییر رمز عبور
+                در حال بارگذاری...
 
-            </a>
+            </h4>
 
-            <div class="dropdown-divider"></div>
+            <span id="dropdownEmail">
 
-            <button
-                id="logoutBtn">
+                loading...
 
-                <i class="fa-solid fa-right-from-bracket"></i>
-
-                خروج از حساب
-
-            </button>
+            </span>
 
         </div>
 
     </div>
 
-  <!-- ==========================
-                Notifications Panel
-        ========================== -->
+    <div class="dropdown-divider"></div>
 
-        <div
-            id="notificationPanel"
-            class="notification-panel">
+    <!-- Profile -->
 
-            <div class="panel-header">
+    <a href="profile/index.html">
 
-                <h3>
+        <i class="fa-regular fa-user"></i>
 
-                    اعلان‌ها
+        <span>
 
-                </h3>
+            پروفایل مدیر
 
-                <button
-                    id="clearNotifications">
+        </span>
 
-                    پاک کردن
+    </a>
 
-                </button>
+    <!-- Settings -->
 
-            </div>
+    <a href="settings/index.html">
 
-            <div
-                id="notificationList"
-                class="notification-list">
+        <i class="fa-solid fa-gear"></i>
 
-                <div class="empty-notification">
+        <span>
 
-                    <i class="fa-regular fa-bell-slash"></i>
+            تنظیمات پنل
 
-                    <span>
+        </span>
 
-                        اعلان جدیدی وجود ندارد.
+    </a>
 
-                    </span>
+    <!-- Security -->
 
-                </div>
+    <a href="security/index.html">
 
-            </div>
+        <i class="fa-solid fa-shield-halved"></i>
+
+        <span>
+
+            امنیت حساب
+
+        </span>
+
+    </a>
+
+    <!-- Logs -->
+
+    <a href="logs/index.html">
+
+        <i class="fa-solid fa-clock-rotate-left"></i>
+
+        <span>
+
+            گزارش فعالیت‌ها
+
+        </span>
+
+    </a>
+
+    <div class="dropdown-divider"></div>
+
+    <!-- Logout -->
+
+    <button
+
+        id="logoutBtn"
+
+        type="button">
+
+        <i class="fa-solid fa-right-from-bracket"></i>
+
+        <span>
+
+            خروج از حساب
+
+        </span>
+
+    </button>
+
+</div>
+
+
+
+<!-- ==========================================
+        Notification Panel
+========================================== -->
+
+<div
+
+    id="notificationPanel"
+
+    class="notification-panel">
+
+    <div class="panel-header">
+
+        <h3>
+
+            اعلان‌ها
+
+        </h3>
+
+        <button
+
+            id="clearNotifications"
+
+            type="button">
+
+            پاک کردن همه
+
+        </button>
+
+    </div>
+
+    <div
+
+        id="notificationList"
+
+        class="notification-list">
+
+        <div class="empty-notification">
+
+            <i class="fa-regular fa-bell-slash"></i>
+
+            <span>
+
+                اعلان جدیدی وجود ندارد.
+
+            </span>
 
         </div>
 
+    </div>
 
-        <!-- ==========================
-                Search Results
-        ========================== -->
+</div>
 
-        <div
-            id="searchResultBox"
-            class="search-result-box">
+<!-- ==========================================
+        Search Result Box
+========================================== -->
 
-            <div class="search-empty">
+<div
 
-                <i class="fa-solid fa-magnifying-glass"></i>
+    id="searchResultBox"
 
-                <span>
+    class="search-result-box">
 
-                    برای جستجو تایپ کنید...
+    <div class="search-result-header">
 
-                </span>
+        <span>
 
-            </div>
+            نتایج جستجو
+
+        </span>
+
+    </div>
+
+    <div
+
+        id="searchResults"
+
+        class="search-results">
+
+        <div class="search-empty">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <span>
+
+                برای جستجو عبارت موردنظر را تایپ کنید...
+
+            </span>
 
         </div>
+
+    </div>
+
+</div>
 
 </header>
