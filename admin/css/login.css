@@ -260,66 +260,113 @@ body::after{
 
 }
 
-/*-------------------------
- Logo
---------------------------*/
+/* ==========================================
+              Logo Section
+========================================== */
 
 .logo-wrapper{
 
-    width:120px;
+position:relative;
 
-    height:120px;
+width:150px;
 
-    margin:0 auto 24px;
+height:150px;
 
-    position:relative;
+margin:0 auto 28px;
 
-    display:flex;
+display:flex;
 
-    justify-content:center;
+justify-content:center;
 
-    align-items:center;
+align-items:center;
 
 }
 
 .logo-glow{
 
-    position:absolute;
+position:absolute;
 
-    width:105px;
+width:135px;
 
-    height:105px;
+height:135px;
 
-    border-radius:50%;
+border-radius:50%;
 
-    background:
+background:
+radial-gradient(
+circle,
+rgba(240,24,115,.35),
+rgba(240,24,115,.05),
+transparent
+);
 
-    radial-gradient(
+filter:blur(20px);
 
-        circle,
+animation:
+glowPulse 3s ease-in-out infinite;
 
-        rgba(240,24,115,.18),
+}
 
-        transparent 72%
+@keyframes glowPulse{
 
-    );
+0%,100%{
+
+transform:scale(1);
+
+opacity:.8;
+
+}
+
+50%{
+
+transform:scale(1.18);
+
+opacity:1;
+
+}
 
 }
 
 .logo{
 
-    width:82px;
+position:relative;
 
-    height:82px;
+z-index:2;
 
-    object-fit:contain;
+width:105px;
 
-    position:relative;
+height:105px;
 
-    z-index:2;
+object-fit:contain;
+
+animation:
+logoFloat 5s ease-in-out infinite;
+
+filter:
+drop-shadow(
+0 12px 20px
+rgba(240,24,115,.25)
+);
 
 }
 
+@keyframes logoFloat{
+
+0%,100%{
+
+transform:
+translateY(0);
+
+}
+
+50%{
+
+transform:
+translateY(-10px);
+
+}
+
+}
 /*-------------------------
  Title
 --------------------------*/
