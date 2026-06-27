@@ -755,55 +755,69 @@ background:#fff4f8;
 
 body{
 
-padding:20px;
+padding:25px 18px;
 
-overflow:auto;
+overflow-y:auto;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+min-height:100vh;
 
 }
 
 .login-card{
 
-padding:30px 22px;
+width:100%;
 
-border-radius:28px;
+max-width:380px;
+
+padding:28px 20px;
+
+border-radius:24px;
+
+backdrop-filter:blur(18px);
 
 }
 
 .logo-wrapper{
 
-width:120px;
+width:110px;
 
-height:120px;
+height:110px;
 
-margin-bottom:20px;
+margin-bottom:18px;
 
 }
 
 .logo{
 
-width:85px;
+width:78px;
 
-height:85px;
+height:78px;
+
+animation:none;
 
 }
 
 .logo-glow{
 
-width:105px;
-
-height:105px;
+animation:none;
 
 }
 
 .login-title h1{
 
-font-size:27px;
+font-size:26px;
 
 }
 
 .login-title h2{
 
-font-size:21px;
+font-size:20px;
 
 }
 
@@ -817,58 +831,31 @@ line-height:1.9;
 
 .google-btn{
 
-height:56px;
+height:54px;
 
 font-size:15px;
 
 }
 
-.google-btn img{
+.security-box{
 
-width:22px;
+gap:10px;
 
 }
 
 .security-item{
 
-padding:13px;
+padding:12px;
 
 }
 
-.security-item i{
-
-width:42px;
-
-height:42px;
-
-font-size:18px;
-
-}
-
-.security-item span{
-
-font-size:14px;
-
-}
-
-footer{
-
-position:relative;
-
-left:auto;
-
-bottom:auto;
+.security-item:hover{
 
 transform:none;
 
-margin-top:30px;
-
-justify-content:center;
-
 }
 
 }
-
 /* ==========================================
         Small Phones
 ========================================== */
