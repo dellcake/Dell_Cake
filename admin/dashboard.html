@@ -1,1 +1,591 @@
+<!DOCTYPE html>
 
+<html lang="fa" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+
+داشبورد مدیریت | دل‌کیک
+
+</title>
+
+<!-- Fonts -->
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<!-- Font Awesome -->
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<!-- CSS -->
+
+<link rel="stylesheet" href="css/variables.css">
+
+<link rel="stylesheet" href="css/reset.css">
+
+<link rel="stylesheet" href="css/layout.css">
+
+<link rel="stylesheet" href="css/sidebar.css">
+
+<link rel="stylesheet" href="css/header.css">
+
+<link rel="stylesheet" href="css/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- Sidebar -->
+
+    <div
+        id="sidebarContainer"
+        class="sidebar-container">
+
+    </div>
+
+    <!-- Main -->
+
+    <div class="main-wrapper">
+
+        <!-- Header -->
+
+        <div
+            id="headerContainer"
+            class="header-container">
+
+        </div>
+
+        <!-- Content -->
+
+        <main class="content-wrapper">
+
+            <!-- Dashboard Title -->
+
+            <section class="dashboard-top">
+
+                <div>
+
+                    <h1>
+
+                        سلام مدیر 👋
+
+                    </h1>
+
+                    <p>
+
+                        به پنل مدیریت دل‌کیک خوش آمدید.
+
+                    </p>
+
+                </div>
+
+            </section>
+          <!-- Stats Cards -->
+
+<section class="stats-grid">
+
+    <!-- Orders -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon orders">
+
+            <i class="fa-solid fa-bag-shopping"></i>
+
+        </div>
+
+        <div class="stat-content">
+
+            <span>
+
+                سفارش‌های جدید
+
+            </span>
+
+            <h2 id="ordersCount">
+
+                0
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <!-- Customers -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon customers">
+
+            <i class="fa-solid fa-users"></i>
+
+        </div>
+
+        <div class="stat-content">
+
+            <span>
+
+                مشتریان
+
+            </span>
+
+            <h2 id="customersCount">
+
+                0
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <!-- Products -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon products">
+
+            <i class="fa-solid fa-cake-candles"></i>
+
+        </div>
+
+        <div class="stat-content">
+
+            <span>
+
+                محصولات
+
+            </span>
+
+            <h2 id="productsCount">
+
+                0
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <!-- Revenue -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon revenue">
+
+            <i class="fa-solid fa-wallet"></i>
+
+        </div>
+
+        <div class="stat-content">
+
+            <span>
+
+                درآمد امروز
+
+            </span>
+
+            <h2 id="revenueCount">
+
+                0 تومان
+
+            </h2>
+
+        </div>
+
+    </div>
+
+</section>
+          <!-- ==========================================
+        Dashboard Main Grid
+========================================== -->
+
+<section class="dashboard-grid">
+
+    <!-- ==========================
+            Latest Orders
+    =========================== -->
+
+    <div class="dashboard-card orders-card">
+
+        <div class="card-header">
+
+            <h2>
+
+                آخرین سفارش‌ها
+
+            </h2>
+
+            <a href="orders/index.html">
+
+                مشاهده همه
+
+            </a>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="orders-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+
+                            سفارش
+
+                        </th>
+
+                        <th>
+
+                            مشتری
+
+                        </th>
+
+                        <th>
+
+                            مبلغ
+
+                        </th>
+
+                        <th>
+
+                            وضعیت
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="latestOrders">
+
+                    <tr>
+
+                        <td>
+
+                            #1001
+
+                        </td>
+
+                        <td>
+
+                            نمونه مشتری
+
+                        </td>
+
+                        <td>
+
+                            ۱٬۴۵۰٬۰۰۰ تومان
+
+                        </td>
+
+                        <td>
+
+                            <span class="status pending">
+
+                                جدید
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+
+                            #1002
+
+                        </td>
+
+                        <td>
+
+                            نمونه مشتری
+
+                        </td>
+
+                        <td>
+
+                            ۸۵۰٬۰۰۰ تومان
+
+                        </td>
+
+                        <td>
+
+                            <span class="status preparing">
+
+                                درحال آماده‌سازی
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+
+                            #1003
+
+                        </td>
+
+                        <td>
+
+                            نمونه مشتری
+
+                        </td>
+
+                        <td>
+
+                            ۲٬۳۰۰٬۰۰۰ تومان
+
+                        </td>
+
+                        <td>
+
+                            <span class="status delivered">
+
+                                تحویل شده
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+          </div>
+      <!-- ==========================
+            Right Dashboard Panel
+    =========================== -->
+
+    <aside class="dashboard-side">
+
+        <!-- Today's Summary -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <h2>
+
+                    خلاصه امروز
+
+                </h2>
+
+            </div>
+
+            <div class="summary-list">
+
+                <div class="summary-item">
+
+                    <span>
+
+                        سفارش‌های امروز
+
+                    </span>
+
+                    <strong id="todayOrders">
+
+                        0
+
+                    </strong>
+
+                </div>
+
+                <div class="summary-item">
+
+                    <span>
+
+                        درآمد امروز
+
+                    </span>
+
+                    <strong id="todayIncome">
+
+                        0 تومان
+
+                    </strong>
+
+                </div>
+
+                <div class="summary-item">
+
+                    <span>
+
+                        کاربران جدید
+
+                    </span>
+
+                    <strong id="todayUsers">
+
+                        0
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Recent Activity -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <h2>
+
+                    آخرین فعالیت‌ها
+
+                </h2>
+
+            </div>
+
+            <ul class="activity-list">
+
+                <li>
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    <span>
+
+                        ورود موفق مدیر به پنل
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-bag-shopping"></i>
+
+                    <span>
+
+                        سفارش جدید ثبت شد.
+
+                    </span>
+
+                </li>
+
+                <li>
+
+                    <i class="fa-solid fa-image"></i>
+
+                    <span>
+
+                        گالری به‌روزرسانی شد.
+
+                    </span>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- Quick Actions -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <h2>
+
+                    دسترسی سریع
+
+                </h2>
+
+            </div>
+
+            <div class="quick-actions">
+
+                <a href="orders/index.html">
+
+                    <i class="fa-solid fa-bag-shopping"></i>
+
+                    سفارش‌ها
+
+                </a>
+
+                <a href="products/index.html">
+
+                    <i class="fa-solid fa-cake-candles"></i>
+
+                    محصولات
+
+                </a>
+
+                <a href="gallery/index.html">
+
+                    <i class="fa-solid fa-images"></i>
+
+                    گالری
+
+                </a>
+
+                <a href="courses/index.html">
+
+                    <i class="fa-solid fa-graduation-cap"></i>
+
+                    دوره‌ها
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+</section>
+
+</main>
+
+</div>
+
+</div>
+
+<!-- JavaScript -->
+
+<script type="module" src="js/load-components.js"></script>
+
+<script type="module" src="js/sidebar.js"></script>
+
+<script type="module" src="js/dashboard.js"></script>
+
+</body>
+
+</html>
