@@ -1,7 +1,11 @@
-/* =======================================================
-   Dell Cake Admin Login
-   Premium UI v1.0
-======================================================= */
+/*======================================================
+  Dell Cake Admin Login
+  Version 2.0
+======================================================*/
+
+/*-------------------------
+        Reset
+--------------------------*/
 
 *{
     margin:0;
@@ -9,31 +13,9 @@
     box-sizing:border-box;
 }
 
-:root{
-
-    --primary:#f01873;
-    --primary-light:#ff4b98;
-    --secondary:#ffbfd8;
-
-    --white:#ffffff;
-
-    --text:#2b2b2b;
-    --text-light:#666;
-
-    --glass:rgba(255,255,255,.18);
-
-    --border:rgba(255,255,255,.28);
-
-    --shadow:
-    0 30px 60px rgba(0,0,0,.12);
-
-    --radius:32px;
-
-}
-
 html{
 
-    scroll-behavior:smooth;
+    font-size:16px;
 
 }
 
@@ -43,9 +25,15 @@ body{
 
     direction:rtl;
 
-    overflow:hidden;
+    background:
+    linear-gradient(
+        135deg,
+        #fff7fb 0%,
+        #ffeaf2 55%,
+        #ffd9e9 100%
+    );
 
-    min-height:100vh;
+    min-height:100dvh;
 
     display:flex;
 
@@ -53,25 +41,204 @@ body{
 
     align-items:center;
 
-    position:relative;
+    overflow-x:hidden;
 
-    background:
-    linear-gradient(
-        135deg,
-        #fff8fb,
-        #ffe9f2,
-        #ffd5e7
-    );
+    overflow-y:auto;
+
+    padding:30px;
+
+    position:relative;
 
 }
 
-/* ==========================================
-           Animated Background
-========================================== */
+/*-------------------------
+      Variables
+--------------------------*/
+
+:root{
+
+    --primary:#f01873;
+
+    --primary-light:#ff4b98;
+
+    --secondary:#ffe5ef;
+
+    --white:#ffffff;
+
+    --text:#2d2d2d;
+
+    --gray:#777;
+
+    --radius:28px;
+
+    --shadow:
+    0 18px 45px rgba(0,0,0,.12);
+
+}
+
+/*-------------------------
+ Background Decoration
+--------------------------*/
 
 body::before{
 
     content:"";
+
+    position:fixed;
+
+    width:420px;
+
+    height:420px;
+
+    border-radius:50%;
+
+    background:
+
+    radial-gradient(
+
+        circle,
+
+        rgba(240,24,115,.16),
+
+        transparent 70%
+
+    );
+
+    top:-140px;
+
+    right:-120px;
+
+    z-index:-2;
+
+}
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    width:340px;
+
+    height:340px;
+
+    border-radius:50%;
+
+    background:
+
+    radial-gradient(
+
+        circle,
+
+        rgba(255,255,255,.75),
+
+        transparent 72%
+
+    );
+
+    left:-100px;
+
+    bottom:-120px;
+
+    z-index:-2;
+
+}
+
+/*-------------------------
+ Floating Circles
+--------------------------*/
+
+.bg-circle{
+
+    position:fixed;
+
+    border-radius:50%;
+
+    pointer-events:none;
+
+    z-index:-1;
+
+    opacity:.35;
+
+}
+
+.c1{
+
+    width:180px;
+
+    height:180px;
+
+    top:70px;
+
+    left:8%;
+
+    background:#ffd7e7;
+
+}
+
+.c2{
+
+    width:120px;
+
+    height:120px;
+
+    right:10%;
+
+    bottom:130px;
+
+    background:#ffeef5;
+
+}
+
+.c3{
+
+    width:70px;
+
+    height:70px;
+
+    left:45%;
+
+    top:12%;
+
+    background:#ffffff;
+
+}
+
+/*-------------------------
+ Login Card
+--------------------------*/
+
+.login-card{
+
+    width:100%;
+
+    max-width:430px;
+
+    background:
+
+    rgba(255,255,255,.72);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.55);
+
+    border-radius:var(--radius);
+
+    box-shadow:var(--shadow);
+
+    padding:42px 34px;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+/* Reflection */
+
+.glass-reflection{
 
     position:absolute;
 
@@ -79,516 +246,215 @@ body::before{
 
     background:
 
-    radial-gradient(circle at 20% 20%,
-    rgba(255,255,255,.75),
-    transparent 45%),
+    linear-gradient(
 
-    radial-gradient(circle at 80% 10%,
-    rgba(255,192,220,.45),
-    transparent 35%),
+        135deg,
 
-    radial-gradient(circle at 50% 90%,
-    rgba(255,255,255,.7),
-    transparent 40%);
+        rgba(255,255,255,.18),
 
-    animation:
-    bgMove 18s linear infinite alternate;
+        transparent 45%
+
+    );
+
+    pointer-events:none;
 
 }
 
-@keyframes bgMove{
-
-0%{
-
-transform:translateY(0);
-
-}
-
-100%{
-
-transform:
-translateY(-40px);
-
-}
-
-}
-
-/* ==========================================
-             Floating Circles
-========================================== */
-
-.bg-circle{
-
-position:absolute;
-
-border-radius:50%;
-
-filter:blur(6px);
-
-animation:floating 8s ease-in-out infinite;
-
-opacity:.45;
-
-}
-
-.c1{
-
-width:320px;
-
-height:320px;
-
-background:#ffcae0;
-
-top:-80px;
-
-right:-80px;
-
-}
-
-.c2{
-
-width:260px;
-
-height:260px;
-
-background:#ffd7eb;
-
-left:-100px;
-
-bottom:-60px;
-
-animation-delay:2s;
-
-}
-
-.c3{
-
-width:140px;
-
-height:140px;
-
-background:#ffffff;
-
-bottom:18%;
-
-right:15%;
-
-animation-delay:4s;
-
-}
-
-@keyframes floating{
-
-0%,100%{
-
-transform:
-translateY(0);
-
-}
-
-50%{
-
-transform:
-translateY(-28px);
-
-}
-
-}
-
-/* ==========================================
-             Floating Hearts
-========================================== */
-
-.floating-heart{
-
-position:absolute;
-
-font-size:24px;
-
-opacity:.18;
-
-animation:
-heartMove 12s linear infinite;
-
-user-select:none;
-
-}
-
-.h1{
-
-left:15%;
-
-bottom:-40px;
-
-animation-delay:0s;
-
-}
-
-.h2{
-
-right:18%;
-
-bottom:-70px;
-
-animation-delay:5s;
-
-}
-
-.h3{
-
-left:60%;
-
-bottom:-55px;
-
-animation-delay:9s;
-
-}
-
-@keyframes heartMove{
-
-0%{
-
-transform:
-translateY(0)
-scale(.8);
-
-opacity:0;
-
-}
-
-15%{
-
-opacity:.22;
-
-}
-
-100%{
-
-transform:
-translateY(-900px)
-scale(1.3);
-
-opacity:0;
-
-}
-
-}
-
-/* ==========================================
-              Login Card
-========================================== */
-
-.login-card{
-
-position:relative;
-
-z-index:5;
-
-width:min(430px,92%);
-
-padding:45px;
-
-border-radius:var(--radius);
-
-background:var(--glass);
-
-backdrop-filter:blur(25px);
-
--webkit-backdrop-filter:blur(25px);
-
-border:1px solid var(--border);
-
-box-shadow:var(--shadow);
-
-animation:none;
-
-}
-
-/* ==========================================
-              Logo Section
-========================================== */
+/*-------------------------
+ Logo
+--------------------------*/
 
 .logo-wrapper{
 
-position:relative;
+    width:120px;
 
-width:150px;
+    height:120px;
 
-height:150px;
+    margin:0 auto 24px;
 
-margin:0 auto 28px;
+    position:relative;
 
-display:flex;
+    display:flex;
 
-justify-content:center;
+    justify-content:center;
 
-align-items:center;
+    align-items:center;
 
 }
 
 .logo-glow{
 
-position:absolute;
+    position:absolute;
 
-width:135px;
+    width:105px;
 
-height:135px;
+    height:105px;
 
-border-radius:50%;
+    border-radius:50%;
 
-background:
-radial-gradient(
-circle,
-rgba(240,24,115,.35),
-rgba(240,24,115,.05),
-transparent
-);
+    background:
 
-filter:blur(20px);
+    radial-gradient(
 
-animation:
-glowPulse 3s ease-in-out infinite;
+        circle,
 
-}
+        rgba(240,24,115,.18),
 
-@keyframes glowPulse{
+        transparent 72%
 
-0%,100%{
-
-transform:scale(1);
-
-opacity:.8;
-
-}
-
-50%{
-
-transform:scale(1.18);
-
-opacity:1;
-
-}
+    );
 
 }
 
 .logo{
 
-position:relative;
+    width:82px;
 
-z-index:2;
+    height:82px;
 
-width:105px;
+    object-fit:contain;
 
-height:105px;
+    position:relative;
 
-object-fit:contain;
-
-animation:
-logoFloat 5s ease-in-out infinite;
-
-filter:
-drop-shadow(
-0 12px 20px
-rgba(240,24,115,.25)
-);
+    z-index:2;
 
 }
 
-@keyframes logoFloat{
-
-0%,100%{
-
-transform:
-translateY(0);
-
-}
-
-50%{
-
-transform:
-translateY(-10px);
-
-}
-
-}
-
-/* ==========================================
-                Title
-========================================== */
+/*-------------------------
+ Title
+--------------------------*/
 
 .login-title{
 
-text-align:center;
+    text-align:center;
 
-margin-bottom:35px;
+    margin-bottom:28px;
 
 }
 
 .login-title h1{
 
-font-size:34px;
+    font-size:30px;
 
-font-weight:800;
+    color:var(--text);
 
-color:#222;
+    font-weight:800;
 
-margin-bottom:6px;
+    margin-bottom:6px;
 
 }
 
 .login-title h2{
 
-font-size:24px;
+    font-size:22px;
 
-font-weight:700;
+    color:var(--primary);
 
-color:var(--primary);
+    font-weight:700;
 
-margin-bottom:15px;
+    margin-bottom:14px;
 
 }
 
 .login-title p{
 
-font-size:15px;
+    color:var(--gray);
 
-line-height:2;
+    line-height:2;
 
-color:#666;
+    font-size:14px;
 
 }
 
-/* ==========================================
-             Google Button
-========================================== */
+/*======================================================
+                Google Button
+======================================================*/
 
 .google-btn{
 
-width:100%;
+    width:100%;
 
-height:62px;
+    height:58px;
 
-border:none;
+    border:none;
 
-outline:none;
+    outline:none;
 
-cursor:pointer;
+    cursor:pointer;
 
-display:flex;
+    border-radius:18px;
 
-justify-content:center;
+    background:#fff;
 
-align-items:center;
+    display:flex;
 
-gap:15px;
+    align-items:center;
 
-border-radius:20px;
+    justify-content:center;
 
-font-family:inherit;
+    gap:14px;
 
-font-size:17px;
+    font-family:"Vazirmatn",sans-serif;
 
-font-weight:700;
+    font-size:16px;
 
-background:#fff;
+    font-weight:700;
 
-color:#444;
+    color:#333;
 
-box-shadow:
+    box-shadow:
 
-0 15px 35px
-rgba(0,0,0,.08);
+    0 10px 25px rgba(0,0,0,.08);
 
-transition:.35s;
+    transition:
 
-position:relative;
+    background .25s ease,
 
-overflow:hidden;
+    box-shadow .25s ease,
+
+    transform .25s ease;
 
 }
 
 .google-btn img{
 
-width:24px;
+    width:22px;
 
-height:24px;
+    height:22px;
 
-transition:.35s;
+    flex-shrink:0;
 
 }
 
 .google-btn:hover{
 
-transform:
+    background:#fafafa;
 
-translateY(-4px);
+    box-shadow:
 
-box-shadow:
+    0 16px 35px rgba(240,24,115,.12);
 
-0 25px 45px
-rgba(240,24,115,.18);
-
-}
-
-.google-btn:hover img{
-
-transform:
-
-rotate(12deg)
-scale(1.1);
+    transform:translateY(-2px);
 
 }
 
 .google-btn:active{
 
-transform:
-
-scale(.98);
+    transform:scale(.98);
 
 }
 
-.google-btn::before{
+.google-btn:focus-visible{
 
-content:"";
+    outline:3px solid rgba(240,24,115,.18);
 
-position:absolute;
-
-top:0;
-
-left:-120%;
-
-width:60%;
-
-height:100%;
-
-background:
-
-linear-gradient(
-
-90deg,
-
-transparent,
-
-rgba(255,255,255,.7),
-
-transparent
-
-);
-
-transform:skewX(-25deg);
-
-transition:1s;
+    outline-offset:3px;
 
 }
 
-.google-btn:hover::before{
-
-left:150%;
-
-}
-/* ==========================================
-              Divider
-========================================== */
+/*======================================================
+                    Divider
+======================================================*/
 
 .login-divider{
 
@@ -600,17 +466,16 @@ left:150%;
 
     margin:28px 0;
 
-    color:#888;
+    color:#999;
 
     font-size:13px;
 
     font-weight:500;
 
-    position:relative;
-
 }
 
 .login-divider::before,
+
 .login-divider::after{
 
     content:"";
@@ -619,19 +484,21 @@ left:150%;
 
     height:1px;
 
-    background:rgba(0,0,0,.08);
+    background:#ececec;
 
 }
 
 .login-divider span{
 
-    padding:0 18px;
+    padding:0 16px;
+
+    white-space:nowrap;
 
 }
 
-/* ==========================================
-            Security Box
-========================================== */
+/*======================================================
+                 Security Box
+======================================================*/
 
 .security-box{
 
@@ -649,67 +516,67 @@ left:150%;
 
     align-items:center;
 
-    gap:15px;
+    gap:14px;
 
     padding:15px 18px;
 
+    background:
+
+    rgba(255,255,255,.65);
+
+    border:1px solid rgba(255,255,255,.7);
+
     border-radius:18px;
 
-    background:rgba(255,255,255,.45);
+    transition:
 
-    border:1px solid rgba(255,255,255,.45);
+    background .25s ease,
 
-    transition:.35s;
+    box-shadow .25s ease;
 
 }
 
 .security-item:hover{
 
-    transform:translateX(-6px);
-
     background:#fff;
 
     box-shadow:
 
-    0 10px 25px
-
-    rgba(240,24,115,.12);
+    0 10px 25px rgba(0,0,0,.06);
 
 }
 
 .security-item i{
 
-    width:46px;
+    width:44px;
 
-    height:46px;
+    height:44px;
 
     border-radius:14px;
 
     display:flex;
 
-    justify-content:center;
-
     align-items:center;
 
-    font-size:20px;
+    justify-content:center;
 
     color:#fff;
 
-    background:linear-gradient(
+    background:
+
+    linear-gradient(
 
         135deg,
 
-        #f01873,
+        var(--primary),
 
-        #ff5da6
+        var(--primary-light)
 
     );
 
-    box-shadow:
+    font-size:18px;
 
-    0 10px 20px
-
-    rgba(240,24,115,.25);
+    flex-shrink:0;
 
 }
 
@@ -721,606 +588,292 @@ left:150%;
 
     font-weight:600;
 
-}
-
-/* ==========================================
-             Scrollbar
-========================================== */
-
-::-webkit-scrollbar{
-
-width:8px;
+    line-height:1.8;
 
 }
 
-::-webkit-scrollbar-thumb{
+/*======================================================
+               Desktop Only Hover
+======================================================*/
 
-background:#f01873;
+@media (hover:hover){
 
-border-radius:20px;
+    .login-card{
 
-}
+        transition:
 
-::-webkit-scrollbar-track{
+        transform .25s ease,
 
-background:#fff4f8;
-
-}
-
-/* ==========================================
-            Mobile Responsive
-========================================== */
-
-@media(max-width:768px){
-
-body{
-
-padding:25px 18px;
-
-overflow-y:auto;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-min-height:100vh;
-
-}
-
-.login-card{
-
-width:100%;
-
-max-width:380px;
-
-padding:28px 20px;
-
-border-radius:24px;
-
-backdrop-filter:blur(18px);
-
-}
-
-.logo-wrapper{
-
-width:110px;
-
-height:110px;
-
-margin-bottom:18px;
-
-}
-
-.logo{
-
-width:78px;
-
-height:78px;
-
-animation:none;
-
-}
-
-.logo-glow{
-
-animation:none;
-
-}
-
-.login-title h1{
-
-font-size:26px;
-
-}
-
-.login-title h2{
-
-font-size:20px;
-
-}
-
-.login-title p{
-
-font-size:14px;
-
-line-height:1.9;
-
-}
-
-.google-btn{
-
-height:54px;
-
-font-size:15px;
-
-}
-
-.security-box{
-
-gap:10px;
-
-}
-
-.security-item{
-
-padding:12px;
-
-}
-
-.security-item:hover{
-
-transform:none;
-
-}
-
-}
-/* ==========================================
-        Small Phones
-========================================== */
-
-@media(max-width:420px){
-
-.login-card{
-
-padding:24px 18px;
-
-}
-
-.login-title h1{
-
-font-size:24px;
-
-}
-
-.login-title h2{
-
-font-size:19px;
-
-}
-
-.login-title p{
-
-font-size:13px;
-
-}
-
-.google-btn{
-
-height:52px;
-
-font-size:14px;
-
-}
-
-}
-/* =======================================================
-            Dell Cake Deluxe Effects
-=======================================================*/
-
-/* نور متحرک پشت کارت */
-
-.login-card::before{
-
-content:"";
-
-position:absolute;
-
-width:320px;
-
-height:320px;
-
-background:
-
-radial-gradient(circle,
-rgba(240,24,115,.18),
-transparent 70%);
-
-top:-140px;
-
-left:-120px;
-
-border-radius:50%;
-
-z-index:-1;
-
-animation:
-lightMove 8s ease-in-out infinite;
-
-}
-
-.login-card::after{
-
-content:"";
-
-position:absolute;
-
-width:220px;
-
-height:220px;
-
-background:
-
-radial-gradient(circle,
-rgba(255,255,255,.55),
-transparent 70%);
-
-bottom:-80px;
-
-right:-70px;
-
-border-radius:50%;
-
-z-index:-1;
-
-animation:
-lightMove2 10s ease-in-out infinite;
-
-}
-
-@keyframes lightMove{
-
-0%,100%{
-
-transform:
-translate(0,0);
-
-}
-
-50%{
-
-transform:
-translate(25px,-20px);
-
-}
-
-}
-
-@keyframes lightMove2{
-
-0%,100%{
-
-transform:
-translate(0,0);
-
-}
-
-50%{
-
-transform:
-translate(-18px,18px);
-
-}
-
-}
-
-/* ===========================
-     Sparkles
-=========================== */
-
-.logo-wrapper::before{
-
-content:"✦";
-
-position:absolute;
-
-top:8px;
-
-right:18px;
-
-font-size:18px;
-
-color:#ffd54f;
-
-animation:
-spark1 3s infinite;
-
-}
-
-.logo-wrapper::after{
-
-content:"✦";
-
-position:absolute;
-
-bottom:12px;
-
-left:15px;
-
-font-size:14px;
-
-color:#ff8dc0;
-
-animation:
-spark2 4s infinite;
-
-}
-
-@keyframes spark1{
-
-0%,100%{
-
-opacity:.2;
-
-transform:scale(.8);
-
-}
-
-50%{
-
-opacity:1;
-
-transform:scale(1.4);
-
-}
-
-}
-
-@keyframes spark2{
-
-0%,100%{
-
-opacity:.3;
-
-transform:rotate(0deg);
-
-}
-
-50%{
-
-opacity:1;
-
-transform:rotate(180deg)
-scale(1.3);
-
-}
-
-}
-
-/* ===========================
-    Google Button Shadow
-=========================== */
-
-.google-btn{
-
-position:relative;
-
-}
-
-.google-btn::after{
-
-content:"";
-
-position:absolute;
-
-inset:0;
-
-border-radius:20px;
-
-border:1px solid
-rgba(240,24,115,.15);
-
-opacity:0;
-
-transition:.35s;
-
-}
-
-.google-btn:hover::after{
-
-opacity:1;
-
-transform:scale(1.03);
-
-}
-
-/* ===========================
-       Hover Card
-=========================== */
-
-.login-card:hover{
-
-transform:
-translateY(-6px);
-
-transition:.4s;
-
-box-shadow:
-
-0 45px 90px
-rgba(0,0,0,.15);
-
-}
-
-/* ===========================
-     Floating Pattern
-=========================== */
-
-body::after{
-
-content:"";
-
-position:absolute;
-
-inset:0;
-
-background-image:
-
-radial-gradient(
-rgba(240,24,115,.08) 1px,
-transparent 1px);
-
-background-size:42px 42px;
-
-opacity:.35;
-
-pointer-events:none;
-
-animation:
-patternMove 18s linear infinite;
-
-}
-
-@keyframes patternMove{
-
-0%{
-
-background-position:0 0;
-
-}
-
-100%{
-
-background-position:220px 220px;
-
-}
-
-}
-
-/* ===========================
-    Glass Reflection
-=========================== */
-
-.login-card .glass-reflection{
-
-position:absolute;
-
-top:0;
-
-left:-120%;
-
-width:120px;
-
-height:100%;
-
-background:
-
-linear-gradient(
-
-90deg,
-
-transparent,
-
-rgba(255,255,255,.35),
-
-transparent
-
-);
-
-transform:skewX(-25deg);
-
-animation:
-reflection 7s infinite;
-
-pointer-events:none;
-
-}
-
-@keyframes reflection{
-
-0%{
-
-left:-120%;
-
-}
-
-100%{
-
-left:160%;
-
-}
-
-}
-
-/* ===========================
-     Logo Hover
-=========================== */
-
-.logo:hover{
-
-transform:
-
-scale(1.08)
-rotate(-4deg);
-
-transition:.35s;
-
-}
-
-/* ===========================
-     Smooth Selection
-=========================== */
-
-::selection{
-
-background:#f01873;
-
-color:#fff;
-
-}
-
-/* ===========================
-      Focus Style
-=========================== */
-
-button:focus{
-
-outline:none;
-
-box-shadow:
-
-0 0 0 5px
-
-rgba(240,24,115,.15);
-
-}
-
-/* ==========================================
-      Mobile Stable Version
-========================================== */
-
-@media (max-width:768px){
-
-    /* جلوگیری از اجرای دوباره تمام انیمیشن‌ها */
-
-    *,
-    *::before,
-    *::after{
-
-        animation:none !important;
-
-        transition:none !important;
+        box-shadow .25s ease;
 
     }
 
+    .login-card:hover{
+
+        transform:translateY(-3px);
+
+        box-shadow:
+
+        0 25px 50px rgba(0,0,0,.14);
+
+    }
+
+}
+
+/*======================================================
+                Tablet Responsive
+======================================================*/
+
+@media (max-width:992px){
+
     body{
 
-        overflow-x:hidden;
-        overflow-y:auto;
-
-        min-height:100svh;
-
-        padding:24px 16px;
-
-        display:flex;
-        justify-content:center;
-        align-items:center;
+        padding:24px;
 
     }
 
     .login-card{
 
+        max-width:420px;
+
+        padding:36px 28px;
+
+    }
+
+}
+
+
+/*======================================================
+              Mobile Responsive
+======================================================*/
+
+@media (max-width:768px){
+
+    html{
+
+        font-size:15px;
+
+    }
+
+    body{
+
+        min-height:100dvh;
+
+        display:flex;
+
+        justify-content:center;
+
+        align-items:center;
+
+        padding:20px 16px;
+
+        overflow-x:hidden;
+
+        overflow-y:auto;
+
+    }
+
+    /* مهم‌ترین قسمت برای جلوگیری از چسبیدن کارت */
+
+    .login-card{
+
         width:100%;
-        max-width:380px;
 
-        transform:none !important;
-
-        opacity:1 !important;
+        max-width:100%;
 
         margin:0 auto;
 
+        position:relative;
+
+        left:auto;
+
+        right:auto;
+
+        top:auto;
+
+        bottom:auto;
+
+        transform:none !important;
+
+        animation:none !important;
+
+        padding:30px 22px;
+
+        border-radius:24px;
+
     }
+
+    .logo-wrapper{
+
+        width:100px;
+
+        height:100px;
+
+        margin-bottom:18px;
+
+    }
+
+    .logo{
+
+        width:72px;
+
+        height:72px;
+
+    }
+
+    .logo-glow{
+
+        width:90px;
+
+        height:90px;
+
+    }
+
+    .login-title{
+
+        margin-bottom:22px;
+
+    }
+
+    .login-title h1{
+
+        font-size:26px;
+
+    }
+
+    .login-title h2{
+
+        font-size:20px;
+
+    }
+
+    .login-title p{
+
+        font-size:14px;
+
+        line-height:2;
+
+    }
+
+    .google-btn{
+
+        height:56px;
+
+        font-size:15px;
+
+    }
+
+    .security-item{
+
+        padding:14px;
+
+    }
+
+    .security-item i{
+
+        width:40px;
+
+        height:40px;
+
+        font-size:17px;
+
+    }
+
+}
+
+
+/*======================================================
+              Small Phones
+======================================================*/
+
+@media (max-width:480px){
+
+    body{
+
+        padding:14px;
+
+    }
+
+    .login-card{
+
+        padding:24px 18px;
+
+        border-radius:20px;
+
+    }
+
+    .logo-wrapper{
+
+        width:90px;
+
+        height:90px;
+
+    }
+
+    .logo{
+
+        width:66px;
+
+        height:66px;
+
+    }
+
+    .login-title h1{
+
+        font-size:23px;
+
+    }
+
+    .login-title h2{
+
+        font-size:18px;
+
+    }
+
+    .login-title p{
+
+        font-size:13px;
+
+    }
+
+    .google-btn{
+
+        height:52px;
+
+        font-size:14px;
+
+    }
+
+    .google-btn img{
+
+        width:20px;
+
+        height:20px;
+
+    }
+
+    .security-item{
+
+        gap:12px;
+
+        padding:12px;
+
+    }
+
+    .security-item span{
+
+        font-size:14px;
+
+    }
+
+}
+
+
+/*======================================================
+      Disable Hover On Mobile
+======================================================*/
+
+@media (hover:none){
 
     .login-card:hover{
 
@@ -1330,4 +883,242 @@ rgba(240,24,115,.15);
 
     }
 
+    .google-btn:hover{
+
+        transform:none !important;
+
+        background:#fff;
+
+        box-shadow:
+        0 10px 25px rgba(0,0,0,.08);
+
+    }
+
+    .security-item:hover{
+
+        transform:none !important;
+
+        background:rgba(255,255,255,.65);
+
+        box-shadow:none;
+
+    }
+
 }
+
+/*======================================================
+                Final Polish
+======================================================*/
+
+/* انتخاب متن */
+::selection{
+    background:#f01873;
+    color:#fff;
+}
+
+/* اسکرول بار (دسکتاپ) */
+::-webkit-scrollbar{
+    width:8px;
+}
+
+::-webkit-scrollbar-track{
+    background:#fff3f8;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#f5a2c4;
+    border-radius:20px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background:#f01873;
+}
+
+/* جلوگیری از کشیده شدن تصویر لوگو */
+.logo{
+    display:block;
+    user-select:none;
+    -webkit-user-drag:none;
+    pointer-events:none;
+}
+
+/* تصاویر */
+img{
+    max-width:100%;
+    height:auto;
+}
+
+/* دکمه */
+button{
+    font-family:"Vazirmatn",sans-serif;
+}
+
+/* لینک‌ها */
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+/* جلوگیری از پرش Layout */
+.login-card,
+.google-btn,
+.security-item{
+    will-change:auto;
+}
+
+/* حذف Highlight آبی موبایل */
+
+*{
+    -webkit-tap-highlight-color:transparent;
+}
+
+/* جلوگیری از زوم آیفون */
+
+input,
+button,
+select,
+textarea{
+
+    font-size:16px;
+
+}
+
+/*======================================================
+            Safe Area (iPhone)
+======================================================*/
+
+body{
+
+    padding-left:max(20px,env(safe-area-inset-left));
+    padding-right:max(20px,env(safe-area-inset-right));
+    padding-top:max(20px,env(safe-area-inset-top));
+    padding-bottom:max(20px,env(safe-area-inset-bottom));
+
+}
+
+/*======================================================
+      Fix Chrome Android 100vh Bug
+======================================================*/
+
+@supports(height:100dvh){
+
+    body{
+
+        min-height:100dvh;
+
+    }
+
+}
+
+/*======================================================
+      Accessibility
+======================================================*/
+
+.google-btn:focus-visible{
+
+    outline:3px solid rgba(240,24,115,.25);
+    outline-offset:4px;
+
+}
+
+.security-item:focus-visible{
+
+    outline:2px solid rgba(240,24,115,.2);
+
+}
+
+/*======================================================
+      Reduce Motion
+======================================================*/
+
+@media (prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+
+        animation:none !important;
+        transition:none !important;
+        scroll-behavior:auto !important;
+
+    }
+
+}
+
+/*======================================================
+      Print
+======================================================*/
+
+@media print{
+
+    body{
+
+        background:#fff;
+
+    }
+
+    .bg-circle,
+    .glass-reflection,
+    .logo-glow{
+
+        display:none;
+
+    }
+
+}
+
+/*======================================================
+      Mobile Final Fix
+======================================================*/
+
+@media (max-width:768px){
+
+    /* حذف کامل هر نوع انیمیشن */
+
+    *,
+    *::before,
+    *::after{
+
+        animation:none !important;
+
+    }
+
+    /* حذف کامل Transform هایی که باعث ورود کارت می‌شوند */
+
+    .login-card{
+
+        transform:none !important;
+        opacity:1 !important;
+
+    }
+
+    .login-title,
+    .google-btn,
+    .login-divider,
+    .security-box,
+    .security-item,
+    .logo,
+    .logo-wrapper{
+
+        transform:none !important;
+        opacity:1 !important;
+
+    }
+
+    /* ثابت ماندن کارت */
+
+    .login-card{
+
+        position:relative;
+
+        inset:auto;
+
+        margin:auto;
+
+    }
+
+}
+
+/*======================================================
+            End of File
+======================================================*/
