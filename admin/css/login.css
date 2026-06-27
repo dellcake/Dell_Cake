@@ -1276,56 +1276,58 @@ rgba(240,24,115,.15);
 
 }
 
-/* ===========================
-       Entrance Delay
-=========================== */
+/* ==========================================
+      Mobile Stable Version
+========================================== */
 
-.login-title{
+@media (max-width:768px){
 
-animation:
-fadeUp .8s .2s both;
+    /* جلوگیری از اجرای دوباره تمام انیمیشن‌ها */
 
-}
+    *,
+    *::before,
+    *::after{
 
-.google-btn{
+        animation:none !important;
 
-animation:
-fadeUp .8s .4s both;
+        transition:none !important;
 
-}
+    }
 
-.security-box{
+    body{
 
-animation:
-fadeUp .8s .6s both;
+        overflow-x:hidden;
+        overflow-y:auto;
 
-}
+        min-height:100svh;
 
-footer{
+        padding:24px 16px;
 
-animation:
-fadeUp .8s .8s both;
+        display:flex;
+        justify-content:center;
+        align-items:center;
 
-}
+    }
 
-@keyframes fadeUp{
+    .login-card{
 
-from{
+        width:100%;
+        max-width:380px;
 
-opacity:0;
+        transform:none !important;
 
-transform:
-translateY(20px);
+        opacity:1 !important;
 
-}
+        margin:0 auto;
 
-to{
+    }
 
-opacity:1;
+    .login-card:hover{
 
-transform:
-translateY(0);
+        transform:none !important;
 
-}
+        box-shadow:var(--shadow);
+
+    }
 
 }
