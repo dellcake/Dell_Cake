@@ -1,0 +1,311 @@
+/* =====================================================
+        Dell Cake CMS
+        Layout System
+===================================================== */
+
+@import url("variables.css");
+@import url("reset.css");
+
+/* ===========================
+        Main Layout
+=========================== */
+
+.admin-layout{
+
+    display:flex;
+
+    min-height:100vh;
+
+    background:var(--bg);
+
+}
+
+/* ===========================
+        Sidebar Space
+=========================== */
+
+.sidebar-container{
+
+    width:var(--sidebar-width);
+
+    flex-shrink:0;
+
+}
+
+/* ===========================
+        Main Area
+=========================== */
+
+.main-wrapper{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    min-width:0;
+
+}
+
+/* ===========================
+        Header Container
+=========================== */
+
+.header-container{
+
+    height:var(--header-height);
+
+    flex-shrink:0;
+
+    background:var(--surface);
+
+    border-bottom:1px solid var(--border-light);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:0 20px;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:900;
+
+}
+/* =====================================================
+        Content Area
+===================================================== */
+
+.content-wrapper{
+
+    flex:1;
+
+    padding:24px;
+
+    overflow-y:auto;
+
+    min-height:0;
+
+}
+
+/* ===========================
+        Grid System (Dashboard)
+=========================== */
+
+.grid{
+
+    display:grid;
+
+    gap:20px;
+
+}
+
+.grid-2{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+.grid-3{
+
+    grid-template-columns:repeat(3,1fr);
+
+}
+
+.grid-4{
+
+    grid-template-columns:repeat(4,1fr);
+
+}
+
+
+/* ===========================
+        Cards Base
+=========================== */
+
+.card{
+
+    background:var(--surface);
+
+    border:1px solid var(--border-light);
+
+    border-radius:var(--radius-lg);
+
+    padding:20px;
+
+    box-shadow:var(--shadow-xs);
+
+    transition:all var(--transition);
+
+}
+
+.card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:var(--shadow-sm);
+
+}
+/* =====================================================
+        Layout States (Sidebar Behavior)
+===================================================== */
+
+/* وقتی سایدبار Collapse می‌شود */
+
+.admin-layout.sidebar-collapsed .sidebar-container{
+
+    width:var(--sidebar-mini);
+
+}
+
+.admin-layout.sidebar-collapsed .header-container{
+
+    padding-right:90px;
+
+}
+
+/* ===========================
+        When Sidebar is Hidden (Mobile)
+=========================== */
+
+@media (max-width:768px){
+
+    .sidebar-container{
+
+        position:fixed;
+
+        right:0;
+
+        top:0;
+
+        height:100vh;
+
+        z-index:1000;
+
+        transform:translateX(100%);
+
+        transition:all var(--transition);
+
+    }
+
+    .admin-layout.sidebar-open .sidebar-container{
+
+        transform:translateX(0);
+
+    }
+
+    .admin-layout.sidebar-open::after{
+
+        content:"";
+
+        position:fixed;
+
+        inset:0;
+
+        background:rgba(0,0,0,.35);
+
+        z-index:999;
+
+    }
+}
+
+/* ===========================
+        Smooth Transitions
+=========================== */
+
+.main-wrapper,
+.sidebar-container,
+.header-container{
+
+    transition:all var(--transition);
+
+}
+/* =====================================================
+        Final Layout Fixes
+===================================================== */
+
+/* جلوگیری از اسکرول اضافی کل صفحه */
+
+html, body{
+
+    height:100%;
+
+}
+
+/* ===========================
+        Fix Overflow Issues
+=========================== */
+
+.admin-layout{
+
+    overflow:hidden;
+
+}
+
+/* ===========================
+        Proper Scroll for Content
+=========================== */
+
+.content-wrapper{
+
+    height:calc(100vh - var(--header-height));
+
+}
+
+/* ===========================
+        Ensure Sidebar Above Content
+=========================== */
+
+.sidebar-container{
+
+    position:relative;
+
+    z-index:1000;
+
+}
+
+/* ===========================
+        Improve Mobile Behavior
+=========================== */
+
+@media (max-width:768px){
+
+    .content-wrapper{
+
+        padding:18px;
+
+    }
+
+    .header-container{
+
+        padding:0 14px;
+
+    }
+
+}
+
+/* ===========================
+        Smooth UI Feel
+=========================== */
+
+*{
+
+    -webkit-tap-highlight-color:transparent;
+
+}
+
+button,
+a{
+
+    user-select:none;
+
+}
+
+/* ===========================
+        End Layout System
+=========================== */
