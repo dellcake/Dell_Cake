@@ -25,10 +25,11 @@ const ADMIN_EMAIL = "sobhanrahimisrj@gmail.com";
         Dashboard Entry Point
 ===================================================== */
 
-const dashboardModule =
-await import("../dashboard/dashboard.js");
+export function initDashboard(){
 
-dashboardModule.initDashboard();
+    initializeDashboard();
+
+}
 
 /* =====================================================
         Initialize
