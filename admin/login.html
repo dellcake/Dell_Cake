@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="fa" dir="rtl">
 
 <head>
@@ -10,15 +9,28 @@
 content="width=device-width, initial-scale=1.0">
 
 <title>
-
-ورود مدیر | دل‌کیک
-
+پنل مدیریت | دل‌کیک
 </title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<!-- Font -->
 
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700&display=swap" rel="stylesheet">
-  
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800&display=swap"
+rel="stylesheet">
+
+<!-- FontAwesome -->
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<!-- CSS -->
+
 <link rel="stylesheet"
 href="css/login.css">
 
@@ -26,17 +38,44 @@ href="css/login.css">
 
 <body>
 
-<div class="login-box">
+<!-- Floating Shapes -->
+
+<div class="bg-circle c1"></div>
+<div class="bg-circle c2"></div>
+<div class="bg-circle c3"></div>
+
+<div class="floating-heart h1">❤</div>
+<div class="floating-heart h2">❤</div>
+<div class="floating-heart h3">❤</div>
+
+<!-- Login Card -->
+
+<div class="login-card">
+
+<div class="logo-wrapper">
+
+<div class="logo-glow"></div>
 
 <img
 src="../images/logo/sweet-.png"
+alt="Dell Cake"
 class="logo">
+
+</div>
+
+<div class="login-title">
 
 <h1>
 
-پنل مدیریت دل‌کیک
+پنل مدیریت
 
 </h1>
+
+<h2>
+
+دل‌کیک
+
+</h2>
 
 <p>
 
@@ -44,18 +83,89 @@ class="logo">
 
 </p>
 
-<button id="googleLogin">
+</div>
+
+<!-- Google -->
+
+<button
+id="googleLogin"
+class="google-btn">
+
+<img
+src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+alt="Google">
+
+<span>
 
 ورود با حساب Google
 
+</span>
+
 </button>
 
+<div class="login-divider">
+
+<span>
+
+ورود امن با Firebase Authentication
+
+</span>
+
 </div>
+
+<div class="security-box">
+
+<div class="security-item">
+
+<i class="fa-solid fa-shield-halved"></i>
+
+<span>
+
+احراز هویت امن
+
+</span>
+
+</div>
+
+<div class="security-item">
+
+<i class="fa-solid fa-user-lock"></i>
+
+<span>
+
+دسترسی فقط مدیر
+
+</span>
+
+</div>
+
+<div class="security-item">
+
+<i class="fa-solid fa-lock"></i>
+
+<span>
+
+رمزنگاری اطلاعات
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+<footer>
+
+<i class="fa-solid fa-heart"></i>
+
+ساخته شده با عشق برای دل‌کیک
+
+</footer>
 
 <script
 type="module"
 src="js/login.js">
-
 </script>
 
 </body>
