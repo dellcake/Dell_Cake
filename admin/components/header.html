@@ -158,30 +158,32 @@
 ========================================== -->
 
 <div
-
     id="profileDropdown"
-
     class="profile-dropdown">
 
     <!-- Profile Header -->
 
-    <div class="dropdown-profile">
+    <div class="dropdown-header">
 
-        <img
+        <div class="dropdown-avatar">
 
-            id="dropdownAvatar"
+            <img
 
-            src="../images/logo/sweet-.png"
+                id="dropdownAvatar"
 
-            alt="Admin">
+                src="../images/logo/sweet-.png"
 
-        <div>
+                alt="Admin">
 
-            <h4 id="dropdownName">
+        </div>
+
+        <div class="dropdown-user">
+
+            <h3 id="dropdownName">
 
                 در حال بارگذاری...
 
-            </h4>
+            </h3>
 
             <span id="dropdownEmail">
 
@@ -189,13 +191,19 @@
 
             </span>
 
+            <small>
+
+                مدیر Dell Cake
+
+            </small>
+
         </div>
 
     </div>
 
     <div class="dropdown-divider"></div>
 
-    <!-- Profile -->
+    <!-- Menu -->
 
     <a href="profile/index.html">
 
@@ -203,13 +211,47 @@
 
         <span>
 
-            پروفایل مدیر
+            پروفایل
 
         </span>
 
     </a>
 
-    <!-- Settings -->
+    <a href="courses/index.html">
+
+        <i class="fa-solid fa-graduation-cap"></i>
+
+        <span>
+
+            مدیریت دوره‌ها
+
+        </span>
+
+    </a>
+
+    <a href="products/index.html">
+
+        <i class="fa-solid fa-cake-candles"></i>
+
+        <span>
+
+            محصولات
+
+        </span>
+
+    </a>
+
+    <a href="gallery/index.html">
+
+        <i class="fa-regular fa-images"></i>
+
+        <span>
+
+            گالری
+
+        </span>
+
+    </a>
 
     <a href="settings/index.html">
 
@@ -217,35 +259,19 @@
 
         <span>
 
-            تنظیمات پنل
+            تنظیمات
 
         </span>
 
     </a>
 
-    <!-- Security -->
+    <a href="../index.html" target="_blank">
 
-    <a href="security/index.html">
-
-        <i class="fa-solid fa-shield-halved"></i>
+        <i class="fa-solid fa-globe"></i>
 
         <span>
 
-            امنیت حساب
-
-        </span>
-
-    </a>
-
-    <!-- Logs -->
-
-    <a href="logs/index.html">
-
-        <i class="fa-solid fa-clock-rotate-left"></i>
-
-        <span>
-
-            گزارش فعالیت‌ها
+            مشاهده سایت
 
         </span>
 
@@ -253,12 +279,8 @@
 
     <div class="dropdown-divider"></div>
 
-    <!-- Logout -->
-
     <button
-
         id="logoutBtn"
-
         type="button">
 
         <i class="fa-solid fa-right-from-bracket"></i>
@@ -274,50 +296,59 @@
 </div>
 
 
-
 <!-- ==========================================
         Notification Panel
 ========================================== -->
 
 <div
-
     id="notificationPanel"
-
     class="notification-panel">
 
     <div class="panel-header">
 
-        <h3>
+        <div>
 
-            اعلان‌ها
+            <h3>
 
-        </h3>
+                اعلان‌ها
+
+            </h3>
+
+            <small>
+
+                آخرین فعالیت‌های پنل
+
+            </small>
+
+        </div>
 
         <button
-
             id="clearNotifications"
-
             type="button">
 
-            پاک کردن همه
+            پاک کردن
 
         </button>
 
     </div>
 
     <div
-
         id="notificationList"
-
         class="notification-list">
 
         <div class="empty-notification">
 
             <i class="fa-regular fa-bell-slash"></i>
 
+            <h4>
+
+                اعلانی وجود ندارد
+
+            </h4>
+
             <span>
 
-                اعلان جدیدی وجود ندارد.
+                اعلان‌های جدید در این قسمت نمایش داده می‌شوند.
 
             </span>
 
@@ -328,16 +359,16 @@
 </div>
 
 <!-- ==========================================
-        Search Result Box
+        Search Result
 ========================================== -->
 
 <div
-
     id="searchResultBox"
-
     class="search-result-box">
 
     <div class="search-result-header">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
 
         <span>
 
@@ -348,18 +379,22 @@
     </div>
 
     <div
-
         id="searchResults"
-
         class="search-results">
 
         <div class="search-empty">
 
             <i class="fa-solid fa-magnifying-glass"></i>
 
+            <h4>
+
+                چیزی پیدا نشد
+
+            </h4>
+
             <span>
 
-                برای جستجو عبارت موردنظر را تایپ کنید...
+                نام دوره، محصول، گالری یا کاربر را جستجو کنید.
 
             </span>
 
