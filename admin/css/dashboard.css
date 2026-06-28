@@ -133,39 +133,29 @@
 
 }
 
-/* ===========================
-        Stats Grid
-=========================== */
+/* =====================================================
+        Statistics Grid
+===================================================== */
 
 .stats-grid{
 
     display:grid;
 
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
 
     gap:22px;
 
-    margin-bottom:30px;
-
 }
 
-/* ===========================
-        Stat Card
-=========================== */
+/* =====================================================
+        Statistic Card
+===================================================== */
 
 .stat-card{
 
-    background:rgba(255,255,255,.82);
+    position:relative;
 
-    backdrop-filter:blur(18px);
-
-    -webkit-backdrop-filter:blur(18px);
-
-    border:1px solid rgba(255,255,255,.35);
-
-    border-radius:22px;
-
-    padding:24px;
+    overflow:hidden;
 
     display:flex;
 
@@ -173,17 +163,51 @@
 
     gap:18px;
 
-    box-shadow:0 12px 35px rgba(0,0,0,.06);
+    padding:24px;
 
-    transition:all .35s ease;
+    border-radius:24px;
+
+    background:rgba(255,255,255,.88);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.45);
+
+    box-shadow:0 15px 40px rgba(0,0,0,.06);
+
+    transition:.35s ease;
 
 }
 
 .stat-card:hover{
 
-    transform:translateY(-6px);
+    transform:translateY(-8px);
 
-    box-shadow:0 20px 40px rgba(236,64,122,.12);
+    box-shadow:0 24px 45px rgba(236,64,122,.12);
+
+}
+
+/* Glow */
+
+.stat-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-60px;
+
+    left:-60px;
+
+    width:140px;
+
+    height:140px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.28);
 
 }
 
@@ -193,71 +217,58 @@
 
 .stat-icon{
 
-    width:66px;
+    width:72px;
 
-    height:66px;
+    height:72px;
 
-    border-radius:18px;
+    border-radius:22px;
 
     display:flex;
 
-    align-items:center;
-
     justify-content:center;
 
-    color:#fff;
-
-    font-size:24px;
+    align-items:center;
 
     flex-shrink:0;
 
+    color:#fff;
+
+    font-size:26px;
+
+    box-shadow:0 12px 24px rgba(0,0,0,.12);
+
 }
+
 /* ===========================
-        Icon Colors
+        Colors
 =========================== */
 
 .orders{
 
-    background:linear-gradient(
-        135deg,
-        #ff8fb8,
-        #ff5f96
-    );
+    background:linear-gradient(135deg,#ff9bc3,#ff5f96);
 
 }
 
 .customers{
 
-    background:linear-gradient(
-        135deg,
-        #7c4dff,
-        #5e35b1
-    );
+    background:linear-gradient(135deg,#8b5cf6,#5b3cc4);
 
 }
 
 .products{
 
-    background:linear-gradient(
-        135deg,
-        #26c6da,
-        #0097a7
-    );
+    background:linear-gradient(135deg,#36d1dc,#00acc1);
 
 }
 
 .revenue{
 
-    background:linear-gradient(
-        135deg,
-        #66bb6a,
-        #43a047
-    );
+    background:linear-gradient(135deg,#74d680,#43a047);
 
 }
 
 /* ===========================
-        Stat Content
+        Content
 =========================== */
 
 .stat-content{
@@ -266,68 +277,137 @@
 
     flex-direction:column;
 
+    gap:8px;
+
 }
 
 .stat-content span{
 
-    font-size:14px;
-
     color:var(--text-light);
 
-    margin-bottom:8px;
+    font-size:14px;
+
+    font-weight:500;
 
 }
 
 .stat-content h2{
 
-    font-size:30px;
+    font-size:34px;
 
     font-weight:800;
 
     color:var(--text);
 
+    line-height:1;
+
 }
+
+/* ===========================
+        Change Badge
+=========================== */
+
+.stat-change{
+
+    margin-top:6px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    color:#2e7d32;
+
+}
+
+.stat-change i{
+
+    font-size:11px;
+
+}
+
 /* =====================================================
-        Dashboard Main Grid
+        Dashboard Grid
 ===================================================== */
 
 .dashboard-grid{
 
     display:grid;
 
-    grid-template-columns:2fr 1fr;
+    grid-template-columns:2.1fr 1fr;
 
-    gap:24px;
+    gap:26px;
 
     align-items:start;
 
 }
 
-/* ===========================
+/* =====================================================
         Dashboard Card
-=========================== */
+===================================================== */
 
 .dashboard-card{
 
-    background:rgba(255,255,255,.82);
+    position:relative;
+
+    overflow:hidden;
+
+    background:rgba(255,255,255,.88);
 
     backdrop-filter:blur(18px);
 
     -webkit-backdrop-filter:blur(18px);
 
-    border:1px solid rgba(255,255,255,.35);
+    border:1px solid rgba(255,255,255,.45);
 
-    border-radius:22px;
+    border-radius:26px;
 
-    padding:24px;
+    padding:26px;
 
-    box-shadow:0 12px 35px rgba(0,0,0,.05);
+    box-shadow:0 15px 40px rgba(0,0,0,.06);
+
+    transition:.35s ease;
 
 }
 
-/* ===========================
+.dashboard-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 24px 48px rgba(236,64,122,.10);
+
+}
+
+/* Glow */
+
+.dashboard-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-70px;
+
+    left:-70px;
+
+    width:160px;
+
+    height:160px;
+
+    border-radius:50%;
+
+    background:rgba(255,182,206,.16);
+
+}
+
+/* =====================================================
         Card Header
-=========================== */
+===================================================== */
 
 .card-header{
 
@@ -337,15 +417,19 @@
 
     align-items:center;
 
-    margin-bottom:22px;
+    margin-bottom:26px;
+
+    padding-bottom:18px;
+
+    border-bottom:1px solid rgba(236,64,122,.08);
 
 }
 
 .card-header h2{
 
-    font-size:20px;
+    font-size:21px;
 
-    font-weight:700;
+    font-weight:800;
 
     color:var(--text);
 
@@ -353,19 +437,41 @@
 
 .card-header a{
 
-    font-size:14px;
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
 
     color:var(--primary);
 
-    font-weight:600;
+    font-size:14px;
 
-    transition:.3s;
+    font-weight:700;
+
+    transition:.30s;
 
 }
 
 .card-header a:hover{
 
-    opacity:.7;
+    color:var(--primary-dark);
+
+    transform:translateX(-4px);
+
+}
+
+/* =====================================================
+        Dashboard Side
+===================================================== */
+
+.dashboard-side{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:24px;
 
 }
 /* =====================================================
@@ -683,7 +789,9 @@
         Responsive
 ===================================================== */
 
-@media (max-width:1200px){
+/* ---------- Laptop ---------- */
+
+@media (max-width:1400px){
 
     .stats-grid{
 
@@ -693,7 +801,9 @@
 
 }
 
-@media (max-width:992px){
+/* ---------- Tablet ---------- */
+
+@media (max-width:1100px){
 
     .dashboard-grid{
 
@@ -701,17 +811,41 @@
 
     }
 
+    .dashboard-side{
+
+        order:2;
+
+    }
+
 }
+
+/* ---------- Small Tablet ---------- */
 
 @media (max-width:768px){
 
-    .dashboard-top{
+    .dashboard{
 
-        flex-direction:column;
+        gap:22px;
+
+    }
+
+    .dashboard-top{
 
         align-items:flex-start;
 
-        gap:12px;
+        flex-direction:column;
+
+    }
+
+    .dashboard-top h1{
+
+        font-size:28px;
+
+    }
+
+    .dashboard-top p{
+
+        font-size:14px;
 
     }
 
@@ -719,27 +853,91 @@
 
         grid-template-columns:1fr;
 
-    }
-
-    .quick-actions{
-
-        grid-template-columns:1fr 1fr;
+        gap:18px;
 
     }
 
     .stat-card{
 
-        padding:18px;
+        padding:20px;
+
+    }
+
+    .stat-icon{
+
+        width:64px;
+
+        height:64px;
+
+        font-size:24px;
+
+    }
+
+    .dashboard-card{
+
+        padding:20px;
+
+        border-radius:22px;
+
+    }
+
+    .quick-actions{
+
+        grid-template-columns:repeat(2,1fr);
 
     }
 
 }
 
-@media (max-width:480px){
+/* ---------- Mobile ---------- */
 
-    .content-wrapper{
+@media (max-width:576px){
 
-        padding:16px;
+    .dashboard{
+
+        width:100%;
+
+    }
+
+    .dashboard-top{
+
+        margin-bottom:0;
+
+    }
+
+    .dashboard-top h1{
+
+        font-size:24px;
+
+    }
+
+    .dashboard-card{
+
+        padding:18px;
+
+    }
+
+    .card-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:10px;
+
+    }
+
+    .stat-card{
+
+        flex-direction:row;
+
+        gap:16px;
+
+    }
+
+    .stat-content h2{
+
+        font-size:28px;
 
     }
 
@@ -751,9 +949,42 @@
 
     .orders-table{
 
-        min-width:650px;
+        min-width:700px;
 
     }
 
 }
 
+/* ---------- Very Small Phones ---------- */
+
+@media (max-width:380px){
+
+    .dashboard-top h1{
+
+        font-size:21px;
+
+    }
+
+    .stat-card{
+
+        padding:16px;
+
+    }
+
+    .stat-icon{
+
+        width:58px;
+
+        height:58px;
+
+        font-size:22px;
+
+    }
+
+    .dashboard-card{
+
+        padding:16px;
+
+    }
+
+}
