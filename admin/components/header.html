@@ -1,33 +1,28 @@
 <!-- ==========================================
-        Dell Cake Header
+        Dell Cake CMS Header
 ========================================== -->
 
 <header class="admin-header">
 
-    <!-- ==========================
-            Header Left
-    =========================== -->
+    <!-- Left -->
 
     <div class="header-left">
-
-        <!-- Sidebar Toggle -->
 
         <button
             id="menuToggle"
             class="menu-toggle"
+            type="button"
             aria-label="باز کردن منو">
 
             <i class="fa-solid fa-bars"></i>
 
         </button>
 
-        <!-- Page Information -->
-
         <div class="page-information">
 
             <h1 id="pageTitle">
 
-                داشبورد مدیریت
+                داشبورد
 
             </h1>
 
@@ -53,9 +48,7 @@
 
     </div>
 
-    <!-- ==========================
-            Header Center
-    =========================== -->
+    <!-- Center -->
 
     <div class="header-center">
 
@@ -64,43 +57,31 @@
             <i class="fa-solid fa-magnifying-glass"></i>
 
             <input
-
                 id="globalSearch"
-
                 type="search"
-
-                autocomplete="off"
-
-                spellcheck="false"
-
-                placeholder="جستجو در پنل مدیریت ...">
+                placeholder="جستجو..."
+                autocomplete="off">
 
         </div>
 
     </div>
 
-    <!-- ==========================
-            Header Right
-    =========================== -->
+    <!-- Right -->
 
     <div class="header-right">
 
-        <!-- Notification -->
+        <!-- Notifications -->
 
         <button
-
             id="notificationBtn"
-
             class="header-icon notification-btn"
-
+            type="button"
             aria-label="اعلان‌ها">
 
             <i class="fa-regular fa-bell"></i>
 
             <span
-
                 id="notificationBadge"
-
                 class="notification-badge">
 
                 0
@@ -112,19 +93,14 @@
         <!-- Profile -->
 
         <div
-
             id="adminProfile"
-
             class="admin-profile">
 
             <div class="profile-image">
 
                 <img
-
                     id="adminAvatar"
-
                     src="../images/logo/sweet-.png"
-
                     alt="Admin">
 
                 <span class="online-status"></span>
@@ -153,6 +129,8 @@
 
     </div>
 
+</header>
+
 <!-- ==========================================
         Profile Dropdown
 ========================================== -->
@@ -161,18 +139,13 @@
     id="profileDropdown"
     class="profile-dropdown">
 
-    <!-- Profile Header -->
-
     <div class="dropdown-header">
 
         <div class="dropdown-avatar">
 
             <img
-
                 id="dropdownAvatar"
-
                 src="../images/logo/sweet-.png"
-
                 alt="Admin">
 
         </div>
@@ -187,7 +160,7 @@
 
             <span id="dropdownEmail">
 
-                loading...
+                admin@dellcake.ir
 
             </span>
 
@@ -203,9 +176,7 @@
 
     <div class="dropdown-divider"></div>
 
-    <!-- Menu -->
-
-    <a href="profile/index.html">
+    <a href="./profile/index.html">
 
         <i class="fa-regular fa-user"></i>
 
@@ -217,19 +188,19 @@
 
     </a>
 
-    <a href="courses/index.html">
+    <a href="./academy/index.html">
 
         <i class="fa-solid fa-graduation-cap"></i>
 
         <span>
 
-            مدیریت دوره‌ها
+            آکادمی
 
         </span>
 
     </a>
 
-    <a href="products/index.html">
+    <a href="./products/index.html">
 
         <i class="fa-solid fa-cake-candles"></i>
 
@@ -241,7 +212,7 @@
 
     </a>
 
-    <a href="gallery/index.html">
+    <a href="./gallery/index.html">
 
         <i class="fa-regular fa-images"></i>
 
@@ -253,25 +224,25 @@
 
     </a>
 
-    <a href="settings/index.html">
+    <a href="./customers/index.html">
+
+        <i class="fa-solid fa-users"></i>
+
+        <span>
+
+            مشتریان
+
+        </span>
+
+    </a>
+
+    <a href="./settings/index.html">
 
         <i class="fa-solid fa-gear"></i>
 
         <span>
 
             تنظیمات
-
-        </span>
-
-    </a>
-
-    <a href="../index.html" target="_blank">
-
-        <i class="fa-solid fa-globe"></i>
-
-        <span>
-
-            مشاهده سایت
 
         </span>
 
@@ -295,7 +266,6 @@
 
 </div>
 
-
 <!-- ==========================================
         Notification Panel
 ========================================== -->
@@ -316,7 +286,7 @@
 
             <small>
 
-                آخرین فعالیت‌های پنل
+                آخرین فعالیت‌های سیستم
 
             </small>
 
@@ -342,13 +312,13 @@
 
             <h4>
 
-                اعلانی وجود ندارد
+                اعلان جدیدی وجود ندارد
 
             </h4>
 
             <span>
 
-                اعلان‌های جدید در این قسمت نمایش داده می‌شوند.
+                اعلان‌های آینده در این قسمت نمایش داده خواهند شد.
 
             </span>
 
@@ -359,7 +329,7 @@
 </div>
 
 <!-- ==========================================
-        Search Result
+        Search Results
 ========================================== -->
 
 <div
@@ -388,7 +358,7 @@
 
             <h4>
 
-                چیزی پیدا نشد
+                نتیجه‌ای پیدا نشد
 
             </h4>
 
@@ -403,5 +373,3 @@
     </div>
 
 </div>
-
-</header>
