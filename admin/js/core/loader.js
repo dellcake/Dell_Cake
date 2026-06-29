@@ -1,40 +1,72 @@
 /* =====================================================
         Dell Cake CMS
-        Component Loader
+        Core Loader
 ===================================================== */
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    await loadComponent(
-    "#sidebarContainer",
-    "../../components/sidebar.html"
-);
+    try {
 
-await loadComponent(
-    "#headerContainer",
-    "../../components/header.html"
-);
-        
-    initializeLayout();
+        /* ==========================
+                Load Components
+        ========================== */
 
-    /* -------------------------------
-       Load Modules After Components
-    -------------------------------- */
+        await loadComponent(
+            "#sidebarContainer",
+            "./components/sidebar.html"
+        );
 
-    await import("../dashboard/dashboard.js");
+        await loadComponent(
+            "#headerContainer",
+            "./components/header.html"
+        );
+
+        /* ==========================
+                Initialize Layout
+        ========================== */
+
+        initializeLayout();
+
+        /* ==========================
+                Load JS Modules
+        ========================== */
+
+        await Promise.all([
+
+            import("../sidebar/sidebar.js"),
+
+            import("../header/header.js"),
+
+            import("../dashboard/dashboard.js")
+
+        ]);
+
+    }
+
+    catch (error) {
+
+        console.error("CMS Loader Error :", error);
+
+    }
 
 });
 
 
 /* =====================================================
-        Load Component
+        Load HTML Component
 ===================================================== */
 
 async function loadComponent(selector, url) {
 
     const container = document.querySelector(selector);
 
-    if (!container) return;
+    if (!container) {
+
+        console.warn(`Container not found : ${selector}`);
+
+        return;
+
+    }
 
     try {
 
@@ -42,22 +74,25 @@ async function loadComponent(selector, url) {
 
         if (!response.ok) {
 
-            throw new Error(response.status);
+            throw new Error(`Cannot load ${url}`);
 
         }
 
         container.innerHTML = await response.text();
 
-    } catch (error) {
+    }
 
-        console.error("Component Error:", error);
+    catch (error) {
+
+        console.error(error);
 
     }
+
 }
 
 
 /* =====================================================
-        Layout Init
+        Initialize Layout
 ===================================================== */
 
 function initializeLayout() {
@@ -75,47 +110,43 @@ function initializeLayout() {
 
 function setPageTitle() {
 
-    const title = document.getElementById("pageTitle");
+    const pageTitle = document.getElementById("pageTitle");
 
-    if (!title) return;
+    if (!pageTitle) return;
 
-    const page = window.location.pathname
+    const page = location.pathname
         .split("/")
         .pop()
         .replace(".html", "");
 
-    const pages = {
+    const titles = {
 
-        dashboard: "داشبورد مدیریت",
+        dashboard: "داشبورد",
 
-        orders: "مدیریت سفارش‌ها",
+        academy: "آکادمی",
 
-        gallery: "مدیریت گالری",
+        gallery: "گالری",
 
-        products: "مدیریت محصولات",
+        products: "محصولات",
 
-        courses: "مدیریت دوره‌ها",
+        customers: "مشتریان",
 
-        users: "مدیریت کاربران",
-
-        settings: "تنظیمات",
-
-        profile: "پروفایل مدیر"
+        settings: "تنظیمات"
 
     };
 
-    title.textContent = pages[page] || "پنل مدیریت";
+    pageTitle.textContent = titles[page] || "پنل مدیریت";
 
 }
 
 
 /* =====================================================
-        Active Menu
+        Active Sidebar Item
 ===================================================== */
 
 function setActiveMenu() {
 
-    const current = window.location.pathname
+    const currentPage = location.pathname
         .split("/")
         .pop();
 
@@ -127,7 +158,7 @@ function setActiveMenu() {
 
         if (!href) return;
 
-        if (href.endsWith(current)) {
+        if (href.endsWith(currentPage)) {
 
             item.classList.add("active");
 
