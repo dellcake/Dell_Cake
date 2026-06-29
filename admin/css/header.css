@@ -451,3 +451,538 @@
     margin:6px 0;
 
 }
+/* =====================================================
+        Profile Dropdown
+===================================================== */
+
+.profile-dropdown{
+
+    position:absolute;
+
+    top:92px;
+
+    left:28px;
+
+    width:320px;
+
+    background:#fff;
+
+    border-radius:24px;
+
+    overflow:hidden;
+
+    box-shadow:0 25px 60px rgba(0,0,0,.12);
+
+    border:1px solid rgba(236,64,122,.08);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transform:translateY(15px);
+
+    transition:.35s;
+
+    z-index:999;
+
+}
+
+.profile-dropdown.show{
+
+    opacity:1;
+
+    visibility:visible;
+
+    transform:translateY(0);
+
+}
+
+/* ================================= */
+
+.dropdown-header{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+    padding:22px;
+
+    background:linear-gradient(
+        135deg,
+        #fff5f8,
+        #ffffff
+    );
+
+}
+
+.dropdown-avatar{
+
+    width:64px;
+
+    height:64px;
+
+}
+
+.dropdown-avatar img{
+
+    width:100%;
+
+    height:100%;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+}
+
+.dropdown-user{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:4px;
+
+}
+
+.dropdown-user h3{
+
+    font-size:16px;
+
+    font-weight:700;
+
+    color:var(--text);
+
+}
+
+.dropdown-user span{
+
+    font-size:13px;
+
+    color:var(--text-light);
+
+}
+
+.dropdown-user small{
+
+    color:var(--primary);
+
+    font-weight:600;
+
+}
+
+.dropdown-divider{
+
+    height:1px;
+
+    background:#f3f3f3;
+
+}
+
+/* ================================= */
+
+.profile-dropdown a,
+
+.profile-dropdown button{
+
+    width:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:16px 22px;
+
+    background:none;
+
+    border:none;
+
+    cursor:pointer;
+
+    color:var(--text);
+
+    font-size:14px;
+
+    transition:.25s;
+
+}
+
+.profile-dropdown a:hover,
+
+.profile-dropdown button:hover{
+
+    background:#fff5f8;
+
+    color:var(--primary);
+
+}
+
+.profile-dropdown i{
+
+    width:22px;
+
+    text-align:center;
+
+}
+
+/* =====================================================
+        Notification Panel
+===================================================== */
+
+.notification-panel{
+
+    position:absolute;
+
+    top:92px;
+
+    left:370px;
+
+    width:360px;
+
+    max-height:480px;
+
+    overflow:auto;
+
+    background:#fff;
+
+    border-radius:24px;
+
+    border:1px solid rgba(236,64,122,.08);
+
+    box-shadow:0 25px 60px rgba(0,0,0,.12);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transform:translateY(15px);
+
+    transition:.35s;
+
+    z-index:998;
+
+}
+
+.notification-panel.show{
+
+    opacity:1;
+
+    visibility:visible;
+
+    transform:translateY(0);
+
+}
+
+.panel-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:20px;
+
+    border-bottom:1px solid #f2f2f2;
+
+}
+
+.panel-header h3{
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+.panel-header small{
+
+    display:block;
+
+    margin-top:4px;
+
+    color:var(--text-light);
+
+}
+
+.notification-list{
+
+    padding:20px;
+
+}
+
+.empty-notification{
+
+    text-align:center;
+
+    padding:40px 15px;
+
+}
+
+.empty-notification i{
+
+    font-size:42px;
+
+    color:#d7d7d7;
+
+    margin-bottom:16px;
+
+}
+
+.empty-notification h4{
+
+    margin-bottom:8px;
+
+}
+
+.empty-notification span{
+
+    color:var(--text-light);
+
+    font-size:13px;
+
+}
+
+/* =====================================================
+        Search Result
+===================================================== */
+
+.search-result-box{
+
+    position:absolute;
+
+    top:92px;
+
+    right:50%;
+
+    transform:translateX(50%);
+
+    width:560px;
+
+    background:#fff;
+
+    border-radius:22px;
+
+    border:1px solid rgba(236,64,122,.08);
+
+    box-shadow:0 25px 60px rgba(0,0,0,.10);
+
+    overflow:hidden;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.35s;
+
+    z-index:997;
+
+}
+
+.search-result-box.show{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+.search-result-header{
+
+    padding:16px 22px;
+
+    border-bottom:1px solid #f3f3f3;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.search-results{
+
+    max-height:420px;
+
+    overflow:auto;
+
+}
+
+.search-empty{
+
+    text-align:center;
+
+    padding:55px 20px;
+
+}
+
+.search-empty i{
+
+    font-size:38px;
+
+    color:#d7d7d7;
+
+    margin-bottom:16px;
+
+}
+
+.search-empty h4{
+
+    margin-bottom:10px;
+
+}
+
+.search-empty span{
+
+    color:var(--text-light);
+
+}
+
+/* =====================================================
+        Responsive
+===================================================== */
+
+@media(max-width:1100px){
+
+    .header-center{
+
+        max-width:380px;
+
+    }
+
+    .search-result-box{
+
+        width:460px;
+
+    }
+
+}
+
+@media(max-width:992px){
+
+    .admin-header{
+
+        padding:0 18px;
+
+    }
+
+    .profile-info{
+
+        display:none;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .admin-header{
+
+        height:auto;
+
+        flex-wrap:wrap;
+
+        gap:16px;
+
+        padding:18px;
+
+    }
+
+    .header-left{
+
+        width:100%;
+
+        justify-content:space-between;
+
+    }
+
+    .header-center{
+
+        width:100%;
+
+        order:3;
+
+    }
+
+    .search-box{
+
+        max-width:none;
+
+    }
+
+    .header-right{
+
+        margin-right:auto;
+
+    }
+
+    .page-breadcrumb{
+
+        display:none;
+
+    }
+
+    .profile-dropdown,
+
+    .notification-panel,
+
+    .search-result-box{
+
+        width:calc(100vw - 30px);
+
+        left:15px;
+
+        right:15px;
+
+        transform:none;
+
+        top:85px;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .page-information h1{
+
+        font-size:20px;
+
+    }
+
+    .menu-toggle{
+
+        width:42px;
+
+        height:42px;
+
+    }
+
+    .header-icon{
+
+        width:44px;
+
+        height:44px;
+
+    }
+
+    .admin-profile{
+
+        padding:6px;
+
+    }
+
+    .profile-image{
+
+        width:42px;
+
+        height:42px;
+
+    }
+
+}
