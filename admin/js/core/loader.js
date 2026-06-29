@@ -5,15 +5,9 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    await loadComponent(
-        "#sidebarContainer",
-        "components/sidebar.html"
-    );
+    await loadComponent("#sidebarContainer", "../components/sidebar.html");
 
-    await loadComponent(
-        "#headerContainer",
-        "components/header.html"
-    );
+await loadComponent("#headerContainer", "../components/header.html");
 
     initializeLayout();
 
