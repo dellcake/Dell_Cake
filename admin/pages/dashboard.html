@@ -1,22 +1,122 @@
-<section class="content-section">
+<section class="dashboard-wrapper">
+    <!-- Top Stats -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-icon pink"><i class="fa-solid fa-book"></i></div>
-            <div class="stat-info"><h3>تعداد دوره‌ها</h3><p id="total-courses">۰</p></div>
+            <div class="stat-icon pink"><i class="fa-solid fa-shopping-bag"></i></div>
+            <div class="stat-info">
+                <h3>کل سفارشات</h3>
+                <p id="total-orders-count">۰</p>
+                <span class="stat-change positive"><i class="fa-solid fa-arrow-up"></i> ۱۲٪</span>
+            </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon brown"><i class="fa-solid fa-bag-shopping"></i></div>
-            <div class="stat-info"><h3>سفارشات جدید</h3><p id="new-orders">۰</p></div>
+            <div class="stat-icon brown"><i class="fa-solid fa-book-open"></i></div>
+            <div class="stat-info">
+                <h3>دوره‌ها</h3>
+                <p id="total-courses-count">۰</p>
+                <span class="stat-change">بدون تغییر</span>
+            </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon cream"><i class="fa-solid fa-users"></i></div>
-            <div class="stat-info"><h3>مشتریان</h3><p>۱۲۴</p></div>
+            <div class="stat-icon cream"><i class="fa-solid fa-dollar-sign"></i></div>
+            <div class="stat-info">
+                <h3>درآمد کل</h3>
+                <p id="total-revenue">۰ تومان</p>
+                <span class="stat-change positive"><i class="fa-solid fa-arrow-up"></i> ۸٪</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon pink"><i class="fa-solid fa-envelope"></i></div>
+            <div class="stat-info">
+                <h3>پیام‌ها</h3>
+                <p id="total-messages">۰</p>
+                <span class="stat-change negative"><i class="fa-solid fa-arrow-down"></i> ۵٪</span>
+            </div>
         </div>
     </div>
-    <div class="recent-activities">
-        <h2>فعالیت‌های اخیر</h2>
-        <div class="activities-list" id="activities-list">
-            <p class="empty-msg">در حال بارگذاری فعالیت‌ها...</p>
+
+    <!-- Charts & Main Content -->
+    <div class="dashboard-main-grid">
+        <div class="chart-container card">
+            <div class="card-header">
+                <h2>نمودار فروش ماهانه</h2>
+                <div class="card-actions">
+                    <button class="btn-sm">ماه جاری</button>
+                </div>
+            </div>
+            <canvas id="salesChart"></canvas>
+        </div>
+
+        <div class="quick-actions card">
+            <div class="card-header"><h2>دسترسی سریع</h2></div>
+            <div class="action-grid">
+                <button onclick="navigateTo('Courses')" class="action-btn">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>افزودن دوره</span>
+                </button>
+                <button onclick="navigateTo('Orders')" class="action-btn">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>لیست سفارشات</span>
+                </button>
+                <button class="action-btn">
+                    <i class="fa-solid fa-image"></i>
+                    <span>گالری تصاویر</span>
+                </button>
+                <button class="action-btn">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>تنظیمات سیستم</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-bottom-grid">
+        <div class="recent-orders-card card">
+            <div class="card-header">
+                <h2>آخرین سفارشات</h2>
+                <button onclick="navigateTo('Orders')" class="view-all">مشاهده همه</button>
+            </div>
+            <div class="table-responsive">
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>مشتری</th>
+                            <th>محصول</th>
+                            <th>وضعیت</th>
+                            <th>مبلغ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-orders-tbody">
+                        <tr><td colspan="4" class="loading">در حال بارگذاری...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="system-status card">
+            <div class="card-header"><h2>وضعیت سیستم</h2></div>
+            <div class="status-list">
+                <div class="status-item">
+                    <div class="status-info">
+                        <span>پایگاه داده (Firebase)</span>
+                        <span class="status-dot online"></span>
+                    </div>
+                    <div class="progress-bar"><div class="progress" style="width: 100%"></div></div>
+                </div>
+                <div class="status-item">
+                    <div class="status-info">
+                        <span>فضای ذخیره‌سازی</span>
+                        <span>۴۵٪</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress" style="width: 45%"></div></div>
+                </div>
+                <div class="status-item">
+                    <div class="status-info">
+                        <span>امنیت سیستم</span>
+                        <span class="badge-secure">امن</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
