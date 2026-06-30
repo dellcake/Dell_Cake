@@ -485,6 +485,7 @@ td{padding:.85rem 1rem;vertical-align:middle}
 
 <div id="toast-stack"></div>
 
+<script type="module" src="js/auth-guard.js"></script>
 <script type="module">
 import { db } from "../js/firebase-db.js";
 import {
@@ -494,8 +495,7 @@ import {
   setDoc,
   deleteDoc,
   addDoc,
-  query,
-  orderBy
+  query
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 // ═══════════════════════════════════════════
@@ -557,26 +557,39 @@ async function syncFromFirebase() {
   try {
     const qCourses = query(collection(db, "courses"));
     const snapCourses = await getDocs(qCourses);
-    COURSES = snapCourses.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    if (!snapCourses.empty) {
+        COURSES = snapCourses.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
 
-    const qOrders = query(collection(db, "orders"), orderBy("date", "desc"));
+    const qOrders = query(collection(db, "orders"));
     const snapOrders = await getDocs(qOrders);
-    ORDERS = snapOrders.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    if (!snapOrders.empty) {
+        ORDERS = snapOrders.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        // Manual sort to avoid index issues
+        ORDERS.sort((a,b) => (b.date || "").localeCompare(a.date || ""));
+    }
 
     const qContent = query(collection(db, "content"));
     const snapContent = await getDocs(qContent);
-    CONTENT = snapContent.docs.map(doc => ({ key: doc.id, ...doc.data() }));
+    if (!snapContent.empty) {
+        CONTENT = snapContent.docs.map(doc => ({ key: doc.id, ...doc.data() }));
+    }
 
     const qGallery = query(collection(db, "gallery"));
     const snapGallery = await getDocs(qGallery);
-    GALLERY = snapGallery.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    if (!snapGallery.empty) {
+        GALLERY = snapGallery.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
 
     const qCustomers = query(collection(db, "customers"));
     const snapCustomers = await getDocs(qCustomers);
-    CUSTOMERS = snapCustomers.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    if (!snapCustomers.empty) {
+        CUSTOMERS = snapCustomers.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
 
     saveAll(); // Update local storage
     if(curPage) navigateTo(curPage);
+    toast("همگام‌سازی با سرور انجام شد ✅", "success");
   } catch (e) {
     console.error("Firebase sync error:", e);
     toast("خطا در همگام‌سازی با سرور", "error");
