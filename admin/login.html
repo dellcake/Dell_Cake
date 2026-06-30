@@ -27,13 +27,34 @@
             <h2>دل‌کیک</h2>
             <p>ورود فقط برای مدیر سایت امکان‌پذیر است.</p>
         </div>
+
+        <form id="loginForm" class="auth-form">
+            <div class="form-group">
+                <label for="email"><i class="fa-solid fa-envelope"></i> ایمیل</label>
+                <input type="email" id="email" placeholder="example@gmail.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password"><i class="fa-solid fa-lock"></i> رمز عبور</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+            <div class="forgot-link">
+                <a href="forgot-password.html">رمز عبور را فراموش کرده‌اید؟</a>
+            </div>
+            <button type="submit" class="submit-btn">
+                <span>ورود به پنل</span>
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </form>
+
+        <div class="login-divider">
+            <span>یا ورود با</span>
+        </div>
+
         <button id="googleLogin" class="google-btn">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-            <span>ورود با حساب Google</span>
+            <span>حساب Google</span>
         </button>
-        <div class="login-divider">
-            <span>ورود امن با Firebase Authentication</span>
-        </div>
+
         <div class="security-box">
             <div class="security-item">
                 <i class="fa-solid fa-shield-halved"></i>
@@ -42,10 +63,6 @@
             <div class="security-item">
                 <i class="fa-solid fa-user-lock"></i>
                 <span>دسترسی فقط مدیر</span>
-            </div>
-            <div class="security-item">
-                <i class="fa-solid fa-lock"></i>
-                <span>رمزنگاری اطلاعات</span>
             </div>
         </div>
     </div>

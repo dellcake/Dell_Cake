@@ -1,1185 +1,251 @@
 /*======================================================
-  Dell Cake Admin Login
-  Version 2.0
+  Dell Cake Admin Auth Styles
+  Professional, Minimal, Soft Pink Theme
 ======================================================*/
 
-/*-------------------------
-        Reset
---------------------------*/
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+:root {
+    --primary: #e8789a;
+    --primary-light: #f09cb5;
+    --primary-dark: #d66185;
+    --secondary: #6b3d2a;
+    --accent: #fdf6f0;
+    --white: #ffffff;
+    --text-dark: #2d2d2d;
+    --text-light: #777;
+    --bg-gradient: linear-gradient(135deg, #fdf6f0 0%, #fff0f5 100%);
+    --radius: 20px;
+    --shadow: 0 10px 30px rgba(232, 120, 154, 0.1);
 }
 
-html{
-
-    font-size:16px;
-
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-
-    font-family:"Vazirmatn",sans-serif;
-
-    direction:rtl;
-
-    background:
-    linear-gradient(
-        135deg,
-        #fff7fb 0%,
-        #ffeaf2 55%,
-        #ffd9e9 100%
-    );
-
-    min-height:100dvh;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    overflow-x:hidden;
-
-    overflow-y:auto;
-
-    padding:30px;
-
-    position:relative;
-
+body {
+    font-family: "Vazirmatn", sans-serif;
+    direction: rtl;
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
 }
 
-/*-------------------------
-      Variables
---------------------------*/
+/* Background Elements */
+.bg-circle {
+    position: fixed;
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0.5;
+}
+.c1 { width: 300px; height: 300px; background: #ffeef2; top: -100px; left: -100px; }
+.c2 { width: 200px; height: 200px; background: #fff5f0; bottom: -50px; right: -50px; }
+.c3 { width: 100px; height: 100px; background: #fdf6f0; top: 20%; right: 10%; }
 
-:root{
+.floating-heart {
+    position: fixed;
+    color: var(--primary);
+    opacity: 0.2;
+    font-size: 24px;
+    animation: float 6s infinite ease-in-out;
+    z-index: -1;
+}
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(20deg); }
+}
+.h1 { top: 10%; left: 15%; animation-delay: 0s; }
+.h2 { bottom: 15%; left: 10%; animation-delay: 2s; }
+.h3 { top: 40%; right: 5%; animation-delay: 4s; }
 
-    --primary:#f01873;
-
-    --primary-light:#ff4b98;
-
-    --secondary:#ffe5ef;
-
-    --white:#ffffff;
-
-    --text:#2d2d2d;
-
-    --gray:#777;
-
-    --radius:28px;
-
-    --shadow:
-    0 18px 45px rgba(0,0,0,.12);
-
+/* Auth Card */
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius);
+    padding: 40px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    position: relative;
 }
 
-/*-------------------------
- Background Decoration
---------------------------*/
-
-body::before{
-
-    content:"";
-
-    position:fixed;
-
-    width:420px;
-
-    height:420px;
-
-    border-radius:50%;
-
-    background:
-
-    radial-gradient(
-
-        circle,
-
-        rgba(240,24,115,.16),
-
-        transparent 70%
-
-    );
-
-    top:-140px;
-
-    right:-120px;
-
-    z-index:-2;
-
+.logo-wrapper {
+    margin-bottom: 20px;
+}
+.logo {
+    width: 80px;
+    height: auto;
 }
 
-body::after{
-
-    content:"";
-
-    position:fixed;
-
-    width:340px;
-
-    height:340px;
-
-    border-radius:50%;
-
-    background:
-
-    radial-gradient(
-
-        circle,
-
-        rgba(255,255,255,.75),
-
-        transparent 72%
-
-    );
-
-    left:-100px;
-
-    bottom:-120px;
-
-    z-index:-2;
-
+.login-title h1 {
+    font-size: 1.8rem;
+    color: var(--secondary);
+    margin-bottom: 5px;
+}
+.login-title h2 {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+.login-title p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 30px;
 }
 
-/*-------------------------
- Floating Circles
---------------------------*/
-
-.bg-circle{
-
-    position:fixed;
-
-    border-radius:50%;
-
-    pointer-events:none;
-
-    z-index:-1;
-
-    opacity:.35;
-
+/* Form Styles */
+.auth-form {
+    text-align: right;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--secondary);
+    margin-bottom: 8px;
+}
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1.5px solid #eee;
+    border-radius: 12px;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.3s;
+}
+.form-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(232, 120, 154, 0.1);
 }
 
-.c1{
-
-    width:180px;
-
-    height:180px;
-
-    top:70px;
-
-    left:8%;
-
-    background:#ffd7e7;
-
+.forgot-link {
+    text-align: left;
+    margin-top: -15px;
+    margin-bottom: 25px;
+}
+.forgot-link a {
+    font-size: 0.8rem;
+    color: var(--primary);
+    text-decoration: none;
 }
 
-.c2{
-
-    width:120px;
-
-    height:120px;
-
-    right:10%;
-
-    bottom:130px;
-
-    background:#ffeef5;
-
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+}
+.submit-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+.submit-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
 }
 
-.c3{
-
-    width:70px;
-
-    height:70px;
-
-    left:45%;
-
-    top:12%;
-
-    background:#ffffff;
-
+/* Divider */
+.login-divider {
+    margin: 25px 0;
+    display: flex;
+    align-items: center;
+    color: #bbb;
+    font-size: 0.8rem;
+}
+.login-divider::before, .login-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+.login-divider span {
+    padding: 0 15px;
 }
 
-/*-------------------------
- Login Card
---------------------------*/
-
-.login-card{
-
-    width:100%;
-
-    max-width:430px;
-
-    background:
-
-    rgba(255,255,255,.72);
-
-    backdrop-filter:blur(18px);
-
-    -webkit-backdrop-filter:blur(18px);
-
-    border:1px solid rgba(255,255,255,.55);
-
-    border-radius:var(--radius);
-
-    box-shadow:var(--shadow);
-
-    padding:42px 34px;
-
-    position:relative;
-
-    overflow:hidden;
-
+/* Google Button */
+.google-btn {
+    width: 100%;
+    padding: 12px;
+    background: white;
+    border: 1.5px solid #eee;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.google-btn:hover {
+    background: #f9f9f9;
+    border-color: #ddd;
+}
+.google-btn img {
+    width: 20px;
 }
 
-/* Reflection */
-
-.glass-reflection{
-
-    position:absolute;
-
-    inset:0;
-
-    background:
-
-    linear-gradient(
-
-        135deg,
-
-        rgba(255,255,255,.18),
-
-        transparent 45%
-
-    );
-
-    pointer-events:none;
-
+/* Security Box */
+.security-box {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.security-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+.security-item i {
+    color: var(--primary);
 }
 
-/* ==========================================
-              Logo Section
-========================================== */
-
-.logo-wrapper{
-
-position:relative;
-
-width:150px;
-
-height:150px;
-
-margin:0 auto 28px;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
+/* Back to login */
+.back-to-login {
+    margin-top: 20px;
+}
+.back-to-login a {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.back-to-login a:hover {
+    color: var(--primary);
 }
 
-.logo-glow{
-
-position:absolute;
-
-width:135px;
-
-height:135px;
-
-border-radius:50%;
-
-background:
-radial-gradient(
-circle,
-rgba(240,24,115,.35),
-rgba(240,24,115,.05),
-transparent
-);
-
-filter:blur(20px);
-
-animation:
-glowPulse 3s ease-in-out infinite;
-
-}
-
-@keyframes glowPulse{
-
-0%,100%{
-
-transform:scale(1);
-
-opacity:.8;
-
-}
-
-50%{
-
-transform:scale(1.18);
-
-opacity:1;
-
-}
-
-}
-
-.logo{
-
-position:relative;
-
-z-index:2;
-
-width:105px;
-
-height:105px;
-
-object-fit:contain;
-
-animation:
-logoFloat 5s ease-in-out infinite;
-
-filter:
-drop-shadow(
-0 12px 20px
-rgba(240,24,115,.25)
-);
-
-}
-
-@keyframes logoFloat{
-
-0%,100%{
-
-transform:
-translateY(0);
-
-}
-
-50%{
-
-transform:
-translateY(-10px);
-
-}
-
-}
-/*-------------------------
- Title
---------------------------*/
-
-.login-title{
-
-    text-align:center;
-
-    margin-bottom:28px;
-
-}
-
-.login-title h1{
-
-    font-size:30px;
-
-    color:var(--text);
-
-    font-weight:800;
-
-    margin-bottom:6px;
-
-}
-
-.login-title h2{
-
-    font-size:22px;
-
-    color:var(--primary);
-
-    font-weight:700;
-
-    margin-bottom:14px;
-
-}
-
-.login-title p{
-
-    color:var(--gray);
-
-    line-height:2;
-
-    font-size:14px;
-
-}
-
-/*======================================================
-                Google Button
-======================================================*/
-
-.google-btn{
-
-    width:100%;
-
-    height:58px;
-
-    border:none;
-
-    outline:none;
-
-    cursor:pointer;
-
-    border-radius:18px;
-
-    background:#fff;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:14px;
-
-    font-family:"Vazirmatn",sans-serif;
-
-    font-size:16px;
-
-    font-weight:700;
-
-    color:#333;
-
-    box-shadow:
-
-    0 10px 25px rgba(0,0,0,.08);
-
-    transition:
-
-    background .25s ease,
-
-    box-shadow .25s ease,
-
-    transform .25s ease;
-
-}
-
-.google-btn img{
-
-    width:22px;
-
-    height:22px;
-
-    flex-shrink:0;
-
-}
-
-.google-btn:hover{
-
-    background:#fafafa;
-
-    box-shadow:
-
-    0 16px 35px rgba(240,24,115,.12);
-
-    transform:translateY(-2px);
-
-}
-
-.google-btn:active{
-
-    transform:scale(.98);
-
-}
-
-.google-btn:focus-visible{
-
-    outline:3px solid rgba(240,24,115,.18);
-
-    outline-offset:3px;
-
-}
-
-/*======================================================
-                    Divider
-======================================================*/
-
-.login-divider{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    margin:28px 0;
-
-    color:#999;
-
-    font-size:13px;
-
-    font-weight:500;
-
-}
-
-.login-divider::before,
-
-.login-divider::after{
-
-    content:"";
-
-    flex:1;
-
-    height:1px;
-
-    background:#ececec;
-
-}
-
-.login-divider span{
-
-    padding:0 16px;
-
-    white-space:nowrap;
-
-}
-
-/*======================================================
-                 Security Box
-======================================================*/
-
-.security-box{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:14px;
-
-}
-
-.security-item{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:14px;
-
-    padding:15px 18px;
-
-    background:
-
-    rgba(255,255,255,.65);
-
-    border:1px solid rgba(255,255,255,.7);
-
-    border-radius:18px;
-
-    transition:
-
-    background .25s ease,
-
-    box-shadow .25s ease;
-
-}
-
-.security-item:hover{
-
-    background:#fff;
-
-    box-shadow:
-
-    0 10px 25px rgba(0,0,0,.06);
-
-}
-
-.security-item i{
-
-    width:44px;
-
-    height:44px;
-
-    border-radius:14px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    color:#fff;
-
-    background:
-
-    linear-gradient(
-
-        135deg,
-
-        var(--primary),
-
-        var(--primary-light)
-
-    );
-
-    font-size:18px;
-
-    flex-shrink:0;
-
-}
-
-.security-item span{
-
-    color:#444;
-
-    font-size:15px;
-
-    font-weight:600;
-
-    line-height:1.8;
-
-}
-
-/*======================================================
-               Desktop Only Hover
-======================================================*/
-
-@media (hover:hover){
-
-    .login-card{
-
-        transition:
-
-        transform .25s ease,
-
-        box-shadow .25s ease;
-
+/* Responsive */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 30px 20px;
     }
-
-    .login-card:hover{
-
-        transform:translateY(-3px);
-
-        box-shadow:
-
-        0 25px 50px rgba(0,0,0,.14);
-
-    }
-
 }
-
-/*======================================================
-                Tablet Responsive
-======================================================*/
-
-@media (max-width:992px){
-
-    body{
-
-        padding:24px;
-
-    }
-
-    .login-card{
-
-        max-width:420px;
-
-        padding:36px 28px;
-
-    }
-
-}
-
-
-/*======================================================
-              Mobile Responsive
-======================================================*/
-
-@media (max-width:768px){
-
-    html{
-
-        font-size:15px;
-
-    }
-
-    body{
-
-        min-height:100dvh;
-
-        display:flex;
-
-        justify-content:center;
-
-        align-items:center;
-
-        padding:20px 16px;
-
-        overflow-x:hidden;
-
-        overflow-y:auto;
-
-    }
-
-    /* مهم‌ترین قسمت برای جلوگیری از چسبیدن کارت */
-
-    .login-card{
-
-        width:100%;
-
-        max-width:100%;
-
-        margin:0 auto;
-
-        position:relative;
-
-        left:auto;
-
-        right:auto;
-
-        top:auto;
-
-        bottom:auto;
-
-        transform:none !important;
-
-        animation:none !important;
-
-        padding:30px 22px;
-
-        border-radius:24px;
-
-    }
-
-    .logo-wrapper{
-
-        width:100px;
-
-        height:100px;
-
-        margin-bottom:18px;
-
-    }
-
-    .logo{
-
-        width:72px;
-
-        height:72px;
-
-    }
-
-    .logo-glow{
-
-        width:90px;
-
-        height:90px;
-
-    }
-
-    .login-title{
-
-        margin-bottom:22px;
-
-    }
-
-    .login-title h1{
-
-        font-size:26px;
-
-    }
-
-    .login-title h2{
-
-        font-size:20px;
-
-    }
-
-    .login-title p{
-
-        font-size:14px;
-
-        line-height:2;
-
-    }
-
-    .google-btn{
-
-        height:56px;
-
-        font-size:15px;
-
-    }
-
-    .security-item{
-
-        padding:14px;
-
-    }
-
-    .security-item i{
-
-        width:40px;
-
-        height:40px;
-
-        font-size:17px;
-
-    }
-
-}
-
-
-/*======================================================
-              Small Phones
-======================================================*/
-
-@media (max-width:480px){
-
-    body{
-
-        padding:14px;
-
-    }
-
-    .login-card{
-
-        padding:24px 18px;
-
-        border-radius:20px;
-
-    }
-
-    .logo-wrapper{
-
-        width:90px;
-
-        height:90px;
-
-    }
-
-    .logo{
-
-        width:66px;
-
-        height:66px;
-
-    }
-
-    .login-title h1{
-
-        font-size:23px;
-
-    }
-
-    .login-title h2{
-
-        font-size:18px;
-
-    }
-
-    .login-title p{
-
-        font-size:13px;
-
-    }
-
-    .google-btn{
-
-        height:52px;
-
-        font-size:14px;
-
-    }
-
-    .google-btn img{
-
-        width:20px;
-
-        height:20px;
-
-    }
-
-    .security-item{
-
-        gap:12px;
-
-        padding:12px;
-
-    }
-
-    .security-item span{
-
-        font-size:14px;
-
-    }
-
-}
-
-
-/*======================================================
-      Disable Hover On Mobile
-======================================================*/
-
-@media (hover:none){
-
-    .login-card:hover{
-
-        transform:none !important;
-
-        box-shadow:var(--shadow);
-
-    }
-
-    .google-btn:hover{
-
-        transform:none !important;
-
-        background:#fff;
-
-        box-shadow:
-        0 10px 25px rgba(0,0,0,.08);
-
-    }
-
-    .security-item:hover{
-
-        transform:none !important;
-
-        background:rgba(255,255,255,.65);
-
-        box-shadow:none;
-
-    }
-
-}
-
-/*======================================================
-                Final Polish
-======================================================*/
-
-/* انتخاب متن */
-::selection{
-    background:#f01873;
-    color:#fff;
-}
-
-/* اسکرول بار (دسکتاپ) */
-::-webkit-scrollbar{
-    width:8px;
-}
-
-::-webkit-scrollbar-track{
-    background:#fff3f8;
-}
-
-::-webkit-scrollbar-thumb{
-    background:#f5a2c4;
-    border-radius:20px;
-}
-
-::-webkit-scrollbar-thumb:hover{
-    background:#f01873;
-}
-
-/* جلوگیری از کشیده شدن تصویر لوگو */
-.logo{
-    display:block;
-    user-select:none;
-    -webkit-user-drag:none;
-    pointer-events:none;
-}
-
-/* تصاویر */
-img{
-    max-width:100%;
-    height:auto;
-}
-
-/* دکمه */
-button{
-    font-family:"Vazirmatn",sans-serif;
-}
-
-/* لینک‌ها */
-a{
-    text-decoration:none;
-    color:inherit;
-}
-
-/* جلوگیری از پرش Layout */
-.login-card,
-.google-btn,
-.security-item{
-    will-change:auto;
-}
-
-/* حذف Highlight آبی موبایل */
-
-*{
-    -webkit-tap-highlight-color:transparent;
-}
-
-/* جلوگیری از زوم آیفون */
-
-input,
-button,
-select,
-textarea{
-
-    font-size:16px;
-
-}
-
-/*======================================================
-            Safe Area (iPhone)
-======================================================*/
-
-body{
-
-    padding-left:max(20px,env(safe-area-inset-left));
-    padding-right:max(20px,env(safe-area-inset-right));
-    padding-top:max(20px,env(safe-area-inset-top));
-    padding-bottom:max(20px,env(safe-area-inset-bottom));
-
-}
-
-/*======================================================
-      Fix Chrome Android 100vh Bug
-======================================================*/
-
-@supports(height:100dvh){
-
-    body{
-
-        min-height:100dvh;
-
-    }
-
-}
-
-/*======================================================
-      Accessibility
-======================================================*/
-
-.google-btn:focus-visible{
-
-    outline:3px solid rgba(240,24,115,.25);
-    outline-offset:4px;
-
-}
-
-.security-item:focus-visible{
-
-    outline:2px solid rgba(240,24,115,.2);
-
-}
-
-/*======================================================
-      Reduce Motion
-======================================================*/
-
-@media (prefers-reduced-motion:reduce){
-
-    *,
-    *::before,
-    *::after{
-
-        animation:none !important;
-        transition:none !important;
-        scroll-behavior:auto !important;
-
-    }
-
-}
-
-/*======================================================
-      Print
-======================================================*/
-
-@media print{
-
-    body{
-
-        background:#fff;
-
-    }
-
-    .bg-circle,
-    .glass-reflection,
-    .logo-glow{
-
-        display:none;
-
-    }
-
-}
-
-/*======================================================
-      Mobile Final Fix
-======================================================*/
-
-@media (max-width:768px){
-
-    /* حذف کامل هر نوع انیمیشن */
-
-    *,
-    *::before,
-    *::after{
-
-        animation:none !important;
-
-    }
-
-    /* حذف کامل Transform هایی که باعث ورود کارت می‌شوند */
-
-    .login-card{
-
-        transform:none !important;
-        opacity:1 !important;
-
-    }
-
-    .login-title,
-    .google-btn,
-    .login-divider,
-    .security-box,
-    .security-item,
-    .logo,
-    .logo-wrapper{
-
-        transform:none !important;
-        opacity:1 !important;
-
-    }
-
-    /* ثابت ماندن کارت */
-
-    .login-card{
-
-        position:relative;
-
-        inset:auto;
-
-        margin:auto;
-
-    }
-
-}
-/*======================================================
-            Floating Heart
-======================================================*/
-.floating-heart{
-  color: rgba(255, 105, 180, 0.25);
-  position: absolute;
-  animation: floatUp 6s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes floatUp {
-  0% { transform: translateY(20px); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: translateY(-40px); opacity: 0; }
-}
-/*======================================================
-            End of File
-======================================================*/
