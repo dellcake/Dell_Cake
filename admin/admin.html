@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت دل‌کیک</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../images/logo/sweet-.png" alt="دل‌کیک" class="admin-logo">
+                <h2>پنل مدیریت</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active" onclick="navigateTo('dashboard')">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>داشبورد</span>
+                    </li>
+                    <li onclick="navigateTo('courses')">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <span>مدیریت دوره‌ها</span>
+                    </li>
+                    <li onclick="navigateTo('orders')">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span>سفارشات</span>
+                    </li>
+                    <li onclick="logout()">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>خروج</span>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="welcome-text">
+                    <h1 id="page-title">داشبورد</h1>
+                    <p>خوش آمدید، مدیر عزیز 👋</p>
+                </div>
+                <div class="user-profile">
+                    <span id="admin-email">sobhanrahimisrj@gmail.com</span>
+                    <img src="../images/logo/sweet-.png" alt="Admin" class="avatar">
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon pink"><i class="fa-solid fa-book"></i></div>
+                        <div class="stat-info">
+                            <h3>تعداد دوره‌ها</h3>
+                            <p id="total-courses">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon brown"><i class="fa-solid fa-bag-shopping"></i></div>
+                        <div class="stat-info">
+                            <h3>سفارشات جدید</h3>
+                            <p id="new-orders">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon cream"><i class="fa-solid fa-users"></i></div>
+                        <div class="stat-info">
+                            <h3>کاربران</h3>
+                            <p>۱۲۴</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activities">
+                    <h2>فعالیت‌های اخیر</h2>
+                    <div class="activities-list" id="activities-list">
+                        <p class="empty-msg">فعالیتی ثبت نشده است.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Courses Section -->
+            <section id="courses-section" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2>لیست دوره‌های آموزشی</h2>
+                    <button class="add-btn" onclick="openCourseModal()">
+                        <i class="fa-solid fa-plus"></i>
+                        افزودن دوره جدید
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table id="courses-table">
+                        <thead>
+                            <tr>
+                                <th>تصویر</th>
+                                <th>عنوان دوره</th>
+                                <th>قیمت (تومان)</th>
+                                <th>سطح</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="courses-tbody">
+                            <!-- Courses will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="orders-section" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2>مدیریت سفارشات</h2>
+                </div>
+                <div class="table-container">
+                    <table id="orders-table">
+                        <thead>
+                            <tr>
+                                <th>مشتری</th>
+                                <th>محصول</th>
+                                <th>تاریخ</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <!-- Orders will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Course Modal -->
+    <div id="course-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">افزودن دوره جدید</h2>
+                <span class="close" onclick="closeCourseModal()">&times;</span>
+            </div>
+            <form id="course-form">
+                <input type="hidden" id="course-id">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="course-title">عنوان دوره</label>
+                        <input type="text" id="course-title" required placeholder="مثلاً: آموزش کیک خامه ای">
+                    </div>
+                    <div class="form-group">
+                        <label for="course-price">قیمت (تومان)</label>
+                        <input type="number" id="course-price" required placeholder="مثلاً: ۵۰۰۰۰۰">
+                    </div>
+                    <div class="form-group">
+                        <label for="course-level">سطح دوره</label>
+                        <select id="course-level">
+                            <option value="مبتدی">مبتدی</option>
+                            <option value="متوسط">متوسط</option>
+                            <option value="پیشرفته">پیشرفته</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="course-duration">مدت زمان</label>
+                        <input type="text" id="course-duration" placeholder="مثلاً: ۴ ساعت">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="course-description">توضیحات کوتاه</label>
+                        <textarea id="course-description" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="course-package">محتوای پکیج (هر مورد در یک خط)</label>
+                        <textarea id="course-package" rows="4" placeholder="مثلاً: پخت اسفنجی&#10;خامه کشی"></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="course-image">لینک تصویر</label>
+                        <input type="text" id="course-image" placeholder="https://example.com/image.jpg">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="cancel-btn" onclick="closeCourseModal()">انصراف</button>
+                    <button type="submit" class="save-btn">ذخیره دوره</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module" src="js/auth-guard.js"></script>
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>
