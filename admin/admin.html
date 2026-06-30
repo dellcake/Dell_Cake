@@ -413,6 +413,7 @@ td{padding:.85rem 1rem;vertical-align:middle}
       <input type="hidden" id="mc-id"/>
       <div class="form-group"><label>عنوان دوره</label><input id="mc-title-inp" placeholder="کیک‌پزی پیشرفته"/></div>
       <div class="form-group"><label>توضیحات کوتاه</label><textarea id="mc-desc" placeholder="در این دوره یاد می‌گیرید..."></textarea></div>
+      <div class="form-group"><label>محتویات پکیج (هر مورد در یک خط)</label><textarea id="mc-package" placeholder="آیتم ۱&#10;آیتم ۲&#10;..."></textarea></div>
       <div class="form-2col">
         <div class="form-group"><label>قیمت (تومان)</label><input id="mc-price" type="number" placeholder="1200000"/></div>
         <div class="form-group"><label>قیمت با تخفیف (تومان)</label><input id="mc-sale" type="number" placeholder="890000"/></div>
@@ -484,7 +485,19 @@ td{padding:.85rem 1rem;vertical-align:middle}
 
 <div id="toast-stack"></div>
 
-<script>
+<script type="module">
+import { db } from "../js/firebase-db.js";
+import {
+  collection,
+  getDocs,
+  doc,
+  setDoc,
+  deleteDoc,
+  addDoc,
+  query,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
 // ═══════════════════════════════════════════
 //  DATA STORE
 // ═══════════════════════════════════════════
@@ -503,10 +516,10 @@ let ORDERS = ls('orders', [
 ])
 
 let COURSES = ls('courses', [
-  { id:'CR-01', icon:'🎂', title:'کیک‌پزی مقدماتی',       desc:'آموزش کامل پایه‌های کیک‌پزی حرفه‌ای از صفر تا صد برای مبتدیان', price:1200000, sale:890000, dur:'۸ جلسه', level:'مقدماتی', pub:1 },
-  { id:'CR-02', icon:'🍰', title:'کیک‌پزی پیشرفته',       desc:'تکنیک‌های حرفه‌ای تزئین، فوندانت، ویفر و انواع رویه‌های کیک', price:2500000, sale:1800000, dur:'۱۲ جلسه', level:'پیشرفته', pub:1 },
-  { id:'CR-03', icon:'🥐', title:'شیرینی‌پزی سنتی',       desc:'آموزش شیرینی‌های اصیل ایرانی؛ باقلوا، نان برنجی، کلوچه و بیشتر', price:980000, sale:0, dur:'۶ جلسه', level:'مقدماتی', pub:1 },
-  { id:'CR-04', icon:'🧁', title:'کاپ‌کیک و مینی‌کیک',   desc:'آموزش طراحی و تزئین کاپ‌کیک برای مجالس و مهمانی‌ها', price:750000, sale:590000, dur:'۴ جلسه', level:'متوسط', pub:0 },
+  { id:'CR-01', icon:'🎂', title:'کیک‌پزی مقدماتی',       desc:'آموزش کامل پایه‌های کیک‌پزی حرفه‌ای از صفر تا صد برای مبتدیان', package:'آشنایی با ابزار\nپخت کیک اسفنجی پایه\nاصول فیلینگ‌گذاری\nخامه‌کشی مدرن', price:1200000, sale:890000, dur:'۸ جلسه', level:'مقدماتی', pub:1 },
+  { id:'CR-02', icon:'🍰', title:'کیک‌پزی پیشرفته',       desc:'تکنیک‌های حرفه‌ای تزئین، فوندانت، ویفر و انواع رویه‌های کیک', package:'کار با فوندانت\nگل‌های شکری\nویفر پیپر\nنقاشی روی کیک', price:2500000, sale:1800000, dur:'۱۲ جلسه', level:'پیشرفته', pub:1 },
+  { id:'CR-03', icon:'🥐', title:'شیرینی‌پزی سنتی',       desc:'آموزش شیرینی‌های اصیل ایرانی؛ باقلوا، نان برنجی، کلوچه و بیشتر', package:'باقلوا قزوین\nنان برنجی کرمانشاه\nکلوچه لاهیجان', price:980000, sale:0, dur:'۶ جلسه', level:'مقدماتی', pub:1 },
+  { id:'CR-04', icon:'🧁', title:'کاپ‌کیک و مینی‌کیک',   desc:'آموزش طراحی و تزئین کاپ‌کیک برای مجالس و مهمانی‌ها', package:'کاپ‌کیک شکلاتی\nفراستینگ پنیر\nمینی‌کیک روسی', price:750000, sale:590000, dur:'۴ جلسه', level:'متوسط', pub:0 },
 ])
 
 let CUSTOMERS = ls('customers', [
@@ -538,6 +551,65 @@ function saveAll() {
   ss('orders', ORDERS); ss('courses', COURSES)
   ss('customers', CUSTOMERS); ss('content', CONTENT); ss('gallery', GALLERY)
 }
+
+// Firebase Sync Functions
+async function syncFromFirebase() {
+  try {
+    const qCourses = query(collection(db, "courses"));
+    const snapCourses = await getDocs(qCourses);
+    COURSES = snapCourses.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    const qOrders = query(collection(db, "orders"), orderBy("date", "desc"));
+    const snapOrders = await getDocs(qOrders);
+    ORDERS = snapOrders.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    const qContent = query(collection(db, "content"));
+    const snapContent = await getDocs(qContent);
+    CONTENT = snapContent.docs.map(doc => ({ key: doc.id, ...doc.data() }));
+
+    const qGallery = query(collection(db, "gallery"));
+    const snapGallery = await getDocs(qGallery);
+    GALLERY = snapGallery.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    const qCustomers = query(collection(db, "customers"));
+    const snapCustomers = await getDocs(qCustomers);
+    CUSTOMERS = snapCustomers.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    saveAll(); // Update local storage
+    if(curPage) navigateTo(curPage);
+  } catch (e) {
+    console.error("Firebase sync error:", e);
+    toast("خطا در همگام‌سازی با سرور", "error");
+  }
+}
+
+// Initial Sync
+syncFromFirebase();
+
+// Expose functions to window
+window.syncFromFirebase = syncFromFirebase;
+window.navigateTo = navigateTo;
+window.openSidebar = openSidebar;
+window.closeSidebar = closeSidebar;
+window.toast = toast;
+window.re = re;
+window.openOrderModal = openOrderModal;
+window.saveOrder = saveOrder;
+window.cycleStatus = cycleStatus;
+window.delOrder = delOrder;
+window.showOrderDetail = showOrderDetail;
+window.openCourseModal = openCourseModal;
+window.saveCourse = saveCourse;
+window.toggleCoursePublish = toggleCoursePublish;
+window.delCourse = delCourse;
+window.openCustomerModal = openCustomerModal;
+window.saveCustomer = saveCustomer;
+window.delCustomer = delCustomer;
+window.openContentModal = openContentModal;
+window.saveContent = saveContent;
+window.addGalleryItem = addGalleryItem;
+window.delGallery = delGallery;
+window.closeModal = closeModal;
 
 // ═══════════════════════════════════════════
 //  NAVIGATION
@@ -730,6 +802,10 @@ courses() {
       <div class="course-thumb">${c.icon}</div>
       <div class="course-title">${c.title}</div>
       <div class="course-desc">${c.desc}</div>
+      <div style="font-size: 0.75rem; color: var(--pink-d); margin-bottom: 0.5rem; font-weight: 600;">📦 محتویات پکیج:</div>
+      <div style="font-size: 0.75rem; color: var(--ink-f); margin-bottom: 0.75rem; line-height: 1.4;">
+        ${(c.package || '').split('\n').map(line => `• ${line}`).join('<br>')}
+      </div>
       <div class="course-meta">
         <div>
           <span class="chip chip-purple" style="font-size:.72rem">${c.level}</span>
@@ -948,7 +1024,7 @@ function openOrderModal(id) {
   openModal('modal-order')
 }
 
-function saveOrder() {
+async function saveOrder() {
   const id   = document.getElementById('mo-id').value
   const name = document.getElementById('mo-name').value.trim()
   const phone= document.getElementById('mo-phone').value.trim()
@@ -960,22 +1036,38 @@ function saveOrder() {
     date:   document.getElementById('mo-date').value,
     desc:   document.getElementById('mo-desc').value,
   }
-  if(id) { Object.assign(ORDERS.find(x=>x.id===id), data); toast('سفارش ویرایش شد ✅','success') }
-  else   { data.id='DC-'+(1000+ORDERS.length+1); ORDERS.unshift(data); toast('سفارش جدید ثبت شد 🎂','success') }
-  saveAll(); closeModal('modal-order'); re()
+  try {
+    if(id) {
+      await setDoc(doc(db, "orders", id), data);
+      Object.assign(ORDERS.find(x=>x.id===id), data);
+      toast('سفارش ویرایش شد ✅','success')
+    } else {
+      const docRef = await addDoc(collection(db, "orders"), data);
+      data.id = docRef.id;
+      ORDERS.unshift(data);
+      toast('سفارش جدید ثبت شد 🎂','success')
+    }
+    saveAll(); closeModal('modal-order'); re()
+  } catch(e) { console.error(e); toast("خطا در ذخیره سازی", "error") }
 }
 
-function cycleStatus(id) {
+async function cycleStatus(id) {
   const o = ORDERS.find(x=>x.id===id)
   if(!o || o.status==='cancel') return
   const i = STATUS_FLOW.indexOf(o.status)
   o.status = STATUS_FLOW[Math.min(i+1, STATUS_FLOW.length-1)]
-  saveAll(); toast('وضعیت به «'+STATUS[o.status].label+'» تغییر کرد'); re()
+  try {
+    await setDoc(doc(db, "orders", id), o);
+    saveAll(); toast('وضعیت به «'+STATUS[o.status].label+'» تغییر کرد'); re()
+  } catch(e) { console.error(e); toast("خطا در بروزرسانی", "error") }
 }
 
-function delOrder(id) {
+async function delOrder(id) {
   if(!confirm('این سفارش حذف شود؟')) return
-  ORDERS = ORDERS.filter(x=>x.id!==id); saveAll(); toast('سفارش حذف شد'); re()
+  try {
+    await deleteDoc(doc(db, "orders", id));
+    ORDERS = ORDERS.filter(x=>x.id!==id); saveAll(); toast('سفارش حذف شد'); re()
+  } catch(e) { console.error(e); toast("خطا در حذف", "error") }
 }
 
 function showOrderDetail(id) {
@@ -1004,6 +1096,7 @@ function openCourseModal(id) {
   document.getElementById('mc-id').value             = c?.id||''
   document.getElementById('mc-title-inp').value      = c?.title||''
   document.getElementById('mc-desc').value           = c?.desc||''
+  document.getElementById('mc-package').value        = c?.package||''
   document.getElementById('mc-price').value          = c?.price||''
   document.getElementById('mc-sale').value           = c?.sale||''
   document.getElementById('mc-dur').value            = c?.dur||''
@@ -1013,12 +1106,13 @@ function openCourseModal(id) {
   openModal('modal-course')
 }
 
-function saveCourse() {
+async function saveCourse() {
   const id = document.getElementById('mc-id').value
   const title = document.getElementById('mc-title-inp').value.trim()
   if(!title){ toast('عنوان دوره الزامی است','error'); return }
   const data = { title,
     desc:  document.getElementById('mc-desc').value,
+    package: document.getElementById('mc-package').value,
     price: Number(document.getElementById('mc-price').value)||0,
     sale:  Number(document.getElementById('mc-sale').value)||0,
     dur:   document.getElementById('mc-dur').value,
@@ -1026,21 +1120,38 @@ function saveCourse() {
     icon:  document.getElementById('mc-icon').value||'🎂',
     pub:   Number(document.getElementById('mc-pub').value),
   }
-  if(id) { Object.assign(COURSES.find(x=>x.id===id), data); toast('دوره ویرایش شد ✅','success') }
-  else   { data.id='CR-'+(COURSES.length+10); COURSES.push(data); toast('دوره جدید اضافه شد 🎓','success') }
-  saveAll(); closeModal('modal-course'); navigateTo('courses')
+  try {
+    if(id) {
+      await setDoc(doc(db, "courses", id), data);
+      Object.assign(COURSES.find(x=>x.id===id), data);
+      toast('دوره ویرایش شد ✅','success')
+    } else {
+      const docRef = await addDoc(collection(db, "courses"), data);
+      data.id = docRef.id;
+      COURSES.push(data);
+      toast('دوره جدید اضافه شد 🎓','success')
+    }
+    saveAll(); closeModal('modal-course'); navigateTo('courses')
+  } catch(e) { console.error(e); toast("خطا در ذخیره سازی", "error") }
 }
 
-function toggleCoursePublish(id) {
+async function toggleCoursePublish(id) {
   const c = COURSES.find(x=>x.id===id)
-  c.pub = c.pub?0:1; saveAll()
-  toast(c.pub?'دوره منتشر شد ✅':'دوره به پیش‌نویس تغییر کرد','success')
-  navigateTo('courses')
+  c.pub = c.pub?0:1;
+  try {
+    await setDoc(doc(db, "courses", id), c);
+    saveAll()
+    toast(c.pub?'دوره منتشر شد ✅':'دوره به پیش‌نویس تغییر کرد','success')
+    navigateTo('courses')
+  } catch(e) { console.error(e); toast("خطا در بروزرسانی", "error") }
 }
 
-function delCourse(id) {
+async function delCourse(id) {
   if(!confirm('این دوره حذف شود؟')) return
-  COURSES = COURSES.filter(x=>x.id!==id); saveAll(); toast('دوره حذف شد'); navigateTo('courses')
+  try {
+    await deleteDoc(doc(db, "courses", id));
+    COURSES = COURSES.filter(x=>x.id!==id); saveAll(); toast('دوره حذف شد'); navigateTo('courses')
+  } catch(e) { console.error(e); toast("خطا در حذف", "error") }
 }
 
 // ═══════════════════════════════════════════
@@ -1057,7 +1168,7 @@ function openCustomerModal(id) {
   openModal('modal-customer')
 }
 
-function saveCustomer() {
+async function saveCustomer() {
   const id   = document.getElementById('mcu-id').value
   const name = document.getElementById('mcu-name').value.trim()
   if(!name){ toast('نام الزامی است','error'); return }
@@ -1067,14 +1178,29 @@ function saveCustomer() {
     note:  document.getElementById('mcu-note').value,
     orders:0,
   }
-  if(id) { const cu=CUSTOMERS.find(x=>x.id===id); data.orders=cu.orders; Object.assign(cu,data); toast('مشتری ویرایش شد ✅','success') }
-  else   { data.id='CU-'+(CUSTOMERS.length+10); CUSTOMERS.push(data); toast('مشتری جدید ثبت شد 👥','success') }
-  saveAll(); closeModal('modal-customer'); navigateTo('customers')
+  try {
+    if(id) {
+      const cu=CUSTOMERS.find(x=>x.id===id);
+      data.orders=cu.orders;
+      await setDoc(doc(db, "customers", id), data);
+      Object.assign(cu,data);
+      toast('مشتری ویرایش شد ✅','success')
+    } else {
+      const docRef = await addDoc(collection(db, "customers"), data);
+      data.id = docRef.id;
+      CUSTOMERS.push(data);
+      toast('مشتری جدید ثبت شد 👥','success')
+    }
+    saveAll(); closeModal('modal-customer'); navigateTo('customers')
+  } catch(e) { console.error(e); toast("خطا در ذخیره سازی", "error") }
 }
 
-function delCustomer(id) {
+async function delCustomer(id) {
   if(!confirm('این مشتری حذف شود؟')) return
-  CUSTOMERS = CUSTOMERS.filter(x=>x.id!==id); saveAll(); toast('مشتری حذف شد'); navigateTo('customers')
+  try {
+    await deleteDoc(doc(db, "customers", id));
+    CUSTOMERS = CUSTOMERS.filter(x=>x.id!==id); saveAll(); toast('مشتری حذف شد'); navigateTo('customers')
+  } catch(e) { console.error(e); toast("خطا در حذف", "error") }
 }
 
 // ═══════════════════════════════════════════
@@ -1090,27 +1216,40 @@ function openContentModal(key) {
   openModal('modal-content')
 }
 
-function saveContent() {
+async function saveContent() {
   const key = document.getElementById('mct-key').value
   const c   = CONTENT.find(x=>x.key===key); if(!c) return
-  c.title = document.getElementById('mct-title-inp').value
-  c.body  = document.getElementById('mct-body').value
-  c.vis   = Number(document.getElementById('mct-vis').value)
-  saveAll(); toast('محتوا ذخیره شد ✅','success'); closeModal('modal-content'); navigateTo('content')
+  const data = {
+    title: document.getElementById('mct-title-inp').value,
+    body: document.getElementById('mct-body').value,
+    vis: Number(document.getElementById('mct-vis').value)
+  }
+  try {
+    await setDoc(doc(db, "content", key), data);
+    Object.assign(c, data);
+    saveAll(); toast('محتوا ذخیره شد ✅','success'); closeModal('modal-content'); navigateTo('content')
+  } catch(e) { console.error(e); toast("خطا در ذخیره سازی", "error") }
 }
 
 // ═══════════════════════════════════════════
 //  GALLERY
 // ═══════════════════════════════════════════
 const EMOJIS = ['🎂','🍰','🧁','🥐','🍮','🍩','🎉','🌸','✨','💝']
-function addGalleryItem() {
+async function addGalleryItem() {
   const labels = ['کیک تولد','کیک عروسی','کاپ‌کیک','شیرینی','دسر','کیک شکلاتی','کیک تزئینی','سفارشی']
-  const item = { id:'G'+(Date.now()), emoji: EMOJIS[Math.floor(Math.random()*EMOJIS.length)], label: labels[Math.floor(Math.random()*labels.length)] }
-  GALLERY.push(item); saveAll(); toast('تصویر اضافه شد 🖼️','success'); navigateTo('gallery')
+  const item = { emoji: EMOJIS[Math.floor(Math.random()*EMOJIS.length)], label: labels[Math.floor(Math.random()*labels.length)] }
+  try {
+    const docRef = await addDoc(collection(db, "gallery"), item);
+    GALLERY.push({ id: docRef.id, ...item });
+    saveAll(); toast('تصویر اضافه شد 🖼️','success'); navigateTo('gallery')
+  } catch(e) { console.error(e); toast("خطا در ذخیره سازی", "error") }
 }
-function delGallery(id) {
+async function delGallery(id) {
   if(!confirm('این تصویر حذف شود؟')) return
-  GALLERY = GALLERY.filter(x=>x.id!==id); saveAll(); toast('تصویر حذف شد'); navigateTo('gallery')
+  try {
+    await deleteDoc(doc(db, "gallery", id));
+    GALLERY = GALLERY.filter(x=>x.id!==id); saveAll(); toast('تصویر حذف شد'); navigateTo('gallery')
+  } catch(e) { console.error(e); toast("خطا در حذف", "error") }
 }
 
 // ═══════════════════════════════════════════

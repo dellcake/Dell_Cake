@@ -13,7 +13,7 @@ signInWithPopup
 
 }
 
-from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 const adminEmail =
 "sobhanrahimisrj@gmail.com";
@@ -32,7 +32,7 @@ result.user;
 
 if(user.email===adminEmail){
 
-location.href="dashboard.html";
+location.href="admin.html";
 
 }else{
 
