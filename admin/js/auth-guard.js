@@ -4,13 +4,15 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
-        location.replace("login.html");
-        return;
-    }
-
-    if (user.email !== ADMIN_CONFIG.adminEmail) {
+        // Not logged in
+        location.replace('login.html');
+    } else if (user.email !== ADMIN_CONFIG.adminEmail) {
+        // Logged in but not the admin
+        console.error("Access denied. Unauthorized user.");
         await signOut(auth);
-        location.replace("login.html");
-        return;
+        location.replace('login.html?error=unauthorized');
+    } else {
+        // Authorized admin
+        console.log("Welcome Admin:", user.email);
     }
 });
