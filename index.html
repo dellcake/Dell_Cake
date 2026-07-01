@@ -144,17 +144,13 @@ onclick="openAcademyPopup(); return false;">
 
 </a>
 
-<a href="admin/admin.html">
+<a href="admin/admin.html" class="admin-link" style="display: none;">
  <i class="fas fa-chart-bar"></i>
-
     پنل مدیریت</a>
 
-<a href="#">
-
+<a href="user/login.html" id="user-auth-link">
     <i class="fas fa-user"></i>
-
-    ورود / عضویت
-
+    <span id="user-auth-text">ورود / عضویت</span>
 </a>
 
 </div>
@@ -275,6 +271,7 @@ onclick="openAcademyPopup(); return false;">
     <script src="js/menu.js"></script>
     <script src="js/homepage-animation.js"></script>
     <script src="js/academy-popup.js"></script>
+    <script type="module" src="js/user-auth-state.js"></script>
 
 <div id="footer-container"></div>
 
