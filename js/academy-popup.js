@@ -41,23 +41,25 @@ async function renderAcademyCourses() {
     if (!coursesContainer) return;
 
     try {
-        const { db } = await import("./firebase-db.js");
-        const { collection, query, where, getDocs } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
+        const { supabase } = await import("./supabase-client.js");
 
-        const q = query(collection(db, "courses"), where("status", "==", "published"));
-        const snapshot = await getDocs(q);
+        const { data, error } = await supabase
+            .from('courses')
+            .select('*')
+            .eq('status', 'published');
 
-        if (snapshot.empty) {
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
             coursesContainer.innerHTML = '<p class="no-courses">در حال حاضر دوره‌ای برای نمایش وجود ندارد.</p>';
             return;
         }
 
         let coursesHtml = '';
-        snapshot.forEach(doc => {
-            const course = doc.data();
+        data.forEach(course => {
             coursesHtml += `
                 <div class="academy-course-card">
-                    <img src="${course.image || 'images/placeholder-course.jpg'}" alt="${course.title}">
+                    <img src="${course.image_url || 'images/placeholder-course.jpg'}" alt="${course.title}">
                     <div class="course-info">
                         <h3>${course.title}</h3>
                         <p>${course.description ? course.description.substring(0, 80) + '...' : ''}</p>

@@ -1,27 +1,76 @@
-import { db } from "../../js/firebase-db.js";
-import { auth } from "../../js/firebase-auth.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { supabase } from "../../js/supabase-client.js";
+import { onAuthStateChange, signOut } from "../../js/supabase-auth.js";
 
-onAuthStateChanged(auth, async (user) => {
-    if (!user) {
+onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_OUT' || !session) {
         window.location.replace('login.html');
         return;
     }
+
+    const user = session.user;
 
     // Set User Profile UI
     const nameDisplay = document.getElementById('user-display-name');
     const welcomeMsg = document.getElementById('welcome-msg');
 
-    nameDisplay.innerText = user.displayName || user.email.split('@')[0];
-    welcomeMsg.innerText = `سلام ${user.displayName || 'دوست من'}! خوش آمدی`;
+    const displayName = user.user_metadata?.display_name || user.email.split('@')[0];
+    if (nameDisplay) nameDisplay.innerText = displayName;
+    if (welcomeMsg) welcomeMsg.innerText = `سلام ${displayName}! خوش آمدی`;
 
-    // Here you could load user orders/courses from Firestore
+    // Load User Specific Data
+    loadUserOrders(user.id);
 });
+
+async function loadUserOrders(userId) {
+    const orderList = document.getElementById('user-orders-list');
+    if (!orderList) return;
+
+    try {
+        const { data, error } = await supabase
+            .from('orders')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            orderList.innerHTML = '<p class="empty-msg">هنوز سفارشی ثبت نکرده‌اید.</p>';
+            return;
+        }
+
+        orderList.innerHTML = data.map(order => `
+            <div class="order-item">
+                <div class="order-header">
+                    <span>سفارش #${order.id.slice(-6).toUpperCase()}</span>
+                    <span class="order-status ${order.status}">${translateStatus(order.status)}</span>
+                </div>
+                <div class="order-body">
+                    <p>محصول: ${order.product_name}</p>
+                    <p>مبلغ: ${Number(order.price).toLocaleString('fa-IR')} تومان</p>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error("Error loading user orders:", error);
+    }
+}
+
+function translateStatus(status) {
+    const map = {
+        'new': 'جدید',
+        'pending': 'در حال بررسی',
+        'preparing': 'آماده‌سازی',
+        'ready': 'آماده تحویل',
+        'completed': 'تحویل شده',
+        'cancelled': 'لغو شده'
+    };
+    return map[status] || status;
+}
 
 window.handleLogout = async () => {
     if (confirm('آیا می‌خواهید از پنل خود خارج شوید؟')) {
-        await signOut(auth);
+        await signOut();
         window.location.replace('login.html');
     }
 };

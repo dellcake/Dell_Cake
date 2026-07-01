@@ -1,8 +1,8 @@
-import { auth } from "./firebase-auth.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { onAuthStateChange } from "./supabase-auth.js";
 import { ADMIN_CONFIG } from "../admin/js/config.js";
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChange((event, session) => {
+    const user = session?.user;
     const authText = document.getElementById('user-auth-text');
     const authLink = document.getElementById('user-auth-link');
     const adminLinks = document.querySelectorAll('.admin-link');
@@ -15,6 +15,8 @@ onAuthStateChanged(auth, (user) => {
         // Show admin link if the logged in user is the admin
         if (user.email === ADMIN_CONFIG.adminEmail) {
             adminLinks.forEach(link => link.style.display = 'block');
+        } else {
+            adminLinks.forEach(link => link.style.display = 'none');
         }
     } else {
         if (authText) authText.innerText = 'ورود / عضویت';

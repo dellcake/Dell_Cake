@@ -1,87 +1,91 @@
-import { db } from "./firebase-db.js";
-import { doc, getDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { supabase } from "./supabase-client.js";
 
 async function applySiteSettings() {
     try {
-        const docRef = doc(db, "settings", "site");
-        const docSnap = await getDoc(docRef);
+        const { data, error } = await supabase
+            .from('site_settings')
+            .select('value')
+            .eq('key', 'site_config')
+            .single();
 
-        if (docSnap.exists()) {
-            const data = docSnap.data();
+        if (error) throw error;
+
+        if (data && data.value) {
+            const config = data.value;
 
             // 1. Branding
-            if (data.logoUrl) {
+            if (config.logoUrl) {
                 document.querySelectorAll('.site-logo-mini img, .menu-profile img, .dk-footer-logo').forEach(img => {
-                    img.src = data.logoUrl;
+                    img.src = config.logoUrl;
                 });
             }
-            if (data.siteName) {
+            if (config.siteName) {
                 document.querySelectorAll('.menu-profile h3, .footer-brand h3').forEach(el => {
-                    el.innerText = data.siteName;
+                    el.innerText = config.siteName;
                 });
-                document.title = data.siteName;
+                document.title = config.siteName;
             }
 
             // 2. Hero Section
-            if (data.heroTitle) {
+            if (config.heroTitle) {
                 const heroTitle = document.querySelector('.hero-title');
-                if (heroTitle) heroTitle.innerText = data.heroTitle;
+                if (heroTitle) heroTitle.innerText = config.heroTitle;
             }
-            if (data.heroSlogan) {
+            if (config.heroSlogan) {
                 const heroSlogan = document.querySelector('.hero-slogan');
-                if (heroSlogan) heroSlogan.innerText = data.heroSlogan;
+                if (heroSlogan) heroSlogan.innerText = config.heroSlogan;
             }
-            if (data.heroDescription) {
+            if (config.heroDescription) {
                 const heroDesc = document.querySelector('.hero-description');
-                if (heroDesc) heroDesc.innerText = data.heroDescription;
+                if (heroDesc) heroDesc.innerText = config.heroDescription;
             }
 
             // 3. Contact & Social
-            if (data.phone) {
+            if (config.phone) {
                 document.querySelectorAll('a[href^="tel:"]').forEach(a => {
-                    a.href = `tel:${data.phone}`;
+                    a.href = `tel:${config.phone}`;
                     if (a.innerText.includes('۰۹') || a.innerText.includes('09')) {
-                        a.innerHTML = `<i class="fas fa-phone"></i> ${data.phone}`;
+                        a.innerHTML = `<i class="fas fa-phone"></i> ${config.phone}`;
                     }
                 });
             }
-            if (data.instagram) {
+            if (config.instagram) {
                 document.querySelectorAll('a[href*="instagram.com"]').forEach(a => {
-                    a.href = `https://instagram.com/${data.instagram}`;
+                    a.href = `https://instagram.com/${config.instagram}`;
                 });
             }
-            if (data.telegram) {
+            if (config.telegram) {
                 document.querySelectorAll('a[href*="t.me"]').forEach(a => {
-                    a.href = `https://t.me/${data.telegram}`;
+                    a.href = `https://t.me/${config.telegram}`;
                 });
             }
-            if (data.bale) {
+            if (config.bale) {
                 document.querySelectorAll('a[href*="ble.ir"]').forEach(a => {
-                    a.href = `https://ble.ir/${data.bale}`;
+                    a.href = `https://ble.ir/${config.bale}`;
                 });
             }
 
             // 4. SEO Meta Tags
-            if (data.seoTitle) {
-                document.title = data.seoTitle;
+            if (config.seoTitle) {
+                document.title = config.seoTitle;
             }
-            if (data.seoDescription) {
+            if (config.seoDescription) {
                 let metaDesc = document.querySelector('meta[name="description"]');
                 if (!metaDesc) {
                     metaDesc = document.createElement('meta');
                     metaDesc.name = 'description';
                     document.head.appendChild(metaDesc);
                 }
-                metaDesc.content = data.seoDescription;
+                metaDesc.content = config.seoDescription;
             }
-            if (data.seoKeywords) {
+            if (config.seoKeywords) {
                 let metaKeywords = document.querySelector('meta[name="keywords"]');
                 if (!metaKeywords) {
                     metaKeywords = document.createElement('meta');
                     metaKeywords.name = 'keywords';
                     document.head.appendChild(metaKeywords);
                 }
-                metaKeywords.content = data.seoKeywords;
+                metaKeywords.content = config.seoKeywords;
             }
         }
     } catch (error) {
@@ -94,16 +98,16 @@ async function loadDynamicGallery() {
     if (!galleryGrid) return;
 
     try {
-        const q = query(collection(db, "gallery"), orderBy("createdAt", "desc"), limit(16));
-        const querySnapshot = await getDocs(q);
+        const { data, error } = await supabase
+            .from('gallery')
+            .select('url')
+            .order('created_at', { ascending: false })
+            .limit(16);
 
-        if (!querySnapshot.empty) {
-            const items = [];
-            querySnapshot.forEach((doc) => {
-                items.push(doc.data());
-            });
+        if (error) throw error;
 
-            galleryGrid.innerHTML = items.map(item => `
+        if (data && data.length > 0) {
+            galleryGrid.innerHTML = data.map(item => `
                 <img src="${item.url}" alt="کیک دل کیک" loading="lazy">
             `).join('');
         }

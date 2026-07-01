@@ -1,22 +1,6 @@
 import { ADMIN_CONFIG } from "./config.js";
-import { db } from "../../js/firebase-db.js";
-import { auth } from "../../js/firebase-auth.js";
-import { storage } from "../../js/firebase-storage.js";
-import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
-import { signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import {
-    collection,
-    onSnapshot,
-    addDoc,
-    updateDoc,
-    deleteDoc,
-    doc,
-    getDoc,
-    setDoc,
-    query,
-    orderBy,
-    limit
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { supabase } from "../../js/supabase-client.js";
+import { signOut as supabaseSignOut } from "../../js/supabase-auth.js";
 
 // Layout Loader
 async function loadComponent(id, path) {
@@ -53,10 +37,12 @@ let orderSortOrder = 'newest';
 let orderPageSize = 10;
 let orderCurrentPage = 1;
 
-function clearListeners() {
-    unsubscribers.forEach(unsub => {
-        if (typeof unsub === 'function') unsub();
-    });
+async function clearListeners() {
+    for (const unsub of unsubscribers) {
+        if (typeof unsub === 'function') {
+            await unsub();
+        }
+    }
     unsubscribers = [];
 }
 
@@ -125,52 +111,76 @@ function initViewLogic(view) {
 
 // Dashboard Data Implementation
 async function loadDashboardData() {
-    // 1. Load Statistics
-    const unsubCourses = onSnapshot(collection(db, "courses"), (snapshot) => {
-        const el = document.getElementById('total-courses-count');
-        if (el) el.innerText = snapshot.size.toLocaleString('fa-IR');
-    });
-    unsubscribers.push(unsubCourses);
+    // 1. Load Statistics via Realtime Subscriptions
+    const coursesSub = supabase
+        .channel('dashboard-courses')
+        .on('postgres_changes', { event: '*', table: 'courses' }, () => updateDashboardStats())
+        .subscribe();
 
-    const unsubOrders = onSnapshot(collection(db, "orders"), (snapshot) => {
-        const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const ordersSub = supabase
+        .channel('dashboard-orders')
+        .on('postgres_changes', { event: '*', table: 'orders' }, () => updateDashboardStats())
+        .subscribe();
 
-        // Total Orders
-        const totalEl = document.getElementById('total-orders-count');
-        if (totalEl) totalEl.innerText = orders.length.toLocaleString('fa-IR');
+    unsubscribers.push(() => supabase.removeChannel(coursesSub));
+    unsubscribers.push(() => supabase.removeChannel(ordersSub));
 
-        // Revenue Calculation
-        const revenue = orders
-            .filter(o => o.status === 'completed')
-            .reduce((sum, o) => sum + (Number(o.price) || 0), 0);
-        const revEl = document.getElementById('total-revenue');
-        if (revEl) revEl.innerText = `${revenue.toLocaleString('fa-IR')} تومان`;
-
-        // Recent Orders Table (Sorted by createdAt client-side to avoid index requirement errors)
-        const tbody = document.getElementById('recent-orders-tbody');
-        if (tbody) {
-            const recent = orders
-                .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0))
-                .slice(0, 5);
-
-            if (recent.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center">سفارشی یافت نشد.</td></tr>';
-            } else {
-                tbody.innerHTML = recent.map(o => `
-                    <tr>
-                        <td>${o.customerName || 'نامشخص'}</td>
-                        <td>${o.productName || 'محصول'}</td>
-                        <td><span class="status-badge ${o.status}">${translateStatus(o.status)}</span></td>
-                        <td>${(Number(o.price) || 0).toLocaleString('fa-IR')}</td>
-                    </tr>
-                `).join('');
-            }
-        }
-    });
-    unsubscribers.push(unsubOrders);
+    await updateDashboardStats();
 
     // 2. Load Chart
     initDashboardChart();
+}
+
+async function updateDashboardStats() {
+    try {
+        // Total Courses
+        const { count: courseCount } = await supabase
+            .from('courses')
+            .select('*', { count: 'exact', head: true });
+
+        const courseEl = document.getElementById('total-courses-count');
+        if (courseEl) courseEl.innerText = (courseCount || 0).toLocaleString('fa-IR');
+
+        // Total Orders & Revenue
+        const { data: orderData } = await supabase
+            .from('orders')
+            .select('price, status, created_at, customer_name, product_name');
+
+        if (orderData) {
+            const totalEl = document.getElementById('total-orders-count');
+            if (totalEl) totalEl.innerText = orderData.length.toLocaleString('fa-IR');
+
+            const revenue = orderData
+                .filter(o => o.status === 'completed')
+                .reduce((sum, o) => sum + (Number(o.price) || 0), 0);
+
+            const revEl = document.getElementById('total-revenue');
+            if (revEl) revEl.innerText = `${revenue.toLocaleString('fa-IR')} تومان`;
+
+            // Recent Orders
+            const tbody = document.getElementById('recent-orders-tbody');
+            if (tbody) {
+                const recent = [...orderData]
+                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    .slice(0, 5);
+
+                if (recent.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center">سفارشی یافت نشد.</td></tr>';
+                } else {
+                    tbody.innerHTML = recent.map(o => `
+                        <tr>
+                            <td>${o.customer_name || 'نامشخص'}</td>
+                            <td>${o.product_name || 'محصول'}</td>
+                            <td><span class="status-badge ${o.status}">${translateStatus(o.status)}</span></td>
+                            <td>${(Number(o.price) || 0).toLocaleString('fa-IR')}</td>
+                        </tr>
+                    `).join('');
+                }
+            }
+        }
+    } catch (err) {
+        console.error('Error updating dashboard stats:', err);
+    }
 }
 
 async function initDashboardChart() {
@@ -213,12 +223,43 @@ async function initDashboardChart() {
 }
 
 // Courses Logic
-function loadCourses() {
-    const unsub = onSnapshot(collection(db, "courses"), (snapshot) => {
-        courses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        applyCourseFilters();
-    });
-    unsubscribers.push(unsub);
+async function loadCourses() {
+    const { data, error } = await supabase
+        .from('courses')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching courses:', error);
+        return;
+    }
+
+    courses = data.map(item => ({
+        ...item,
+        image: item.image_url,
+        package: item.package_content,
+        seoTitle: item.seo_title,
+        seoDescription: item.seo_description
+    }));
+    applyCourseFilters();
+
+    // Subscribe to changes
+    const sub = supabase
+        .channel('admin-courses')
+        .on('postgres_changes', { event: '*', table: 'courses' }, async () => {
+            const { data } = await supabase.from('courses').select('*').order('created_at', { ascending: false });
+            courses = data.map(item => ({
+                ...item,
+                image: item.image_url,
+                package: item.package_content,
+                seoTitle: item.seo_title,
+                seoDescription: item.seo_description
+            }));
+            applyCourseFilters();
+        })
+        .subscribe();
+
+    unsubscribers.push(() => supabase.removeChannel(sub));
 }
 
 window.handleCourseSearch = (query) => {
@@ -371,10 +412,22 @@ function updateImagePreview(src) {
     }
 }
 
-async function uploadImage(file) {
-    const storageRef = ref(storage, `courses/${Date.now()}_${file.name}`);
-    const snapshot = await uploadBytes(storageRef, file);
-    return await getDownloadURL(snapshot.ref);
+async function uploadImage(file, bucket = 'courses') {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    const { data, error } = await supabase.storage
+        .from(bucket)
+        .upload(filePath, file);
+
+    if (error) throw error;
+
+    const { data: { publicUrl } } = supabase.storage
+        .from(bucket)
+        .getPublicUrl(filePath);
+
+    return publicUrl;
 }
 
 window.closeCourseModal = () => {
@@ -418,19 +471,25 @@ window.saveCourse = async (event) => {
             level: form.level.value,
             status: form.status.value,
             duration: form.duration.value.trim(),
-            image: imageUrl,
+            image_url: imageUrl,
             description: form.description.value.trim(),
-            package: form.packageContent.value.split('\n').map(l => l.trim()).filter(l => l !== ''),
-            seoTitle: form.seoTitle.value.trim(),
-            seoDescription: form.seoDescription.value.trim(),
-            updatedAt: new Date()
+            package_content: form.packageContent.value.split('\n').map(l => l.trim()).filter(l => l !== ''),
+            seo_title: form.seoTitle.value.trim(),
+            seo_description: form.seoDescription.value.trim(),
+            updated_at: new Date().toISOString()
         };
 
         if (form.courseId.value) {
-            await updateDoc(doc(db, "courses", form.courseId.value), courseData);
+            const { error } = await supabase
+                .from('courses')
+                .update(courseData)
+                .eq('id', form.courseId.value);
+            if (error) throw error;
         } else {
-            courseData.createdAt = new Date();
-            await addDoc(collection(db, "courses"), courseData);
+            const { error } = await supabase
+                .from('courses')
+                .insert([{ ...courseData, created_at: new Date().toISOString() }]);
+            if (error) throw error;
         }
 
         closeCourseModal();
@@ -445,7 +504,14 @@ window.saveCourse = async (event) => {
 
 window.deleteCourse = async (id) => {
     if (confirm('آیا از حذف این دوره اطمینان دارید؟')) {
-        await deleteDoc(doc(db, "courses", id));
+        const { error } = await supabase
+            .from('courses')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            alert('خطا در حذف دوره: ' + error.message);
+        }
     }
 };
 
@@ -457,12 +523,37 @@ let customerFilterStatus = 'all';
 let customerPageSize = 10;
 let customerCurrentPage = 1;
 
-function loadCustomers() {
-    const unsub = onSnapshot(collection(db, "users"), (snapshot) => {
-        customers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        applyCustomerFilters();
-    });
-    unsubscribers.push(unsub);
+async function loadCustomers() {
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching customers:', error);
+        return;
+    }
+
+    customers = data.map(item => ({
+        ...item,
+        displayName: item.display_name
+    }));
+    applyCustomerFilters();
+
+    // Subscribe
+    const sub = supabase
+        .channel('admin-profiles')
+        .on('postgres_changes', { event: '*', table: 'profiles' }, async () => {
+            const { data } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
+            customers = data.map(item => ({
+                ...item,
+                displayName: item.display_name
+            }));
+            applyCustomerFilters();
+        })
+        .subscribe();
+
+    unsubscribers.push(() => supabase.removeChannel(sub));
 }
 
 window.handleCustomerSearch = (query) => {
@@ -507,7 +598,7 @@ function renderCustomers() {
                 <td>${c.displayName || 'نامشخص'}</td>
                 <td>${c.email || 'بدون ایمیل'}</td>
                 <td>${c.phone || 'ثبت نشده'}</td>
-                <td>${c.createdAt ? new Date(c.createdAt.seconds * 1000).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
+                <td>${c.created_at ? new Date(c.created_at).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
                 <td><span class="status-badge ${c.status || 'active'}">${(c.status || 'active') === 'active' ? 'فعال' : 'غیرفعال'}</span></td>
                 <td>
                     <div class="actions">
@@ -545,7 +636,11 @@ window.toggleUserStatus = async (id, currentStatus) => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
     if (confirm(`آیا از ${newStatus === 'active' ? 'فعال‌سازی' : 'غیرفعال‌سازی'} این کاربر اطمینان دارید؟`)) {
         try {
-            await updateDoc(doc(db, "users", id), { status: newStatus });
+            const { error } = await supabase
+                .from('profiles')
+                .update({ status: newStatus })
+                .eq('id', id);
+            if (error) throw error;
         } catch (error) {
             alert('خطا در بروزرسانی وضعیت: ' + error.message);
         }
@@ -558,18 +653,21 @@ async function loadSettings() {
     if (!form) return;
 
     try {
-        const docRef = doc(db, "settings", "site");
-        const docSnap = await getDoc(docRef);
+        const { data, error } = await supabase
+            .from('site_settings')
+            .select('value')
+            .eq('key', 'site_config')
+            .single();
 
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            Object.keys(data).forEach(key => {
+        if (data && data.value) {
+            const config = data.value;
+            Object.keys(config).forEach(key => {
                 if (form[key]) {
-                    form[key].value = data[key];
+                    form[key].value = config[key];
                 }
             });
-            if (data.logoUrl) {
-                updateSettingsLogoPreview(data.logoUrl);
+            if (config.logoUrl) {
+                updateSettingsLogoPreview(config.logoUrl);
             }
         }
     } catch (error) {
@@ -618,12 +716,18 @@ window.saveSiteSettings = async () => {
         // Handle Logo Upload
         const logoFile = document.getElementById('site-logo-input').files[0];
         if (logoFile) {
-            const storageRef = ref(storage, `site/logo_${Date.now()}`);
-            const snapshot = await uploadBytes(storageRef, logoFile);
-            settingsData.logoUrl = await getDownloadURL(snapshot.ref);
+            settingsData.logoUrl = await uploadImage(logoFile, 'site');
         }
 
-        await setDoc(doc(db, "settings", "site"), settingsData, { merge: true });
+        const { error } = await supabase
+            .from('site_settings')
+            .upsert({
+                key: 'site_config',
+                value: settingsData,
+                updated_at: new Date().toISOString()
+            });
+
+        if (error) throw error;
         alert('تنظیمات با موفقیت ذخیره شد');
     } catch (error) {
         console.error("Error saving settings:", error);
@@ -643,7 +747,7 @@ window.exportCustomersToCSV = () => {
             c.displayName || 'نامشخص',
             c.email || '',
             c.phone || '',
-            c.createdAt ? new Date(c.createdAt.seconds * 1000).toLocaleDateString('fa-IR') : '',
+            c.created_at ? new Date(c.created_at).toLocaleDateString('fa-IR') : '',
             (c.status || 'active') === 'active' ? 'فعال' : 'غیرفعال'
         ].join(",");
         csvContent += row + "\n";
@@ -661,12 +765,31 @@ window.exportCustomersToCSV = () => {
 let galleryItems = [];
 let galleryFilter = 'all';
 
-function loadGallery() {
-    const unsub = onSnapshot(collection(db, "gallery"), (snapshot) => {
-        galleryItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        renderGallery();
-    });
-    unsubscribers.push(unsub);
+async function loadGallery() {
+    const { data, error } = await supabase
+        .from('gallery')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching gallery:', error);
+        return;
+    }
+
+    galleryItems = data;
+    renderGallery();
+
+    // Subscribe
+    const sub = supabase
+        .channel('admin-gallery')
+        .on('postgres_changes', { event: '*', table: 'gallery' }, async () => {
+            const { data } = await supabase.from('gallery').select('*').order('created_at', { ascending: false });
+            galleryItems = data;
+            renderGallery();
+        })
+        .subscribe();
+
+    unsubscribers.push(() => supabase.removeChannel(sub));
 }
 
 window.previewGalleryImage = (event) => {
@@ -706,15 +829,19 @@ window.handleGalleryUpload = async () => {
         const file = fileInput.files[0];
         const watermarkedBlob = await watermarkImage(file);
 
-        const storageRef = ref(storage, `gallery/${Date.now()}_${file.name}`);
-        const snapshot = await uploadBytes(storageRef, watermarkedBlob);
-        const downloadURL = await getDownloadURL(snapshot.ref);
+        // Convert Blob to File object for Supabase
+        const watermarkedFile = new File([watermarkedBlob], file.name, { type: file.type });
+        const downloadURL = await uploadImage(watermarkedFile, 'gallery');
 
-        await addDoc(collection(db, "gallery"), {
-            url: downloadURL,
-            category: categorySelect.value,
-            createdAt: new Date()
-        });
+        const { error } = await supabase
+            .from('gallery')
+            .insert([{
+                url: downloadURL,
+                category: categorySelect.value,
+                created_at: new Date().toISOString()
+            }]);
+
+        if (error) throw error;
 
         clearGalleryPreview();
         alert('تصویر با موفقیت آپلود شد');
@@ -824,12 +951,18 @@ window.deleteGalleryItem = async (id, url) => {
     if (!confirm('آیا از حذف این تصویر اطمینان دارید؟')) return;
 
     try {
-        await deleteDoc(doc(db, "gallery", id));
-        // Note: Realistically we should also delete from storage,
-        // but it requires matching the URL to a path. For simplicity now we just remove Firestore record.
-        // If we want to delete from storage:
-        // const imageRef = ref(storage, url);
-        // await deleteObject(imageRef);
+        const { error } = await supabase
+            .from('gallery')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+
+        // Try to delete from storage if URL is from our Supabase bucket
+        if (url.includes('/storage/v1/object/public/gallery/')) {
+            const path = url.split('/gallery/').pop();
+            await supabase.storage.from('gallery').remove([path]);
+        }
     } catch (error) {
         alert('خطا در حذف تصویر: ' + error.message);
     }
@@ -852,12 +985,39 @@ window.closeLightbox = () => {
 };
 
 // Orders Logic
-function loadOrders() {
-    const unsub = onSnapshot(collection(db, "orders"), (snapshot) => {
-        orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        applyOrderFilters();
-    });
-    unsubscribers.push(unsub);
+async function loadOrders() {
+    const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching orders:', error);
+        return;
+    }
+
+    orders = data.map(item => ({
+        ...item,
+        customerName: item.customer_name,
+        productName: item.product_name
+    }));
+    applyOrderFilters();
+
+    // Subscribe
+    const sub = supabase
+        .channel('admin-orders')
+        .on('postgres_changes', { event: '*', table: 'orders' }, async () => {
+            const { data } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
+            orders = data.map(item => ({
+                ...item,
+                customerName: item.customer_name,
+                productName: item.product_name
+            }));
+            applyOrderFilters();
+        })
+        .subscribe();
+
+    unsubscribers.push(() => supabase.removeChannel(sub));
 }
 
 window.handleOrderSearch = (query) => {
@@ -884,8 +1044,8 @@ function applyOrderFilters() {
 
     // Sorting
     filteredOrders.sort((a, b) => {
-        const timeA = a.createdAt?.seconds || 0;
-        const timeB = b.createdAt?.seconds || 0;
+        const timeA = new Date(a.created_at).getTime() || 0;
+        const timeB = new Date(b.created_at).getTime() || 0;
         const priceA = Number(a.price) || 0;
         const priceB = Number(b.price) || 0;
 
@@ -919,7 +1079,7 @@ function renderOrders() {
                 <td>${order.customerName || 'نامشخص'}</td>
                 <td>${order.productName || 'محصول'}</td>
                 <td>${(Number(order.price) || 0).toLocaleString('fa-IR')}</td>
-                <td>${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
+                <td>${order.created_at ? new Date(order.created_at).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
                 <td><span class="status-badge ${order.status}">${translateStatus(order.status)}</span></td>
                 <td>
                     <div class="actions">
@@ -974,7 +1134,7 @@ window.openOrderModal = (orderId) => {
         </div>
         <div class="detail-item">
             <label>تاریخ ثبت</label>
-            <span>${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString('fa-IR') : 'نامشخص'}</span>
+            <span>${order.created_at ? new Date(order.created_at).toLocaleString('fa-IR') : 'نامشخص'}</span>
         </div>
         <div class="detail-item">
             <label>نام مشتری</label>
@@ -1025,7 +1185,7 @@ window.exportOrdersToCSV = () => {
             o.customerName || 'نامشخص',
             o.productName || 'نامشخص',
             o.price || 0,
-            o.createdAt ? new Date(o.createdAt.seconds * 1000).toLocaleDateString('fa-IR') : 'نامشخص',
+            o.created_at ? new Date(o.created_at).toLocaleDateString('fa-IR') : 'نامشخص',
             translateStatus(o.status)
         ].join(",");
         csvContent += row + "\n";
@@ -1056,7 +1216,11 @@ function translateStatus(status) {
 
 window.updateOrderStatus = async (id, newStatus) => {
     try {
-        await updateDoc(doc(db, "orders", id), { status: newStatus });
+        const { error } = await supabase
+            .from('orders')
+            .update({ status: newStatus, updated_at: new Date().toISOString() })
+            .eq('id', id);
+        if (error) throw error;
     } catch (error) {
         alert('خطا در بروزرسانی وضعیت: ' + error.message);
     }
@@ -1066,7 +1230,7 @@ window.updateOrderStatus = async (id, newStatus) => {
 window.logout = async () => {
     if (confirm('آیا مطمئن هستید که می‌خواهید خارج شوید؟')) {
         try {
-            await signOut(auth);
+            await supabaseSignOut();
             location.replace('login.html');
         } catch (error) {
             console.error('Logout error:', error);
