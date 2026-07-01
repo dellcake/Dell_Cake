@@ -1,0 +1,15 @@
+127.0.0.1 - - [30/Jun/2026 20:39:28] "GET /admin/admin.html?bypass_auth=true HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:28] "GET /admin/css/admin.css HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:28] "GET /admin/js/auth-guard.js HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:28] "GET /admin/js/admin.js HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:28] "GET /admin/js/config.js HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:28] "GET /js/firebase-auth.js HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:28] "GET /js/firebase-db.js HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:28] "GET /js/firebase-config.js HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:28] "GET /admin/components/sidebar.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:28] "GET /admin/components/header.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:28] "GET /images/logo/sweet-.png HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:28] "GET /admin/pages/dashboard.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:28] "GET /admin/login.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:29] "GET /admin/css/login.css HTTP/1.1" 200 -
+127.0.0.1 - - [30/Jun/2026 20:39:29] "GET /admin/js/login.js HTTP/1.1" 200 -

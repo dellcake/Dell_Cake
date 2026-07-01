@@ -10,7 +10,8 @@ import {
     deleteDoc,
     doc,
     query,
-    orderBy
+    orderBy,
+    limit
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 // Layout Loader
@@ -85,9 +86,8 @@ function getTranslate(key) {
 }
 
 function initViewLogic(view) {
-    console.log(`Initializing logic for ${view}`);
     if (view === 'Dashboard') {
-        loadDashboardStats();
+        loadDashboardData();
     } else if (view === 'Courses') {
         loadCourses();
     } else if (view === 'Orders') {
@@ -95,40 +95,93 @@ function initViewLogic(view) {
     }
 }
 
-// Dashboard Logic
-async function loadDashboardStats() {
+// Dashboard Data Implementation
+async function loadDashboardData() {
+    // 1. Load Statistics
     const unsubCourses = onSnapshot(collection(db, "courses"), (snapshot) => {
-        const count = snapshot.size;
-        const el = document.getElementById('total-courses');
-        if (el) el.innerText = count.toLocaleString('fa-IR');
+        const el = document.getElementById('total-courses-count');
+        if (el) el.innerText = snapshot.size.toLocaleString('fa-IR');
     });
     unsubscribers.push(unsubCourses);
 
     const unsubOrders = onSnapshot(collection(db, "orders"), (snapshot) => {
         const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        const newOrdersCount = orders.filter(o => o.status === 'pending').length;
-        const el = document.getElementById('new-orders');
-        if (el) el.innerText = newOrdersCount.toLocaleString('fa-IR');
 
-        // Recent activities
-        const activityList = document.getElementById('activities-list');
-        if (activityList) {
-            if (orders.length === 0) {
-                activityList.innerHTML = '<p class="empty-msg">فعالیتی ثبت نشده است.</p>';
+        // Total Orders
+        const totalEl = document.getElementById('total-orders-count');
+        if (totalEl) totalEl.innerText = orders.length.toLocaleString('fa-IR');
+
+        // Revenue Calculation
+        const revenue = orders
+            .filter(o => o.status === 'completed')
+            .reduce((sum, o) => sum + (Number(o.price) || 0), 0);
+        const revEl = document.getElementById('total-revenue');
+        if (revEl) revEl.innerText = `${revenue.toLocaleString('fa-IR')} تومان`;
+
+        // Recent Orders Table (Sorted by createdAt client-side to avoid index requirement errors)
+        const tbody = document.getElementById('recent-orders-tbody');
+        if (tbody) {
+            const recent = orders
+                .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0))
+                .slice(0, 5);
+
+            if (recent.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center">سفارشی یافت نشد.</td></tr>';
             } else {
-                activityList.innerHTML = orders.slice(0, 5).map(order => `
-                    <div class="activity-item">
-                        <div class="activity-icon"><i class="fa-solid fa-shopping-cart"></i></div>
-                        <div class="activity-text">
-                            <strong>${order.customerName || 'مشتری'}</strong> یک سفارش جدید ثبت کرد.
-                            <span>${new Date(order.createdAt?.seconds * 1000).toLocaleDateString('fa-IR')}</span>
-                        </div>
-                    </div>
+                tbody.innerHTML = recent.map(o => `
+                    <tr>
+                        <td>${o.customerName || 'نامشخص'}</td>
+                        <td>${o.productName || 'محصول'}</td>
+                        <td><span class="status-badge ${o.status}">${translateStatus(o.status)}</span></td>
+                        <td>${(Number(o.price) || 0).toLocaleString('fa-IR')}</td>
+                    </tr>
                 `).join('');
             }
         }
     });
     unsubscribers.push(unsubOrders);
+
+    // 2. Load Chart
+    initDashboardChart();
+}
+
+async function initDashboardChart() {
+    const ctx = document.getElementById('salesChart');
+    if (!ctx) return;
+
+    // Dynamically load Chart.js if not present
+    if (typeof Chart === 'undefined') {
+        await new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+            script.onload = resolve;
+            document.head.appendChild(script);
+        });
+    }
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور'],
+            datasets: [{
+                label: 'فروش ماهانه',
+                data: [12, 19, 3, 5, 2, 3],
+                borderColor: '#e8789a',
+                backgroundColor: 'rgba(232, 120, 154, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
 }
 
 // Courses Logic
@@ -228,7 +281,9 @@ function loadOrders() {
         if (orders.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">سفارشی ثبت نشده است.</td></tr>';
         } else {
-            tbody.innerHTML = orders.map(order => `
+            tbody.innerHTML = orders
+                .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0))
+                .map(order => `
                 <tr>
                     <td>${order.customerName || 'نامشخص'}</td>
                     <td>${order.productName || 'محصول'}</td>
