@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
     price NUMERIC DEFAULT 0,
     status TEXT DEFAULT 'new' CHECK (status IN ('new', 'pending', 'preparing', 'ready', 'completed', 'cancelled')),
     address TEXT,
+    details JSONB,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
@@ -98,9 +99,24 @@ CREATE POLICY "Users can see own orders" ON public.orders FOR SELECT USING (auth
 CREATE POLICY "Anyone can view gallery" ON public.gallery FOR SELECT USING (true);
 
 -- Admin Access: (We will define a way to identify admins, e.g., by email or a special metadata/role)
--- For now, we'll assume the admin email sobhanrahimisrj@gmail.com is handled in app logic or custom claims.
--- A simple way is to check the user's email in policies if possible, or use a separate admin role.
+-- Admin Access Policies (Identifying admin by email: sobhanrahimisrj@gmail.com)
 
--- To enable full admin access (example):
--- CREATE POLICY "Admins can do everything on courses" ON public.courses FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
--- Note: Supabase policies are very flexible.
+-- 1. Profiles Admin Policy
+CREATE POLICY "Admins have full access to profiles" ON public.profiles
+FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+
+-- 2. Site Settings Admin Policy
+CREATE POLICY "Admins have full access to site settings" ON public.site_settings
+FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+
+-- 3. Courses Admin Policy
+CREATE POLICY "Admins have full access to courses" ON public.courses
+FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+
+-- 4. Orders Admin Policy
+CREATE POLICY "Admins have full access to orders" ON public.orders
+FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+
+-- 5. Gallery Admin Policy
+CREATE POLICY "Admins have full access to gallery" ON public.gallery
+FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
