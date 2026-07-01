@@ -1,1 +1,180 @@
-<section class='content-section'><h2>مدیریت settings</h2><p>این بخش در حال توسعه است.</p></section>
+<section class="content-section">
+    <div class="section-header">
+        <h2>تنظیمات سایت</h2>
+        <button class="add-btn" onclick="saveSiteSettings()">
+            <i class="fa-solid fa-floppy-disk"></i>
+            ذخیره تغییرات
+        </button>
+    </div>
+
+    <div class="card settings-card">
+        <!-- Tabs Header -->
+        <div class="settings-tabs">
+            <button class="tab-btn active" onclick="switchSettingsTab('general')">عمومی و محتوا</button>
+            <button class="tab-btn" onclick="switchSettingsTab('social')">شبکه‌های اجتماعی</button>
+            <button class="tab-btn" onclick="switchSettingsTab('seo')">سئو و متا</button>
+        </div>
+
+        <form id="settings-form" class="settings-form">
+            <!-- General Tab -->
+            <div id="tab-general" class="tab-pane active">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>لوگوی سایت</label>
+                        <div class="logo-upload-container">
+                            <div id="settings-logo-preview" class="logo-preview">
+                                <img src="../images/logo/sweet-.png" alt="Logo">
+                            </div>
+                            <div class="logo-actions">
+                                <input type="file" id="site-logo-input" hidden accept="image/*" onchange="previewSiteLogo(event)">
+                                <button type="button" class="btn-secondary" onclick="document.getElementById('site-logo-input').click()">تغییر لوگو</button>
+                                <input type="hidden" name="logoUrl">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>نام سایت</label>
+                        <input type="text" name="siteName" placeholder="مثلا: دل کیک">
+                    </div>
+                    <div class="form-group">
+                        <label>عنوان اصلی (Hero Title)</label>
+                        <input type="text" name="heroTitle">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>شعار سایت (Slogan)</label>
+                        <input type="text" name="heroSlogan">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>توضیحات معرفی (Hero Description)</label>
+                        <textarea name="heroDescription" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social & Contact Tab -->
+            <div id="tab-social" class="tab-pane">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-phone"></i> شماره تماس</label>
+                        <input type="text" name="phone" placeholder="0912...">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-instagram"></i> اینستاگرام (آیدی)</label>
+                        <input type="text" name="instagram" placeholder="delcake">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-telegram"></i> تلگرام (آیدی)</label>
+                        <input type="text" name="telegram" placeholder="delcake_admin">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-comments"></i> بله (آیدی)</label>
+                        <input type="text" name="bale" placeholder="delcake">
+                    </div>
+                    <div class="form-group full-width">
+                        <label><i class="fa-solid fa-location-dot"></i> آدرس حضوری</label>
+                        <textarea name="address" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEO Tab -->
+            <div id="tab-seo" class="tab-pane">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>عنوان سئو (Global Meta Title)</label>
+                        <input type="text" name="seoTitle">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>توضیحات سئو (Meta Description)</label>
+                        <textarea name="seoDescription" rows="4"></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>کلمات کلیدی (Keywords - با کاما جدا کنید)</label>
+                        <input type="text" name="seoKeywords" placeholder="کیک خانگی, آموزش کیک پزی, ...">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<style>
+.settings-tabs {
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+}
+
+.settings-tabs .tab-btn {
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+    color: var(--text-light);
+    transition: all 0.3s;
+    position: relative;
+}
+
+.settings-tabs .tab-btn.active {
+    color: var(--secondary);
+}
+
+.settings-tabs .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--secondary);
+    border-radius: 2px;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
+
+.logo-upload-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--accent);
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.logo-preview {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 10px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+}
+
+.logo-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.settings-form textarea {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--accent);
+    font-family: inherit;
+    width: 100%;
+    resize: vertical;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
