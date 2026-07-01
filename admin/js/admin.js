@@ -42,6 +42,15 @@ let courseFilterStatus = 'all';
 let coursePageSize = 5;
 let courseCurrentPage = 1;
 
+// Orders State
+let orders = [];
+let filteredOrders = [];
+let orderSearchQuery = '';
+let orderFilterStatus = 'all';
+let orderSortOrder = 'newest';
+let orderPageSize = 10;
+let orderCurrentPage = 1;
+
 function clearListeners() {
     unsubscribers.forEach(unsub => {
         if (typeof unsub === 'function') unsub();
@@ -435,40 +444,198 @@ window.deleteCourse = async (id) => {
 // Orders Logic
 function loadOrders() {
     const unsub = onSnapshot(collection(db, "orders"), (snapshot) => {
-        const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        const tbody = document.getElementById('orders-tbody');
-        if (!tbody) return;
-
-        if (orders.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">سفارشی ثبت نشده است.</td></tr>';
-        } else {
-            tbody.innerHTML = orders
-                .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0))
-                .map(order => `
-                <tr>
-                    <td>${order.customerName || 'نامشخص'}</td>
-                    <td>${order.productName || 'محصول'}</td>
-                    <td>${new Date(order.createdAt?.seconds * 1000).toLocaleDateString('fa-IR')}</td>
-                    <td><span class="status-badge ${order.status}">${translateStatus(order.status)}</span></td>
-                    <td>
-                        <select onchange="updateOrderStatus('${order.id}', this.value)" class="status-select">
-                            <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>در انتظار</option>
-                            <option value="preparing" ${order.status === 'preparing' ? 'selected' : ''}>در حال آماده‌سازی</option>
-                            <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>تکمیل شده</option>
-                            <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>لغو شده</option>
-                        </select>
-                    </td>
-                </tr>
-            `).join('');
-        }
+        orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        applyOrderFilters();
     });
     unsubscribers.push(unsub);
 }
 
+window.handleOrderSearch = (query) => {
+    orderSearchQuery = query.toLowerCase();
+    orderCurrentPage = 1;
+    applyOrderFilters();
+};
+
+window.handleOrderFilter = () => {
+    orderFilterStatus = document.getElementById('filter-order-status').value;
+    orderSortOrder = document.getElementById('sort-orders').value;
+    orderCurrentPage = 1;
+    applyOrderFilters();
+};
+
+function applyOrderFilters() {
+    filteredOrders = orders.filter(o => {
+        const matchesSearch = (o.customerName || '').toLowerCase().includes(orderSearchQuery) ||
+                            (o.id || '').toLowerCase().includes(orderSearchQuery) ||
+                            (o.productName || '').toLowerCase().includes(orderSearchQuery);
+        const matchesStatus = orderFilterStatus === 'all' || o.status === orderFilterStatus;
+        return matchesSearch && matchesStatus;
+    });
+
+    // Sorting
+    filteredOrders.sort((a, b) => {
+        const timeA = a.createdAt?.seconds || 0;
+        const timeB = b.createdAt?.seconds || 0;
+        const priceA = Number(a.price) || 0;
+        const priceB = Number(b.price) || 0;
+
+        if (orderSortOrder === 'newest') return timeB - timeA;
+        if (orderSortOrder === 'oldest') return timeA - timeB;
+        if (orderSortOrder === 'price-high') return priceB - priceA;
+        if (orderSortOrder === 'price-low') return priceA - priceB;
+        return 0;
+    });
+
+    renderOrders();
+}
+
+function renderOrders() {
+    const tbody = document.getElementById('orders-tbody');
+    if (!tbody) return;
+
+    // Pagination
+    const totalItems = filteredOrders.length;
+    const totalPages = Math.ceil(totalItems / orderPageSize);
+    const start = (orderCurrentPage - 1) * orderPageSize;
+    const end = start + orderPageSize;
+    const paginatedItems = filteredOrders.slice(start, end);
+
+    if (paginatedItems.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">سفارشی یافت نشد.</td></tr>';
+    } else {
+        tbody.innerHTML = paginatedItems.map(order => `
+            <tr>
+                <td>#${order.id.slice(-6).toUpperCase()}</td>
+                <td>${order.customerName || 'نامشخص'}</td>
+                <td>${order.productName || 'محصول'}</td>
+                <td>${(Number(order.price) || 0).toLocaleString('fa-IR')}</td>
+                <td>${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
+                <td><span class="status-badge ${order.status}">${translateStatus(order.status)}</span></td>
+                <td>
+                    <div class="actions">
+                        <button class="btn-icon btn-edit" title="جزئیات" onclick="openOrderModal('${order.id}')"><i class="fa-solid fa-eye"></i></button>
+                        <select onchange="updateOrderStatus('${order.id}', this.value)" class="status-select-mini">
+                            <option value="new" ${order.status === 'new' ? 'selected' : ''}>جدید</option>
+                            <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>در حال بررسی</option>
+                            <option value="preparing" ${order.status === 'preparing' ? 'selected' : ''}>آماده‌سازی</option>
+                            <option value="ready" ${order.status === 'ready' ? 'selected' : ''}>آماده تحویل</option>
+                            <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>تحویل شده</option>
+                            <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>لغو شده</option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Update Pagination UI
+    const pageStartEl = document.getElementById('order-page-start');
+    const pageEndEl = document.getElementById('order-page-end');
+    const totalItemsEl = document.getElementById('order-total-items');
+    const currentPageEl = document.getElementById('order-current-page');
+    const prevBtn = document.getElementById('order-prev-page');
+    const nextBtn = document.getElementById('order-next-page');
+
+    if (pageStartEl) pageStartEl.innerText = (totalItems > 0 ? start + 1 : 0).toLocaleString('fa-IR');
+    if (pageEndEl) pageEndEl.innerText = Math.min(end, totalItems).toLocaleString('fa-IR');
+    if (totalItemsEl) totalItemsEl.innerText = totalItems.toLocaleString('fa-IR');
+    if (currentPageEl) currentPageEl.innerText = orderCurrentPage.toLocaleString('fa-IR');
+
+    if (prevBtn) prevBtn.disabled = orderCurrentPage === 1;
+    if (nextBtn) nextBtn.disabled = orderCurrentPage === totalPages || totalPages === 0;
+}
+
+window.changeOrderPage = (direction) => {
+    orderCurrentPage += direction;
+    renderOrders();
+};
+
+window.openOrderModal = (orderId) => {
+    const order = orders.find(o => o.id === orderId);
+    if (!order) return;
+
+    const modal = document.getElementById('order-modal');
+    const content = document.getElementById('order-details-content');
+
+    content.innerHTML = `
+        <div class="detail-item">
+            <label>شناسه سفارش</label>
+            <span>#${order.id.toUpperCase()}</span>
+        </div>
+        <div class="detail-item">
+            <label>تاریخ ثبت</label>
+            <span>${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString('fa-IR') : 'نامشخص'}</span>
+        </div>
+        <div class="detail-item">
+            <label>نام مشتری</label>
+            <span>${order.customerName || 'نامشخص'}</span>
+        </div>
+        <div class="detail-item">
+            <label>شماره تماس</label>
+            <span>${order.phone || 'نامشخص'}</span>
+        </div>
+        <div class="detail-item">
+            <label>محصول/دوره</label>
+            <span>${order.productName || 'نامشخص'}</span>
+        </div>
+        <div class="detail-item">
+            <label>مبلغ کل</label>
+            <span>${(Number(order.price) || 0).toLocaleString('fa-IR')} تومان</span>
+        </div>
+        <div class="detail-item order-full-width">
+            <label>آدرس تحویل / توضیحات</label>
+            <span>${order.address || 'ثبت نشده'}</span>
+        </div>
+        <div class="detail-item">
+            <label>وضعیت فعلی</label>
+            <span class="status-badge ${order.status}">${translateStatus(order.status)}</span>
+        </div>
+    `;
+
+    modal.style.display = 'flex';
+};
+
+window.closeOrderModal = () => {
+    document.getElementById('order-modal').style.display = 'none';
+};
+
+window.printOrder = () => {
+    window.print();
+};
+
+window.exportOrdersToCSV = () => {
+    if (filteredOrders.length === 0) return alert('لیست سفارشات خالی است');
+
+    let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // Added BOM for Excel Persian support
+    csvContent += "شناسه سفارش,نام مشتری,محصول,قیمت,تاریخ,وضعیت\n";
+
+    filteredOrders.forEach(o => {
+        const row = [
+            o.id,
+            o.customerName || 'نامشخص',
+            o.productName || 'نامشخص',
+            o.price || 0,
+            o.createdAt ? new Date(o.createdAt.seconds * 1000).toLocaleDateString('fa-IR') : 'نامشخص',
+            translateStatus(o.status)
+        ].join(",");
+        csvContent += row + "\n";
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `delcake-orders-${new Date().toLocaleDateString('fa-IR')}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
+
 function translateStatus(status) {
     const map = {
-        'pending': 'در انتظار',
-        'preparing': 'در حال پخت',
+        'new': 'جدید',
+        'pending': 'در حال بررسی',
+        'preparing': 'آماده‌سازی',
+        'ready': 'آماده تحویل',
         'completed': 'تحویل شده',
         'cancelled': 'لغو شده',
         'published': 'منتشر شده',

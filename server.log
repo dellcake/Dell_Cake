@@ -1,0 +1,13 @@
+127.0.0.1 - - [01/Jul/2026 01:52:31] "GET /admin/admin.html HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 01:52:31] "GET /admin/css/admin.css HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 01:52:31] "GET /admin/js/admin.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 01:52:31] "GET /js/firebase-storage.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 01:52:31] "GET /admin/js/config.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 01:52:31] "GET /js/firebase-auth.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 01:52:31] "GET /js/firebase-db.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 01:52:31] "GET /js/firebase-config.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 01:52:31] "GET /admin/components/sidebar.html HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 01:52:31] "GET /images/logo/sweet-.png HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 01:52:31] "GET /admin/components/header.html HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 01:52:31] "GET /admin/pages/dashboard.html HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 01:52:35] "GET /admin/pages/orders.html HTTP/1.1" 200 -
