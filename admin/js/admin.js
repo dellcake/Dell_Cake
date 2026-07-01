@@ -503,15 +503,36 @@ window.saveCourse = async (event) => {
 };
 
 window.deleteCourse = async (id) => {
-    if (confirm('آیا از حذف این دوره اطمینان دارید؟')) {
-        const { error } = await supabase
+    if (!confirm('آیا از حذف این دوره اطمینان دارید؟')) return;
+
+    try {
+        // 1. Get course data to find image URL
+        const { data: course, error: fetchError } = await supabase
+            .from('courses')
+            .select('image_url')
+            .eq('id', id)
+            .single();
+
+        if (fetchError) throw fetchError;
+
+        // 2. Delete image from storage if it exists
+        if (course && course.image_url && course.image_url.includes('/storage/v1/object/public/courses/')) {
+            const path = course.image_url.split('/courses/').pop();
+            await supabase.storage.from('courses').remove([path]);
+        }
+
+        // 3. Delete from database
+        const { error: deleteError } = await supabase
             .from('courses')
             .delete()
             .eq('id', id);
 
-        if (error) {
-            alert('خطا در حذف دوره: ' + error.message);
-        }
+        if (deleteError) throw deleteError;
+
+        renderCourses(); // Refresh list
+    } catch (error) {
+        console.error('Error deleting course:', error);
+        alert('خطا در حذف دوره: ' + error.message);
     }
 };
 
