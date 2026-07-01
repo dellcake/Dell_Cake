@@ -1,12 +1,17 @@
+import { supabase } from "./supabase-client.js";
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const form = document.getElementById("cookieForm");
 
     if (!form) return;
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
 
         e.preventDefault();
+        const submitBtn = e.target.querySelector('.order-submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ثبت...';
 
         const name =
             document.getElementById("cookieName")?.value.trim();
@@ -34,7 +39,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!name || !phone || !type) {
             alert("لطفاً نام، شماره تماس و نوع شیرینی را تکمیل کنید 💗");
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'ثبت سفارش شیرینی 🍪';
             return;
+        }
+
+        // Save to Database
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            await supabase.from('orders').insert([{
+                user_id: session?.user?.id || null,
+                customer_name: name,
+                phone: phone,
+                product_name: "شیرینی: " + type,
+                address: desc,
+                details: { weight, flavors, deliveryDate: date, deliveryTime: time },
+                status: 'new'
+            }]);
+        } catch (err) {
+            console.warn("Could not save cookie order to DB:", err);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'ثبت سفارش شیرینی 🍪';
         }
 
         let message = "💗 سفارش جدید شیرینی دل‌کیک\n\n";
