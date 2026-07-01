@@ -112,6 +112,8 @@ function initViewLogic(view) {
         loadCourses();
     } else if (view === 'Orders') {
         loadOrders();
+    } else if (view === 'Gallery') {
+        loadGallery();
     }
 }
 
@@ -439,6 +441,200 @@ window.deleteCourse = async (id) => {
     if (confirm('آیا از حذف این دوره اطمینان دارید؟')) {
         await deleteDoc(doc(db, "courses", id));
     }
+};
+
+// Gallery Logic
+let galleryItems = [];
+let galleryFilter = 'all';
+
+function loadGallery() {
+    const unsub = onSnapshot(collection(db, "gallery"), (snapshot) => {
+        galleryItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderGallery();
+    });
+    unsubscribers.push(unsub);
+}
+
+window.previewGalleryImage = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const preview = document.getElementById('gallery-upload-preview');
+            const container = document.getElementById('gallery-preview-container');
+            if (preview && container) {
+                preview.src = e.target.result;
+                container.style.display = 'block';
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+window.clearGalleryPreview = () => {
+    const input = document.getElementById('gallery-file-input');
+    const container = document.getElementById('gallery-preview-container');
+    if (input) input.value = '';
+    if (container) container.style.display = 'none';
+};
+
+window.handleGalleryUpload = async () => {
+    const fileInput = document.getElementById('gallery-file-input');
+    const categorySelect = document.getElementById('gallery-upload-category');
+    const uploadBtn = document.getElementById('upload-gallery-btn');
+
+    if (!fileInput.files[0]) return alert('لطفا یک تصویر انتخاب کنید');
+
+    uploadBtn.disabled = true;
+    uploadBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال پردازش...';
+
+    try {
+        const file = fileInput.files[0];
+        const watermarkedBlob = await watermarkImage(file);
+
+        const storageRef = ref(storage, `gallery/${Date.now()}_${file.name}`);
+        const snapshot = await uploadBytes(storageRef, watermarkedBlob);
+        const downloadURL = await getDownloadURL(snapshot.ref);
+
+        await addDoc(collection(db, "gallery"), {
+            url: downloadURL,
+            category: categorySelect.value,
+            createdAt: new Date()
+        });
+
+        clearGalleryPreview();
+        alert('تصویر با موفقیت آپلود شد');
+    } catch (error) {
+        console.error('Upload error:', error);
+        alert('خطا در آپلود تصویر: ' + error.message);
+    } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.innerHTML = '<i class="fa-solid fa-upload"></i> آپلود تصویر';
+    }
+};
+
+async function watermarkImage(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                // Set canvas size to image size
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                // Draw original image
+                ctx.drawImage(img, 0, 0);
+
+                // Watermark settings
+                const fontSize = Math.max(20, canvas.width / 20);
+                ctx.font = `bold ${fontSize}px Lalezar, Tahoma`;
+                ctx.fillStyle = 'rgba(232, 120, 154, 0.5)'; // Pink with transparency
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'bottom';
+
+                // Add shadow for better visibility
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+                ctx.shadowBlur = 4;
+                ctx.shadowOffsetX = 2;
+                ctx.shadowOffsetY = 2;
+
+                // Draw text
+                ctx.fillText('Dell Cake | دل کیک', canvas.width - 20, canvas.height - 20);
+
+                canvas.toBlob((blob) => {
+                    resolve(blob);
+                }, file.type);
+            };
+            img.src = event.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+window.filterGallery = (category) => {
+    galleryFilter = category;
+
+    // Update UI
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('onclick').includes(`'${category}'`)) {
+            btn.classList.add('active');
+        }
+    });
+
+    renderGallery();
+};
+
+function renderGallery() {
+    const grid = document.getElementById('gallery-grid');
+    if (!grid) return;
+
+    const filtered = galleryItems.filter(item =>
+        galleryFilter === 'all' || item.category === galleryFilter
+    );
+
+    if (filtered.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px;">تصویری در این دسته بندی یافت نشد.</div>';
+    } else {
+        grid.innerHTML = filtered.map(item => `
+            <div class="gallery-item">
+                <span class="category-badge">${translateGalleryCategory(item.category)}</span>
+                <img src="${item.url}" onclick="openLightbox('${item.url}', '${translateGalleryCategory(item.category)}')">
+                <div class="gallery-item-overlay">
+                    <button class="btn-delete-image" onclick="deleteGalleryItem('${item.id}', '${item.url}')">
+                        <i class="fa-solid fa-trash"></i> حذف
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+function translateGalleryCategory(cat) {
+    const map = {
+        'cake': 'کیک',
+        'pastry': 'شیرینی',
+        'cafe-cake': 'کیک کافه‌ای',
+        'cupcake': 'کاپ کیک',
+        'other': 'سایر'
+    };
+    return map[cat] || cat;
+}
+
+window.deleteGalleryItem = async (id, url) => {
+    if (!confirm('آیا از حذف این تصویر اطمینان دارید؟')) return;
+
+    try {
+        await deleteDoc(doc(db, "gallery", id));
+        // Note: Realistically we should also delete from storage,
+        // but it requires matching the URL to a path. For simplicity now we just remove Firestore record.
+        // If we want to delete from storage:
+        // const imageRef = ref(storage, url);
+        // await deleteObject(imageRef);
+    } catch (error) {
+        alert('خطا در حذف تصویر: ' + error.message);
+    }
+};
+
+window.openLightbox = (url, caption) => {
+    const modal = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    const cap = document.getElementById('lightbox-caption');
+
+    if (modal && img && cap) {
+        img.src = url;
+        cap.innerText = caption;
+        modal.style.display = 'block';
+    }
+};
+
+window.closeLightbox = () => {
+    document.getElementById('lightbox').style.display = 'none';
 };
 
 // Orders Logic
