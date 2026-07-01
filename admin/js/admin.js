@@ -11,6 +11,8 @@ import {
     updateDoc,
     deleteDoc,
     doc,
+    getDoc,
+    setDoc,
     query,
     orderBy,
     limit
@@ -116,6 +118,8 @@ function initViewLogic(view) {
         loadGallery();
     } else if (view === 'Customers') {
         loadCustomers();
+    } else if (view === 'Settings') {
+        loadSettings();
     }
 }
 
@@ -545,6 +549,88 @@ window.toggleUserStatus = async (id, currentStatus) => {
         } catch (error) {
             alert('خطا در بروزرسانی وضعیت: ' + error.message);
         }
+    }
+};
+
+// Settings Logic
+async function loadSettings() {
+    const form = document.getElementById('settings-form');
+    if (!form) return;
+
+    try {
+        const docRef = doc(db, "settings", "site");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            Object.keys(data).forEach(key => {
+                if (form[key]) {
+                    form[key].value = data[key];
+                }
+            });
+            if (data.logoUrl) {
+                updateSettingsLogoPreview(data.logoUrl);
+            }
+        }
+    } catch (error) {
+        console.error("Error loading settings:", error);
+    }
+}
+
+window.switchSettingsTab = (tabName) => {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+    document.querySelector(`.tab-btn[onclick*="'${tabName}'"]`).classList.add('active');
+};
+
+window.previewSiteLogo = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => updateSettingsLogoPreview(e.target.result);
+        reader.readAsDataURL(file);
+    }
+};
+
+function updateSettingsLogoPreview(src) {
+    const preview = document.getElementById('settings-logo-preview');
+    if (preview) {
+        preview.innerHTML = `<img src="${src}" alt="Logo">`;
+    }
+}
+
+window.saveSiteSettings = async () => {
+    const form = document.getElementById('settings-form');
+    const saveBtn = document.querySelector('.add-btn[onclick="saveSiteSettings()"]');
+
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال ذخیره...';
+
+    try {
+        const formData = new FormData(form);
+        const settingsData = {};
+        formData.forEach((value, key) => {
+            settingsData[key] = value;
+        });
+
+        // Handle Logo Upload
+        const logoFile = document.getElementById('site-logo-input').files[0];
+        if (logoFile) {
+            const storageRef = ref(storage, `site/logo_${Date.now()}`);
+            const snapshot = await uploadBytes(storageRef, logoFile);
+            settingsData.logoUrl = await getDownloadURL(snapshot.ref);
+        }
+
+        await setDoc(doc(db, "settings", "site"), settingsData, { merge: true });
+        alert('تنظیمات با موفقیت ذخیره شد');
+    } catch (error) {
+        console.error("Error saving settings:", error);
+        alert('خطا در ذخیره تنظیمات: ' + error.message);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> ذخیره تغییرات';
     }
 };
 
