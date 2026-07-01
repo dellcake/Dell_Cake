@@ -114,6 +114,8 @@ function initViewLogic(view) {
         loadOrders();
     } else if (view === 'Gallery') {
         loadGallery();
+    } else if (view === 'Customers') {
+        loadCustomers();
     }
 }
 
@@ -441,6 +443,132 @@ window.deleteCourse = async (id) => {
     if (confirm('آیا از حذف این دوره اطمینان دارید؟')) {
         await deleteDoc(doc(db, "courses", id));
     }
+};
+
+// Customers Logic
+let customers = [];
+let filteredCustomers = [];
+let customerSearchQuery = '';
+let customerFilterStatus = 'all';
+let customerPageSize = 10;
+let customerCurrentPage = 1;
+
+function loadCustomers() {
+    const unsub = onSnapshot(collection(db, "users"), (snapshot) => {
+        customers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        applyCustomerFilters();
+    });
+    unsubscribers.push(unsub);
+}
+
+window.handleCustomerSearch = (query) => {
+    customerSearchQuery = query.toLowerCase();
+    customerCurrentPage = 1;
+    applyCustomerFilters();
+};
+
+window.handleCustomerFilter = () => {
+    customerFilterStatus = document.getElementById('filter-customer-status').value;
+    customerCurrentPage = 1;
+    applyCustomerFilters();
+};
+
+function applyCustomerFilters() {
+    filteredCustomers = customers.filter(c => {
+        const matchesSearch = (c.displayName || '').toLowerCase().includes(customerSearchQuery) ||
+                            (c.email || '').toLowerCase().includes(customerSearchQuery) ||
+                            (c.phone || '').toLowerCase().includes(customerSearchQuery);
+        const matchesStatus = customerFilterStatus === 'all' || (c.status || 'active') === customerFilterStatus;
+        return matchesSearch && matchesStatus;
+    });
+
+    renderCustomers();
+}
+
+function renderCustomers() {
+    const tbody = document.getElementById('customers-tbody');
+    if (!tbody) return;
+
+    const totalItems = filteredCustomers.length;
+    const totalPages = Math.ceil(totalItems / customerPageSize);
+    const start = (customerCurrentPage - 1) * customerPageSize;
+    const end = start + customerPageSize;
+    const paginatedItems = filteredCustomers.slice(start, end);
+
+    if (paginatedItems.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">کاربری یافت نشد.</td></tr>';
+    } else {
+        tbody.innerHTML = paginatedItems.map(c => `
+            <tr>
+                <td>${c.displayName || 'نامشخص'}</td>
+                <td>${c.email || 'بدون ایمیل'}</td>
+                <td>${c.phone || 'ثبت نشده'}</td>
+                <td>${c.createdAt ? new Date(c.createdAt.seconds * 1000).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
+                <td><span class="status-badge ${c.status || 'active'}">${(c.status || 'active') === 'active' ? 'فعال' : 'غیرفعال'}</span></td>
+                <td>
+                    <div class="actions">
+                        <button class="btn-icon btn-edit" title="ویرایش" onclick="alert('ویرایش کاربر بزودی...')"><i class="fa-solid fa-user-pen"></i></button>
+                        <button class="btn-icon btn-delete" title="غیرفعال‌سازی" onclick="toggleUserStatus('${c.id}', '${c.status || 'active'}')"><i class="fa-solid fa-user-slash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Update Pagination UI
+    const pageStartEl = document.getElementById('customer-page-start');
+    const pageEndEl = document.getElementById('customer-page-end');
+    const totalItemsEl = document.getElementById('customer-total-items');
+    const currentPageEl = document.getElementById('customer-current-page');
+    const prevBtn = document.getElementById('customer-prev-page');
+    const nextBtn = document.getElementById('customer-next-page');
+
+    if (pageStartEl) pageStartEl.innerText = (totalItems > 0 ? start + 1 : 0).toLocaleString('fa-IR');
+    if (pageEndEl) pageEndEl.innerText = Math.min(end, totalItems).toLocaleString('fa-IR');
+    if (totalItemsEl) totalItemsEl.innerText = totalItems.toLocaleString('fa-IR');
+    if (currentPageEl) currentPageEl.innerText = customerCurrentPage.toLocaleString('fa-IR');
+
+    if (prevBtn) prevBtn.disabled = customerCurrentPage === 1;
+    if (nextBtn) nextBtn.disabled = customerCurrentPage === totalPages || totalPages === 0;
+}
+
+window.changeCustomerPage = (direction) => {
+    customerCurrentPage += direction;
+    renderCustomers();
+};
+
+window.toggleUserStatus = async (id, currentStatus) => {
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    if (confirm(`آیا از ${newStatus === 'active' ? 'فعال‌سازی' : 'غیرفعال‌سازی'} این کاربر اطمینان دارید؟`)) {
+        try {
+            await updateDoc(doc(db, "users", id), { status: newStatus });
+        } catch (error) {
+            alert('خطا در بروزرسانی وضعیت: ' + error.message);
+        }
+    }
+};
+
+window.exportCustomersToCSV = () => {
+    if (filteredCustomers.length === 0) return alert('لیست کاربران خالی است');
+    let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+    csvContent += "نام,ایمیل,تلفن,تاریخ عضویت,وضعیت\n";
+    filteredCustomers.forEach(c => {
+        const row = [
+            c.displayName || 'نامشخص',
+            c.email || '',
+            c.phone || '',
+            c.createdAt ? new Date(c.createdAt.seconds * 1000).toLocaleDateString('fa-IR') : '',
+            (c.status || 'active') === 'active' ? 'فعال' : 'غیرفعال'
+        ].join(",");
+        csvContent += row + "\n";
+    });
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `delcake-customers.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 };
 
 // Gallery Logic

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل کاربری دل کیک</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&family=Lalezar&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e8789a;
+            --secondary: #6b3d2a;
+            --cream: #fdf6f0;
+            --accent: #f8d7da;
+            --text: #4a2c21;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: var(--cream);
+            margin: 0;
+            color: var(--text);
+        }
+
+        .user-header {
+            background: var(--white);
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background: white;
+        }
+
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .logo-section img { width: 50px; }
+        .logo-section h1 { font-family: 'Lalezar'; color: var(--secondary); margin: 0; font-size: 1.5rem; }
+
+        .user-nav { display: flex; gap: 20px; }
+        .btn-logout {
+            color: #ff4757;
+            text-decoration: none;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, var(--primary) 0%, #d66183 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .welcome-text h2 { margin: 0 0 10px 0; font-family: 'Lalezar'; font-size: 2rem; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--secondary);
+            border-bottom: 2px solid var(--cream);
+            padding-bottom: 10px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+        }
+
+        .empty-state i { font-size: 3rem; margin-bottom: 10px; opacity: 0.3; }
+    </style>
+</head>
+<body>
+    <header class="user-header">
+        <div class="logo-section">
+            <img src="../images/logo/sweet-.png" alt="Del Cake">
+            <h1>پنل کاربری دل کیک</h1>
+        </div>
+        <div class="user-nav">
+            <span id="user-display-name">کاربر مهمان</span>
+            <a onclick="handleLogout()" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> خروج</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-card">
+            <div class="welcome-text">
+                <h2 id="welcome-msg">سلام! خوش آمدی</h2>
+                <p>در این بخش می‌توانید سفارشات و دوره‌های خود را مدیریت کنید.</p>
+            </div>
+            <i class="fa-solid fa-cookie-bite" style="font-size: 4rem; opacity: 0.5;"></i>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3><i class="fa-solid fa-basket-shopping"></i> سفارشات من</h3>
+                <div id="orders-list" class="empty-state">
+                    <i class="fa-solid fa-box-open"></i>
+                    <p>هنوز سفارشی ثبت نکرده‌اید</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><i class="fa-solid fa-graduation-cap"></i> دوره‌های من</h3>
+                <div id="courses-list" class="empty-state">
+                    <i class="fa-solid fa-book-open"></i>
+                    <p>در دوره‌ای ثبت‌نام نکرده‌اید</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

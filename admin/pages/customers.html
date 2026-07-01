@@ -1,1 +1,64 @@
-<section class='content-section'><h2>مدیریت customers</h2><p>این بخش در حال توسعه است.</p></section>
+<section class="content-section">
+    <div class="section-header">
+        <h2>مدیریت کاربران و مشتریان</h2>
+        <div class="header-actions">
+            <button class="btn-secondary" onclick="exportCustomersToCSV()">
+                <i class="fa-solid fa-file-export"></i>
+                خروجی لیست
+            </button>
+        </div>
+    </div>
+
+    <!-- Filters & Search -->
+    <div class="card filters-card">
+        <div class="filter-row">
+            <div class="search-box">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="customer-search" placeholder="جستجوی نام، ایمیل یا شماره تماس..." oninput="handleCustomerSearch(this.value)">
+            </div>
+            <div class="filter-group">
+                <select id="filter-customer-status" onchange="handleCustomerFilter()">
+                    <option value="all">همه وضعیت‌ها</option>
+                    <option value="active">فعال</option>
+                    <option value="inactive">غیرفعال</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customers Table -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>نام مشتری</th>
+                    <th>ایمیل</th>
+                    <th>شماره تماس</th>
+                    <th>تاریخ عضویت</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="customers-tbody">
+                <tr><td colspan="6" style="text-align:center">در حال بارگذاری...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container">
+        <div class="pagination-info">
+            نمایش <span id="customer-page-start">0</span> تا <span id="customer-page-end">0</span> از <span id="customer-total-items">0</span> کاربر
+        </div>
+        <div class="pagination-controls">
+            <button class="page-btn" id="customer-prev-page" onclick="changeCustomerPage(-1)"><i class="fa-solid fa-chevron-right"></i></button>
+            <span id="customer-current-page">۱</span>
+            <button class="page-btn" id="customer-next-page" onclick="changeCustomerPage(1)"><i class="fa-solid fa-chevron-left"></i></button>
+        </div>
+    </div>
+</section>
+
+<style>
+.status-badge.active { background: #2ed573; color: white; }
+.status-badge.inactive { background: #ff4757; color: white; }
+</style>
