@@ -1,1 +1,60 @@
-<section class='content-section'><h2>مدیریت profile</h2><p>این بخش در حال توسعه است.</p></section>
+<section class="content-section">
+    <div class="section-header">
+        <h2>تنظیمات پروفایل مدیریت</h2>
+    </div>
+
+    <div class="profile-grid">
+        <!-- Profile Info -->
+        <div class="card profile-card">
+            <div class="card-header">
+                <h3><i class="fa-solid fa-user-gear"></i> مشخصات کاربری</h3>
+            </div>
+            <form id="profile-form" onsubmit="saveAdminProfile(event)">
+                <div class="form-group">
+                    <label>ایمیل (غیر قابل تغییر)</label>
+                    <input type="email" name="email" readonly class="readonly-input">
+                </div>
+                <div class="form-group">
+                    <label>نام نمایش</label>
+                    <input type="text" name="displayName" placeholder="مدیریت دل‌کیک">
+                </div>
+                <div class="form-group">
+                    <label>شماره تماس</label>
+                    <input type="tel" name="phone" placeholder="۰۹۱۲۰۰۰۰۰۰۰">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">بروزرسانی مشخصات</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Security -->
+        <div class="card profile-card">
+            <div class="card-header">
+                <h3><i class="fa-solid fa-shield-halved"></i> امنیت و تغییر رمز عبور</h3>
+            </div>
+            <form id="password-form" onsubmit="changeAdminPassword(event)">
+                <div class="form-group">
+                    <label>رمز عبور جدید</label>
+                    <input type="password" name="newPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>تکرار رمز عبور جدید</label>
+                    <input type="password" name="confirmPassword" required minlength="6">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-secondary">تغییر رمز عبور</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<style>
+.profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; margin-top: 20px; }
+.profile-card { padding: 25px; }
+.card-header { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+.card-header h3 { color: #6b3d2a; font-size: 1.1rem; }
+.readonly-input { background: #f5f5f5; cursor: not-allowed; }
+.form-actions { margin-top: 20px; display: flex; justify-content: flex-end; }
+</style>

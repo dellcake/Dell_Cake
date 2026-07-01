@@ -40,3 +40,15 @@
 127.0.0.1 - - [01/Jul/2026 13:22:22] "GET /admin/js/admin.js HTTP/1.1" 200 -
 127.0.0.1 - - [01/Jul/2026 13:22:22] "GET /admin/js/auth-guard.js HTTP/1.1" 200 -
 127.0.0.1 - - [01/Jul/2026 13:22:22] "GET /admin/css/admin.css HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 15:18:04] "GET /admin/admin.html HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 15:18:04] "GET /admin/css/admin.css HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 15:18:04] "GET /admin/js/admin.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 15:18:04] "GET /admin/js/auth-guard.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 15:18:04] "GET /js/supabase-client.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 15:18:04] "GET /js/supabase-auth.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 15:18:04] "GET /admin/js/config.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 15:18:04] "GET /js/supabase-config.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 15:18:05] "GET /admin/login.html HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 15:18:05] "GET /admin/css/login.css HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 15:18:05] "GET /images/logo/sweet-.png HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 15:18:05] "GET /admin/js/login.js HTTP/1.1" 200 -
