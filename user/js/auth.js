@@ -1,49 +1,36 @@
-import { db } from "../../js/firebase-db.js";
-import { auth } from "../../js/firebase-auth.js";
-import {
-    GoogleAuthProvider,
-    signInWithPopup,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { supabase } from "../../js/supabase-client.js";
+import { signIn, signUp, signInWithGoogle, onAuthStateChange } from "../../js/supabase-auth.js";
 
 const googleBtn = document.getElementById('google-login');
 const emailBtn = document.getElementById('email-auth');
 
 // Protect the login page if already logged in
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // Double check it's not the admin accessing customer panel (or let them, but usually they stay in admin)
+onAuthStateChange((event, session) => {
+    if (session) {
         window.location.replace('panel.html');
     }
 });
 
-async function saveUserToFirestore(user) {
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
-
-    if (!userSnap.exists()) {
-        await setDoc(userRef, {
-            displayName: user.displayName || 'مشتری جدید',
+async function saveProfile(user) {
+    // In Supabase, we usually use triggers to create profiles.
+    // But we can also do it manually for extra safety during migration.
+    const { error } = await supabase
+        .from('profiles')
+        .upsert({
+            id: user.id,
+            display_name: user.user_metadata.display_name || user.user_metadata.full_name || 'مشتری جدید',
             email: user.email,
-            photoURL: user.photoURL || '',
-            status: 'active',
-            createdAt: serverTimestamp(),
-            lastLogin: serverTimestamp()
-        });
-    } else {
-        await setDoc(userRef, { lastLogin: serverTimestamp() }, { merge: true });
-    }
+            updated_at: new Date()
+        }, { onConflict: 'id' });
+
+    if (error) console.error("Error saving profile", error);
 }
 
 googleBtn.addEventListener('click', async () => {
-    const provider = new GoogleAuthProvider();
     try {
-        const result = await signInWithPopup(auth, provider);
-        await saveUserToFirestore(result.user);
-        window.location.replace('panel.html');
+        const { error } = await signInWithGoogle();
+        if (error) throw error;
+        // Redirect is handled by Supabase OAuth
     } catch (error) {
         console.error("Google login failed", error);
         alert("خطا در ورود با گوگل: " + error.message);
@@ -57,24 +44,32 @@ emailBtn.addEventListener('click', async () => {
     if (!email || !password) return alert('لطفا ایمیل و رمز عبور را وارد کنید');
 
     try {
-        // Try Login
-        const result = await signInWithEmailAndPassword(auth, email, password);
-        await saveUserToFirestore(result.user);
-        window.location.replace('panel.html');
-    } catch (error) {
-        if (error.code === 'auth/user-not-found') {
-            // Try Signup
-            try {
-                const result = await createUserWithEmailAndPassword(auth, email, password);
-                await saveUserToFirestore(result.user);
-                window.location.replace('panel.html');
-            } catch (signupError) {
-                alert("خطا در ایجاد حساب: " + signupError.message);
+        // 1. Try Login
+        const { data, error: signInError } = await signIn(email, password);
+
+        if (signInError) {
+            // 2. If login fails, try Signup (Simplified flow for Dell Cake)
+            if (signInError.status === 400 || signInError.message.includes("Invalid login credentials")) {
+                const { data: signUpData, error: signUpError } = await signUp(email, password, 'مشتری جدید', '');
+
+                if (signUpError) {
+                    throw signUpError;
+                }
+
+                if (signUpData.user) {
+                    await saveProfile(signUpData.user);
+                    alert('حساب کاربری با موفقیت ایجاد شد. لطفا ایمیل خود را تایید کنید (در صورت فعال بودن)');
+                    window.location.replace('panel.html');
+                }
+            } else {
+                throw signInError;
             }
-        } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
-            alert('ایمیل یا رمز عبور اشتباه است');
-        } else {
-            alert("خطا در ورود: " + error.message);
+        } else if (data.user) {
+            await saveProfile(data.user);
+            window.location.replace('panel.html');
         }
+    } catch (error) {
+        console.error("Auth process failed", error);
+        alert("خطا در ورود/ثبت‌نام: " + error.message);
     }
 });
