@@ -80,43 +80,81 @@ CREATE TABLE IF NOT EXISTS public.gallery (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- 6. Blog Posts
+CREATE TABLE IF NOT EXISTS public.blog (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    title TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    content TEXT,
+    excerpt TEXT,
+    image_url TEXT,
+    status TEXT DEFAULT 'published' CHECK (status IN ('published', 'draft')),
+    author_name TEXT DEFAULT 'مدیریت دل‌کیک',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 7. Contact Messages
+CREATE TABLE IF NOT EXISTS public.contact_messages (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT,
+    phone TEXT,
+    subject TEXT,
+    message TEXT NOT NULL,
+    status TEXT DEFAULT 'unread' CHECK (status IN ('unread', 'read', 'replied')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 8. User Course Enrollments
+CREATE TABLE IF NOT EXISTS public.user_courses (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
+    course_id UUID REFERENCES public.courses ON DELETE CASCADE NOT NULL,
+    enrolled_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    UNIQUE(user_id, course_id)
+);
+
 -- Row Level Security (RLS) Policies
 
--- Profiles: Users can view and edit their own profiles
+-- Profiles Policies
 CREATE POLICY "Users can view own profile" ON public.profiles FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
-
--- Site Settings: Everyone can read, only admins can write
-CREATE POLICY "Anyone can read site settings" ON public.site_settings FOR SELECT USING (true);
-
--- Courses: Everyone can read published, only admins can manage
-CREATE POLICY "Anyone can read published courses" ON public.courses FOR SELECT USING (status = 'published');
-
--- Orders: Users can see their own orders, admins see all
-CREATE POLICY "Users can see own orders" ON public.orders FOR SELECT USING (auth.uid() = user_id);
-
--- Gallery: Everyone can read, only admins can manage
-CREATE POLICY "Anyone can view gallery" ON public.gallery FOR SELECT USING (true);
-
--- Admin Access: (We will define a way to identify admins, e.g., by email or a special metadata/role)
--- Admin Access Policies (Identifying admin by email: sobhanrahimisrj@gmail.com)
-
--- 1. Profiles Admin Policy
 CREATE POLICY "Admins have full access to profiles" ON public.profiles
 FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
 
--- 2. Site Settings Admin Policy
+-- Site Settings Policies
+CREATE POLICY "Anyone can read site settings" ON public.site_settings FOR SELECT USING (true);
 CREATE POLICY "Admins have full access to site settings" ON public.site_settings
 FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
 
--- 3. Courses Admin Policy
+-- Courses Policies
+CREATE POLICY "Anyone can read published courses" ON public.courses FOR SELECT USING (status = 'published');
 CREATE POLICY "Admins have full access to courses" ON public.courses
 FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
 
--- 4. Orders Admin Policy
+-- Orders Policies
+CREATE POLICY "Users can see own orders" ON public.orders FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Admins have full access to orders" ON public.orders
 FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
 
--- 5. Gallery Admin Policy
+-- Gallery Policies
+CREATE POLICY "Anyone can view gallery" ON public.gallery FOR SELECT USING (true);
 CREATE POLICY "Admins have full access to gallery" ON public.gallery
+FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+
+-- Blog Policies
+CREATE POLICY "Anyone can read published blog posts" ON public.blog FOR SELECT USING (status = 'published');
+CREATE POLICY "Admins have full access to blog" ON public.blog
+FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+
+-- Contact Messages Policies
+CREATE POLICY "Anyone can insert contact messages" ON public.contact_messages FOR INSERT WITH CHECK (true);
+CREATE POLICY "Admins have full access to contact messages" ON public.contact_messages
+FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+
+-- User Courses Policies
+CREATE POLICY "Users can see their own enrollments" ON public.user_courses
+FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Admins have full access to user courses" ON public.user_courses
 FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');

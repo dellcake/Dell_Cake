@@ -52,3 +52,10 @@
 127.0.0.1 - - [01/Jul/2026 15:18:05] "GET /admin/css/login.css HTTP/1.1" 200 -
 127.0.0.1 - - [01/Jul/2026 15:18:05] "GET /images/logo/sweet-.png HTTP/1.1" 200 -
 127.0.0.1 - - [01/Jul/2026 15:18:05] "GET /admin/js/login.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 16:28:07] "GET /user/panel.html HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 16:28:07] "GET /admin/css/admin.css HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 16:28:07] "GET /user/js/dashboard.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 16:28:07] "GET /images/logo/sweet-.png HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 16:28:07] "GET /js/supabase-client.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 16:28:07] "GET /js/supabase-auth.js HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jul/2026 16:28:07] "GET /js/supabase-config.js HTTP/1.1" 200 -
