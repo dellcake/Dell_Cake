@@ -1,1 +1,111 @@
-<section class='content-section'><h2>مدیریت blog</h2><p>این بخش در حال توسعه است.</p></section>
+<section class="content-section">
+    <div class="section-header">
+        <h2>مدیریت مقالات (بلاگ)</h2>
+        <div class="header-actions">
+            <button class="add-btn" onclick="openBlogModal()">
+                <i class="fa-solid fa-plus"></i>
+                افزودن مقاله جدید
+            </button>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card filters-card">
+        <div class="filter-row">
+            <div class="search-box">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="blog-search" placeholder="جستجوی در مقالات..." oninput="handleBlogSearch(this.value)">
+            </div>
+            <div class="filter-group">
+                <select id="filter-blog-status" onchange="handleBlogFilter()">
+                    <option value="all">همه وضعیت‌ها</option>
+                    <option value="published">منتشر شده</option>
+                    <option value="draft">پیش‌نویس</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog Table -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>تصویر</th>
+                    <th>عنوان مقاله</th>
+                    <th>نویسنده</th>
+                    <th>تاریخ انتشار</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="blog-tbody">
+                <tr><td colspan="6" style="text-align:center">در حال بارگذاری...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Blog Modal -->
+<div id="blog-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="blog-modal-title">افزودن مقاله جدید</h3>
+            <button class="close-btn" onclick="closeBlogModal()">&times;</button>
+        </div>
+        <form id="blog-form" onsubmit="saveBlogPost(event)">
+            <input type="hidden" name="blogId">
+            <input type="hidden" name="imageUrl">
+
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label>عنوان مقاله</label>
+                    <input type="text" name="title" required oninput="generateBlogSlug(this.value)">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>اسلاگ (URL)</label>
+                    <input type="text" name="slug" required placeholder="example-post-title">
+                </div>
+
+                <div class="form-group">
+                    <label>نویسنده</label>
+                    <input type="text" name="author" value="مدیریت دل‌کیک">
+                </div>
+
+                <div class="form-group">
+                    <label>وضعیت</label>
+                    <select name="status">
+                        <option value="published">منتشر شده</option>
+                        <option value="draft">پیش‌نویس</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>خلاصه مقاله</label>
+                    <textarea name="excerpt" rows="2"></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>محتوای کامل (HTML)</label>
+                    <textarea name="content" rows="10" required></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>تصویر شاخص</label>
+                    <div class="image-upload-box" onclick="document.getElementById('blog-image-input').click()">
+                        <input type="file" id="blog-image-input" hidden accept="image/*" onchange="previewBlogImage(event)">
+                        <div id="blog-image-preview" class="image-preview">
+                            <span>انتخاب تصویر</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeBlogModal()">انصراف</button>
+                <button type="submit" id="save-blog-btn" class="btn-primary">ذخیره مقاله</button>
+            </div>
+        </form>
+    </div>
+</div>

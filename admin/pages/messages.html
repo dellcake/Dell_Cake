@@ -1,1 +1,66 @@
-<section class='content-section'><h2>مدیریت messages</h2><p>این بخش در حال توسعه است.</p></section>
+<section class="content-section">
+    <div class="section-header">
+        <h2>مدیریت پیام‌های تماس</h2>
+    </div>
+
+    <!-- Filters -->
+    <div class="card filters-card">
+        <div class="filter-row">
+            <div class="search-box">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="message-search" placeholder="جستجو در پیام‌ها..." oninput="handleMessageSearch(this.value)">
+            </div>
+            <div class="filter-group">
+                <select id="filter-message-status" onchange="handleMessageFilter()">
+                    <option value="all">همه وضعیت‌ها</option>
+                    <option value="unread">خوانده نشده</option>
+                    <option value="read">خوانده شده</option>
+                    <option value="replied">پاسخ داده شده</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages List -->
+    <div class="messages-container" id="messages-list">
+        <div class="loader-wrapper"><div class="loader"></div></div>
+    </div>
+</section>
+
+<!-- Message Detail Modal -->
+<div id="message-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>جزئیات پیام</h3>
+            <button class="close-btn" onclick="closeMessageModal()">&times;</button>
+        </div>
+        <div id="message-detail-content" class="order-details-grid">
+            <!-- Dynamic Content -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn-delete" onclick="deleteCurrentMessage()"><i class="fa-solid fa-trash"></i> حذف پیام</button>
+            <div class="modal-actions-right">
+                <button class="btn-secondary" onclick="closeMessageModal()">بستن</button>
+                <select id="update-message-status" class="status-select" onchange="updateCurrentMessageStatus(this.value)">
+                    <option value="unread">خوانده نشده</option>
+                    <option value="read">خوانده شده</option>
+                    <option value="replied">پاسخ داده شده</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.messages-container { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+.message-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-right: 5px solid #eee; transition: 0.3s; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.message-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
+.message-card.unread { border-right-color: #e8789a; background: #fff9fa; }
+.message-card.read { border-right-color: #3498db; }
+.message-card.replied { border-right-color: #2ecc71; }
+
+.msg-info h4 { color: #6b3d2a; margin-bottom: 5px; }
+.msg-info p { color: #888; font-size: 0.9rem; }
+.msg-meta { text-align: left; }
+.msg-date { color: #aaa; font-size: 0.8rem; display: block; margin-bottom: 8px; }
+</style>

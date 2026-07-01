@@ -1,6 +1,6 @@
 import { ADMIN_CONFIG } from "./config.js";
 import { supabase } from "../../js/supabase-client.js";
-import { signOut as supabaseSignOut } from "../../js/supabase-auth.js";
+import { signOut as supabaseSignOut, updatePassword, updateProfile as supabaseUpdateProfile } from "../../js/supabase-auth.js";
 
 // Layout Loader
 async function loadComponent(id, path) {
@@ -36,6 +36,19 @@ let orderFilterStatus = 'all';
 let orderSortOrder = 'newest';
 let orderPageSize = 10;
 let orderCurrentPage = 1;
+
+// Blog State
+let blogPosts = [];
+let filteredBlog = [];
+let blogSearchQuery = '';
+let blogFilterStatus = 'all';
+
+// Messages State
+let contactMessages = [];
+let filteredMessages = [];
+let messageSearchQuery = '';
+let messageFilterStatus = 'all';
+let currentMessageId = null;
 
 async function clearListeners() {
     for (const unsub of unsubscribers) {
@@ -106,6 +119,12 @@ function initViewLogic(view) {
         loadCustomers();
     } else if (view === 'Settings') {
         loadSettings();
+    } else if (view === 'Blog') {
+        loadBlog();
+    } else if (view === 'Messages') {
+        loadMessages();
+    } else if (view === 'Profile') {
+        loadProfile();
     }
 }
 
@@ -1244,6 +1263,420 @@ window.updateOrderStatus = async (id, newStatus) => {
         if (error) throw error;
     } catch (error) {
         alert('خطا در بروزرسانی وضعیت: ' + error.message);
+    }
+};
+
+// Blog Logic
+async function loadBlog() {
+    const { data, error } = await supabase
+        .from('blog')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching blog:', error);
+        return;
+    }
+
+    blogPosts = data;
+    applyBlogFilters();
+
+    // Subscribe
+    const sub = supabase
+        .channel('admin-blog')
+        .on('postgres_changes', { event: '*', table: 'blog' }, async () => {
+            const { data } = await supabase.from('blog').select('*').order('created_at', { ascending: false });
+            blogPosts = data;
+            applyBlogFilters();
+        })
+        .subscribe();
+
+    unsubscribers.push(() => supabase.removeChannel(sub));
+}
+
+window.handleBlogSearch = (query) => {
+    blogSearchQuery = query.toLowerCase();
+    applyBlogFilters();
+};
+
+window.handleBlogFilter = () => {
+    blogFilterStatus = document.getElementById('filter-blog-status').value;
+    applyBlogFilters();
+};
+
+function applyBlogFilters() {
+    filteredBlog = blogPosts.filter(p => {
+        const matchesSearch = p.title.toLowerCase().includes(blogSearchQuery) ||
+                            (p.excerpt && p.excerpt.toLowerCase().includes(blogSearchQuery));
+        const matchesStatus = blogFilterStatus === 'all' || p.status === blogFilterStatus;
+        return matchesSearch && matchesStatus;
+    });
+    renderBlog();
+}
+
+function renderBlog() {
+    const tbody = document.getElementById('blog-tbody');
+    if (!tbody) return;
+
+    if (filteredBlog.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">مقاله‌ای یافت نشد.</td></tr>';
+    } else {
+        tbody.innerHTML = filteredBlog.map(post => `
+            <tr>
+                <td><img src="${post.image_url || '../assets/placeholder.jpg'}" width="50" height="50" style="border-radius:8px; object-fit:cover;"></td>
+                <td>${post.title}</td>
+                <td>${post.author_name || 'مدیریت'}</td>
+                <td>${new Date(post.created_at).toLocaleDateString('fa-IR')}</td>
+                <td><span class="status-badge ${post.status}">${translateStatus(post.status)}</span></td>
+                <td>
+                    <div class="actions">
+                        <button class="btn-icon btn-edit" onclick="openBlogModal('${post.id}')"><i class="fa-solid fa-edit"></i></button>
+                        <button class="btn-icon btn-delete" onclick="deleteBlogPost('${post.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+}
+
+window.openBlogModal = (id = null) => {
+    const modal = document.getElementById('blog-modal');
+    const form = document.getElementById('blog-form');
+    if (!modal || !form) return;
+
+    if (id) {
+        const post = blogPosts.find(p => p.id === id);
+        form.blogId.value = post.id;
+        form.title.value = post.title;
+        form.slug.value = post.slug;
+        form.author.value = post.author_name;
+        form.status.value = post.status;
+        form.excerpt.value = post.excerpt || '';
+        form.content.value = post.content || '';
+        form.imageUrl.value = post.image_url || '';
+        updateBlogImagePreview(post.image_url);
+        document.getElementById('blog-modal-title').innerText = 'ویرایش مقاله';
+    } else {
+        form.reset();
+        form.blogId.value = '';
+        form.imageUrl.value = '';
+        updateBlogImagePreview(null);
+        document.getElementById('blog-modal-title').innerText = 'افزودن مقاله جدید';
+    }
+    modal.style.display = 'flex';
+};
+
+window.closeBlogModal = () => {
+    document.getElementById('blog-modal').style.display = 'none';
+};
+
+window.generateBlogSlug = (text) => {
+    const slug = text.toLowerCase()
+        .replace(/[^\w\u0600-\u06FF\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+    document.querySelector('#blog-form input[name="slug"]').value = slug;
+};
+
+window.previewBlogImage = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => updateBlogImagePreview(e.target.result);
+        reader.readAsDataURL(file);
+    }
+};
+
+function updateBlogImagePreview(src) {
+    const preview = document.getElementById('blog-image-preview');
+    if (!preview) return;
+    if (src) {
+        preview.innerHTML = `<img src="${src}" style="width:100%; height:100%; object-fit:cover; border-radius:10px;">`;
+    } else {
+        preview.innerHTML = '<span>انتخاب تصویر</span>';
+    }
+}
+
+window.saveBlogPost = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const saveBtn = document.getElementById('save-blog-btn');
+
+    saveBtn.disabled = true;
+    saveBtn.innerText = 'در حال ذخیره...';
+
+    try {
+        let imageUrl = form.imageUrl.value;
+        const imageFile = document.getElementById('blog-image-input').files[0];
+
+        if (imageFile) {
+            imageUrl = await uploadImage(imageFile, 'blog');
+        }
+
+        const blogData = {
+            title: form.title.value.trim(),
+            slug: form.slug.value.trim(),
+            author_name: form.author.value.trim(),
+            status: form.status.value,
+            excerpt: form.excerpt.value.trim(),
+            content: form.content.value.trim(),
+            image_url: imageUrl,
+            updated_at: new Date().toISOString()
+        };
+
+        if (form.blogId.value) {
+            const { error } = await supabase
+                .from('blog')
+                .update(blogData)
+                .eq('id', form.blogId.value);
+            if (error) throw error;
+        } else {
+            const { error } = await supabase
+                .from('blog')
+                .insert([{ ...blogData, created_at: new Date().toISOString() }]);
+            if (error) throw error;
+        }
+
+        closeBlogModal();
+    } catch (error) {
+        console.error('Error saving blog post:', error);
+        alert('خطا در ذخیره مقاله: ' + error.message);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerText = 'ذخیره مقاله';
+    }
+};
+
+window.deleteBlogPost = async (id) => {
+    if (!confirm('آیا از حذف این مقاله اطمینان دارید؟')) return;
+
+    try {
+        const { data: post } = await supabase.from('blog').select('image_url').eq('id', id).single();
+
+        if (post && post.image_url && post.image_url.includes('/storage/v1/object/public/blog/')) {
+            const path = post.image_url.split('/blog/').pop();
+            await supabase.storage.from('blog').remove([path]);
+        }
+
+        const { error } = await supabase.from('blog').delete().eq('id', id);
+        if (error) throw error;
+    } catch (error) {
+        alert('خطا در حذف مقاله: ' + error.message);
+    }
+};
+
+// Messages Logic
+async function loadMessages() {
+    const { data, error } = await supabase
+        .from('contact_messages')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching messages:', error);
+        return;
+    }
+
+    contactMessages = data;
+    applyMessageFilters();
+
+    // Subscribe
+    const sub = supabase
+        .channel('admin-messages')
+        .on('postgres_changes', { event: '*', table: 'contact_messages' }, async () => {
+            const { data } = await supabase.from('contact_messages').select('*').order('created_at', { ascending: false });
+            contactMessages = data;
+            applyMessageFilters();
+        })
+        .subscribe();
+
+    unsubscribers.push(() => supabase.removeChannel(sub));
+}
+
+window.handleMessageSearch = (query) => {
+    messageSearchQuery = query.toLowerCase();
+    applyMessageFilters();
+};
+
+window.handleMessageFilter = () => {
+    messageFilterStatus = document.getElementById('filter-message-status').value;
+    applyMessageFilters();
+};
+
+function applyMessageFilters() {
+    filteredMessages = contactMessages.filter(m => {
+        const matchesSearch = m.name.toLowerCase().includes(messageSearchQuery) ||
+                            (m.subject && m.subject.toLowerCase().includes(messageSearchQuery)) ||
+                            m.message.toLowerCase().includes(messageSearchQuery);
+        const matchesStatus = messageFilterStatus === 'all' || m.status === messageFilterStatus;
+        return matchesSearch && matchesStatus;
+    });
+    renderMessages();
+}
+
+function renderMessages() {
+    const list = document.getElementById('messages-list');
+    if (!list) return;
+
+    if (filteredMessages.length === 0) {
+        list.innerHTML = '<div class="card" style="text-align:center; padding:40px;">پیامی یافت نشد.</div>';
+    } else {
+        list.innerHTML = filteredMessages.map(msg => `
+            <div class="message-card ${msg.status}" onclick="openMessageModal('${msg.id}')">
+                <div class="msg-info">
+                    <h4>${msg.name}</h4>
+                    <p>${msg.subject || 'بدون موضوع'}</p>
+                </div>
+                <div class="msg-meta">
+                    <span class="msg-date">${new Date(msg.created_at).toLocaleString('fa-IR')}</span>
+                    <span class="status-badge ${msg.status}">${translateMessageStatus(msg.status)}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+function translateMessageStatus(status) {
+    const map = {
+        'unread': 'خوانده نشده',
+        'read': 'خوانده شده',
+        'replied': 'پاسخ داده شده'
+    };
+    return map[status] || status;
+}
+
+window.openMessageModal = async (id) => {
+    const msg = contactMessages.find(m => m.id === id);
+    if (!msg) return;
+
+    currentMessageId = id;
+    const modal = document.getElementById('message-modal');
+    const content = document.getElementById('message-detail-content');
+
+    content.innerHTML = `
+        <div class="detail-item">
+            <label>فرستنده</label>
+            <span>${msg.name}</span>
+        </div>
+        <div class="detail-item">
+            <label>ایمیل / تماس</label>
+            <span>${msg.email || ''} ${msg.phone || ''}</span>
+        </div>
+        <div class="detail-item">
+            <label>موضوع</label>
+            <span>${msg.subject || 'بدون موضوع'}</span>
+        </div>
+        <div class="detail-item">
+            <label>تاریخ ارسال</label>
+            <span>${new Date(msg.created_at).toLocaleString('fa-IR')}</span>
+        </div>
+        <div class="detail-item order-full-width">
+            <label>متن پیام</label>
+            <div style="background:#f9f9f9; padding:15px; border-radius:10px; margin-top:10px; white-space:pre-wrap;">${msg.message}</div>
+        </div>
+    `;
+
+    document.getElementById('update-message-status').value = msg.status;
+    modal.style.display = 'flex';
+
+    // Auto-mark as read if unread
+    if (msg.status === 'unread') {
+        await updateCurrentMessageStatus('read');
+    }
+};
+
+window.closeMessageModal = () => {
+    document.getElementById('message-modal').style.display = 'none';
+};
+
+window.updateCurrentMessageStatus = async (newStatus) => {
+    if (!currentMessageId) return;
+    try {
+        const { error } = await supabase
+            .from('contact_messages')
+            .update({ status: newStatus })
+            .eq('id', currentMessageId);
+        if (error) throw error;
+    } catch (error) {
+        console.error('Error updating message status:', error);
+    }
+};
+
+window.deleteCurrentMessage = async () => {
+    if (!currentMessageId || !confirm('آیا از حذف این پیام اطمینان دارید؟')) return;
+    try {
+        const { error } = await supabase
+            .from('contact_messages')
+            .delete()
+            .eq('id', currentMessageId);
+        if (error) throw error;
+        closeMessageModal();
+    } catch (error) {
+        alert('خطا در حذف پیام: ' + error.message);
+    }
+};
+
+// Profile Logic
+async function loadProfile() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const form = document.getElementById('profile-form');
+    if (form) {
+        form.email.value = user.email;
+        form.displayName.value = user.user_metadata?.display_name || '';
+        form.phone.value = user.user_metadata?.phone || '';
+    }
+}
+
+window.saveAdminProfile = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const saveBtn = form.querySelector('button[type="submit"]');
+
+    saveBtn.disabled = true;
+    saveBtn.innerText = 'در حال بروزرسانی...';
+
+    try {
+        const { error } = await supabaseUpdateProfile({
+            data: {
+                display_name: form.displayName.value.trim(),
+                phone: form.phone.value.trim()
+            }
+        });
+
+        if (error) throw error;
+        alert('پروفایل با موفقیت بروزرسانی شد');
+    } catch (error) {
+        alert('خطا در بروزرسانی پروفایل: ' + error.message);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerText = 'بروزرسانی مشخصات';
+    }
+};
+
+window.changeAdminPassword = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const saveBtn = form.querySelector('button[type="submit"]');
+
+    if (form.newPassword.value !== form.confirmPassword.value) {
+        return alert('رمز عبور جدید و تکرار آن مطابقت ندارند');
+    }
+
+    saveBtn.disabled = true;
+    saveBtn.innerText = 'در حال تغییر رمز...';
+
+    try {
+        const { error } = await updatePassword(form.newPassword.value);
+        if (error) throw error;
+        alert('رمز عبور با موفقیت تغییر کرد');
+        form.reset();
+    } catch (error) {
+        alert('خطا در تغییر رمز عبور: ' + error.message);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerText = 'تغییر رمز عبور';
     }
 };
 
