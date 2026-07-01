@@ -1,6 +1,8 @@
 import { ADMIN_CONFIG } from "./config.js";
 import { db } from "../../js/firebase-db.js";
 import { auth } from "../../js/firebase-auth.js";
+import { storage } from "../../js/firebase-storage.js";
+import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import {
     collection,
@@ -30,6 +32,15 @@ async function loadComponent(id, path) {
 // State
 let currentView = 'Dashboard';
 let unsubscribers = [];
+
+// Courses State
+let courses = [];
+let filteredCourses = [];
+let courseSearchQuery = '';
+let courseFilterCategory = 'all';
+let courseFilterStatus = 'all';
+let coursePageSize = 5;
+let courseCurrentPage = 1;
 
 function clearListeners() {
     unsubscribers.forEach(unsub => {
@@ -185,33 +196,99 @@ async function initDashboardChart() {
 }
 
 // Courses Logic
-let courses = [];
 function loadCourses() {
     const unsub = onSnapshot(collection(db, "courses"), (snapshot) => {
         courses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        const tbody = document.getElementById('courses-tbody');
-        if (!tbody) return;
-
-        if (courses.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">دوره ای یافت نشد.</td></tr>';
-        } else {
-            tbody.innerHTML = courses.map(course => `
-                <tr>
-                    <td><img src="${course.image || '../assets/placeholder.jpg'}" width="50" style="border-radius:8px"></td>
-                    <td>${course.title}</td>
-                    <td>${Number(course.price).toLocaleString('fa-IR')} تومان</td>
-                    <td>${course.level || 'متوسط'}</td>
-                    <td>
-                        <div class="actions">
-                            <button class="btn-icon btn-edit" onclick="openCourseModal('${course.id}')"><i class="fa-solid fa-edit"></i></button>
-                            <button class="btn-icon btn-delete" onclick="deleteCourse('${course.id}')"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
-        }
+        applyCourseFilters();
     });
     unsubscribers.push(unsub);
+}
+
+window.handleCourseSearch = (query) => {
+    courseSearchQuery = query.toLowerCase();
+    courseCurrentPage = 1;
+    applyCourseFilters();
+};
+
+window.handleCourseFilter = () => {
+    courseFilterCategory = document.getElementById('filter-category').value;
+    courseFilterStatus = document.getElementById('filter-status').value;
+    courseCurrentPage = 1;
+    applyCourseFilters();
+};
+
+function applyCourseFilters() {
+    filteredCourses = courses.filter(c => {
+        const matchesSearch = c.title.toLowerCase().includes(courseSearchQuery) ||
+                            (c.description && c.description.toLowerCase().includes(courseSearchQuery));
+        const matchesCategory = courseFilterCategory === 'all' || c.category === courseFilterCategory;
+        const matchesStatus = courseFilterStatus === 'all' || c.status === courseFilterStatus;
+        return matchesSearch && matchesCategory && matchesStatus;
+    });
+
+    renderCourses();
+}
+
+function renderCourses() {
+    const tbody = document.getElementById('courses-tbody');
+    if (!tbody) return;
+
+    // Pagination
+    const totalItems = filteredCourses.length;
+    const totalPages = Math.ceil(totalItems / coursePageSize);
+    const start = (courseCurrentPage - 1) * coursePageSize;
+    const end = start + coursePageSize;
+    const paginatedItems = filteredCourses.slice(start, end);
+
+    if (paginatedItems.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">دوره ای یافت نشد.</td></tr>';
+    } else {
+        tbody.innerHTML = paginatedItems.map(course => `
+            <tr>
+                <td><img src="${course.image || '../assets/placeholder.jpg'}" width="50" height="50" style="border-radius:8px; object-fit:cover;"></td>
+                <td>${course.title}</td>
+                <td>${Number(course.price).toLocaleString('fa-IR')} تومان</td>
+                <td>${translateCategory(course.category)}</td>
+                <td><span class="status-badge ${course.status || 'published'}">${translateStatus(course.status || 'published')}</span></td>
+                <td>
+                    <div class="actions">
+                        <button class="btn-icon btn-edit" onclick="openCourseModal('${course.id}')"><i class="fa-solid fa-edit"></i></button>
+                        <button class="btn-icon btn-delete" onclick="deleteCourse('${course.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Update Pagination UI
+    const pageStartEl = document.getElementById('page-start');
+    const pageEndEl = document.getElementById('page-end');
+    const totalItemsEl = document.getElementById('total-items');
+    const currentPageEl = document.getElementById('current-page');
+    const prevBtn = document.getElementById('prev-page');
+    const nextBtn = document.getElementById('next-page');
+
+    if (pageStartEl) pageStartEl.innerText = (totalItems > 0 ? start + 1 : 0).toLocaleString('fa-IR');
+    if (pageEndEl) pageEndEl.innerText = Math.min(end, totalItems).toLocaleString('fa-IR');
+    if (totalItemsEl) totalItemsEl.innerText = totalItems.toLocaleString('fa-IR');
+    if (currentPageEl) currentPageEl.innerText = courseCurrentPage.toLocaleString('fa-IR');
+
+    if (prevBtn) prevBtn.disabled = courseCurrentPage === 1;
+    if (nextBtn) nextBtn.disabled = courseCurrentPage === totalPages || totalPages === 0;
+}
+
+window.changePage = (direction) => {
+    courseCurrentPage += direction;
+    renderCourses();
+};
+
+function translateCategory(cat) {
+    const map = {
+        'cake': 'کیک',
+        'pastry': 'شیرینی',
+        'dessert': 'دسر'
+    };
+    return map[cat] || cat;
 }
 
 window.openCourseModal = (courseId = null) => {
@@ -219,49 +296,133 @@ window.openCourseModal = (courseId = null) => {
     const form = document.getElementById('course-form');
     if (!modal || !form) return;
 
+    // Reset Tabs
+    switchFormTab('basic');
+
     if (courseId) {
         const course = courses.find(c => c.id === courseId);
         form.courseId.value = course.id;
         form.title.value = course.title;
+        form.slug.value = course.slug || '';
+        form.category.value = course.category || 'cake';
         form.price.value = course.price;
+        form.discount.value = course.discount || 0;
         form.level.value = course.level || 'intermediate';
-        form.image.value = course.image || '';
+        form.status.value = course.status || 'published';
+        form.duration.value = course.duration || '';
+        form.imageUrl.value = course.image || '';
+        form.description.value = course.description || '';
         form.packageContent.value = Array.isArray(course.package) ? course.package.join('\n') : '';
+        form.seoTitle.value = course.seoTitle || '';
+        form.seoDescription.value = course.seoDescription || '';
+
+        updateImagePreview(course.image);
         document.getElementById('modal-title').innerText = 'ویرایش دوره';
     } else {
         form.reset();
         form.courseId.value = '';
+        updateImagePreview(null);
         document.getElementById('modal-title').innerText = 'افزودن دوره جدید';
     }
     modal.style.display = 'flex';
 };
 
+window.switchFormTab = (tabName) => {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+    document.querySelector(`.tab-btn[onclick*="'${tabName}'"]`).classList.add('active');
+};
+
+window.previewCourseImage = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => updateImagePreview(e.target.result);
+        reader.readAsDataURL(file);
+    }
+};
+
+function updateImagePreview(src) {
+    const preview = document.getElementById('image-preview');
+    if (!preview) return;
+    if (src) {
+        preview.innerHTML = `<img src="${src}" style="width:100%; height:100%; object-fit:cover; border-radius:10px;">`;
+    } else {
+        preview.innerHTML = '<span>پیش‌نمایش تصویر</span>';
+    }
+}
+
+async function uploadImage(file) {
+    const storageRef = ref(storage, `courses/${Date.now()}_${file.name}`);
+    const snapshot = await uploadBytes(storageRef, file);
+    return await getDownloadURL(snapshot.ref);
+}
+
 window.closeCourseModal = () => {
     document.getElementById('course-modal').style.display = 'none';
+};
+
+window.generateSlug = (text) => {
+    const slug = text.toLowerCase()
+        .replace(/[^\w\u0600-\u06FF\s-]/g, '') // Keep alphanumeric, persian chars, spaces, and hyphens
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+    document.querySelector('input[name="slug"]').value = slug;
 };
 
 window.saveCourse = async (event) => {
     event.preventDefault();
     const form = event.target;
-    const courseData = {
-        title: form.title.value,
-        price: Number(form.price.value),
-        level: form.level.value,
-        image: form.image.value,
-        package: form.packageContent.value.split('\n').filter(line => line.trim() !== ''),
-        updatedAt: new Date()
-    };
+    const saveBtn = document.getElementById('save-course-btn');
+
+    // Validation
+    if (!form.title.value.trim()) return alert('لطفا عنوان دوره را وارد کنید');
+    if (!form.slug.value.trim()) return alert('لطفا اسلاگ دوره را وارد کنید');
+
+    saveBtn.disabled = true;
+    saveBtn.innerText = 'در حال ذخیره...';
 
     try {
+        let imageUrl = form.imageUrl.value;
+        const imageFile = document.getElementById('course-image-input').files[0];
+
+        if (imageFile) {
+            imageUrl = await uploadImage(imageFile);
+        }
+
+        const courseData = {
+            title: form.title.value.trim(),
+            slug: form.slug.value.trim(),
+            category: form.category.value,
+            price: Number(form.price.value),
+            discount: Number(form.discount.value) || 0,
+            level: form.level.value,
+            status: form.status.value,
+            duration: form.duration.value.trim(),
+            image: imageUrl,
+            description: form.description.value.trim(),
+            package: form.packageContent.value.split('\n').map(l => l.trim()).filter(l => l !== ''),
+            seoTitle: form.seoTitle.value.trim(),
+            seoDescription: form.seoDescription.value.trim(),
+            updatedAt: new Date()
+        };
+
         if (form.courseId.value) {
             await updateDoc(doc(db, "courses", form.courseId.value), courseData);
         } else {
             courseData.createdAt = new Date();
             await addDoc(collection(db, "courses"), courseData);
         }
+
         closeCourseModal();
     } catch (error) {
+        console.error('Error saving course:', error);
         alert('خطا در ذخیره دوره: ' + error.message);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerText = 'ذخیره دوره';
     }
 };
 
@@ -309,7 +470,9 @@ function translateStatus(status) {
         'pending': 'در انتظار',
         'preparing': 'در حال پخت',
         'completed': 'تحویل شده',
-        'cancelled': 'لغو شده'
+        'cancelled': 'لغو شده',
+        'published': 'منتشر شده',
+        'draft': 'پیش‌نویس'
     };
     return map[status] || status;
 }
