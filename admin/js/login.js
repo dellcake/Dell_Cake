@@ -1,11 +1,15 @@
 import { ADMIN_CONFIG } from "./config.js";
 import { signIn, signInWithGoogle, signOut } from "../../js/supabase-auth.js";
+import { initGuestGuard } from "../../js/guards/guest-guard.js";
+
+// Initialize Guest Guard
+initGuestGuard();
 
 // Google Login
 document.getElementById("googleLogin").addEventListener("click", async () => {
     try {
         // Passing a relative path; supabase-auth.js helper will prepend the correct base URL
-        const redirectUrl = '/admin/admin.html';
+        const redirectUrl = '/admin/';
         const { error } = await signInWithGoogle(redirectUrl);
         if (error) throw error;
         // Redirect handled by OAuth
@@ -33,11 +37,11 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         const user = data.user;
 
         if (user.email === ADMIN_CONFIG.adminEmail) {
-            location.replace("admin.html");
+            location.replace("../");
         } else {
             alert("دسترسی محدود به مدیر است.");
             await signOut();
-            location.replace("login.html?error=unauthorized");
+            location.replace("./?error=unauthorized");
         }
     } catch (error) {
         console.error("Email Login Error:", error);

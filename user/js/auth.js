@@ -1,15 +1,12 @@
 import { supabase } from "../../js/supabase-client.js";
-import { signIn, signUp, signInWithGoogle, onAuthStateChange } from "../../js/supabase-auth.js";
+import { signIn, signUp, signInWithGoogle } from "../../js/supabase-auth.js";
+import { initGuestGuard } from "../../js/guards/guest-guard.js";
+
+// Initialize Guest Guard to redirect logged-in users away from login/register
+initGuestGuard();
 
 const googleBtn = document.getElementById('google-login');
 const emailBtn = document.getElementById('email-auth');
-
-// Protect the login page if already logged in
-onAuthStateChange((event, session) => {
-    if (session) {
-        window.location.replace('panel.html');
-    }
-});
 
 async function saveProfile(user) {
     // In Supabase, we usually use triggers to create profiles.
@@ -29,7 +26,7 @@ async function saveProfile(user) {
 googleBtn.addEventListener('click', async () => {
     try {
         // Passing a relative path; supabase-auth.js helper will prepend the correct base URL
-        const redirectUrl = '/user/panel.html';
+        const redirectUrl = '/user/';
         const { error } = await signInWithGoogle(redirectUrl);
         if (error) throw error;
         // Redirect is handled by Supabase OAuth
@@ -60,15 +57,15 @@ emailBtn.addEventListener('click', async () => {
 
                 if (signUpData.user) {
                     await saveProfile(signUpData.user);
-                    alert('حساب کاربری با موفقیت ایجاد شد. لطفا ایمیل خود را تایید کنید (در صورت فعال بودن)');
-                    window.location.replace('panel.html');
+                    alert('حساب کاربری با موفقیت ایجاد شد.');
+                    window.location.replace('../user/');
                 }
             } else {
                 throw signInError;
             }
         } else if (data.user) {
             await saveProfile(data.user);
-            window.location.replace('panel.html');
+            window.location.replace('../user/');
         }
     } catch (error) {
         console.error("Auth process failed", error);

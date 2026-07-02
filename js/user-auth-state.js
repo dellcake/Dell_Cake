@@ -1,24 +1,30 @@
 import { onAuthStateChange } from "./supabase-auth.js";
 import { ADMIN_CONFIG } from "../admin/js/config.js";
 
+/**
+ * Helper to get the correct base URL (handles GitHub Pages subfolders)
+ */
+function getBase() {
+    const path = window.location.pathname;
+    const parts = path.split('/');
+    const repo = parts[1];
+    if (window.location.hostname.includes('github.io') && repo && !['admin', 'user', 'login', 'register'].includes(repo)) {
+        return '/' + repo;
+    }
+    return '';
+}
+
 onAuthStateChange((event, session) => {
     const user = session?.user;
     const authText = document.getElementById('user-auth-text');
     const authLink = document.getElementById('user-auth-link');
     const adminLinks = document.querySelectorAll('.admin-link');
+    const base = getBase();
 
     if (user) {
-        // Determine correct path based on current location
-        const isSubDir = window.location.pathname.includes('/user/') ||
-                         window.location.pathname.includes('/admin/') ||
-                         window.location.pathname.includes('.html') && !window.location.pathname.includes('index.html');
-
-        const panelPath = isSubDir ? 'panel.html' : 'user/panel.html';
-        const loginPath = isSubDir ? 'login.html' : 'user/login.html';
-
         // Change "Login" to "My Panel"
         if (authText) authText.innerText = 'پنل کاربری من';
-        if (authLink) authLink.href = panelPath;
+        if (authLink) authLink.href = base + '/user/';
 
         // Show admin link if the logged in user is the admin
         if (user.email === ADMIN_CONFIG.adminEmail) {
@@ -27,12 +33,8 @@ onAuthStateChange((event, session) => {
             adminLinks.forEach(link => link.style.display = 'none');
         }
     } else {
-        const isSubDir = window.location.pathname.includes('/user/') ||
-                         window.location.pathname.includes('/admin/');
-        const loginPath = isSubDir ? 'login.html' : 'user/login.html';
-
         if (authText) authText.innerText = 'ورود / عضویت';
-        if (authLink) authLink.href = loginPath;
+        if (authLink) authLink.href = base + '/login/';
         adminLinks.forEach(link => link.style.display = 'none');
     }
 });

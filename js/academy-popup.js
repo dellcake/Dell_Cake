@@ -65,7 +65,7 @@ async function renderAcademyCourses() {
                         <p>${course.description ? course.description.substring(0, 80) + '...' : ''}</p>
                         <div class="course-footer">
                             <span class="price">${Number(course.price).toLocaleString('fa-IR')} تومان</span>
-                            <a href="user/login.html" class="buy-btn">مشاهده و ثبت‌نام</a>
+                            <a href="login/" class="buy-btn">مشاهده و ثبت‌نام</a>
                         </div>
                     </div>
                 </div>
