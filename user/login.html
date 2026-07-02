@@ -6,139 +6,15 @@
     <title>ورود / عضویت مشتریان - دل کیک</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&family=Lalezar&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
-    <style>
-        :root {
-            --primary: #e8789a;
-            --secondary: #6b3d2a;
-            --cream: #fdf6f0;
-            --accent: #f8d7da;
-            --white: #ffffff;
-            --text: #4a2c21;
-            --glass: rgba(255, 255, 255, 0.7);
-        }
-
-        body {
-            font-family: 'Vazirmatn', sans-serif;
-            background: linear-gradient(135deg, #fdf6f0 0%, #f8d7da 100%);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            overflow: hidden;
-        }
-
-        .login-container {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            padding: 40px;
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(107, 61, 42, 0.1);
-            width: 400px;
-            max-width: 90%;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .logo {
-            width: 100px;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-family: 'Lalezar', cursive;
-            color: var(--secondary);
-            margin-bottom: 10px;
-            font-size: 2rem;
-        }
-
-        p { color: var(--text); margin-bottom: 30px; }
-
-        .auth-methods { display: flex; flex-direction: column; gap: 15px; }
-
-        .btn-auth {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px;
-            border-radius: 12px;
-            border: none;
-            font-family: inherit;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-google {
-            background: white;
-            color: #444;
-            border: 1px solid #ddd;
-        }
-
-        .btn-google:hover { background: #f8f8f8; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-
-        .btn-email {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-email:hover { background: #d66183; transform: translateY(-2px); }
-
-        .divider {
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            color: #999;
-            font-size: 0.8rem;
-        }
-
-        .divider::before, .divider::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: #ddd;
-            margin: 0 10px;
-        }
-
-        .footer-link {
-            margin-top: 25px;
-            font-size: 0.9rem;
-        }
-
-        .footer-link a {
-            color: var(--secondary);
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .back-home {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: var(--secondary);
-            text-decoration: none;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
     <a href="../index.html" class="back-home"><i class="fa-solid fa-arrow-right"></i> بازگشت به سایت</a>
 
     <div class="login-container">
         <img src="../images/logo/sweet-.png" alt="Del Cake" class="logo">
-        <h1>خوش آمدید</h1>
-        <p>برای دسترسی به پنل کاربری خود وارد شوید</p>
+        <h1>ورود کاربران</h1>
+        <p>برای دسترسی به پنل کاربری و دوره‌های خود وارد شوید</p>
 
         <div class="auth-methods">
             <button id="google-login" class="btn-auth btn-google">
