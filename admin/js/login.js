@@ -4,7 +4,9 @@ import { signIn, signInWithGoogle, signOut } from "../../js/supabase-auth.js";
 // Google Login
 document.getElementById("googleLogin").addEventListener("click", async () => {
     try {
-        const { error } = await signInWithGoogle();
+        // Passing a relative path; supabase-auth.js helper will prepend the correct base URL
+        const redirectUrl = '/admin/admin.html';
+        const { error } = await signInWithGoogle(redirectUrl);
         if (error) throw error;
         // Redirect handled by OAuth
     } catch (error) {

@@ -28,12 +28,36 @@ export async function signIn(email, password) {
     return { data, error };
 }
 
+/**
+ * Helper to get the correct base URL (handles GitHub Pages subfolders)
+ */
+function getBaseURL() {
+    const path = window.location.pathname;
+    // If we are in a subfolder (like /Dell-Cake/), extract it
+    const repoName = path.split('/')[1];
+    const isGitHubPages = window.location.hostname.includes('github.io');
+
+    if (isGitHubPages && repoName && !['admin', 'user', 'index.html'].includes(repoName)) {
+        return `${window.location.origin}/${repoName}`;
+    }
+    return window.location.origin;
+}
+
 // 3. Sign In with Google
-export async function signInWithGoogle() {
+export async function signInWithGoogle(redirectTo = null) {
+    const baseUrl = getBaseURL();
+    const defaultRedirect = baseUrl + '/user/panel.html';
+
+    // Ensure redirectTo starts with the base URL if it's a relative path
+    let finalRedirect = redirectTo || defaultRedirect;
+    if (finalRedirect.startsWith('/')) {
+        finalRedirect = baseUrl + finalRedirect;
+    }
+
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: window.location.origin + '/user/panel.html'
+            redirectTo: finalRedirect
         }
     });
     return { data, error };

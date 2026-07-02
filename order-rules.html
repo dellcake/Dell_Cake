@@ -90,13 +90,14 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         تماس با ما
     </a>
 
-    <a href="#">
-
-    <i class="fas fa-user"></i>
-
-    ورود / عضویت
-
-</a>
+    <a href="user/login.html" id="user-auth-link">
+        <i class="fas fa-user"></i>
+        <span id="user-auth-text">ورود / عضویت</span>
+    </a>
+    <a href="admin/admin.html" class="admin-link" style="display: none;">
+        <i class="fas fa-chart-bar"></i>
+        پنل مدیریت
+    </a>
 
 </div>
 
@@ -265,6 +266,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 <div id="footer-container"></div>
 
 <script src="js/menu.js"></script>
+<script type="module" src="js/user-auth-state.js"></script>
+<script type="module" src="js/site-settings.js"></script>
 <script src="js/academy-popup.js"></script>
 <script src="js/load-components.js"></script>
 
