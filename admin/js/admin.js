@@ -146,6 +146,14 @@ async function loadDashboardData() {
 
     await updateDashboardStats();
 
+    // Total Messages
+    const { count: msgCount } = await supabase
+        .from('contact_messages')
+        .select('*', { count: 'exact', head: true });
+
+    const msgEl = document.getElementById('total-messages');
+    if (msgEl) msgEl.innerText = (msgCount || 0).toLocaleString('fa-IR');
+
     // 2. Load Chart
     initDashboardChart();
 }

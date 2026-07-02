@@ -84,8 +84,22 @@ export async function getCurrentUser() {
 }
 
 export async function getSession() {
-    const { data: { session } } = await supabase.api.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
     return session;
+}
+
+// Update Profile
+export async function updateProfile(options) {
+    const { data, error } = await supabase.auth.updateUser(options);
+    return { data, error };
+}
+
+// Update Password
+export async function updatePassword(newPassword) {
+    const { data, error } = await supabase.auth.updateUser({
+        password: newPassword
+    });
+    return { data, error };
 }
 
 // 6. Listen for Auth State Changes
