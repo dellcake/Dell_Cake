@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود / عضویت مشتریان - دل کیک</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&family=Lalezar&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../user/css/login.css">
+</head>
+<body>
+    <a href="../index.html" class="back-home"><i class="fa-solid fa-arrow-right"></i> بازگشت به سایت</a>
+
+    <div class="login-container">
+        <img src="../../images/logo/sweet-.png" alt="Del Cake" class="logo">
+        <h1>عضویت در سایت</h1>
+        <p>به خانواده بزرگ هنرجویان دل‌کیک بپیوندید</p>
+
+        <div class="auth-methods">
+            <button id="google-login" class="btn-auth btn-google">
+                <img src="https://cdn.cdnlogo.com/logos/g/35/google-icon.svg" width="20">
+                عضویت سریع با گوگل
+            </button>
+
+            <div class="divider">یا</div>
+
+            <div style="text-align: right; display: flex; flex-direction: column; gap: 10px;">
+                <input type="email" id="email" placeholder="ایمیل شما" style="padding: 12px; border-radius: 10px; border: 1px solid #ddd;">
+                <input type="password" id="password" placeholder="رمز عبور دلخواه" style="padding: 12px; border-radius: 10px; border: 1px solid #ddd;">
+                <button id="email-auth" class="btn-auth btn-email">ثبت‌نام با ایمیل</button>
+            </div>
+        </div>
+
+        <div class="footer-link">
+            قبلاً ثبت‌نام کرده‌اید؟ <a href="../login/">وارد شوید</a>
+        </div>
+    </div>
+
+    <script type="module" src="../user/js/auth.js"></script>
+</body>
+</html>

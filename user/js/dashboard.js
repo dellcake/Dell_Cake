@@ -44,7 +44,7 @@ window.switchUserTab = (tabName, el = null) => {
 
 onAuthStateChange(async (event, session) => {
     if (event === 'SIGNED_OUT' || !session) {
-        window.location.replace('login.html');
+        // Redirection handled by Guard
         return;
     }
 
@@ -225,7 +225,6 @@ function translateStatus(status) {
 
 window.handleLogout = async () => {
     if (confirm('آیا می‌خواهید از حساب خود خارج شوید؟')) {
-        await signOut();
-        window.location.replace('login.html');
+        await signOut('/login/');
     }
 };

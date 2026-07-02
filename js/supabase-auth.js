@@ -46,7 +46,7 @@ function getBaseURL() {
 // 3. Sign In with Google
 export async function signInWithGoogle(redirectTo = null) {
     const baseUrl = getBaseURL();
-    const defaultRedirect = baseUrl + '/user/panel.html';
+    const defaultRedirect = baseUrl + '/user/';
 
     // Ensure redirectTo starts with the base URL if it's a relative path
     let finalRedirect = redirectTo || defaultRedirect;
@@ -64,8 +64,16 @@ export async function signInWithGoogle(redirectTo = null) {
 }
 
 // 4. Sign Out
-export async function signOut() {
+export async function signOut(redirectTo = null) {
     const { error } = await supabase.auth.signOut();
+    if (!error && redirectTo) {
+        const baseUrl = getBaseURL();
+        let finalRedirect = redirectTo;
+        if (finalRedirect.startsWith('/')) {
+            finalRedirect = baseUrl + finalRedirect;
+        }
+        window.location.replace(finalRedirect);
+    }
     return { error };
 }
 
