@@ -1,6 +1,7 @@
 import { ADMIN_CONFIG } from "./config.js";
 import { supabase } from "../../js/supabase-client.js";
 import { signOut as supabaseSignOut, updatePassword, updateProfile as supabaseUpdateProfile } from "../../js/supabase-auth.js";
+import { loadDashboardData } from "./modules/dashboard.js";
 
 // Layout Loader
 async function loadComponent(id, path) {
@@ -64,7 +65,13 @@ window.navigateTo = async (viewName) => {
     currentView = viewName;
     clearListeners();
     const mainView = document.getElementById('main-view');
-    mainView.innerHTML = '<div class="loader-wrapper"><div class="loader"></div></div>';
+
+    // Only show full-page loader if NOT navigating to dashboard (it has skeletons)
+    if (viewName !== 'Dashboard') {
+        mainView.innerHTML = '<div class="loader-wrapper"><div class="loader"></div></div>';
+    } else {
+        mainView.innerHTML = ''; // Clear for dashboard to load its own template
+    }
 
     // Update active state in sidebar
     document.querySelectorAll('.sidebar-nav li').forEach(li => {
@@ -108,7 +115,7 @@ function getTranslate(key) {
 
 function initViewLogic(view) {
     if (view === 'Dashboard') {
-        loadDashboardData();
+        loadDashboardData(unsubscribers);
     } else if (view === 'Courses') {
         loadCourses();
     } else if (view === 'Orders') {
@@ -126,127 +133,6 @@ function initViewLogic(view) {
     } else if (view === 'Profile') {
         loadProfile();
     }
-}
-
-// Dashboard Data Implementation
-async function loadDashboardData() {
-    // 1. Load Statistics via Realtime Subscriptions
-    const coursesSub = supabase
-        .channel('dashboard-courses')
-        .on('postgres_changes', { event: '*', table: 'courses' }, () => updateDashboardStats())
-        .subscribe();
-
-    const ordersSub = supabase
-        .channel('dashboard-orders')
-        .on('postgres_changes', { event: '*', table: 'orders' }, () => updateDashboardStats())
-        .subscribe();
-
-    unsubscribers.push(() => supabase.removeChannel(coursesSub));
-    unsubscribers.push(() => supabase.removeChannel(ordersSub));
-
-    await updateDashboardStats();
-
-    // Total Messages
-    const { count: msgCount } = await supabase
-        .from('contact_messages')
-        .select('*', { count: 'exact', head: true });
-
-    const msgEl = document.getElementById('total-messages');
-    if (msgEl) msgEl.innerText = (msgCount || 0).toLocaleString('fa-IR');
-
-    // 2. Load Chart
-    initDashboardChart();
-}
-
-async function updateDashboardStats() {
-    try {
-        // Total Courses
-        const { count: courseCount } = await supabase
-            .from('courses')
-            .select('*', { count: 'exact', head: true });
-
-        const courseEl = document.getElementById('total-courses-count');
-        if (courseEl) courseEl.innerText = (courseCount || 0).toLocaleString('fa-IR');
-
-        // Total Orders & Revenue
-        const { data: orderData } = await supabase
-            .from('orders')
-            .select('price, status, created_at, customer_name, product_name');
-
-        if (orderData) {
-            const totalEl = document.getElementById('total-orders-count');
-            if (totalEl) totalEl.innerText = orderData.length.toLocaleString('fa-IR');
-
-            const revenue = orderData
-                .filter(o => o.status === 'completed')
-                .reduce((sum, o) => sum + (Number(o.price) || 0), 0);
-
-            const revEl = document.getElementById('total-revenue');
-            if (revEl) revEl.innerText = `${revenue.toLocaleString('fa-IR')} تومان`;
-
-            // Recent Orders
-            const tbody = document.getElementById('recent-orders-tbody');
-            if (tbody) {
-                const recent = [...orderData]
-                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                    .slice(0, 5);
-
-                if (recent.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center">سفارشی یافت نشد.</td></tr>';
-                } else {
-                    tbody.innerHTML = recent.map(o => `
-                        <tr>
-                            <td>${o.customer_name || 'نامشخص'}</td>
-                            <td>${o.product_name || 'محصول'}</td>
-                            <td><span class="status-badge ${o.status}">${translateStatus(o.status)}</span></td>
-                            <td>${(Number(o.price) || 0).toLocaleString('fa-IR')}</td>
-                        </tr>
-                    `).join('');
-                }
-            }
-        }
-    } catch (err) {
-        console.error('Error updating dashboard stats:', err);
-    }
-}
-
-async function initDashboardChart() {
-    const ctx = document.getElementById('salesChart');
-    if (!ctx) return;
-
-    // Dynamically load Chart.js if not present
-    if (typeof Chart === 'undefined') {
-        await new Promise((resolve) => {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
-            script.onload = resolve;
-            document.head.appendChild(script);
-        });
-    }
-
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور'],
-            datasets: [{
-                label: 'فروش ماهانه',
-                data: [12, 19, 3, 5, 2, 3],
-                borderColor: '#e8789a',
-                backgroundColor: 'rgba(232, 120, 154, 0.1)',
-                fill: true,
-                tension: 0.4
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                y: { beginAtZero: true }
-            }
-        }
-    });
 }
 
 // Courses Logic

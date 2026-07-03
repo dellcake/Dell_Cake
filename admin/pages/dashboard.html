@@ -1,7 +1,7 @@
 <section class="dashboard-wrapper">
     <!-- Top Stats -->
     <div class="stats-grid">
-        <div class="stat-card">
+        <div class="card stat-card skeleton">
             <div class="stat-icon pink"><i class="fa-solid fa-shopping-bag"></i></div>
             <div class="stat-info">
                 <h3>کل سفارشات</h3>
@@ -9,7 +9,7 @@
                 <span class="stat-change positive"><i class="fa-solid fa-arrow-up"></i> ۱۲٪</span>
             </div>
         </div>
-        <div class="stat-card">
+        <div class="card stat-card skeleton">
             <div class="stat-icon brown"><i class="fa-solid fa-book-open"></i></div>
             <div class="stat-info">
                 <h3>دوره‌ها</h3>
@@ -17,7 +17,7 @@
                 <span class="stat-change">بدون تغییر</span>
             </div>
         </div>
-        <div class="stat-card">
+        <div class="card stat-card skeleton">
             <div class="stat-icon cream"><i class="fa-solid fa-dollar-sign"></i></div>
             <div class="stat-info">
                 <h3>درآمد کل</h3>
@@ -25,8 +25,8 @@
                 <span class="stat-change positive"><i class="fa-solid fa-arrow-up"></i> ۸٪</span>
             </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon pink"><i class="fa-solid fa-envelope"></i></div>
+        <div class="card stat-card skeleton">
+            <div class="stat-icon blue skeleton"><i class="fa-solid fa-envelope"></i></div>
             <div class="stat-info">
                 <h3>پیام‌ها</h3>
                 <p id="total-messages">۰</p>
@@ -37,7 +37,7 @@
 
     <!-- Charts & Main Content -->
     <div class="dashboard-main-grid">
-        <div class="chart-container card">
+        <div class="chart-container card skeleton">
             <div class="card-header">
                 <h2>نمودار فروش ماهانه</h2>
                 <div class="card-actions">
@@ -71,7 +71,7 @@
     </div>
 
     <div class="dashboard-bottom-grid">
-        <div class="recent-orders-card card">
+        <div class="recent-orders-card card skeleton">
             <div class="card-header">
                 <h2>آخرین سفارشات</h2>
                 <button onclick="navigateTo('Orders')" class="view-all">مشاهده همه</button>
@@ -87,7 +87,7 @@
                         </tr>
                     </thead>
                     <tbody id="recent-orders-tbody">
-                        <tr><td colspan="4" class="loading">در حال بارگذاری...</td></tr>
+                        <tr><td colspan="4" style="text-align:center">در حال بارگذاری...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -98,7 +98,7 @@
             <div class="status-list">
                 <div class="status-item">
                     <div class="status-info">
-                        <span>پایگاه داده (Firebase)</span>
+                        <span>پایگاه داده (Cloud)</span>
                         <span class="status-dot online"></span>
                     </div>
                     <div class="progress-bar"><div class="progress" style="width: 100%"></div></div>
