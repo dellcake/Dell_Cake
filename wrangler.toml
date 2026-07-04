@@ -1,8 +1,0 @@
-name = "delcake-supabase-proxy"
-main = "cf-worker/index.js"
-compatibility_date = "2024-04-01"
-
-[vars]
-SUPABASE_URL = "https://your-project.supabase.co"
-# DO NOT put sensitive keys here if repo is public, use secrets instead
-# SUPABASE_ANON_KEY = "your-anon-key"
