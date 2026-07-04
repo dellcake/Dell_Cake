@@ -3,9 +3,11 @@
 -- 1. Profiles (Linked to Supabase Auth)
 CREATE TABLE IF NOT EXISTS public.profiles (
     id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
-    display_name TEXT,
+    full_name TEXT,
     email TEXT,
+    avatar_url TEXT,
     phone TEXT,
+    role TEXT DEFAULT 'user' CHECK (role IN ('admin', 'user')),
     status TEXT DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
@@ -13,6 +15,31 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 
 -- Enable RLS on profiles
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+-- Function to handle new user creation
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, full_name, email, avatar_url, role)
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'display_name', 'کاربر جدید'),
+    NEW.email,
+    NEW.raw_user_meta_data->>'avatar_url',
+    CASE
+      WHEN NEW.email = 'sobhanrahimisrj@gmail.com' THEN 'admin'
+      ELSE 'user'
+    END
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger to call function on signup
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- 2. Site Settings
 CREATE TABLE IF NOT EXISTS public.site_settings (
@@ -121,40 +148,44 @@ CREATE TABLE IF NOT EXISTS public.user_courses (
 CREATE POLICY "Users can view own profile" ON public.profiles FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
 CREATE POLICY "Admins have full access to profiles" ON public.profiles
-FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+FOR ALL USING (
+    (SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin'
+    OR
+    auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com'
+);
 
 -- Site Settings Policies
 CREATE POLICY "Anyone can read site settings" ON public.site_settings FOR SELECT USING (true);
 CREATE POLICY "Admins have full access to site settings" ON public.site_settings
-FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+FOR ALL USING ((SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin' OR auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
 
 -- Courses Policies
 CREATE POLICY "Anyone can read published courses" ON public.courses FOR SELECT USING (status = 'published');
 CREATE POLICY "Admins have full access to courses" ON public.courses
-FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+FOR ALL USING ((SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin' OR auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
 
 -- Orders Policies
 CREATE POLICY "Users can see own orders" ON public.orders FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Admins have full access to orders" ON public.orders
-FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+FOR ALL USING ((SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin' OR auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
 
 -- Gallery Policies
 CREATE POLICY "Anyone can view gallery" ON public.gallery FOR SELECT USING (true);
 CREATE POLICY "Admins have full access to gallery" ON public.gallery
-FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+FOR ALL USING ((SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin' OR auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
 
 -- Blog Policies
 CREATE POLICY "Anyone can read published blog posts" ON public.blog FOR SELECT USING (status = 'published');
 CREATE POLICY "Admins have full access to blog" ON public.blog
-FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+FOR ALL USING ((SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin' OR auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
 
 -- Contact Messages Policies
 CREATE POLICY "Anyone can insert contact messages" ON public.contact_messages FOR INSERT WITH CHECK (true);
 CREATE POLICY "Admins have full access to contact messages" ON public.contact_messages
-FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+FOR ALL USING ((SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin' OR auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
 
 -- User Courses Policies
 CREATE POLICY "Users can see their own enrollments" ON public.user_courses
 FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Admins have full access to user courses" ON public.user_courses
-FOR ALL USING (auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+FOR ALL USING ((SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin' OR auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');

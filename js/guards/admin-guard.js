@@ -1,9 +1,8 @@
-import { ADMIN_CONFIG } from "../../admin/js/config.js";
-import { onAuthStateChange, signOut } from "../supabase-auth.js";
+import { onAuthStateChange, getUserProfile } from "../supabase-auth.js";
 
 /**
  * Admin Auth Guard
- * Ensures only the authorized admin can access /admin/*
+ * Ensures only users with the 'admin' role can access /admin/*
  */
 export function initAdminGuard() {
     onAuthStateChange(async (event, session) => {
@@ -25,13 +24,18 @@ export function initAdminGuard() {
         const isAdminLogin = path.includes('/admin/login');
 
         if (!user) {
+            // Redirect guests away from protected admin pages
             if (isAdminPath && !isAdminLogin) {
-                console.warn("Unauthorized admin access. Redirecting to admin login...");
-                location.replace(base + "/admin/login/");
+                console.warn("Guest access blocked. Redirecting to login...");
+                location.replace(base + "/login/");
             }
         } else {
-            if (user.email !== ADMIN_CONFIG.adminEmail) {
-                console.error("Access denied. User is not the admin.");
+            // Fetch profile to verify role
+            const profile = await getUserProfile(user.id);
+            const isAdmin = profile?.role === 'admin';
+
+            if (!isAdmin) {
+                console.error("Access denied. User is not an admin.");
                 if (isAdminPath) {
                     location.replace(base + "/user/");
                 }
