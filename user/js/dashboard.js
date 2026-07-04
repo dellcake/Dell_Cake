@@ -51,7 +51,11 @@ onAuthStateChange(async (event, session) => {
         currentUser = session.user;
         await refreshUserData();
     } else if (event === 'SIGNED_OUT') {
-        location.replace('../login/');
+        // Redirection is usually handled by the signOut function itself.
+        // This is a fallback for session expiry.
+        if (window.location.pathname.includes('/user/')) {
+            window.location.replace('../');
+        }
     }
 });
 
@@ -314,6 +318,11 @@ function translateCategory(c) {
 
 window.confirmLogout = async () => {
     if (confirm('آیا می‌خواهید از حساب خود خارج شوید؟')) {
-        await signOut('../login/');
+        try {
+            await signOut('/');
+        } catch (error) {
+            console.error('Logout error:', error);
+            window.location.replace('../');
+        }
     }
 };
