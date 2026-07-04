@@ -42,6 +42,8 @@ window.switchUserTab = (tabName, el = null) => {
     if (tabName === 'orders') loadUserOrders();
 };
 
+import { getUserProfile } from "../../js/supabase-auth.js";
+
 onAuthStateChange(async (event, session) => {
     if (event === 'SIGNED_OUT' || !session) {
         // Redirection handled by Guard
@@ -50,15 +52,18 @@ onAuthStateChange(async (event, session) => {
 
     currentUser = session.user;
 
+    // Fetch profile from database for latest data
+    const profile = await getUserProfile(currentUser.id);
+
     // UI Updates
-    const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+    const displayName = profile?.full_name || currentUser.email.split('@')[0];
     document.getElementById('user-display-name').innerText = displayName;
     document.getElementById('welcome-msg').innerText = `سلام ${displayName} عزیز!`;
 
     // Fill Profile Form
     document.getElementById('profile-email').value = currentUser.email;
-    document.getElementById('profile-name').value = currentUser.user_metadata?.display_name || '';
-    document.getElementById('profile-phone').value = currentUser.user_metadata?.phone || '';
+    document.getElementById('profile-name').value = profile?.full_name || '';
+    document.getElementById('profile-phone').value = profile?.phone || '';
 
     // Load initial stats
     updateUserStats();
@@ -193,15 +198,31 @@ document.getElementById('user-profile-form')?.addEventListener('submit', async (
     btn.disabled = true;
     btn.innerText = 'در حال ذخیره...';
 
+    const fullName = document.getElementById('profile-name').value.trim();
+    const phone = document.getElementById('profile-phone').value.trim();
+
     try {
-        const { error } = await updateProfile({
+        // 1. Update Supabase Auth metadata
+        const { error: authError } = await updateProfile({
             data: {
-                display_name: document.getElementById('profile-name').value.trim(),
-                phone: document.getElementById('profile-phone').value.trim()
+                display_name: fullName,
+                phone: phone
             }
         });
+        if (authError) throw authError;
 
-        if (error) throw error;
+        // 2. Update profiles table
+        const { error: profileError } = await supabase
+            .from('profiles')
+            .update({
+                full_name: fullName,
+                phone: phone,
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', currentUser.id);
+
+        if (profileError) throw profileError;
+
         alert('پروفایل با موفقیت بروزرسانی شد');
     } catch (error) {
         alert('خطا در بروزرسانی: ' + error.message);

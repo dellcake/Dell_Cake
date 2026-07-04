@@ -1,5 +1,4 @@
-import { onAuthStateChange } from "./supabase-auth.js";
-import { ADMIN_CONFIG } from "../admin/js/config.js";
+import { onAuthStateChange, getUserProfile } from "./supabase-auth.js";
 
 /**
  * Helper to get the correct base URL (handles GitHub Pages subfolders)
@@ -14,7 +13,7 @@ function getBase() {
     return '';
 }
 
-onAuthStateChange((event, session) => {
+onAuthStateChange(async (event, session) => {
     const user = session?.user;
     const authText = document.getElementById('user-auth-text');
     const authLink = document.getElementById('user-auth-link');
@@ -27,7 +26,8 @@ onAuthStateChange((event, session) => {
         if (authLink) authLink.href = base + '/user/';
 
         // Show admin link if the logged in user is the admin
-        if (user.email === ADMIN_CONFIG.adminEmail) {
+        const profile = await getUserProfile(user.id);
+        if (profile?.role === 'admin') {
             adminLinks.forEach(link => link.style.display = 'block');
         } else {
             adminLinks.forEach(link => link.style.display = 'none');

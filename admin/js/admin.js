@@ -470,7 +470,7 @@ async function loadCustomers() {
 
     customers = data.map(item => ({
         ...item,
-        displayName: item.display_name
+        displayName: item.full_name || item.email.split('@')[0]
     }));
     applyCustomerFilters();
 
@@ -481,7 +481,7 @@ async function loadCustomers() {
             const { data } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
             customers = data.map(item => ({
                 ...item,
-                displayName: item.display_name
+                displayName: item.full_name || item.email.split('@')[0]
             }));
             applyCustomerFilters();
         })
@@ -1515,11 +1515,17 @@ async function loadProfile() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
     const form = document.getElementById('profile-form');
-    if (form) {
-        form.email.value = user.email;
-        form.displayName.value = user.user_metadata?.display_name || '';
-        form.phone.value = user.user_metadata?.phone || '';
+    if (form && profile) {
+        form.email.value = profile.email;
+        form.displayName.value = profile.full_name || '';
+        form.phone.value = profile.phone || '';
     }
 }
 
@@ -1528,18 +1534,36 @@ window.saveAdminProfile = async (event) => {
     const form = event.target;
     const saveBtn = form.querySelector('button[type="submit"]');
 
+    const fullName = form.displayName.value.trim();
+    const phone = form.phone.value.trim();
+
     saveBtn.disabled = true;
     saveBtn.innerText = 'در حال بروزرسانی...';
 
     try {
-        const { error } = await supabaseUpdateProfile({
+        const { data: { user } } = await supabase.auth.getUser();
+
+        // 1. Update Auth
+        const { error: authError } = await supabaseUpdateProfile({
             data: {
-                display_name: form.displayName.value.trim(),
-                phone: form.phone.value.trim()
+                display_name: fullName,
+                phone: phone
             }
         });
+        if (authError) throw authError;
 
-        if (error) throw error;
+        // 2. Update profiles table
+        const { error: profileError } = await supabase
+            .from('profiles')
+            .update({
+                full_name: fullName,
+                phone: phone,
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', user.id);
+
+        if (profileError) throw profileError;
+
         alert('پروفایل با موفقیت بروزرسانی شد');
     } catch (error) {
         alert('خطا در بروزرسانی پروفایل: ' + error.message);

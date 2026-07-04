@@ -83,6 +83,30 @@ export async function getCurrentUser() {
     return user;
 }
 
+/**
+ * Get User Profile from Database
+ * Returns the profile data including role
+ */
+export async function getUserProfile(userId) {
+    if (!userId) {
+        const user = await getCurrentUser();
+        if (!user) return null;
+        userId = user.id;
+    }
+
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+    if (error) {
+        console.error("Error fetching user profile:", error);
+        return null;
+    }
+    return data;
+}
+
 export async function getSession() {
     const { data: { session } } = await supabase.auth.getSession();
     return session;
@@ -103,8 +127,17 @@ export async function updatePassword(newPassword) {
 }
 
 // 6. Listen for Auth State Changes
+/**
+ * Robust Auth State Listener
+ * Handles INITIAL_SESSION, SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, USER_UPDATED
+ */
 export function onAuthStateChange(callback) {
-    return supabase.auth.onAuthStateChange((event, session) => {
+    return supabase.auth.onAuthStateChange(async (event, session) => {
+        // Handle session expiry
+        if (event === 'SIGNED_OUT' || (event === 'TOKEN_REFRESHED' && !session)) {
+            console.log("Auth event:", event, "Session cleared.");
+        }
+
         callback(event, session);
     });
 }

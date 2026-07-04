@@ -1,25 +1,45 @@
-import { ADMIN_CONFIG } from "./config.js";
-import { signIn, signInWithGoogle, signOut } from "../../js/supabase-auth.js";
+import { signIn, signInWithGoogle, signOut, getUserProfile } from "../../js/supabase-auth.js";
 import { initGuestGuard } from "../../js/guards/guest-guard.js";
 
-// Initialize Guest Guard
+/**
+ * Admin Login Handler
+ * Specifically handles authentication for the administrative dashboard.
+ */
+
+// Initialize Guest Guard to redirect logged-in users
 initGuestGuard();
 
-// Google Login
+/**
+ * Handle redirection based on user role for admin login
+ */
+async function handleAdminRedirect(user) {
+    const profile = await getUserProfile(user.id);
+    const isAdmin = profile?.role === 'admin';
+
+    if (isAdmin) {
+        // Correct path for admin dashboard
+        location.replace("../");
+    } else {
+        alert("متأسفیم، شما دسترسی مدیریت ندارید.");
+        await signOut();
+        location.replace("./?error=unauthorized");
+    }
+}
+
+// Google Login Listener
 document.getElementById("googleLogin").addEventListener("click", async () => {
     try {
-        // Passing a relative path; supabase-auth.js helper will prepend the correct base URL
+        // Redirecting to admin; the guard will finalise the check
         const redirectUrl = '/admin/';
         const { error } = await signInWithGoogle(redirectUrl);
         if (error) throw error;
-        // Redirect handled by OAuth
     } catch (error) {
         console.error("Google Login Error:", error);
         alert("خطا در ورود با گوگل: " + error.message);
     }
 });
 
-// Email/Password Login
+// Email/Password Login Listener
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = document.getElementById("email").value;
@@ -28,23 +48,17 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
     try {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال ورود...';
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال بررسی...';
 
         const { data, error } = await signIn(email, password);
 
         if (error) throw error;
 
-        const user = data.user;
-
-        if (user.email === ADMIN_CONFIG.adminEmail) {
-            location.replace("../");
-        } else {
-            alert("دسترسی محدود به مدیر است.");
-            await signOut();
-            location.replace("./?error=unauthorized");
+        if (data.user) {
+            await handleAdminRedirect(data.user);
         }
     } catch (error) {
-        console.error("Email Login Error:", error);
+        console.error("Admin Email Login Error:", error);
         alert("خطا در ورود: " + error.message);
     } finally {
         submitBtn.disabled = false;

@@ -1,6 +1,10 @@
-import { supabase } from "../../js/supabase-client.js";
-import { signIn, signUp, signInWithGoogle } from "../../js/supabase-auth.js";
+import { signIn, signUp, signInWithGoogle, getUserProfile } from "../../js/supabase-auth.js";
 import { initGuestGuard } from "../../js/guards/guest-guard.js";
+
+/**
+ * User Authentication Handler
+ * Manages Google OAuth and Email/Password flows for the main site.
+ */
 
 // Initialize Guest Guard to redirect logged-in users away from login/register
 initGuestGuard();
@@ -8,34 +12,34 @@ initGuestGuard();
 const googleBtn = document.getElementById('google-login');
 const emailBtn = document.getElementById('email-auth');
 
-async function saveProfile(user) {
-    // In Supabase, we usually use triggers to create profiles.
-    // But we can also do it manually for extra safety during migration.
-    const { error } = await supabase
-        .from('profiles')
-        .upsert({
-            id: user.id,
-            display_name: user.user_metadata.display_name || user.user_metadata.full_name || 'مشتری جدید',
-            email: user.email,
-            updated_at: new Date()
-        }, { onConflict: 'id' });
+/**
+ * Handle redirection based on user role
+ */
+async function handleRoleBasedRedirect(user) {
+    const profile = await getUserProfile(user.id);
+    const isAdmin = profile?.role === 'admin';
 
-    if (error) console.error("Error saving profile", error);
+    if (isAdmin) {
+        window.location.replace('../admin/');
+    } else {
+        window.location.replace('../user/');
+    }
 }
 
+// Google Login Listener
 googleBtn.addEventListener('click', async () => {
     try {
-        // Passing a relative path; supabase-auth.js helper will prepend the correct base URL
+        // The redirectTo is a hint; the actual landing page will handle the final hop via Auth guards
         const redirectUrl = '/user/';
         const { error } = await signInWithGoogle(redirectUrl);
         if (error) throw error;
-        // Redirect is handled by Supabase OAuth
     } catch (error) {
         console.error("Google login failed", error);
         alert("خطا در ورود با گوگل: " + error.message);
     }
 });
 
+// Email/Password Login & Auto-registration Listener
 emailBtn.addEventListener('click', async () => {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -43,32 +47,29 @@ emailBtn.addEventListener('click', async () => {
     if (!email || !password) return alert('لطفا ایمیل و رمز عبور را وارد کنید');
 
     try {
-        // 1. Try Login
+        // 1. Attempt Sign In
         const { data, error: signInError } = await signIn(email, password);
 
         if (signInError) {
-            // 2. If login fails, try Signup (Simplified flow for Dell Cake)
+            // 2. If login fails due to credentials, attempt Sign Up (User-friendly flow)
             if (signInError.status === 400 || signInError.message.includes("Invalid login credentials")) {
                 const { data: signUpData, error: signUpError } = await signUp(email, password, 'مشتری جدید', '');
 
-                if (signUpError) {
-                    throw signUpError;
-                }
+                if (signUpError) throw signUpError;
 
                 if (signUpData.user) {
-                    await saveProfile(signUpData.user);
                     alert('حساب کاربری با موفقیت ایجاد شد.');
-                    window.location.replace('../user/');
+                    await handleRoleBasedRedirect(signUpData.user);
                 }
             } else {
                 throw signInError;
             }
         } else if (data.user) {
-            await saveProfile(data.user);
-            window.location.replace('../user/');
+            // Successful Sign In
+            await handleRoleBasedRedirect(data.user);
         }
     } catch (error) {
-        console.error("Auth process failed", error);
+        console.error("Authentication process failed", error);
         alert("خطا در ورود/ثبت‌نام: " + error.message);
     }
 });

@@ -1,5 +1,4 @@
-import { ADMIN_CONFIG } from "../../admin/js/config.js";
-import { onAuthStateChange } from "../supabase-auth.js";
+import { onAuthStateChange, getUserProfile } from "../supabase-auth.js";
 
 /**
  * Guest Auth Guard
@@ -23,7 +22,8 @@ export function initGuestGuard() {
         const isAuthPage = path.includes('/login/') || path.includes('/register/');
 
         if (user && isAuthPage) {
-            if (user.email === ADMIN_CONFIG.adminEmail) {
+            const profile = await getUserProfile(user.id);
+            if (profile?.role === 'admin') {
                 location.replace(base + "/admin/");
             } else {
                 location.replace(base + "/user/");
