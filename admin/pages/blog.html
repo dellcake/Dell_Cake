@@ -1,23 +1,24 @@
-<section class="content-section">
+<div class="content-section">
     <div class="section-header">
-        <h2>مدیریت مقالات (بلاگ)</h2>
-        <div class="header-actions">
-            <button class="add-btn" onclick="openBlogModal()">
-                <i class="fa-solid fa-plus"></i>
-                افزودن مقاله جدید
+        <div class="header-left">
+            <h2><i class="fas fa-pen-nib"></i> مدیریت وبلاگ</h2>
+            <p>انتشار مقالات و اخبار آموزشی</p>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-primary" onclick="openBlogModal()">
+                <i class="fas fa-plus"></i> مقاله جدید
             </button>
         </div>
     </div>
 
     <!-- Filters -->
-    <div class="card filters-card">
-        <div class="filter-row">
-            <div class="search-box">
-                <i class="fa-solid fa-search"></i>
-                <input type="text" id="blog-search" placeholder="جستجوی در مقالات..." oninput="handleBlogSearch(this.value)">
+    <div class="card" style="margin-bottom: 25px;">
+        <div style="display: flex; gap: 15px;">
+            <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                <input type="text" class="form-control" placeholder="جستجوی مقاله..." oninput="handleBlogSearch(this.value)">
             </div>
-            <div class="filter-group">
-                <select id="filter-blog-status" onchange="handleBlogFilter()">
+            <div class="form-group" style="width: 200px; margin-bottom: 0;">
+                <select class="form-control" id="filter-blog-status" onchange="handleBlogFilter()">
                     <option value="all">همه وضعیت‌ها</option>
                     <option value="published">منتشر شده</option>
                     <option value="draft">پیش‌نویس</option>
@@ -26,85 +27,86 @@
         </div>
     </div>
 
-    <!-- Blog Table -->
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>تصویر</th>
-                    <th>عنوان مقاله</th>
-                    <th>نویسنده</th>
-                    <th>تاریخ انتشار</th>
-                    <th>وضعیت</th>
-                    <th>عملیات</th>
-                </tr>
-            </thead>
-            <tbody id="blog-tbody">
-                <tr><td colspan="6" style="text-align:center">در حال بارگذاری...</td></tr>
-            </tbody>
-        </table>
+    <!-- Table -->
+    <div class="card">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>تصویر</th>
+                        <th>عنوان مقاله</th>
+                        <th>نویسنده</th>
+                        <th>تاریخ</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody id="blog-tbody">
+                    <!-- Loaded by JS -->
+                </tbody>
+            </table>
+        </div>
     </div>
-</section>
+</div>
 
 <!-- Blog Modal -->
 <div id="blog-modal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 900px;">
         <div class="modal-header">
             <h3 id="blog-modal-title">افزودن مقاله جدید</h3>
-            <button class="close-btn" onclick="closeBlogModal()">&times;</button>
+            <span class="close" onclick="closeBlogModal()">&times;</span>
         </div>
         <form id="blog-form" onsubmit="saveBlogPost(event)">
             <input type="hidden" name="blogId">
             <input type="hidden" name="imageUrl">
 
-            <div class="form-grid">
-                <div class="form-group full-width">
-                    <label>عنوان مقاله</label>
-                    <input type="text" name="title" required oninput="generateBlogSlug(this.value)">
-                </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                    <div class="left-col">
+                        <div class="form-group">
+                            <label>عنوان مقاله</label>
+                            <input type="text" name="title" class="form-control" required oninput="generateBlogSlug(this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>خلاصه مقاله</label>
+                            <textarea name="excerpt" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>متن کامل (HTML)</label>
+                            <textarea name="content" class="form-control" rows="12"></textarea>
+                        </div>
+                    </div>
 
-                <div class="form-group full-width">
-                    <label>اسلاگ (URL)</label>
-                    <input type="text" name="slug" required placeholder="example-post-title">
-                </div>
-
-                <div class="form-group">
-                    <label>نویسنده</label>
-                    <input type="text" name="author" value="مدیریت دل‌کیک">
-                </div>
-
-                <div class="form-group">
-                    <label>وضعیت</label>
-                    <select name="status">
-                        <option value="published">منتشر شده</option>
-                        <option value="draft">پیش‌نویس</option>
-                    </select>
-                </div>
-
-                <div class="form-group full-width">
-                    <label>خلاصه مقاله</label>
-                    <textarea name="excerpt" rows="2"></textarea>
-                </div>
-
-                <div class="form-group full-width">
-                    <label>محتوای کامل (HTML)</label>
-                    <textarea name="content" rows="10" required></textarea>
-                </div>
-
-                <div class="form-group full-width">
-                    <label>تصویر شاخص</label>
-                    <div class="image-upload-box" onclick="document.getElementById('blog-image-input').click()">
-                        <input type="file" id="blog-image-input" hidden accept="image/*" onchange="previewBlogImage(event)">
-                        <div id="blog-image-preview" class="image-preview">
-                            <span>انتخاب تصویر</span>
+                    <div class="right-col">
+                        <div class="form-group">
+                            <label>اسلاگ (Slug)</label>
+                            <input type="text" name="slug" class="form-control" dir="ltr" required>
+                        </div>
+                        <div class="form-group">
+                            <label>نویسنده</label>
+                            <input type="text" name="author" class="form-control" value="مدیریت دل‌کیک">
+                        </div>
+                        <div class="form-group">
+                            <label>وضعیت</label>
+                            <select name="status" class="form-control">
+                                <option value="published">منتشر شده</option>
+                                <option value="draft">پیش‌نویس</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>تصویر شاخص</label>
+                            <input type="file" id="blog-image-input" class="form-control" accept="image/*" onchange="previewBlogImage(event)">
+                            <div id="blog-image-preview" style="margin-top: 10px; height: 150px; border: 2px dashed var(--border-color); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                <span>انتخاب تصویر</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn-secondary" onclick="closeBlogModal()">انصراف</button>
-                <button type="submit" id="save-blog-btn" class="btn-primary">ذخیره مقاله</button>
+                <button type="button" class="btn btn-outline" onclick="closeBlogModal()">انصراف</button>
+                <button type="submit" class="btn btn-primary" id="save-blog-btn">ذخیره مقاله</button>
             </div>
         </form>
     </div>

@@ -76,7 +76,7 @@ window.navigateTo = async (viewName) => {
     // Update active state in sidebar
     document.querySelectorAll('.sidebar-nav li').forEach(li => {
         li.classList.remove('active');
-        if (li.getAttribute('onclick')?.includes(`'${viewName}'`)) {
+        if (li.dataset.page === viewName.toLowerCase()) {
             li.classList.add('active');
         }
     });
@@ -132,6 +132,12 @@ function initViewLogic(view) {
         loadMessages();
     } else if (view === 'Profile') {
         loadProfile();
+    } else if (view === 'Products') {
+        loadProducts();
+    } else if (view === 'Banners') {
+        loadBanners();
+    } else if (view === 'Discounts') {
+        loadDiscounts();
     }
 }
 
@@ -1598,6 +1604,428 @@ window.changeAdminPassword = async (event) => {
     }
 };
 
+// Products Logic
+let products = [];
+
+async function loadProducts() {
+    const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching products:', error);
+        return;
+    }
+
+    products = data;
+    renderProducts();
+
+    const sub = supabase
+        .channel('admin-products')
+        .on('postgres_changes', { event: '*', table: 'products' }, async () => {
+            const { data } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+            products = data;
+            renderProducts();
+        })
+        .subscribe();
+
+    unsubscribers.push(() => supabase.removeChannel(sub));
+}
+
+function renderProducts() {
+    const tbody = document.getElementById('products-tbody');
+    if (!tbody) return;
+
+    if (products.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">محصولی یافت نشد.</td></tr>';
+    } else {
+        tbody.innerHTML = products.map(p => `
+            <tr>
+                <td><img src="${p.image_url || '../assets/placeholder.jpg'}" width="50" height="50" style="border-radius:8px; object-fit:cover;"></td>
+                <td>${p.name}</td>
+                <td>${(Number(p.price) || 0).toLocaleString('fa-IR')} تومان</td>
+                <td>${translateCategory(p.category)}</td>
+                <td><span class="status-badge ${p.status || 'active'}">${p.status === 'active' ? 'فعال' : 'غیرفعال'}</span></td>
+                <td>
+                    <div class="actions">
+                        <button class="btn-icon btn-edit" onclick="openProductModal('${p.id}')"><i class="fa-solid fa-edit"></i></button>
+                        <button class="btn-icon btn-delete" onclick="deleteProduct('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+}
+
+window.openProductModal = (id = null) => {
+    const modal = document.getElementById('product-modal');
+    const form = document.getElementById('product-form');
+    if (!modal || !form) return;
+
+    if (id) {
+        const p = products.find(item => item.id === id);
+        form.productId.value = p.id;
+        form.name.value = p.name;
+        form.category.value = p.category;
+        form.price.value = p.price;
+        form.status.value = p.status;
+        form.description.value = p.description || '';
+        updateProductPreview(p.image_url);
+    } else {
+        form.reset();
+        form.productId.value = '';
+        updateProductPreview(null);
+    }
+    modal.style.display = 'flex';
+};
+
+window.closeProductModal = () => {
+    document.getElementById('product-modal').style.display = 'none';
+};
+
+window.previewProductImage = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => updateProductPreview(e.target.result);
+        reader.readAsDataURL(file);
+    }
+};
+
+function updateProductPreview(src) {
+    const preview = document.getElementById('product-preview');
+    if (!preview) return;
+    if (src) {
+        preview.innerHTML = `<img src="${src}" style="width:100%; height:100%; object-fit:cover;">`;
+    } else {
+        preview.innerHTML = '<span>انتخاب تصویر</span>';
+    }
+}
+
+window.saveProduct = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const saveBtn = document.getElementById('save-product-btn');
+
+    saveBtn.disabled = true;
+    saveBtn.innerText = 'در حال ذخیره...';
+
+    try {
+        let imageUrl = products.find(p => p.id === form.productId.value)?.image_url || '';
+        const imageFile = document.getElementById('product-image-input').files[0];
+
+        if (imageFile) {
+            imageUrl = await uploadImage(imageFile, 'products');
+        }
+
+        const data = {
+            name: form.name.value.trim(),
+            category: form.category.value,
+            price: Number(form.price.value),
+            status: form.status.value,
+            description: form.description.value.trim(),
+            image_url: imageUrl,
+            updated_at: new Date().toISOString()
+        };
+
+        if (form.productId.value) {
+            await supabase.from('products').update(data).eq('id', form.productId.value);
+        } else {
+            await supabase.from('products').insert([{ ...data, created_at: new Date().toISOString() }]);
+        }
+
+        closeProductModal();
+    } catch (error) {
+        alert('خطا در ذخیره محصول: ' + error.message);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerText = 'ذخیره محصول';
+    }
+};
+
+window.deleteProduct = async (id) => {
+    if (!confirm('آیا از حذف این محصول اطمینان دارید؟')) return;
+    try {
+        await supabase.from('products').delete().eq('id', id);
+    } catch (error) {
+        alert('خطا در حذف محصول: ' + error.message);
+    }
+};
+
+// Banners Logic
+let banners = [];
+
+async function loadBanners() {
+    const { data, error } = await supabase
+        .from('banners')
+        .select('*')
+        .order('order_priority', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching banners:', error);
+        return;
+    }
+
+    banners = data;
+    renderBanners();
+
+    const sub = supabase
+        .channel('admin-banners')
+        .on('postgres_changes', { event: '*', table: 'banners' }, async () => {
+            const { data } = await supabase.from('banners').select('*').order('order_priority', { ascending: false });
+            banners = data;
+            renderBanners();
+        })
+        .subscribe();
+
+    unsubscribers.push(() => supabase.removeChannel(sub));
+}
+
+function renderBanners() {
+    const tbody = document.getElementById('banners-tbody');
+    if (!tbody) return;
+
+    if (banners.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">بنری یافت نشد.</td></tr>';
+    } else {
+        tbody.innerHTML = banners.map(b => `
+            <tr>
+                <td><img src="${b.image_url}" width="100" height="50" style="border-radius:5px; object-fit:cover;"></td>
+                <td>${b.title || 'بدون عنوان'}</td>
+                <td dir="ltr">${b.link || '-'}</td>
+                <td>${b.order_priority}</td>
+                <td><span class="status-badge ${b.status}">${b.status === 'active' ? 'فعال' : 'غیرفعال'}</span></td>
+                <td>
+                    <div class="actions">
+                        <button class="btn-icon btn-edit" onclick="openBannerModal('${b.id}')"><i class="fa-solid fa-edit"></i></button>
+                        <button class="btn-icon btn-delete" onclick="deleteBanner('${b.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+}
+
+window.openBannerModal = (id = null) => {
+    const modal = document.getElementById('banner-modal');
+    const form = document.getElementById('banner-form');
+    if (!modal || !form) return;
+
+    if (id) {
+        const b = banners.find(item => item.id === id);
+        form.bannerId.value = b.id;
+        form.title.value = b.title || '';
+        form.link.value = b.link || '';
+        form.priority.value = b.order_priority;
+        form.status.value = b.status;
+        updateBannerPreview(b.image_url);
+    } else {
+        form.reset();
+        form.bannerId.value = '';
+        updateBannerPreview(null);
+    }
+    modal.style.display = 'flex';
+};
+
+window.closeBannerModal = () => {
+    document.getElementById('banner-modal').style.display = 'none';
+};
+
+window.previewBannerImage = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => updateBannerPreview(e.target.result);
+        reader.readAsDataURL(file);
+    }
+};
+
+function updateBannerPreview(src) {
+    const preview = document.getElementById('banner-preview');
+    if (!preview) return;
+    if (src) {
+        preview.innerHTML = `<img src="${src}" style="width:100%; height:100%; object-fit:cover;">`;
+    } else {
+        preview.innerHTML = '<span>انتخاب تصویر</span>';
+    }
+}
+
+window.saveBanner = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const saveBtn = document.getElementById('save-banner-btn');
+
+    saveBtn.disabled = true;
+    saveBtn.innerText = 'در حال ذخیره...';
+
+    try {
+        let imageUrl = banners.find(b => b.id === form.bannerId.value)?.image_url || '';
+        const imageFile = document.getElementById('banner-image-input').files[0];
+
+        if (imageFile) {
+            imageUrl = await uploadImage(imageFile, 'site');
+        }
+
+        if (!imageUrl) return alert('لطفا یک تصویر انتخاب کنید');
+
+        const data = {
+            title: form.title.value.trim(),
+            link: form.link.value.trim(),
+            order_priority: Number(form.priority.value),
+            status: form.status.value,
+            image_url: imageUrl
+        };
+
+        if (form.bannerId.value) {
+            await supabase.from('banners').update(data).eq('id', form.bannerId.value);
+        } else {
+            await supabase.from('banners').insert([{ ...data, created_at: new Date().toISOString() }]);
+        }
+
+        closeBannerModal();
+    } catch (error) {
+        alert('خطا در ذخیره بنر: ' + error.message);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerText = 'ذخیره بنر';
+    }
+};
+
+window.deleteBanner = async (id) => {
+    if (!confirm('آیا از حذف این بنر اطمینان دارید؟')) return;
+    try {
+        await supabase.from('banners').delete().eq('id', id);
+    } catch (error) {
+        alert('خطا در حذف بنر: ' + error.message);
+    }
+};
+
+// Discounts Logic
+let discounts = [];
+
+async function loadDiscounts() {
+    const { data, error } = await supabase
+        .from('discounts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching discounts:', error);
+        return;
+    }
+
+    discounts = data;
+    renderDiscounts();
+
+    const sub = supabase
+        .channel('admin-discounts')
+        .on('postgres_changes', { event: '*', table: 'discounts' }, async () => {
+            const { data } = await supabase.from('discounts').select('*').order('created_at', { ascending: false });
+            discounts = data;
+            renderDiscounts();
+        })
+        .subscribe();
+
+    unsubscribers.push(() => supabase.removeChannel(sub));
+}
+
+function renderDiscounts() {
+    const tbody = document.getElementById('discounts-tbody');
+    if (!tbody) return;
+
+    if (discounts.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">کد تخفیفی یافت نشد.</td></tr>';
+    } else {
+        tbody.innerHTML = discounts.map(d => `
+            <tr>
+                <td dir="ltr" style="font-weight:bold; color:var(--primary);">${d.code}</td>
+                <td>${d.amount.toLocaleString('fa-IR')} ${d.type === 'percentage' ? '٪' : 'تومان'}</td>
+                <td>${d.type === 'percentage' ? 'درصدی' : 'مبلغ ثابت'}</td>
+                <td>${d.usage_limit || 'نامحدود'}</td>
+                <td>${d.usage_count}</td>
+                <td><span class="status-badge ${d.status}">${d.status === 'active' ? 'فعال' : 'غیرفعال'}</span></td>
+                <td>
+                    <div class="actions">
+                        <button class="btn-icon btn-edit" onclick="openDiscountModal('${d.id}')"><i class="fa-solid fa-edit"></i></button>
+                        <button class="btn-icon btn-delete" onclick="deleteDiscount('${d.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+}
+
+window.openDiscountModal = (id = null) => {
+    const modal = document.getElementById('discount-modal');
+    const form = document.getElementById('discount-form');
+    if (!modal || !form) return;
+
+    if (id) {
+        const d = discounts.find(item => item.id === id);
+        form.discountId.value = d.id;
+        form.code.value = d.code;
+        form.amount.value = d.amount;
+        form.type.value = d.type;
+        form.limit.value = d.usage_limit || '';
+        form.startDate.value = d.start_date ? d.start_date.split('T')[0] : '';
+        form.endDate.value = d.end_date ? d.end_date.split('T')[0] : '';
+        form.status.value = d.status;
+    } else {
+        form.reset();
+        form.discountId.value = '';
+    }
+    modal.style.display = 'flex';
+};
+
+window.closeDiscountModal = () => {
+    document.getElementById('discount-modal').style.display = 'none';
+};
+
+window.saveDiscount = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const saveBtn = document.getElementById('save-discount-btn');
+
+    saveBtn.disabled = true;
+    saveBtn.innerText = 'در حال ذخیره...';
+
+    try {
+        const data = {
+            code: form.code.value.trim().toUpperCase(),
+            amount: Number(form.amount.value),
+            type: form.type.value,
+            usage_limit: form.limit.value ? Number(form.limit.value) : null,
+            start_date: form.startDate.value || null,
+            end_date: form.endDate.value || null,
+            status: form.status.value,
+            updated_at: new Date().toISOString()
+        };
+
+        if (form.discountId.value) {
+            await supabase.from('discounts').update(data).eq('id', form.discountId.value);
+        } else {
+            await supabase.from('discounts').insert([{ ...data, created_at: new Date().toISOString() }]);
+        }
+
+        closeDiscountModal();
+    } catch (error) {
+        alert('خطا در ذخیره کد تخفیف: ' + error.message);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerText = 'ذخیره کد';
+    }
+};
+
+window.deleteDiscount = async (id) => {
+    if (!confirm('آیا از حذف این کد تخفیف اطمینان دارید؟')) return;
+    try {
+        await supabase.from('discounts').delete().eq('id', id);
+    } catch (error) {
+        alert('خطا در حذف کد تخفیف: ' + error.message);
+    }
+};
+
 // Logout
 window.logout = async () => {
     if (confirm('آیا مطمئن هستید که می‌خواهید خارج شوید؟')) {
@@ -1615,7 +2043,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadComponent('sidebar-container', 'components/sidebar.html');
     await loadComponent('header-container', 'components/header.html');
 
-    document.getElementById('admin-email-display').innerText = ADMIN_CONFIG.adminEmail;
+    // Setup Sidebar Click Listeners
+    document.addEventListener('click', (e) => {
+        const li = e.target.closest('.sidebar-nav li');
+        if (li) {
+            const page = li.dataset.page;
+            if (page) {
+                // Capitalize first letter to match navigateTo expectation
+                const viewName = page.charAt(0).toUpperCase() + page.slice(1);
+                navigateTo(viewName);
+            }
+        }
+
+        // Logout button
+        if (e.target.closest('#logout-btn')) {
+            logout();
+        }
+    });
 
     // Default View
     window.navigateTo('Dashboard');

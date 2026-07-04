@@ -37,7 +37,7 @@ export function initAdminGuard() {
             if (!isAdmin) {
                 console.error("Access denied. User is not an admin.");
                 if (isAdminPath) {
-                    location.replace(base + "/user/");
+                    location.replace(base + "/index.html");
                 }
             } else {
                 // Authorized admin
