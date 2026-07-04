@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     email TEXT,
     avatar_url TEXT,
     phone TEXT,
+    address TEXT,
     role TEXT DEFAULT 'user' CHECK (role IN ('admin', 'user')),
     status TEXT DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,

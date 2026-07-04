@@ -1,103 +1,127 @@
 import { supabase } from "../../js/supabase-client.js";
-import { onAuthStateChange, signOut, updateProfile } from "../../js/supabase-auth.js";
+import { onAuthStateChange, signOut, updateProfile, updatePassword, getUserProfile } from "../../js/supabase-auth.js";
 
+// --- State Management ---
 let currentUser = null;
-let userOrders = [];
-let enrolledCourses = [];
+let userProfile = null;
+let orders = [];
+let enrollments = [];
 
-// Tab Navigation
-window.switchUserTab = (tabName, el = null) => {
-    // Update Sidebar UI
+// --- Tab Navigation ---
+window.switchView = (viewName, el = null) => {
+    // 1. Sidebar UI Update
     if (el) {
-        document.querySelectorAll('.sidebar-nav li').forEach(li => li.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
         el.classList.add('active');
     }
 
-    // Toggle Sections
-    document.querySelectorAll('.user-view').forEach(view => {
-        view.style.display = 'none';
-        view.classList.remove('active');
+    // 2. Hide all views
+    document.querySelectorAll('.view-section').forEach(section => {
+        section.classList.remove('active');
     });
 
-    const targetView = document.getElementById(`view-${tabName}`);
-    if (targetView) {
-        targetView.style.display = 'block';
-        targetView.classList.add('active');
-    }
+    // 3. Show target view
+    const target = document.getElementById(`view-${viewName}`);
+    if (target) target.classList.add('active');
 
-    // Update Breadcrumb
-    const breadcrumb = document.getElementById('user-breadcrumb');
-    if (breadcrumb) {
-        const labels = {
-            'overview': 'پیشخوان',
-            'courses': 'دوره‌های من',
-            'orders': 'سفارشات',
-            'profile': 'تنظیمات پروفایل',
-            'player': 'مشاهده دوره'
-        };
-        breadcrumb.innerHTML = `<span>پنل کاربری</span> / <span>${labels[tabName] || tabName}</span>`;
-    }
+    // 4. Update Header Title
+    const titles = {
+        'dashboard': 'پیشخوان',
+        'courses': 'دوره‌های من',
+        'orders': 'سفارش‌های من',
+        'profile': 'ویرایش پروفایل',
+        'settings': 'امنیت و تنظیمات'
+    };
+    document.getElementById('view-title').innerText = titles[viewName] || 'پنل کاربری';
 
-    if (tabName === 'courses') loadEnrolledCourses();
-    if (tabName === 'orders') loadUserOrders();
+    // 5. Load Data for specific views
+    if (viewName === 'orders') loadOrders();
+    if (viewName === 'courses') loadCourses();
+
+    // Close sidebar on mobile after selection
+    if (window.innerWidth <= 1100) {
+        document.getElementById('sidebar').classList.remove('active');
+    }
 };
 
-import { getUserProfile } from "../../js/supabase-auth.js";
-
+// --- Auth State Listener ---
 onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_OUT' || !session) {
-        // Redirection handled by Guard
-        return;
+    if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+        if (!session) return;
+        currentUser = session.user;
+        await refreshUserData();
+    } else if (event === 'SIGNED_OUT') {
+        location.replace('../login/');
     }
-
-    currentUser = session.user;
-
-    // Fetch profile from database for latest data
-    const profile = await getUserProfile(currentUser.id);
-
-    // UI Updates
-    const displayName = profile?.full_name || currentUser.email.split('@')[0];
-    document.getElementById('user-display-name').innerText = displayName;
-    document.getElementById('welcome-msg').innerText = `سلام ${displayName} عزیز!`;
-
-    // Fill Profile Form
-    document.getElementById('profile-email').value = currentUser.email;
-    document.getElementById('profile-name').value = profile?.full_name || '';
-    document.getElementById('profile-phone').value = profile?.phone || '';
-
-    // Load initial stats
-    updateUserStats();
 });
 
-async function updateUserStats() {
+async function refreshUserData() {
     if (!currentUser) return;
 
+    // Fetch Profile from DB
+    userProfile = await getUserProfile(currentUser.id);
+
+    // Update UI
+    const name = userProfile?.full_name || currentUser.email.split('@')[0];
+    const email = currentUser.email;
+
+    document.getElementById('header-user-name').innerText = name;
+    document.getElementById('greeting-name').innerText = `سلام ${name} عزیز!`;
+    document.getElementById('summary-name').innerText = name;
+    document.getElementById('summary-email').innerText = email;
+
+    // Join Date
+    const joinDate = new Date(currentUser.created_at).toLocaleDateString('fa-IR');
+    document.getElementById('join-date').innerText = joinDate;
+
+    // Avatar
+    updateAvatarUI(userProfile?.avatar_url);
+
+    // Fill Profile Form
+    document.getElementById('full-name-input').value = userProfile?.full_name || '';
+    document.getElementById('phone-input').value = userProfile?.phone || '';
+    document.getElementById('email-input').value = currentUser.email;
+    document.getElementById('address-input').value = userProfile?.address || '';
+
+    // Dashboard Stats
+    updateDashboardStats();
+}
+
+function updateAvatarUI(url) {
+    const headerAvatar = document.getElementById('header-avatar');
+    const profileLargeAvatar = document.getElementById('profile-large-avatar');
+    const summaryAvatar = document.getElementById('summary-avatar');
+
+    const html = url
+        ? `<img src="${url}" alt="Avatar">`
+        : `<i class="fa-solid fa-user"></i>`;
+
+    if (headerAvatar) headerAvatar.innerHTML = html;
+    if (profileLargeAvatar) profileLargeAvatar.innerHTML = html;
+    if (summaryAvatar) summaryAvatar.innerHTML = html;
+}
+
+// --- Dashboard Stats ---
+async function updateDashboardStats() {
     try {
-        // Orders count
-        const { count: orderCount } = await supabase
-            .from('orders')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', currentUser.id);
+        const [ordersRes, coursesRes] = await Promise.all([
+            supabase.from('orders').select('id', { count: 'exact', head: true }).eq('user_id', currentUser.id),
+            supabase.from('user_courses').select('id', { count: 'exact', head: true }).eq('user_id', currentUser.id)
+        ]);
 
-        document.getElementById('stat-orders-count').innerText = (orderCount || 0).toLocaleString('fa-IR');
-
-        // Courses count
-        const { count: courseCount } = await supabase
-            .from('user_courses')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', currentUser.id);
-
-        document.getElementById('stat-courses-count').innerText = (courseCount || 0).toLocaleString('fa-IR');
+        document.getElementById('total-orders-count').innerText = `${(ordersRes.count || 0).toLocaleString('fa-IR')} مورد`;
+        document.getElementById('active-courses-count').innerText = `${(coursesRes.count || 0).toLocaleString('fa-IR')} دوره`;
     } catch (err) {
-        console.error("Error updating stats:", err);
+        console.error("Stats Error:", err);
     }
 }
 
-async function loadUserOrders() {
-    const tbody = document.getElementById('user-orders-tbody');
-    if (!tbody || !currentUser) return;
+// --- Orders Logic ---
+async function loadOrders() {
+    const tbody = document.getElementById('orders-tbody');
+    if (!tbody) return;
 
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">در حال بارگذاری...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">در حال جستجوی سفارش‌ها...</td></tr>';
 
     try {
         const { data, error } = await supabase
@@ -107,145 +131,189 @@ async function loadUserOrders() {
             .order('created_at', { ascending: false });
 
         if (error) throw error;
-        userOrders = data;
+        orders = data;
 
         if (data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">هنوز سفارشی ثبت نکرده‌اید.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 40px;">هنوز سفارشی ثبت نکرده‌اید.</td></tr>';
         } else {
-            tbody.innerHTML = data.map(order => `
+            tbody.innerHTML = data.map((order, index) => `
                 <tr>
-                    <td>#${order.id.slice(-6).toUpperCase()}</td>
-                    <td>${order.product_name}</td>
-                    <td>${(Number(order.price) || 0).toLocaleString('fa-IR')}</td>
+                    <td style="font-weight:bold; color:var(--primary-pink)">#${order.id.slice(-6).toUpperCase()}</td>
+                    <td style="font-weight:700;">${order.product_name}</td>
+                    <td>${(Number(order.price) || 0).toLocaleString('fa-IR')} تومان</td>
                     <td>${new Date(order.created_at).toLocaleDateString('fa-IR')}</td>
-                    <td><span class="status-badge ${order.status}">${translateStatus(order.status)}</span></td>
+                    <td><span class="status-pill ${order.status}">${translateStatus(order.status)}</span></td>
                 </tr>
             `).join('');
         }
-    } catch (error) {
-        console.error("Error loading orders:", error);
+    } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="5" style="color:red">خطا در بارگذاری سفارش‌ها</td></tr>';
     }
 }
 
-async function loadEnrolledCourses() {
-    const grid = document.getElementById('enrolled-courses-list');
-    if (!grid || !currentUser) return;
+// --- Courses Logic ---
+async function loadCourses() {
+    const container = document.getElementById('courses-list');
+    if (!container) return;
+
+    container.innerHTML = '<div style="grid-column:1/-1; text-align:center;"><i class="fa-solid fa-spinner fa-spin fa-3x" style="color:var(--primary-pink)"></i></div>';
 
     try {
         const { data, error } = await supabase
             .from('user_courses')
-            .select(`
-                *,
-                course:courses(*)
-            `)
+            .select('*, courses(*)')
             .eq('user_id', currentUser.id);
 
         if (error) throw error;
-        enrolledCourses = data;
+        enrollments = data;
 
         if (data.length === 0) {
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding:40px;">هنوز در دوره‌ای ثبت‌نام نکرده‌اید.</p>';
+            container.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 50px;">هنوز در دوره‌ای ثبت‌نام نکرده‌اید.</p>';
         } else {
-            grid.innerHTML = data.map(item => `
-                <div class="course-card">
-                    <div class="course-image" style="background-image: url('${item.course.image_url || '../images/placeholder-course.jpg'}')"></div>
-                    <div class="course-body">
-                        <h4>${item.course.title}</h4>
-                        <p style="font-size:0.85rem; color:#888; margin-bottom:15px;">مدت دوره: ${item.course.duration || 'نامشخص'}</p>
-                        <button class="btn-access" onclick="openCoursePlayer('${item.course.id}')">ورود به کلاس <i class="fa-solid fa-play-circle"></i></button>
+            container.innerHTML = data.map(item => {
+                const c = item.courses;
+                return `
+                <div class="course-card animate__animated animate__fadeInUp">
+                    <div class="course-thumb">
+                        <img src="${c.image_url || '../images/placeholder-course.jpg'}" alt="${c.title}">
+                        <span class="course-badge">${translateCategory(c.category)}</span>
+                    </div>
+                    <div class="course-info">
+                        <h3>${c.title}</h3>
+                        <p>${c.description || 'توضیحات این دوره آموزشی...'}</p>
+                        <button class="btn-enter" onclick="alert('ورود به پنل پخش دوره: ${c.title}')">
+                            <i class="fa-solid fa-circle-play"></i> ورود به کلاس درس
+                        </button>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
-    } catch (error) {
-        console.error("Error loading enrolled courses:", error);
+    } catch (err) {
+        container.innerHTML = '<p>خطا در بارگذاری دوره‌ها</p>';
     }
 }
 
-window.openCoursePlayer = (courseId) => {
-    const enrollment = enrolledCourses.find(e => e.course_id === courseId);
-    if (!enrollment) return;
-
-    const course = enrollment.course;
-    document.getElementById('player-course-title').innerText = course.title;
-
-    const contentArea = document.getElementById('course-content-area');
-    contentArea.innerHTML = `
-        <div style="margin-bottom:20px;">
-            <h3>درباره این دوره</h3>
-            <p>${course.description || 'توضیحاتی ثبت نشده است.'}</p>
-        </div>
-        <div>
-            <h3>محتوای پکیج</h3>
-            <ul style="list-style: none; padding:0;">
-                ${course.package_content ? course.package_content.map(item => `
-                    <li style="padding:10px; border-bottom:1px solid #f0f0f0;"><i class="fa-solid fa-circle-check" style="color:#2ed573; margin-left:10px;"></i> ${item}</li>
-                `).join('') : '<li>لیستی موجود نیست</li>'}
-            </ul>
-        </div>
-        <div style="margin-top:30px; padding:20px; background:#fff9fa; border-radius:10px; text-align:center;">
-            <p>لینک‌های دانلود و ویدیوها بزودی در این بخش قرار می‌گیرند.</p>
-            <button class="btn-secondary" onclick="alert('ارتباط با مدرس در تلگرام: @DellCake_Support')">ارتباط با پشتیبانی دوره</button>
-        </div>
-    `;
-
-    switchUserTab('player');
-};
-
-document.getElementById('user-profile-form')?.addEventListener('submit', async (e) => {
+// --- Profile Management ---
+document.getElementById('profile-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const btn = e.target.querySelector('button');
+    const btn = document.getElementById('save-profile-btn');
+    const originalText = btn.innerText;
+
     btn.disabled = true;
     btn.innerText = 'در حال ذخیره...';
 
-    const fullName = document.getElementById('profile-name').value.trim();
-    const phone = document.getElementById('profile-phone').value.trim();
+    const updates = {
+        full_name: document.getElementById('full-name-input').value.trim(),
+        phone: document.getElementById('phone-input').value.trim(),
+        address: document.getElementById('address-input').value.trim(),
+        updated_at: new Date().toISOString()
+    };
 
     try {
-        // 1. Update Supabase Auth metadata
-        const { error: authError } = await updateProfile({
-            data: {
-                display_name: fullName,
-                phone: phone
-            }
-        });
-        if (authError) throw authError;
-
-        // 2. Update profiles table
-        const { error: profileError } = await supabase
+        // 1. Update Profile in DB
+        const { error: dbError } = await supabase
             .from('profiles')
-            .update({
-                full_name: fullName,
-                phone: phone,
-                updated_at: new Date().toISOString()
-            })
+            .update(updates)
             .eq('id', currentUser.id);
 
-        if (profileError) throw profileError;
+        if (dbError) throw dbError;
 
-        alert('پروفایل با موفقیت بروزرسانی شد');
-    } catch (error) {
-        alert('خطا در بروزرسانی: ' + error.message);
+        // 2. Update Auth Metadata
+        await updateProfile({
+            data: {
+                display_name: updates.full_name,
+                phone: updates.phone
+            }
+        });
+
+        alert('پروفایل شما با موفقیت بروزرسانی شد ✨');
+        refreshUserData();
+    } catch (err) {
+        alert('خطا: ' + err.message);
     } finally {
         btn.disabled = false;
-        btn.innerText = 'ذخیره تغییرات';
+        btn.innerText = originalText;
     }
 });
 
-function translateStatus(status) {
-    const map = {
-        'new': 'جدید',
-        'pending': 'در حال بررسی',
-        'preparing': 'آماده‌سازی',
-        'ready': 'آماده تحویل',
-        'completed': 'تحویل شده',
-        'cancelled': 'لغو شده'
-    };
-    return map[status] || status;
+// Avatar Upload
+document.getElementById('avatar-input')?.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${currentUser.id}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `avatars/${fileName}`;
+
+        // Upload
+        const { error: uploadError } = await supabase.storage
+            .from('profiles')
+            .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        // Get URL
+        const { data: { publicUrl } } = supabase.storage
+            .from('profiles')
+            .getPublicUrl(filePath);
+
+        // Update DB
+        const { error: dbError } = await supabase
+            .from('profiles')
+            .update({ avatar_url: publicUrl })
+            .eq('id', currentUser.id);
+
+        if (dbError) throw dbError;
+
+        updateAvatarUI(publicUrl);
+        alert('عکس پروفایل با موفقیت تغییر کرد ✨');
+    } catch (err) {
+        alert('خطا در آپلود عکس: ' + err.message);
+    }
+});
+
+// --- Security ---
+document.getElementById('password-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const newPass = document.getElementById('new-password').value;
+    const confirmPass = document.getElementById('confirm-password').value;
+
+    if (newPass !== confirmPass) {
+        return alert('رمز عبور و تکرار آن مطابقت ندارند');
+    }
+
+    const btn = document.getElementById('change-pass-btn');
+    btn.disabled = true;
+    btn.innerText = 'در حال تغییر...';
+
+    try {
+        const { error } = await updatePassword(newPass);
+        if (error) throw error;
+        alert('رمز عبور با موفقیت تغییر کرد 🔒');
+        e.target.reset();
+    } catch (err) {
+        alert('خطا: ' + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerText = 'تغییر رمز عبور';
+    }
+});
+
+// --- Helpers ---
+function translateStatus(s) {
+    const map = { 'new': 'جدید', 'pending': 'در انتظار', 'preparing': 'در حال آماده‌سازی', 'completed': 'تحویل شده', 'cancelled': 'لغو شده' };
+    return map[s] || s;
 }
 
-window.handleLogout = async () => {
+function translateCategory(c) {
+    const map = { 'cake': 'کیک', 'pastry': 'شیرینی', 'dessert': 'دسر' };
+    return map[c] || c;
+}
+
+window.confirmLogout = async () => {
     if (confirm('آیا می‌خواهید از حساب خود خارج شوید؟')) {
-        await signOut('/login/');
+        await signOut('../login/');
     }
 };

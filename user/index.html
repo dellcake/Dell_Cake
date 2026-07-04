@@ -3,192 +3,672 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پنل کاربری دل‌کیک | حساب من</title>
+    <title>پنل کاربری دل‌کیک | فضای شیرین من</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800&family=Lalezar&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../admin/css/admin.css"> <!-- Reuse admin core styles for consistency -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         :root {
-            --user-primary: #e8789a;
-            --user-secondary: #6b3d2a;
+            --primary-pink: #e8789a;
+            --soft-pink: #fff0f3;
+            --deep-brown: #6b3d2a;
+            --cream: #fdf6f0;
+            --glass: rgba(255, 255, 255, 0.85);
+            --shadow: 0 15px 35px rgba(232, 120, 154, 0.15);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        body { background: #fdf6f0; }
-        .sidebar { background: white; border-left: 1px solid rgba(0,0,0,0.05); }
-        .sidebar-logo h2 { color: var(--user-secondary); }
-        .sidebar-nav li.active { background: var(--user-primary); }
-        .sidebar-nav li:hover:not(.active) { background: #fff5f7; color: var(--user-primary); }
-        .welcome-hero {
-            background: linear-gradient(135deg, var(--user-primary) 0%, #d66183 100%);
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        body {
+            background: var(--cream);
+            background-image: radial-gradient(var(--soft-pink) 2px, transparent 2px);
+            background-size: 40px 40px;
+            color: var(--deep-brown);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .user-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 300px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border-left: 2px solid var(--soft-pink);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .sidebar-header {
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .sidebar-header img {
+            width: 90px;
+            filter: drop-shadow(0 10px 15px rgba(232, 120, 154, 0.3));
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+        .sidebar-header img:hover { transform: scale(1.1) rotate(5deg); }
+
+        .sidebar-header h2 {
+            font-family: 'Lalezar';
+            color: var(--primary-pink);
+            font-size: 2rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0 20px;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            border-radius: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #8a8a8a;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .nav-item i { font-size: 1.3rem; transition: var(--transition); }
+
+        .nav-item:hover {
+            background: var(--soft-pink);
+            color: var(--primary-pink);
+            transform: translateX(-8px);
+        }
+
+        .nav-item.active {
+            background: var(--primary-pink);
             color: white;
-            padding: 40px;
-            border-radius: 20px;
-            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(232, 120, 154, 0.4);
+        }
+        .nav-item.active i { transform: scale(1.2); }
+
+        .logout-btn {
+            margin: 30px 20px;
+            padding: 16px;
+            border-radius: 18px;
+            background: #fff5f5;
+            color: #ff4757;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 800;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .logout-btn:hover {
+            background: #ff4757;
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.3);
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex-grow: 1;
+            margin-right: 300px;
+            padding: 50px;
+            max-width: 1400px;
+            transition: var(--transition);
+        }
+
+        .top-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 50px;
         }
-        .hero-text h1 { font-family: 'Lalezar'; margin: 0 0 10px 0; font-size: 2.5rem; }
-        .hero-text p { opacity: 0.9; margin: 0; }
 
-        .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .course-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.03); transition: 0.3s; border: 1px solid #eee; }
-        .course-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
-        .course-image { height: 160px; background-size: cover; background-position: center; }
-        .course-body { padding: 20px; }
-        .course-body h4 { color: var(--user-secondary); margin: 0 0 10px 0; font-size: 1.1rem; }
-        .btn-access { background: var(--user-secondary); color: white; border: none; padding: 8px 15px; border-radius: 8px; width: 100%; cursor: pointer; font-family: inherit; transition: 0.3s; }
-        .btn-access:hover { background: #562e1d; }
+        .user-profile-brief {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background: white;
+            padding: 12px 30px;
+            border-radius: 60px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--soft-pink);
+            transition: var(--transition);
+        }
+        .user-profile-brief:hover { transform: scale(1.02); }
 
-        .order-status.new { background: #e3f2fd; color: #1976d2; }
-        .order-status.preparing { background: #fff3e0; color: #f57c00; }
-        .order-status.completed { background: #e8f5e9; color: #388e3c; }
+        .avatar-circle {
+            width: 50px;
+            height: 50px;
+            background: var(--soft-pink);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-pink);
+            font-size: 1.6rem;
+            overflow: hidden;
+            border: 2px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- Views --- */
+        .view-section {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+        .view-section.active { display: block; }
+
+        /* --- Dashboard --- */
+        .welcome-card {
+            background: linear-gradient(135deg, #e8789a 0%, #ff9a9e 100%);
+            border-radius: 40px;
+            padding: 60px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 45px rgba(232, 120, 154, 0.4);
+        }
+
+        .welcome-card h1 { font-family: 'Lalezar'; font-size: 3.5rem; margin-bottom: 15px; text-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .welcome-card p { font-size: 1.2rem; opacity: 0.95; max-width: 600px; line-height: 1.8; }
+        .welcome-card .decoration {
+            position: absolute;
+            left: -30px;
+            bottom: -50px;
+            font-size: 15rem;
+            opacity: 0.15;
+            transform: rotate(25deg);
+            pointer-events: none;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .modern-card {
+            background: white;
+            padding: 35px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(232, 120, 154, 0.08);
+            transition: var(--transition);
+            position: relative;
+        }
+        .modern-card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px rgba(232, 120, 154, 0.2); }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            transition: var(--transition);
+        }
+
+        .profile-summary-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .profile-summary-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--soft-pink);
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 5px solid white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .profile-summary-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-summary-info h3 { font-family: 'Lalezar'; font-size: 1.6rem; color: var(--primary-pink); margin-bottom: 5px; }
+        .profile-summary-info p { color: #888; font-size: 0.9rem; margin-bottom: 15px; }
+
+        /* --- Course Cards --- */
+        .courses-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 35px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 35px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        .course-card:hover { transform: translateY(-15px); border-color: var(--primary-pink); }
+
+        .course-thumb {
+            height: 220px;
+            background: var(--soft-pink);
+            position: relative;
+            overflow: hidden;
+        }
+        .course-thumb img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .course-card:hover .course-thumb img { transform: scale(1.15); }
+
+        .course-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--primary-pink);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .course-info { padding: 30px; }
+        .course-info h3 { margin-bottom: 12px; font-family: 'Lalezar'; font-size: 1.6rem; color: var(--deep-brown); }
+        .course-info p { color: #888; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.6; height: 3.2em; overflow: hidden; }
+
+        .btn-enter {
+            width: 100%;
+            background: var(--primary-pink);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 20px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1rem;
+        }
+        .btn-enter:hover { background: var(--deep-brown); transform: scale(1.02); box-shadow: 0 10px 25px rgba(107, 61, 42, 0.3); }
+
+        /* --- Tables --- */
+        .table-wrapper {
+            background: white;
+            border-radius: 35px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+            border: 1px solid var(--soft-pink);
+        }
+
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { text-align: right; padding: 25px; color: #bbb; font-weight: 600; font-size: 0.95rem; border-bottom: 2px solid var(--soft-pink); }
+        td { padding: 25px; border-bottom: 1px solid #f9f9f9; vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+
+        .status-pill {
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            display: inline-block;
+        }
+        .status-pill.completed { background: #e8fdf5; color: #2ed573; }
+        .status-pill.preparing { background: #fff9e6; color: #ffa502; }
+        .status-pill.new { background: #f0f3ff; color: #3742fa; }
+        .status-pill.pending { background: #fff0f3; color: var(--primary-pink); }
+
+        /* --- Profile Layout --- */
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 40px;
+        }
+
+        .avatar-edit-box {
+            background: white;
+            padding: 40px;
+            border-radius: 35px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--soft-pink);
+        }
+
+        .large-avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: var(--soft-pink);
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            color: var(--primary-pink);
+            position: relative;
+            overflow: hidden;
+            border: 8px solid white;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+        .large-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .btn-upload {
+            background: var(--soft-pink);
+            color: var(--primary-pink);
+            border: 2px solid transparent;
+            padding: 12px 25px;
+            border-radius: 18px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+        .btn-upload:hover { background: var(--primary-pink); color: white; }
+
+        .form-card { padding: 45px; }
+        .form-group { margin-bottom: 30px; }
+        .form-group label { display: block; margin-bottom: 12px; font-weight: 700; color: #666; font-size: 0.95rem; }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 18px 25px;
+            border-radius: 20px;
+            border: 2px solid #f0f0f0;
+            background: #fafafa;
+            transition: var(--transition);
+            outline: none;
+            font-size: 1rem;
+            color: var(--deep-brown);
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--primary-pink);
+            background: white;
+            box-shadow: 0 0 0 5px var(--soft-pink);
+        }
+
+        .btn-save {
+            background: var(--primary-pink);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            border-radius: 20px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            display: block;
+            width: fit-content;
+        }
+        .btn-save:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(232, 120, 154, 0.3); }
+
+        /* --- Animations --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Mobile Toggle --- */
+        .mobile-toggle {
+            display: none;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 15px;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-pink);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            font-size: 1.5rem;
+        }
+
+        /* --- Mobile Responsive --- */
+        @media (max-width: 1100px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .sidebar { transform: translateX(100%); }
+            .sidebar.active { transform: translateX(0); box-shadow: -15px 0 40px rgba(0,0,0,0.15); }
+            .main-content { margin-right: 0; padding: 25px; }
+            .mobile-toggle { display: flex; }
+            .welcome-card { padding: 40px; }
+            .welcome-card h1 { font-size: 2.5rem; }
+        }
 
         @media (max-width: 768px) {
-            .admin-container { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; position: relative; }
-            .main-content { margin-right: 0; padding: 15px; }
+            .profile-layout { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: 1fr; }
+            .top-header { flex-wrap: wrap; gap: 20px; }
         }
+
     </style>
 </head>
 <body>
-    <div class="admin-container">
+
+    <div class="user-container">
         <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-logo">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
                 <img src="../images/logo/sweet-.png" alt="دل‌کیک">
-                <h2>حساب من</h2>
+                <h2>دل‌کیک</h2>
             </div>
-            <ul class="sidebar-nav">
-                <li class="active" onclick="switchUserTab('overview', this)">
-                    <i class="fa-solid fa-house"></i> پیشخوان
+
+            <ul class="nav-menu">
+                <li class="nav-item active" onclick="switchView('dashboard', this)">
+                    <i class="fa-solid fa-house-chimney"></i> پیشخوان
                 </li>
-                <li onclick="switchUserTab('courses', this)">
+                <li class="nav-item" onclick="switchView('courses', this)">
                     <i class="fa-solid fa-graduation-cap"></i> دوره‌های من
                 </li>
-                <li onclick="switchUserTab('orders', this)">
-                    <i class="fa-solid fa-basket-shopping"></i> سفارشات
+                <li class="nav-item" onclick="switchView('orders', this)">
+                    <i class="fa-solid fa-cookie-bite"></i> سفارش‌های من
                 </li>
-                <li onclick="switchUserTab('profile', this)">
-                    <i class="fa-solid fa-user-gear"></i> تنظیمات پروفایل
+                <li class="nav-item" onclick="switchView('profile', this)">
+                    <i class="fa-solid fa-user-pen"></i> ویرایش پروفایل
+                </li>
+                <li class="nav-item" onclick="switchView('settings', this)">
+                    <i class="fa-solid fa-lock"></i> امنیت حساب
                 </li>
             </ul>
-            <div class="sidebar-footer">
-                <button class="logout-btn" onclick="handleLogout()">
-                    <i class="fa-solid fa-right-from-bracket"></i> خروج از حساب
-                </button>
-            </div>
+
+            <button class="logout-btn" onclick="confirmLogout()">
+                <i class="fa-solid fa-power-off"></i> خروج از حساب
+            </button>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <header class="top-bar">
-                <div class="breadcrumb" id="user-breadcrumb"><span>پنل کاربری</span> / <span>پیشخوان</span></div>
-                <div class="user-info">
-                    <span id="user-display-name">کاربر مهمان</span>
-                    <div class="avatar"><i class="fa-solid fa-user"></i></div>
+
+            <header class="top-header">
+                <div class="mobile-toggle" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </div>
+
+                <div class="page-title">
+                    <h2 id="view-title" style="font-family: 'Lalezar'; color: var(--deep-brown); font-size: 2.2rem;">پیشخوان</h2>
+                </div>
+
+                <div class="user-profile-brief">
+                    <div class="avatar-circle" id="header-avatar">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <span id="header-user-name" style="font-weight: 800; font-size: 1.1rem;">در حال بارگذاری...</span>
                 </div>
             </header>
 
-            <div id="user-view-container">
-                <!-- Overview Section -->
-                <section id="view-overview" class="user-view active">
-                    <div class="welcome-hero">
-                        <div class="hero-text">
-                            <h1 id="welcome-msg">سلام دل‌کیکی عزیز!</h1>
-                            <p>به فضای اختصاصی خودت در آکادمی دل‌کیک خوش آمدی.</p>
-                        </div>
-                        <i class="fa-solid fa-heart" style="font-size: 5rem; opacity: 0.3;"></i>
-                    </div>
+            <!-- View: Dashboard -->
+            <section id="view-dashboard" class="view-section active">
+                <div class="welcome-card animate__animated animate__fadeInDown">
+                    <h1 id="greeting-name">سلام دل‌کیکی عزیز!</h1>
+                    <p>خوشحالیم که دوباره پیش مایی. امروز وقتشه که با هم یک طعم جدید و یک تجربه شیرین خلق کنیم. کلاس‌ها منتظر توانمندی‌های تو هستن!</p>
+                    <i class="fa-solid fa-cake-candles decoration"></i>
+                </div>
 
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon" style="background:#fff0f3; color:#e8789a;"><i class="fa-solid fa-book"></i></div>
-                            <div class="stat-info">
-                                <h3 id="stat-courses-count">۰</h3>
-                                <p>دوره فعال</p>
+                <div class="dashboard-grid">
+                    <div class="stats-row">
+                        <div class="modern-card">
+                            <div class="icon-box" style="background: var(--soft-pink); color: var(--primary-pink);">
+                                <i class="fa-solid fa-calendar-day"></i>
                             </div>
+                            <h4 style="color: #aaa; font-size: 0.9rem; margin-bottom: 8px;">تاریخ عضویت</h4>
+                            <p id="join-date" style="font-weight: 900; font-size: 1.3rem;">---</p>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-icon" style="background:#e3f2fd; color:#2196f3;"><i class="fa-solid fa-shopping-bag"></i></div>
-                            <div class="stat-info">
-                                <h3 id="stat-orders-count">۰</h3>
-                                <p>کل سفارشات</p>
+                        <div class="modern-card">
+                            <div class="icon-box" style="background: #e8fdf5; color: #2ed573;">
+                                <i class="fa-solid fa-medal"></i>
                             </div>
+                            <h4 style="color: #aaa; font-size: 0.9rem; margin-bottom: 8px;">دوره‌های فعال</h4>
+                            <p id="active-courses-count" style="font-weight: 900; font-size: 1.3rem;">۰ دوره</p>
+                        </div>
+                        <div class="modern-card">
+                            <div class="icon-box" style="background: #f0f3ff; color: #3742fa;">
+                                <i class="fa-solid fa-heart-circle-check"></i>
+                            </div>
+                            <h4 style="color: #aaa; font-size: 0.9rem; margin-bottom: 8px;">سفارش‌های من</h4>
+                            <p id="total-orders-count" style="font-weight: 900; font-size: 1.3rem;">۰ مورد</p>
                         </div>
                     </div>
-                </section>
 
-                <!-- My Courses Section -->
-                <section id="view-courses" class="user-view" style="display:none;">
-                    <div class="section-header"><h2>دوره‌های آموزشی من</h2></div>
-                    <div id="enrolled-courses-list" class="course-grid">
-                        <div class="loader-wrapper"><div class="loader"></div></div>
+                    <div class="modern-card profile-summary-card">
+                        <div class="profile-summary-avatar" id="summary-avatar">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="profile-summary-info">
+                            <h3 id="summary-name">نام کاربر</h3>
+                            <p id="summary-email">email@example.com</p>
+                            <button class="btn-upload" onclick="switchView('profile')">مدیریت پروفایل</button>
+                        </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <!-- My Orders Section -->
-                <section id="view-orders" class="user-view" style="display:none;">
-                    <div class="section-header"><h2>تاریخچه سفارشات</h2></div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>شماره سفارش</th>
-                                    <th>محصول</th>
-                                    <th>مبلغ (تومان)</th>
-                                    <th>تاریخ</th>
-                                    <th>وضعیت</th>
-                                </tr>
-                            </thead>
-                            <tbody id="user-orders-tbody">
-                                <!-- Dynamic rows -->
-                            </tbody>
-                        </table>
+            <!-- View: Courses -->
+            <section id="view-courses" class="view-section">
+                <div class="courses-container" id="courses-list">
+                    <!-- Dynamic Content -->
+                </div>
+            </section>
+
+            <!-- View: Orders -->
+            <section id="view-orders" class="view-section">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th># شناسه</th>
+                                <th>نام محصول / دوره آموزشی</th>
+                                <th>مبلغ (تومان)</th>
+                                <th>تاریخ ثبت</th>
+                                <th>وضعیت کنونی</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- View: Profile -->
+            <section id="view-profile" class="view-section">
+                <div class="profile-layout">
+                    <div class="avatar-edit-box">
+                        <div class="large-avatar" id="profile-large-avatar">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <h3 style="font-family: 'Lalezar'; font-size: 1.6rem; color: var(--primary-pink);">تصویر پروفایل</h3>
+                        <p style="font-size: 0.9rem; color: #999; margin: 15px 0 25px; line-height: 1.6;">یک عکس زیبا برای خودت انتخاب کن تا در سایت نمایش داده بشه</p>
+                        <input type="file" id="avatar-input" style="display: none;" accept="image/*">
+                        <button class="btn-upload" onclick="document.getElementById('avatar-input').click()">تغییر عکس</button>
                     </div>
-                </section>
 
-                <!-- Profile Section -->
-                <section id="view-profile" class="user-view" style="display:none;">
-                    <div class="section-header"><h2>تنظیمات حساب کاربری</h2></div>
-                    <div class="card" style="max-width: 600px;">
-                        <form id="user-profile-form">
-                            <div class="form-group">
-                                <label>ایمیل</label>
-                                <input type="email" id="profile-email" readonly style="background:#f5f5f5;">
-                            </div>
+                    <div class="modern-card form-card">
+                        <form id="profile-form">
                             <div class="form-group">
                                 <label>نام و نام خانوادگی</label>
-                                <input type="text" id="profile-name" placeholder="وارد کنید...">
+                                <input type="text" id="full-name-input" placeholder="سارا محمدی">
                             </div>
                             <div class="form-group">
-                                <label>شماره تماس</label>
-                                <input type="tel" id="profile-phone" placeholder="۰۹۱۲۰۰۰۰۰۰۰">
+                                <label>شماره تماس (جهت هماهنگی سفارشات)</label>
+                                <input type="tel" id="phone-input" placeholder="۰۹۱۲۰۰۰۰۰۰۰">
                             </div>
-                            <button type="submit" class="btn-primary">ذخیره تغییرات</button>
+                            <div class="form-group">
+                                <label>ایمیل (شناسه کاربری)</label>
+                                <input type="email" id="email-input" readonly style="background: #f0f0f0; cursor: not-allowed; color: #999;">
+                            </div>
+                            <div class="form-group">
+                                <label>آدرس دقیق پستی</label>
+                                <textarea id="address-input" rows="4" placeholder="استان، شهر، محله و..."></textarea>
+                            </div>
+                            <button type="submit" class="btn-save" id="save-profile-btn">بروزرسانی اطلاعات</button>
                         </form>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <!-- Course Player (Hidden by default) -->
-                <section id="view-player" class="user-view" style="display:none;">
-                    <div class="section-header">
-                        <button class="btn-secondary" onclick="switchUserTab('courses')"><i class="fa-solid fa-arrow-right"></i> بازگشت به لیست</button>
-                        <h2 id="player-course-title">نام دوره</h2>
-                    </div>
-                    <div class="card player-card">
-                        <div id="course-content-area">
-                            <!-- Course details and links will appear here -->
+            <!-- View: Settings -->
+            <section id="view-settings" class="view-section">
+                <div class="modern-card" style="max-width: 650px; margin: 0 auto; padding: 50px;">
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <div class="icon-box" style="background: #fff5f5; color: #ff4757; margin: 0 auto 20px;">
+                            <i class="fa-solid fa-shield-halved"></i>
                         </div>
+                        <h3 style="font-family: 'Lalezar'; font-size: 2rem; color: var(--deep-brown);">تغییر رمز عبور</h3>
+                        <p style="color: #888;">برای امنیت بیشتر، رمز عبور خود را به صورت دوره‌ای تغییر دهید</p>
                     </div>
-                </section>
-            </div>
+
+                    <form id="password-form">
+                        <div class="form-group">
+                            <label>رمز عبور جدید</label>
+                            <input type="password" id="new-password" required minlength="6" placeholder="حداقل ۶ کاراکتر">
+                        </div>
+                        <div class="form-group">
+                            <label>تکرار رمز عبور جدید</label>
+                            <input type="password" id="confirm-password" required minlength="6" placeholder="تکرار رمز عبور">
+                        </div>
+                        <button type="submit" class="btn-save" id="change-pass-btn" style="width: 100%;">تغییر رمز عبور</button>
+                    </form>
+                </div>
+            </section>
+
         </main>
     </div>
 
     <script type="module" src="js/dashboard.js"></script>
-    <script type="module">
-        import { initUserGuard } from "../js/guards/user-guard.js";
-        initUserGuard();
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
     </script>
 </body>
 </html>
