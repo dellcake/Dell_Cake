@@ -22,7 +22,8 @@ async function handleRoleBasedRedirect(user) {
     if (isAdmin) {
         window.location.replace('../admin/');
     } else {
-        window.location.replace('../user/');
+        // Direct users to home with success flag for Toast
+        window.location.replace('../index.html?login=success');
     }
 }
 

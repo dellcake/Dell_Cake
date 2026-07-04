@@ -818,7 +818,7 @@ async function watermarkImage(file) {
                 ctx.shadowOffsetY = 2;
 
                 // Draw text
-                ctx.fillText('Dell Cake | دل کیک', canvas.width - 20, canvas.height - 20);
+                ctx.fillText('Dell Cake | دل‌کیک', canvas.width - 20, canvas.height - 20);
 
                 canvas.toBlob((blob) => {
                     resolve(blob);
