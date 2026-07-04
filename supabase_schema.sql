@@ -143,6 +143,45 @@ CREATE TABLE IF NOT EXISTS public.user_courses (
     UNIQUE(user_id, course_id)
 );
 
+-- 9. Products (Physical Products)
+CREATE TABLE IF NOT EXISTS public.products (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name TEXT NOT NULL,
+    price NUMERIC DEFAULT 0,
+    discount NUMERIC DEFAULT 0,
+    description TEXT,
+    image_url TEXT,
+    category TEXT,
+    status TEXT DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 10. Banners
+CREATE TABLE IF NOT EXISTS public.banners (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    title TEXT,
+    image_url TEXT NOT NULL,
+    link TEXT,
+    status TEXT DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+    order_priority INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 11. Discounts
+CREATE TABLE IF NOT EXISTS public.discounts (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    code TEXT UNIQUE NOT NULL,
+    amount NUMERIC NOT NULL,
+    type TEXT CHECK (type IN ('percentage', 'fixed')),
+    start_date TIMESTAMP WITH TIME ZONE,
+    end_date TIMESTAMP WITH TIME ZONE,
+    usage_limit INTEGER,
+    usage_count INTEGER DEFAULT 0,
+    status TEXT DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
 -- Row Level Security (RLS) Policies
 
 -- Profiles Policies
@@ -189,4 +228,21 @@ FOR ALL USING ((SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin
 CREATE POLICY "Users can see their own enrollments" ON public.user_courses
 FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Admins have full access to user courses" ON public.user_courses
+FOR ALL USING ((SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin' OR auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+
+-- Products Policies
+ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can view active products" ON public.products FOR SELECT USING (status = 'active');
+CREATE POLICY "Admins have full access to products" ON public.products
+FOR ALL USING ((SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin' OR auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+
+-- Banners Policies
+ALTER TABLE public.banners ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can view active banners" ON public.banners FOR SELECT USING (status = 'active');
+CREATE POLICY "Admins have full access to banners" ON public.banners
+FOR ALL USING ((SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin' OR auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');
+
+-- Discounts Policies
+ALTER TABLE public.discounts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Admins have full access to discounts" ON public.discounts
 FOR ALL USING ((SELECT role FROM public.profiles WHERE id = auth.uid()) = 'admin' OR auth.jwt() ->> 'email' = 'sobhanrahimisrj@gmail.com');

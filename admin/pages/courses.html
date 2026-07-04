@@ -1,27 +1,32 @@
-<section class="content-section">
+<div class="content-section">
     <div class="section-header">
-        <h2>مدیریت دوره‌های آموزشی</h2>
-        <button class="add-btn" onclick="openCourseModal()">
-            <i class="fa-solid fa-plus"></i>
-            افزودن دوره جدید
-        </button>
+        <div class="header-left">
+            <h2><i class="fas fa-graduation-cap"></i> مدیریت دوره‌ها</h2>
+            <p>افزودن، ویرایش و مدیریت دوره‌های آموزشی</p>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-primary" onclick="openCourseModal()">
+                <i class="fas fa-plus"></i> دوره جدید
+            </button>
+        </div>
     </div>
 
-    <!-- Filters & Search -->
-    <div class="card filters-card">
-        <div class="filter-row">
-            <div class="search-box">
-                <i class="fa-solid fa-search"></i>
-                <input type="text" id="course-search" placeholder="جستجوی دوره..." oninput="handleCourseSearch(this.value)">
+    <!-- Filters -->
+    <div class="card" style="margin-bottom: 25px;">
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <div class="form-group" style="flex: 1; min-width: 200px; margin-bottom: 0;">
+                <input type="text" class="form-control" placeholder="جستجو در عنوان یا توضیحات..." oninput="handleCourseSearch(this.value)">
             </div>
-            <div class="filter-group">
-                <select id="filter-category" onchange="handleCourseFilter()">
-                    <option value="all">همه دسته‌بندی‌ها</option>
+            <div class="form-group" style="width: 180px; margin-bottom: 0;">
+                <select class="form-control" id="filter-category" onchange="handleCourseFilter()">
+                    <option value="all">همه دسته‌ها</option>
                     <option value="cake">کیک</option>
                     <option value="pastry">شیرینی</option>
                     <option value="dessert">دسر</option>
                 </select>
-                <select id="filter-status" onchange="handleCourseFilter()">
+            </div>
+            <div class="form-group" style="width: 180px; margin-bottom: 0;">
+                <select class="form-control" id="filter-status" onchange="handleCourseFilter()">
                     <option value="all">همه وضعیت‌ها</option>
                     <option value="published">منتشر شده</option>
                     <option value="draft">پیش‌نویس</option>
@@ -30,153 +35,130 @@
         </div>
     </div>
 
-    <!-- Courses Table -->
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>تصویر</th>
-                    <th>عنوان</th>
-                    <th>قیمت</th>
-                    <th>دسته‌بندی</th>
-                    <th>وضعیت</th>
-                    <th>عملیات</th>
-                </tr>
-            </thead>
-            <tbody id="courses-tbody">
-                <tr><td colspan="6" style="text-align:center">در حال بارگذاری...</td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Pagination -->
-    <div class="pagination-container">
-        <div class="pagination-info">
-            نمایش <span id="page-start">0</span> تا <span id="page-end">0</span> از <span id="total-items">0</span> دوره
-        </div>
-        <div class="pagination-controls">
-            <button class="page-btn" id="prev-page" onclick="changePage(-1)"><i class="fa-solid fa-chevron-right"></i></button>
-            <span id="current-page">۱</span>
-            <button class="page-btn" id="next-page" onclick="changePage(1)"><i class="fa-solid fa-chevron-left"></i></button>
+    <!-- Table -->
+    <div class="card">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>تصویر</th>
+                        <th>عنوان دوره</th>
+                        <th>قیمت</th>
+                        <th>دسته‌بندی</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody id="courses-tbody">
+                    <!-- Loaded by JS -->
+                </tbody>
+            </table>
         </div>
     </div>
-</section>
+</div>
 
 <!-- Course Modal -->
 <div id="course-modal" class="modal">
-    <div class="modal-content large-modal">
+    <div class="modal-content" style="max-width: 800px;">
         <div class="modal-header">
-            <h2 id="modal-title">افزودن دوره جدید</h2>
+            <h3 id="modal-title">افزودن دوره جدید</h3>
             <span class="close" onclick="closeCourseModal()">&times;</span>
         </div>
         <form id="course-form" onsubmit="saveCourse(event)">
             <input type="hidden" name="courseId">
+            <input type="hidden" name="imageUrl">
 
-            <div class="form-tabs">
-                <button type="button" class="tab-btn active" onclick="switchFormTab('basic')">اطلاعات پایه</button>
-                <button type="button" class="tab-btn" onclick="switchFormTab('details')">جزئیات و محتوا</button>
-                <button type="button" class="tab-btn" onclick="switchFormTab('seo')">سئو و تنظیمات</button>
-            </div>
-
-            <!-- Basic Info Tab -->
-            <div id="tab-basic" class="tab-pane active">
-                <div class="form-grid">
-                    <div class="form-group full-width">
-                        <label>عنوان دوره</label>
-                        <input type="text" name="title" required placeholder="مثال: آموزش کیک خامه ای مدرن" oninput="generateSlug(this.value)">
-                    </div>
-
-                    <div class="form-group">
-                        <label>اسلاگ (URL)</label>
-                        <input type="text" name="slug" required placeholder="modern-cake-training">
-                    </div>
-
-                    <div class="form-group">
-                        <label>دسته‌بندی</label>
-                        <select name="category" required>
-                            <option value="cake">کیک</option>
-                            <option value="pastry">شیرینی</option>
-                            <option value="dessert">دسر</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>قیمت (تومان)</label>
-                        <input type="number" name="price" required placeholder="500000">
-                    </div>
-
-                    <div class="form-group">
-                        <label>تخفیف (درصد)</label>
-                        <input type="number" name="discount" placeholder="0" min="0" max="100">
-                    </div>
-
-                    <div class="form-group">
-                        <label>سطح دوره</label>
-                        <select name="level">
-                            <option value="beginner">مبتدی</option>
-                            <option value="intermediate">متوسط</option>
-                            <option value="advanced">پیشرفته</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>وضعیت انتشار</label>
-                        <select name="status">
-                            <option value="published">منتشر شده</option>
-                            <option value="draft">پیش‌نویس</option>
-                        </select>
-                    </div>
+            <div class="modal-body">
+                <div style="display: flex; gap: 15px; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;">
+                    <button type="button" class="btn btn-outline tab-btn active" onclick="switchFormTab('basic')">اطلاعات پایه</button>
+                    <button type="button" class="btn btn-outline tab-btn" onclick="switchFormTab('details')">محتوا و جزئیات</button>
+                    <button type="button" class="btn btn-outline tab-btn" onclick="switchFormTab('seo')">سئو (SEO)</button>
                 </div>
-            </div>
 
-            <!-- Details Tab -->
-            <div id="tab-details" class="tab-pane">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>مدت زمان (ساعت)</label>
-                        <input type="text" name="duration" placeholder="مثال: ۵ ساعت">
-                    </div>
-
-                    <div class="form-group">
-                        <label>تصویر دوره</label>
-                        <div class="image-upload-wrapper">
-                            <input type="file" id="course-image-input" accept="image/*" onchange="previewCourseImage(event)">
-                            <input type="hidden" name="imageUrl">
-                            <div id="image-preview" class="image-preview">
-                                <span>پیش‌نمایش تصویر</span>
-                            </div>
+                <!-- Tab: Basic -->
+                <div id="tab-basic" class="tab-pane active">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label>عنوان دوره</label>
+                            <input type="text" name="title" class="form-control" required oninput="generateSlug(this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>اسلاگ (URL)</label>
+                            <input type="text" name="slug" class="form-control" dir="ltr" required>
+                        </div>
+                        <div class="form-group">
+                            <label>دسته‌بندی</label>
+                            <select name="category" class="form-control">
+                                <option value="cake">کیک</option>
+                                <option value="pastry">شیرینی</option>
+                                <option value="dessert">دسر</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>قیمت (تومان)</label>
+                            <input type="number" name="price" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>تخفیف (تومان)</label>
+                            <input type="number" name="discount" class="form-control" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>سطح دوره</label>
+                            <select name="level" class="form-control">
+                                <option value="beginner">مبتدی</option>
+                                <option value="intermediate">متوسط</option>
+                                <option value="advanced">پیشرفته</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>مدت زمان</label>
+                            <input type="text" name="duration" class="form-control" placeholder="مثلا: ۵ ساعت">
+                        </div>
+                        <div class="form-group">
+                            <label>وضعیت انتشار</label>
+                            <select name="status" class="form-control">
+                                <option value="published">منتشر شده</option>
+                                <option value="draft">پیش‌نویس</option>
+                            </select>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-group full-width">
-                        <label>توضیحات دوره</label>
-                        <textarea name="description" rows="4" placeholder="توضیحات کامل دوره را اینجا بنویسید..."></textarea>
+                <!-- Tab: Details -->
+                <div id="tab-details" class="tab-pane">
+                    <div class="form-group">
+                        <label>تصویر دوره</label>
+                        <input type="file" id="course-image-input" class="form-control" accept="image/*" onchange="previewCourseImage(event)">
+                        <div id="image-preview" style="margin-top: 10px; height: 150px; border: 2px dashed var(--border-color); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                            <span>پیش‌نمایش تصویر</span>
+                        </div>
                     </div>
-
-                    <div class="form-group full-width">
+                    <div class="form-group">
+                        <label>توضیحات دوره</label>
+                        <textarea name="description" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
                         <label>محتوای پکیج (هر مورد در یک خط)</label>
-                        <textarea name="packageContent" rows="4" placeholder="آیتم ۱&#10;آیتم ۲"></textarea>
+                        <textarea name="packageContent" class="form-control" rows="4" placeholder="مثلا: جزوه آموزشی رایگان"></textarea>
                     </div>
                 </div>
-            </div>
 
-            <!-- SEO Tab -->
-            <div id="tab-seo" class="tab-pane">
-                <div class="form-grid">
-                    <div class="form-group full-width">
+                <!-- Tab: SEO -->
+                <div id="tab-seo" class="tab-pane">
+                    <div class="form-group">
                         <label>عنوان سئو (Meta Title)</label>
-                        <input type="text" name="seoTitle" placeholder="عنوان برای گوگل">
+                        <input type="text" name="seoTitle" class="form-control">
                     </div>
-                    <div class="form-group full-width">
+                    <div class="form-group">
                         <label>توضیحات سئو (Meta Description)</label>
-                        <textarea name="seoDescription" rows="3" placeholder="توضیحات کوتاه برای گوگل"></textarea>
+                        <textarea name="seoDescription" class="form-control" rows="3"></textarea>
                     </div>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="cancel-btn" onclick="closeCourseModal()">انصراف</button>
-                <button type="submit" class="save-btn" id="save-course-btn">ذخیره دوره</button>
+                <button type="button" class="btn btn-outline" onclick="closeCourseModal()">انصراف</button>
+                <button type="submit" class="btn btn-primary" id="save-course-btn">ذخیره دوره</button>
             </div>
         </form>
     </div>

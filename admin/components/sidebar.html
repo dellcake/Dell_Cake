@@ -1,45 +1,54 @@
 <aside class="sidebar">
     <div class="sidebar-header">
-        <img src="../images/logo/sweet-.png" alt="دل‌کیک" class="admin-logo">
-        <h2>پنل مدیریت</h2>
+        <img src="../images/logo.png" alt="دل‌کیک" class="admin-logo">
+        <h2>مدیریت دل‌کیک</h2>
     </div>
+
     <nav class="sidebar-nav">
         <ul>
-            <li class="active" onclick="navigateTo('Dashboard')">
-                <i class="fa-solid fa-chart-line"></i>
+            <li data-page="dashboard" class="active">
+                <i class="fas fa-th-large"></i>
                 <span>داشبورد</span>
             </li>
-            <li onclick="navigateTo('Orders')">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span>سفارشات</span>
+            <li data-page="orders">
+                <i class="fas fa-shopping-cart"></i>
+                <span>سفارش‌ها</span>
             </li>
-            <li onclick="navigateTo('Courses')">
-                <i class="fa-solid fa-graduation-cap"></i>
+            <li data-page="courses">
+                <i class="fas fa-graduation-cap"></i>
                 <span>دوره‌ها</span>
             </li>
-            <li onclick="navigateTo('Gallery')">
-                <i class="fa-solid fa-image"></i>
+            <li data-page="products">
+                <i class="fas fa-cake-candles"></i>
+                <span>محصولات</span>
+            </li>
+            <li data-page="customers">
+                <i class="fas fa-users"></i>
+                <span>کاربران</span>
+            </li>
+            <li data-page="gallery">
+                <i class="fas fa-images"></i>
                 <span>گالری</span>
             </li>
-            <li onclick="navigateTo('Blog')">
-                <i class="fa-solid fa-pen-nib"></i>
-                <span>بلاگ</span>
+            <li data-page="blog">
+                <i class="fas fa-pen-nib"></i>
+                <span>وبلاگ</span>
             </li>
-            <li onclick="navigateTo('Messages')">
-                <i class="fa-solid fa-envelope"></i>
+            <li data-page="banners">
+                <i class="fas fa-ad"></i>
+                <span>بنرها</span>
+            </li>
+            <li data-page="discounts">
+                <i class="fas fa-tags"></i>
+                <span>تخفیف‌ها</span>
+            </li>
+            <li data-page="messages">
+                <i class="fas fa-envelope"></i>
                 <span>پیام‌ها</span>
             </li>
-            <li onclick="navigateTo('Customers')">
-                <i class="fa-solid fa-users"></i>
-                <span>مشتریان</span>
-            </li>
-            <li onclick="navigateTo('Settings')">
-                <i class="fa-solid fa-gear"></i>
+            <li data-page="settings">
+                <i class="fas fa-cog"></i>
                 <span>تنظیمات</span>
-            </li>
-            <li onclick="logout()">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span>خروج</span>
             </li>
         </ul>
     </nav>

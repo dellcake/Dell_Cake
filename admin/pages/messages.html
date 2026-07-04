@@ -1,66 +1,96 @@
-<section class="content-section">
+<div class="content-section">
     <div class="section-header">
-        <h2>مدیریت پیام‌های تماس</h2>
+        <div class="header-left">
+            <h2><i class="fas fa-envelope"></i> پیام‌های دریافتی</h2>
+            <p>مشاهده پیام‌های ارسال شده از طریق فرم تماس با ما</p>
+        </div>
     </div>
 
-    <!-- Filters -->
-    <div class="card filters-card">
-        <div class="filter-row">
-            <div class="search-box">
-                <i class="fa-solid fa-search"></i>
-                <input type="text" id="message-search" placeholder="جستجو در پیام‌ها..." oninput="handleMessageSearch(this.value)">
-            </div>
-            <div class="filter-group">
-                <select id="filter-message-status" onchange="handleMessageFilter()">
-                    <option value="all">همه وضعیت‌ها</option>
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 25px;">
+        <!-- Messages List -->
+        <div class="card" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; max-height: calc(100vh - 200px);">
+            <div style="padding: 15px; border-bottom: 1px solid var(--border-color);">
+                <select class="form-control" id="filter-message-status" onchange="handleMessageFilter()">
+                    <option value="all">همه پیام‌ها</option>
                     <option value="unread">خوانده نشده</option>
                     <option value="read">خوانده شده</option>
                     <option value="replied">پاسخ داده شده</option>
                 </select>
             </div>
+            <div id="messages-list" style="overflow-y: auto; flex: 1;">
+                <!-- Loaded by JS -->
+            </div>
+        </div>
+
+        <!-- Message View (Hidden initially) -->
+        <div id="message-detail-view" class="card" style="display: none;">
+            <!-- Content will be injected here -->
+        </div>
+
+        <div id="message-placeholder" class="card" style="display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+            <div style="text-align: center;">
+                <i class="fas fa-envelope-open" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                <p>برای مشاهده محتوا، یک پیام را انتخاب کنید</p>
+            </div>
         </div>
     </div>
+</div>
 
-    <!-- Messages List -->
-    <div class="messages-container" id="messages-list">
-        <div class="loader-wrapper"><div class="loader"></div></div>
-    </div>
-</section>
-
-<!-- Message Detail Modal -->
+<!-- Simple Modal for mobile/detailed view if needed -->
 <div id="message-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
             <h3>جزئیات پیام</h3>
-            <button class="close-btn" onclick="closeMessageModal()">&times;</button>
+            <span class="close" onclick="closeMessageModal()">&times;</span>
         </div>
-        <div id="message-detail-content" class="order-details-grid">
-            <!-- Dynamic Content -->
+        <div class="modal-body" id="message-detail-content">
+            <!-- Loaded by JS -->
         </div>
-        <div class="modal-footer">
-            <button class="btn-delete" onclick="deleteCurrentMessage()"><i class="fa-solid fa-trash"></i> حذف پیام</button>
-            <div class="modal-actions-right">
-                <button class="btn-secondary" onclick="closeMessageModal()">بستن</button>
-                <select id="update-message-status" class="status-select" onchange="updateCurrentMessageStatus(this.value)">
+        <div class="modal-footer" style="justify-content: space-between;">
+            <button class="btn btn-danger" onclick="deleteCurrentMessage()">حذف پیام</button>
+            <div style="display: flex; gap: 10px;">
+                <select class="form-control" id="update-message-status" onchange="updateCurrentMessageStatus(this.value)" style="width: auto;">
                     <option value="unread">خوانده نشده</option>
                     <option value="read">خوانده شده</option>
                     <option value="replied">پاسخ داده شده</option>
                 </select>
+                <button class="btn btn-primary" onclick="closeMessageModal()">بستن</button>
             </div>
         </div>
     </div>
 </div>
 
 <style>
-.messages-container { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-.message-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-right: 5px solid #eee; transition: 0.3s; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-.message-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
-.message-card.unread { border-right-color: #e8789a; background: #fff9fa; }
-.message-card.read { border-right-color: #3498db; }
-.message-card.replied { border-right-color: #2ecc71; }
-
-.msg-info h4 { color: #6b3d2a; margin-bottom: 5px; }
-.msg-info p { color: #888; font-size: 0.9rem; }
-.msg-meta { text-align: left; }
-.msg-date { color: #aaa; font-size: 0.8rem; display: block; margin-bottom: 8px; }
+.message-card {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background 0.3s;
+    border-right: 4px solid transparent;
+}
+.message-card:hover {
+    background: rgba(255,255,255,0.05);
+}
+.message-card.unread {
+    background: rgba(232, 120, 154, 0.05);
+    border-right-color: var(--primary);
+}
+.message-card h4 {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: var(--white);
+}
+.message-card p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.msg-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 0.7rem;
+}
 </style>
