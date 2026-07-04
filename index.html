@@ -5,155 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>دل‌کیک</title>
 
- <link rel="stylesheet" href="css/academy-popup.css">   
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/academy-popup.css">
+<link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/footer.css">
 <link rel="stylesheet" href="css/order-rules.css">
  
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700&display=swap"
-rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
     
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
 </head>
 
 <body>
 
-  <header class="top-header">
-
-
-
-    <button class="menu-btn">
-
-    <i class="fas fa-bars"></i>
-
-    </button>
-
-
-
-    <a href="index.html" class="site-logo-mini">
-
-        <img src="images/logo/sweet-.png" alt="دل کیک">
-
-    </a>
-
-
-
-<a href="#"
-
-   class="academy-btn"
-
-   onclick="openAcademyPopup(); return false;">
-
-    ثبت‌نام دوره
-
-</a>
-
-
-
-</header>
-
-
-
-<div id="sideMenu" class="side-menu">
-
-
-
-    <div class="menu-profile">
-
-
-
-        <img
-
-        src="images/logo/sweet-.png"
-
-        alt="دل کیک">
-
-
-
-        <h3>دل‌کیک</h3>
-
-
-
-        <p>
-
-            شیرینی، آموزش و خلاقیت
-
-        </p>
-
-
-
-    </div>
-
-
-
-<a href="index.html">
-
-    <i class="fas fa-house"></i>
-
-    خانه
-
-</a>
-
-
-
-<a href="#"
-
-onclick="openAcademyPopup(); return false;">
-
-    <i class="fas fa-graduation-cap"></i>
-
-    آکادمی دل‌کیک
-
-</a>
-
-
-
-
-
-<a href="order-cake.html">
-
-    <i class="fas fa-cake-candles"></i>
-
-    سفارش کیک و شیرینی
-
-</a>
-
-
-
-<a href="#gallerySection">
-
-    <i class="fas fa-image"></i>
-
-    نمونه کارها
-
-</a>
-
-
-
-<a href="tel:09102768171">
-
-    <i class="fas fa-phone"></i>
-
-    تماس با ما
-
-</a>
-
-<a href="admin/" class="admin-link" style="display: none;">
- <i class="fas fa-chart-bar"></i>
-    پنل مدیریت</a>
-
-<a href="login/" id="user-auth-link">
-    <i class="fas fa-user"></i>
-    <span id="user-auth-text">ورود / عضویت</span>
-</a>
-
-</div>
+<div id="header-placeholder"></div>
+<div id="sidebar-placeholder"></div>
  
 <div class="background-hearts"></div>
 
@@ -265,24 +133,24 @@ onclick="openAcademyPopup(); return false;">
 <div class="heart h3">❤</div>
 <div class="heart h4">❤</div>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 <div id="menuOverlay" class="menu-overlay"></div>
 
-    <script src="js/menu.js"></script>
-    <script src="js/homepage-animation.js"></script>
-    <script src="js/academy-popup.js"></script>
+    <script src="js/menu.js" defer></script>
+    <script src="js/homepage-animation.js" defer></script>
+    <script src="js/academy-popup.js" defer></script>
     <script type="module" src="js/user-auth-state.js"></script>
     <script type="module" src="js/site-settings.js"></script>
 
 <div id="footer-container"></div>
 
-<script src="js/load-components.js"></script>
-
+<script src="js/load-components.js" defer></script>
 <script>
-loadComponent(
-    "footer-container",
-    "components/footer.html"
-);
+    document.addEventListener("DOMContentLoaded", () => {
+        loadComponent("header-placeholder", "components/header.html");
+        loadComponent("sidebar-placeholder", "components/sidebar.html");
+        loadComponent("footer-container", "components/footer.html");
+    });
 </script>
  
 </body>
