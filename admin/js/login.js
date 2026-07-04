@@ -30,6 +30,7 @@ async function handleAdminRedirect(user) {
 document.getElementById("googleLogin").addEventListener("click", async () => {
     try {
         // Redirecting to admin; the guard will finalise the check
+        // We use absolute path-like string that our helper will resolve to the correct base
         const redirectUrl = '/admin/';
         const { error } = await signInWithGoogle(redirectUrl);
         if (error) throw error;
