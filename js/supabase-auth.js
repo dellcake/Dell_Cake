@@ -65,16 +65,47 @@ export async function signInWithGoogle(redirectTo = null) {
 
 // 4. Sign Out
 export async function signOut(redirectTo = null) {
-    const { error } = await supabase.auth.signOut();
-    if (!error && redirectTo) {
-        const baseUrl = getBaseURL();
-        let finalRedirect = redirectTo;
-        if (finalRedirect.startsWith('/')) {
-            finalRedirect = baseUrl + finalRedirect;
+    try {
+        // 1. Supabase Sign Out (removes session from server and local storage)
+        const { error } = await supabase.auth.signOut();
+
+        // 2. Clear all local state
+        localStorage.clear();
+        sessionStorage.clear();
+
+        // 3. Clear common cookies (optional but safer)
+        document.cookie.split(";").forEach((c) => {
+            document.cookie = c
+                .replace(/^ +/, "")
+                .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        });
+
+        if (!error && redirectTo) {
+            const baseUrl = getBaseURL();
+            let finalRedirect = redirectTo;
+
+            // Normalize leading slash
+            if (finalRedirect.startsWith('/')) {
+                // If we have a baseUrl (like /Dell-Cake), we don't want double slashes if finalRedirect also has /
+                const normalizedBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+                finalRedirect = normalizedBase + finalRedirect;
+            }
+
+            // Ensure we don't redirect to a 404 by checking if it ends in / and adding index.html if needed
+            // Actually, location.replace handles directories if they have an index.html
+
+            window.location.replace(finalRedirect);
         }
-        window.location.replace(finalRedirect);
+        return { error };
+    } catch (err) {
+        console.error("Logout error details:", err);
+        // Fallback redirect even if there is an error
+        if (redirectTo) {
+            const baseUrl = getBaseURL();
+            window.location.replace(baseUrl || '/');
+        }
+        return { error: err };
     }
-    return { error };
 }
 
 // 5. Get Current User/Session

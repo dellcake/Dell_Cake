@@ -2030,10 +2030,13 @@ window.deleteDiscount = async (id) => {
 window.logout = async () => {
     if (confirm('آیا مطمئن هستید که می‌خواهید خارج شوید؟')) {
         try {
-            await supabaseSignOut();
-            location.replace('login.html');
+            // Using the centralized signOut with redirect to the main home page
+            // which will then be handled by the base URL logic in supabase-auth.js
+            await supabaseSignOut('/');
         } catch (error) {
             console.error('Logout error:', error);
+            // Fallback
+            location.replace('../index.html');
         }
     }
 };
