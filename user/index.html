@@ -481,7 +481,7 @@
             }
             .sidebar.active { transform: translateX(0); box-shadow: -15px 0 40px rgba(0,0,0,0.15); }
             .sidebar-overlay.active { display: block; }
-            .main-content { margin-right: 0; padding: 20px; padding-top: 90px; }
+            .main-content { margin-right: 0; padding: 20px; padding-top: 100px; }
             .mobile-toggle { display: flex; position: fixed; top: 15px; right: 15px; width: 45px; height: 45px; font-size: 1.2rem; }
             .top-header {
                 position: fixed;
@@ -494,7 +494,7 @@
                 z-index: 900;
                 margin-bottom: 0;
                 border-bottom: 1px solid var(--soft-pink);
-                height: 75px;
+                height: 80px;
             }
             .welcome-card { padding: 30px; border-radius: 30px; }
             .welcome-card h1 { font-size: 2rem; }
@@ -514,14 +514,28 @@
         @media (max-width: 768px) {
             .main-content { padding: 15px; padding-top: 100px; }
             .modern-card { padding: 25px; }
-            .welcome-card { padding: 25px; }
+            .welcome-card { padding: 25px; margin-bottom: 25px; }
             .welcome-card h1 { font-size: 1.8rem; }
             .user-profile-brief span { display: none; }
-            .user-profile-brief { padding: 8px; }
+            .user-profile-brief { padding: 8px; border-radius: 50%; width: 50px; height: 50px; justify-content: center; }
+            .user-profile-brief .avatar-circle { margin-right: 0; }
 
             .profile-layout { grid-template-columns: 1fr; }
             .stats-row { grid-template-columns: 1fr; }
-            .top-header { flex-wrap: wrap; gap: 20px; }
+            .top-header { padding: 10px; height: 70px; }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-card { padding: 20px; text-align: center; }
+            .welcome-card h1 { font-size: 1.5rem; }
+            .welcome-card p { font-size: 0.9rem; }
+            .main-content { padding: 10px; padding-top: 85px; }
+            .modern-card { padding: 20px; }
+            .icon-box { width: 50px; height: 50px; font-size: 1.4rem; margin-bottom: 15px; }
+            .table-wrapper { padding: 15px; border-radius: 20px; }
+            th, td { padding: 15px; font-size: 0.85rem; }
+            .btn-save { padding: 15px 30px; font-size: 1rem; }
+            .page-title h2 { font-size: 1.8rem !important; }
         }
 
     </style>
@@ -726,13 +740,25 @@
 
     <script type="module" src="js/dashboard.js"></script>
     <script>
-        function toggleSidebar() {
+        function toggleSidebar(forceClose = false) {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
 
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
+            if (forceClose) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            } else {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
         }
+
+        // Close sidebar on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                toggleSidebar(true);
+            }
+        });
     </script>
 </body>
 </html>

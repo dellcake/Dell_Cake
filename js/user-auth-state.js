@@ -1,24 +1,11 @@
 import { supabase } from "./supabase-client.js";
 import { onAuthStateChange, getUserProfile, signOut } from "./supabase-auth.js";
-
-/**
- * Helper to get the correct base URL (handles GitHub Pages subfolders)
- */
-function getBase() {
-    const path = window.location.pathname;
-    const parts = path.split('/');
-    const repo = parts[1];
-    if (window.location.hostname.includes('github.io') && repo && !['admin', 'user', 'login', 'register'].includes(repo)) {
-        return '/' + repo;
-    }
-    return '';
-}
+import { normalizePath } from "./utils.js";
 
 /**
  * Update UI based on authentication state
  */
 async function updateUI(user) {
-    const base = getBase();
     const guestItems = document.querySelectorAll('.guest-only');
     const userItems = document.querySelectorAll('.user-only');
     const adminItems = document.querySelectorAll('.admin-only');
@@ -31,24 +18,28 @@ async function updateUI(user) {
         const profile = await getUserProfile(user.id);
         const isAdmin = profile?.role === 'admin';
 
-        // Show appropriate items
-        userItems.forEach(el => el.style.display = 'flex'); // sidebar uses flex/block
+        // Show items for logged-in users
+        userItems.forEach(el => el.style.display = 'flex');
 
-        if (isAdmin) {
-            adminItems.forEach(el => el.style.display = 'flex');
-        } else {
-            adminItems.forEach(el => el.style.display = 'none');
-        }
+        // Show/Hide admin items
+        adminItems.forEach(el => {
+            if (isAdmin) {
+                el.style.display = 'flex';
+            } else if (!el.classList.contains('user-only')) {
+                // Only hide if it doesn't also have 'user-only'
+                el.style.display = 'none';
+            }
+        });
 
-        // Adjust links for GitHub Pages
+        // Adjust links using centralized path helper
         document.querySelectorAll('.admin-only').forEach(el => {
             if (el.tagName === 'A') {
-                el.href = base + '/admin/';
+                el.href = normalizePath('/admin/');
             }
         });
         document.querySelectorAll('.user-only').forEach(el => {
             if (el.tagName === 'A') {
-                el.href = base + '/user/';
+                el.href = normalizePath('/user/');
             }
         });
 
@@ -59,7 +50,7 @@ async function updateUI(user) {
         adminItems.forEach(el => el.style.display = 'none');
 
         const authLink = document.getElementById('user-auth-link');
-        if (authLink) authLink.href = base + '/login/';
+        if (authLink) authLink.href = normalizePath('/login/');
     }
 }
 
@@ -77,7 +68,7 @@ document.addEventListener("componentsLoaded", async () => {
 // Global Logout Handler
 window.handleLogout = async () => {
     if (confirm('آیا می‌خواهید از حساب خود خارج شوید؟')) {
-        const { error } = await signOut('/');
+        const { error } = await signOut('/index.html');
         if (error) alert('خطا در خروج: ' + error.message);
     }
 };

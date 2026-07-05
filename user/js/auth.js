@@ -1,5 +1,6 @@
 import { signIn, signUp, signInWithGoogle, getUserProfile } from "../../js/supabase-auth.js";
 import { initGuestGuard } from "../../js/guards/guest-guard.js";
+import { normalizePath } from "../../js/utils.js";
 
 /**
  * User Authentication Handler
@@ -19,19 +20,11 @@ async function handleRoleBasedRedirect(user) {
     const profile = await getUserProfile(user.id);
     const isAdmin = profile?.role === 'admin';
 
-    const path = window.location.pathname;
-    const parts = path.split('/');
-    const repo = parts[1];
-    let base = '';
-    if (window.location.hostname.includes('github.io') && repo && !['admin', 'user', 'login', 'register'].includes(repo)) {
-        base = '/' + repo;
-    }
-
     if (isAdmin) {
-        window.location.replace(base + '/admin/');
+        window.location.replace(normalizePath('/admin/'));
     } else {
         // Direct users to home with success flag for Toast
-        window.location.replace(base + '/index.html?login=success');
+        window.location.replace(normalizePath('/index.html?login=success'));
     }
 }
 

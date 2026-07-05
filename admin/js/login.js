@@ -1,5 +1,6 @@
 import { signIn, signInWithGoogle, signOut, getUserProfile } from "../../js/supabase-auth.js";
 import { initGuestGuard } from "../../js/guards/guest-guard.js";
+import { normalizePath } from "../../js/utils.js";
 
 /**
  * Admin Login Handler
@@ -18,11 +19,10 @@ async function handleAdminRedirect(user) {
 
     if (isAdmin) {
         // Correct path for admin dashboard
-        location.replace("../");
+        location.replace(normalizePath("/admin/"));
     } else {
         alert("متأسفیم، شما دسترسی مدیریت ندارید.");
-        await signOut();
-        location.replace("./?error=unauthorized");
+        await signOut(normalizePath("/index.html"));
     }
 }
 

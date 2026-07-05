@@ -1,4 +1,5 @@
 import { onAuthStateChange, getUserProfile } from "../supabase-auth.js";
+import { normalizePath } from "../utils.js";
 
 /**
  * Admin Auth Guard
@@ -9,17 +10,6 @@ export function initAdminGuard() {
         const user = session?.user;
         const path = window.location.pathname;
 
-        // Base URL helper (handles GitHub Pages)
-        const getBase = () => {
-            const parts = path.split('/');
-            const repo = parts[1];
-            if (window.location.hostname.includes('github.io') && repo && !['admin', 'user', 'login', 'register'].includes(repo)) {
-                return '/' + repo;
-            }
-            return '';
-        };
-
-        const base = getBase();
         const isAdminPath = path.includes('/admin');
         const isAdminLogin = path.includes('/admin/login');
 
@@ -27,7 +17,7 @@ export function initAdminGuard() {
             // Redirect guests away from protected admin pages
             if (isAdminPath && !isAdminLogin) {
                 console.warn("Guest access blocked. Redirecting to login...");
-                location.replace(base + "/login/");
+                location.replace(normalizePath("/login/"));
             }
         } else {
             // Fetch profile to verify role
@@ -37,12 +27,12 @@ export function initAdminGuard() {
             if (!isAdmin) {
                 console.error("Access denied. User is not an admin.");
                 if (isAdminPath) {
-                    location.replace(base + "/index.html");
+                    location.replace(normalizePath("/index.html"));
                 }
             } else {
-                // Authorized admin
+                // Authorized admin - prevent staying on admin login page
                 if (isAdminLogin) {
-                    location.replace(base + "/admin/");
+                    location.replace(normalizePath("/admin/"));
                 }
             }
         }
