@@ -41,10 +41,16 @@ async function updateUI(user) {
         }
 
         // Adjust links for GitHub Pages
-        const adminLink = document.querySelector('.admin-only[href*="admin/"]');
-        const userLink = document.querySelector('.user-only[href*="user/"]');
-        if (adminLink) adminLink.href = base + '/admin/';
-        if (userLink) userLink.href = base + '/user/';
+        document.querySelectorAll('.admin-only').forEach(el => {
+            if (el.tagName === 'A') {
+                el.href = base + '/admin/';
+            }
+        });
+        document.querySelectorAll('.user-only').forEach(el => {
+            if (el.tagName === 'A') {
+                el.href = base + '/user/';
+            }
+        });
 
     } else {
         // Guest mode

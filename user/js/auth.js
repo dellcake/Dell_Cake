@@ -19,11 +19,19 @@ async function handleRoleBasedRedirect(user) {
     const profile = await getUserProfile(user.id);
     const isAdmin = profile?.role === 'admin';
 
+    const path = window.location.pathname;
+    const parts = path.split('/');
+    const repo = parts[1];
+    let base = '';
+    if (window.location.hostname.includes('github.io') && repo && !['admin', 'user', 'login', 'register'].includes(repo)) {
+        base = '/' + repo;
+    }
+
     if (isAdmin) {
-        window.location.replace('../admin/');
+        window.location.replace(base + '/admin/');
     } else {
         // Direct users to home with success flag for Toast
-        window.location.replace('../index.html?login=success');
+        window.location.replace(base + '/index.html?login=success');
     }
 }
 
@@ -31,6 +39,7 @@ async function handleRoleBasedRedirect(user) {
 googleBtn.addEventListener('click', async () => {
     try {
         // The redirectTo is a hint; the actual landing page will handle the final hop via Auth guards
+        // If an admin logs in, the user-guard.js will handle the hop to /admin/
         const redirectUrl = '/user/';
         const { error } = await signInWithGoogle(redirectUrl);
         if (error) throw error;
