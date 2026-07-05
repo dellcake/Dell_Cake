@@ -222,7 +222,7 @@ function renderCourses() {
     } else {
         tbody.innerHTML = paginatedItems.map(course => `
             <tr>
-                <td><img src="${course.image || '../assets/placeholder.jpg'}" width="50" height="50" style="border-radius:8px; object-fit:cover;"></td>
+                <td><img src="${course.image || '../images/logo/sweet-.png'}" width="50" height="50" style="border-radius:8px; object-fit:cover; opacity: 0.5;"></td>
                 <td>${course.title}</td>
                 <td>${Number(course.price).toLocaleString('fa-IR')} تومان</td>
                 <td>${translateCategory(course.category)}</td>
@@ -1223,7 +1223,7 @@ function renderBlog() {
     } else {
         tbody.innerHTML = filteredBlog.map(post => `
             <tr>
-                <td><img src="${post.image_url || '../assets/placeholder.jpg'}" width="50" height="50" style="border-radius:8px; object-fit:cover;"></td>
+                <td><img src="${post.image_url || '../images/logo/sweet-.png'}" width="50" height="50" style="border-radius:8px; object-fit:cover; opacity: 0.5;"></td>
                 <td>${post.title}</td>
                 <td>${post.author_name || 'مدیریت'}</td>
                 <td>${new Date(post.created_at).toLocaleDateString('fa-IR')}</td>
@@ -1642,7 +1642,7 @@ function renderProducts() {
     } else {
         tbody.innerHTML = products.map(p => `
             <tr>
-                <td><img src="${p.image_url || '../assets/placeholder.jpg'}" width="50" height="50" style="border-radius:8px; object-fit:cover;"></td>
+                <td><img src="${p.image_url || '../images/logo/sweet-.png'}" width="50" height="50" style="border-radius:8px; object-fit:cover; opacity: 0.5;"></td>
                 <td>${p.name}</td>
                 <td>${(Number(p.price) || 0).toLocaleString('fa-IR')} تومان</td>
                 <td>${translateCategory(p.category)}</td>
@@ -2032,7 +2032,7 @@ window.logout = async () => {
         try {
             // Using the centralized signOut with redirect to the main home page
             // which will then be handled by the base URL logic in supabase-auth.js
-            await supabaseSignOut('/');
+            await supabaseSignOut('/index.html');
         } catch (error) {
             console.error('Logout error:', error);
             // Fallback
@@ -2058,8 +2058,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // Logout button
-        if (e.target.closest('#logout-btn')) {
+        // Handle common logout button selectors
+        if (e.target.closest('#logout-btn') || e.target.closest('.logout-item') || e.target.closest('.btn-logout')) {
             logout();
         }
     });

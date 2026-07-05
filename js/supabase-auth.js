@@ -1,4 +1,5 @@
 import { supabase } from './supabase-client.js';
+import { normalizePath, getBaseURL as getAppBaseURL } from './utils.js';
 
 /**
  * Supabase Authentication Helper
@@ -28,27 +29,11 @@ export async function signIn(email, password) {
     return { data, error };
 }
 
-/**
- * Helper to get the correct base URL (handles GitHub Pages subfolders)
- */
-function getBaseURL() {
-    const path = window.location.pathname;
-    // If we are in a subfolder (like /Dell-Cake/), extract it
-    const repoName = path.split('/')[1];
-    const isGitHubPages = window.location.hostname.includes('github.io');
-
-    if (isGitHubPages && repoName && !['admin', 'user', 'index.html'].includes(repoName)) {
-        return `${window.location.origin}/${repoName}`;
-    }
-    return window.location.origin;
-}
-
 // 3. Sign In with Google
 export async function signInWithGoogle(redirectTo = null) {
-    const baseUrl = getBaseURL();
-    const defaultRedirect = baseUrl + '/user/';
+    const baseUrl = getAppBaseURL();
+    const defaultRedirect = normalizePath('/user/');
 
-    // Ensure redirectTo starts with the base URL if it's a relative path
     let finalRedirect = redirectTo || defaultRedirect;
     if (finalRedirect.startsWith('/')) {
         finalRedirect = baseUrl + finalRedirect;
@@ -81,28 +66,24 @@ export async function signOut(redirectTo = null) {
         });
 
         if (!error && redirectTo) {
-            const baseUrl = getBaseURL();
+            const baseUrl = getAppBaseURL();
             let finalRedirect = redirectTo;
 
-            // Normalize leading slash
             if (finalRedirect.startsWith('/')) {
-                // If we have a baseUrl (like /Dell-Cake), we don't want double slashes if finalRedirect also has /
-                const normalizedBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-                finalRedirect = normalizedBase + finalRedirect;
+                finalRedirect = normalizePath(finalRedirect);
+                // If it's still just starting with /, it might not have the full URL
+                if (finalRedirect.startsWith('/')) {
+                    finalRedirect = window.location.origin + finalRedirect;
+                }
             }
-
-            // Ensure we don't redirect to a 404 by checking if it ends in / and adding index.html if needed
-            // Actually, location.replace handles directories if they have an index.html
 
             window.location.replace(finalRedirect);
         }
         return { error };
     } catch (err) {
         console.error("Logout error details:", err);
-        // Fallback redirect even if there is an error
         if (redirectTo) {
-            const baseUrl = getBaseURL();
-            window.location.replace(baseUrl || '/');
+            window.location.replace(normalizePath("/index.html"));
         }
         return { error: err };
     }

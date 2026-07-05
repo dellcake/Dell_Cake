@@ -1,6 +1,7 @@
 import { supabase } from "../../js/supabase-client.js";
 import { onAuthStateChange, signOut, updateProfile, updatePassword, getUserProfile } from "../../js/supabase-auth.js";
 import { initUserGuard } from "../../js/guards/user-guard.js";
+import { normalizePath } from "../../js/utils.js";
 
 // Initialize Guard
 initUserGuard();
@@ -13,14 +14,7 @@ let enrollments = [];
 
 // --- Tab Navigation ---
 window.goToAdmin = () => {
-    const path = window.location.pathname;
-    const parts = path.split('/');
-    const repo = parts[1];
-    let base = '';
-    if (window.location.hostname.includes('github.io') && repo && !['admin', 'user', 'login', 'register'].includes(repo)) {
-        base = '/' + repo;
-    }
-    window.location.href = base + '/admin/';
+    window.location.href = normalizePath('/admin/');
 };
 
 window.switchView = (viewName, el = null) => {
@@ -79,6 +73,12 @@ async function refreshUserData() {
 
     // Fetch Profile from DB
     userProfile = await getUserProfile(currentUser.id);
+
+    // Show Admin Link if authorized
+    const adminLink = document.getElementById('admin-panel-link');
+    if (adminLink && userProfile?.role === 'admin') {
+        adminLink.style.display = 'flex';
+    }
 
     // Update UI
     const name = userProfile?.full_name || currentUser.email.split('@')[0];
