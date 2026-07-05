@@ -1,5 +1,9 @@
 import { supabase } from "../../js/supabase-client.js";
 import { onAuthStateChange, signOut, updateProfile, updatePassword, getUserProfile } from "../../js/supabase-auth.js";
+import { initUserGuard } from "../../js/guards/user-guard.js";
+
+// Initialize Guard
+initUserGuard();
 
 // --- State Management ---
 let currentUser = null;
@@ -8,6 +12,17 @@ let orders = [];
 let enrollments = [];
 
 // --- Tab Navigation ---
+window.goToAdmin = () => {
+    const path = window.location.pathname;
+    const parts = path.split('/');
+    const repo = parts[1];
+    let base = '';
+    if (window.location.hostname.includes('github.io') && repo && !['admin', 'user', 'login', 'register'].includes(repo)) {
+        base = '/' + repo;
+    }
+    window.location.href = base + '/admin/';
+};
+
 window.switchView = (viewName, el = null) => {
     // 1. Sidebar UI Update
     if (el) {
