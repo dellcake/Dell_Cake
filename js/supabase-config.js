@@ -1,10 +1,12 @@
-// Supabase Configuration
+/**
+ * Supabase Configuration
+ * IMPORTANT: You MUST replace the values below with your own Supabase project credentials.
+ * Get them from: Project Settings -> API
+ */
 export const SUPABASE_CONFIG = {
-    // If using Cloudflare Worker Proxy (recommended for Iran access):
-    // url: 'https://delcake-supabase-proxy.yourname.workers.dev',
+    // 1. Your Project URL (e.g., https://xyz.supabase.co)
+    url: 'لطفا آدرس پروژه سوپابیس خود را اینجا وارد کنید',
 
-    // Original Supabase URL:
-    url: 'https://your-project-url.supabase.co',
-
-    anonKey: 'your-anon-key'
+    // 2. Your Anon Public Key
+    anonKey: 'لطفا کلید Anon پروژه خود را اینجا وارد کنید'
 };

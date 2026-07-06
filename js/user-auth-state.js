@@ -56,7 +56,21 @@ async function updateUI(user) {
 
 // Listen for auth changes
 onAuthStateChange(async (event, session) => {
-    await updateUI(session?.user);
+    const user = session?.user;
+    await updateUI(user);
+
+    // Global Redirection Logic:
+    // If an Admin lands anywhere outside the /admin/ path, push them to the CMS
+    if (user) {
+        const profile = await getUserProfile(user.id);
+        if (profile?.role === 'admin') {
+            const path = window.location.pathname;
+            if (!path.includes('/admin/')) {
+                console.log("Admin detected. Redirecting to Management Panel...");
+                window.location.replace(normalizePath('/admin/'));
+            }
+        }
+    }
 });
 
 // Initial UI check when components are loaded

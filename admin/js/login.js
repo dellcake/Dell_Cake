@@ -1,4 +1,4 @@
-import { signIn, signInWithGoogle, signOut, getUserProfile } from "../../js/supabase-auth.js";
+import { signIn, signInWithGoogle, signOut, getUserProfile, handleRoleBasedRedirect } from "../../js/supabase-auth.js";
 import { initGuestGuard } from "../../js/guards/guest-guard.js";
 import { normalizePath } from "../../js/utils.js";
 
@@ -29,9 +29,8 @@ async function handleAdminRedirect(user) {
 // Google Login Listener
 document.getElementById("googleLogin").addEventListener("click", async () => {
     try {
-        // Redirecting to admin; the guard will finalise the check
-        // We use absolute path-like string that our helper will resolve to the correct base
-        const redirectUrl = '/admin/';
+        // Redirecting to root; the guards there will handle the role check and redirect to admin
+        const redirectUrl = '/index.html';
         const { error } = await signInWithGoogle(redirectUrl);
         if (error) throw error;
     } catch (error) {
@@ -56,7 +55,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         if (error) throw error;
 
         if (data.user) {
-            await handleAdminRedirect(data.user);
+            await handleRoleBasedRedirect(data.user);
         }
     } catch (error) {
         console.error("Admin Email Login Error:", error);
