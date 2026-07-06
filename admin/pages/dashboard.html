@@ -1,149 +1,28 @@
-<div class="dashboard-wrapper">
-    <!-- Stats Cards -->
+<div class="content-section">
+    <div class="section-header">
+        <h2><i class="fas fa-th-large"></i> نمای کلی پیشخوان</h2>
+    </div>
+
     <div class="stats-grid">
-        <div class="card stat-card">
-            <div class="stat-icon pink">
-                <i class="fas fa-shopping-bag"></i>
-            </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #e8fdf5; color: #2ed573;"><i class="fas fa-shopping-bag"></i></div>
             <div class="stat-info">
-                <h3>فروش کل</h3>
-                <p class="value" id="total-sales">۰ تومان</p>
+                <h3 id="new-orders">۰</h3>
+                <p>سفارش‌های جدید</p>
             </div>
         </div>
-
-        <div class="card stat-card">
-            <div class="stat-icon blue">
-                <i class="fas fa-users"></i>
-            </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #f0f3ff; color: #3742fa;"><i class="fas fa-graduation-cap"></i></div>
             <div class="stat-info">
-                <h3>کاربران</h3>
-                <p class="value" id="total-users">۰</p>
+                <h3 id="total-courses">۰</h3>
+                <p>تعداد کل دوره‌ها</p>
             </div>
         </div>
-
-        <div class="card stat-card">
-            <div class="stat-icon green">
-                <i class="fas fa-cart-arrow-down"></i>
-            </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #fff0f3; color: #e8789a;"><i class="fas fa-images"></i></div>
             <div class="stat-info">
-                <h3>سفارش‌های جدید</h3>
-                <p class="value" id="new-orders">۰</p>
-            </div>
-        </div>
-
-        <div class="card stat-card">
-            <div class="stat-icon orange">
-                <i class="fas fa-graduation-cap"></i>
-            </div>
-            <div class="stat-info">
-                <h3>دوره‌های فعال</h3>
-                <p class="value" id="active-courses">۰</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Charts & Lists -->
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 25px;">
-        <!-- Sales Chart -->
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-chart-line"></i> آمار فروش هفتگی</h2>
-                <select class="form-control" style="width: auto; padding: 5px 10px;">
-                    <option>۷ روز اخیر</option>
-                    <option>۳۰ روز اخیر</option>
-                </select>
-            </div>
-            <div class="chart-container">
-                <canvas id="salesChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Recent Orders -->
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-clock"></i> آخرین سفارش‌ها</h2>
-                <button class="btn btn-outline btn-sm" onclick="navigateTo('orders')">مشاهده همه</button>
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>مشتری</th>
-                            <th>مبلغ</th>
-                            <th>وضعیت</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recent-orders-list">
-                        <!-- Will be populated by JS -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; margin-top: 25px;">
-        <!-- Popular Courses -->
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-star"></i> دوره‌های پرطرفدار</h2>
-            </div>
-            <div id="popular-courses" class="status-list">
-                <!-- Will be populated by JS -->
-            </div>
-        </div>
-
-        <!-- System Status -->
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-server"></i> وضعیت سیستم</h2>
-            </div>
-            <div class="status-list">
-                <div class="status-item">
-                    <div class="status-info">
-                        <span>پایگاه داده (Supabase)</span>
-                        <span class="badge badge-success">متصل</span>
-                    </div>
-                </div>
-                <div class="status-item">
-                    <div class="status-info">
-                        <span>فضای ذخیره‌سازی</span>
-                        <span>۷۵٪ آزاد</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: 25%;"></div>
-                    </div>
-                </div>
-                <div class="status-item">
-                    <div class="status-info">
-                        <span>امنیت SSL</span>
-                        <span class="badge badge-info">فعال</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-bolt"></i> دسترسی سریع</h2>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button class="btn btn-outline" style="flex-direction: column; height: 80px;" onclick="navigateTo('courses')">
-                    <i class="fas fa-plus"></i>
-                    <span>دوره جدید</span>
-                </button>
-                <button class="btn btn-outline" style="flex-direction: column; height: 80px;" onclick="navigateTo('products')">
-                    <i class="fas fa-plus"></i>
-                    <span>محصول جدید</span>
-                </button>
-                <button class="btn btn-outline" style="flex-direction: column; height: 80px;" onclick="navigateTo('gallery')">
-                    <i class="fas fa-upload"></i>
-                    <span>آپلود تصویر</span>
-                </button>
-                <button class="btn btn-outline" style="flex-direction: column; height: 80px;" onclick="navigateTo('blog')">
-                    <i class="fas fa-pen"></i>
-                    <span>پست جدید</span>
-                </button>
+                <h3 id="total-gallery">۰</h3>
+                <p>نمونه کارهای ثبت شده</p>
             </div>
         </div>
     </div>
