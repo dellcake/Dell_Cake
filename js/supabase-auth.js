@@ -124,6 +124,32 @@ export async function getSession() {
     return session;
 }
 
+/**
+ * Handle redirection based on user role
+ * @param {Object} user Supabase user object
+ */
+export async function handleRoleBasedRedirect(user) {
+    if (!user) return;
+
+    try {
+        const profile = await getUserProfile(user.id);
+        const isAdmin = profile?.role === 'admin';
+
+        if (isAdmin) {
+            window.location.replace(normalizePath('/admin/'));
+        } else {
+            // Check if we are already in the user panel or on an auth page
+            const path = window.location.pathname;
+            if (path.includes('/user/') || path.includes('/login/') || path.includes('/register/')) {
+                window.location.replace(normalizePath('/index.html?login=success'));
+            }
+        }
+    } catch (error) {
+        console.error("Redirection error:", error);
+        window.location.replace(normalizePath('/index.html'));
+    }
+}
+
 // Update Profile
 export async function updateProfile(options) {
     const { data, error } = await supabase.auth.updateUser(options);

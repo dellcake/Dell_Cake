@@ -21,9 +21,14 @@ export function initUserGuard() {
         } else {
             // Check for admin role and redirect if necessary
             const profile = await getUserProfile(user.id);
-            if (profile?.role === 'admin' && isUserPath) {
-                console.log("Admin detected on user path. Redirecting to admin panel...");
-                location.replace(normalizePath("/admin/"));
+            const isAdmin = profile?.role === 'admin';
+
+            if (isAdmin) {
+                console.log("Admin detected. Checking path...");
+                // Always redirect admins away from user panel or auth pages to the admin panel
+                if (isUserPath || path.includes('/login/') || path.includes('/register/')) {
+                    location.replace(normalizePath("/admin/"));
+                }
             }
         }
     });

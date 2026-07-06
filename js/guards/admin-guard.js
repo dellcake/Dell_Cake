@@ -27,7 +27,8 @@ export function initAdminGuard() {
             if (!isAdmin) {
                 console.error("Access denied. User is not an admin.");
                 if (isAdminPath) {
-                    location.replace(normalizePath("/index.html"));
+                    // Try to logout to be safe if they somehow got an admin session but aren't admin in DB
+                    location.replace(normalizePath("/index.html?error=unauthorized"));
                 }
             } else {
                 // Authorized admin - prevent staying on admin login page

@@ -1,4 +1,4 @@
-import { signIn, signUp, signInWithGoogle, getUserProfile } from "../../js/supabase-auth.js";
+import { signIn, signUp, signInWithGoogle, handleRoleBasedRedirect } from "../../js/supabase-auth.js";
 import { initGuestGuard } from "../../js/guards/guest-guard.js";
 import { normalizePath } from "../../js/utils.js";
 
@@ -13,27 +13,12 @@ initGuestGuard();
 const googleBtn = document.getElementById('google-login');
 const emailBtn = document.getElementById('email-auth');
 
-/**
- * Handle redirection based on user role
- */
-async function handleRoleBasedRedirect(user) {
-    const profile = await getUserProfile(user.id);
-    const isAdmin = profile?.role === 'admin';
-
-    if (isAdmin) {
-        window.location.replace(normalizePath('/admin/'));
-    } else {
-        // Direct users to home with success flag for Toast
-        window.location.replace(normalizePath('/index.html?login=success'));
-    }
-}
-
 // Google Login Listener
 googleBtn.addEventListener('click', async () => {
     try {
-        // The redirectTo is a hint; the actual landing page will handle the final hop via Auth guards
-        // If an admin logs in, the user-guard.js will handle the hop to /admin/
-        const redirectUrl = '/user/';
+        // Use the root path as the callback for Google, as guards on index.html
+        // will handle role-based redirection more reliably.
+        const redirectUrl = '/index.html';
         const { error } = await signInWithGoogle(redirectUrl);
         if (error) throw error;
     } catch (error) {

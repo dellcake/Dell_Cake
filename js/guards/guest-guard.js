@@ -12,13 +12,20 @@ export function initGuestGuard() {
 
         const isAuthPage = path.includes('/login/') || path.includes('/register/');
 
-        if (user && isAuthPage) {
+        if (user) {
             const profile = await getUserProfile(user.id);
-            if (profile?.role === 'admin') {
-                location.replace(normalizePath("/admin/"));
+            const isAdmin = profile?.role === 'admin';
+
+            if (isAdmin) {
+                // Admins should NOT be on guest pages
+                if (isAuthPage || path.includes('/user/')) {
+                    location.replace(normalizePath("/admin/"));
+                }
             } else {
-                // If on /login/ or /register/, redirect to home after login as per requirement
-                location.replace(normalizePath("/index.html"));
+                // Regular users should NOT be on guest pages
+                if (isAuthPage) {
+                    location.replace(normalizePath("/index.html"));
+                }
             }
         }
     });
