@@ -19,14 +19,10 @@ if (!isConfigValid) {
 export const supabase = isConfigValid
     ? createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
     : {
-        auth: {
-            onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
-            getSession: async () => ({ data: { session: null } }),
-            signInWithOAuth: async () => ({ error: { message: "پیکربندی سوپابیس ناقص است" } }),
-            signInWithPassword: async () => ({ error: { message: "پیکربندی سوپابیس ناقص است" } }),
-            signOut: async () => ({ error: null })
-        },
         from: () => ({
-            select: () => ({ eq: () => ({ single: async () => ({ data: null, error: null }) }) })
+            select: () => ({
+                order: () => ({ limit: () => ({ single: async () => ({ data: null, error: null }) }) }),
+                eq: () => ({ single: async () => ({ data: null, error: null }) })
+            })
         })
     };

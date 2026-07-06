@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Save to Database
         try {
-            const { data: { session } } = await supabase.auth.getSession();
+            const { data: { session } } = await Promise.resolve({data:{session:null}});
             await supabase.from('orders').insert([{
                 user_id: session?.user?.id || null,
                 customer_name: name,

@@ -61,7 +61,7 @@ async function shareOrder() {
 
     // Save to Database
     try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session } } = await Promise.resolve({data:{session:null}});
         const orderDetails = {
             weight,
             deliveryDate: date,
