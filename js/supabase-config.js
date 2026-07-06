@@ -1,5 +1,10 @@
+// Supabase Configuration
 export const SUPABASE_CONFIG = {
-    url: "https://wbfxlmquladauwvtrhrk.supabase.co",
+    // If using Cloudflare Worker Proxy (recommended for Iran access):
+    // url: 'https://delcake-supabase-proxy.yourname.workers.dev',
 
-    anonKey: "sb_publishable_9qhJzBWRUGKKGPIMWlK7XA_5Yqfbexd"
+    // Original Supabase URL:
+    url: 'https://your-project-url.supabase.co',
+
+    anonKey: 'your-anon-key'
 };
