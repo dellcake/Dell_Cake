@@ -1,20 +1,25 @@
 import { supabase } from "../../../js/supabase-client.js";
 
 /**
- * Orders Management Module
+ * Orders Management Module - Supabase Version
  */
 export const OrdersModule = {
     orders: [],
 
     async load() {
-        const { data, error } = await supabase
-            .from('orders')
-            .select('*')
-            .order('created_at', { ascending: false });
+        try {
+            const { data, error } = await supabase
+                .from('orders')
+                .select('*')
+                .order('created_at', { ascending: false });
 
-        if (error) return console.error('Error fetching orders:', error);
-        this.orders = data;
-        this.render();
+            if (error) throw error;
+            this.orders = data || [];
+            this.render();
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+            this.render();
+        }
     },
 
     render() {
@@ -22,19 +27,20 @@ export const OrdersModule = {
         if (!tbody) return;
 
         if (this.orders.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">سفارشی یافت نشد.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">سفارشی ثبت نشده است.</td></tr>';
         } else {
             tbody.innerHTML = this.orders.map(order => `
                 <tr>
-                    <td>#${order.id.slice(-6).toUpperCase()}</td>
-                    <td>${order.customer_name || 'نامشخص'}</td>
-                    <td>${order.product_name || 'محصول'}</td>
-                    <td>${(Number(order.price) || 0).toLocaleString('fa-IR')}</td>
-                    <td>${new Date(order.created_at).toLocaleDateString('fa-IR')}</td>
+                    <td>${order.id.substring(0, 8)}</td>
+                    <td>${order.customer_name}</td>
+                    <td>${order.phone}</td>
+                    <td>${order.details?.cake_type || 'نامشخص'}</td>
+                    <td>${order.details?.delivery_date ? new Date(order.details.delivery_date).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
                     <td><span class="status-badge ${order.status}">${this.translateStatus(order.status)}</span></td>
                     <td>
                         <div class="actions">
-                            <button class="btn-icon btn-edit" onclick="OrdersModule.openModal('${order.id}')"><i class="fa-solid fa-eye"></i></button>
+                            <button class="btn-icon" onclick="OrdersModule.viewDetail('${order.id}')" title="مشاهده جزئیات"><i class="fa-solid fa-eye"></i></button>
+                            <button class="btn-icon btn-delete" onclick="OrdersModule.delete('${order.id}')"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -42,53 +48,64 @@ export const OrdersModule = {
         }
     },
 
-    openModal(orderId) {
-        const order = this.orders.find(o => o.id === orderId);
-        if (!order) return;
+    async updateStatus(id, newStatus) {
+        try {
+            const { error } = await supabase.from('orders').update({ status: newStatus }).eq('id', id);
+            if (error) throw error;
+            this.load();
+        } catch (err) {
+            alert('خطا در بروزرسانی وضعیت: ' + err.message);
+        }
+    },
 
-        const modal = document.getElementById('order-modal');
-        const content = document.getElementById('order-details-content');
+    async delete(id) {
+        if (!confirm('آیا از حذف این سفارش اطمینان دارید؟')) return;
+        try {
+            const { error } = await supabase.from('orders').delete().eq('id', id);
+            if (error) throw error;
+            this.load();
+        } catch (err) {
+            alert('خطا در حذف: ' + err.message);
+        }
+    },
+
+    viewDetail(id) {
+        const order = this.orders.find(o => o.id === id);
+        const modal = document.getElementById('order-detail-modal');
+        const content = document.getElementById('order-detail-content');
+        if (!modal || !content) return;
 
         content.innerHTML = `
-            <div class="detail-item">
-                <label>شناسه سفارش</label>
-                <span>#${order.id.toUpperCase()}</span>
-            </div>
-            <div class="detail-item">
-                <label>نام مشتری</label>
-                <span>${order.customer_name || 'نامشخص'}</span>
-            </div>
-            <div class="detail-item">
-                <label>محصول/دوره</label>
-                <span>${order.product_name || 'نامشخص'}</span>
-            </div>
-            <div class="detail-item">
-                <label>مبلغ کل</label>
-                <span>${(Number(order.price) || 0).toLocaleString('fa-IR')} تومان</span>
-            </div>
-            <div class="detail-item">
-                <label>وضعیت فعلی</label>
-                <select onchange="OrdersModule.updateStatus('${order.id}', this.value)" class="form-control">
-                    <option value="new" ${order.status === 'new' ? 'selected' : ''}>جدید</option>
-                    <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>در حال بررسی</option>
-                    <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>تکمیل شده</option>
-                    <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>لغو شده</option>
-                </select>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="detail-item"><label>نام مشتری:</label> <span>${order.customer_name}</span></div>
+                <div class="detail-item"><label>شماره تماس:</label> <span>${order.phone}</span></div>
+                <div class="detail-item"><label>نوع کیک:</label> <span>${order.details?.cake_type || 'نامشخص'}</span></div>
+                <div class="detail-item"><label>تاریخ تحویل:</label> <span>${order.details?.delivery_date ? new Date(order.details.delivery_date).toLocaleDateString('fa-IR') : 'نامشخص'}</span></div>
+                <div class="detail-item order-full-width"><label>آدرس:</label> <span>${order.address || 'آدرسی ثبت نشده'}</span></div>
+                <div class="detail-item order-full-width"><label>توضیحات:</label> <span>${order.details?.description || 'توضیحاتی ثبت نشده'}</span></div>
+                <div class="detail-item order-full-width">
+                    <label>تغییر وضعیت:</label>
+                    <select class="form-control" onchange="OrdersModule.updateStatus('${order.id}', this.value)">
+                        <option value="new" ${order.status === 'new' ? 'selected' : ''}>جدید</option>
+                        <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>در انتظار بررسی</option>
+                        <option value="preparing" ${order.status === 'preparing' ? 'selected' : ''}>در حال آماده‌سازی</option>
+                        <option value="ready" ${order.status === 'ready' ? 'selected' : ''}>آماده تحویل</option>
+                        <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>تکمیل شده</option>
+                        <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>لغو شده</option>
+                    </select>
+                </div>
             </div>
         `;
         modal.style.display = 'flex';
     },
 
-    async updateStatus(id, newStatus) {
-        await supabase.from('orders').update({ status: newStatus }).eq('id', id);
-        this.load();
-    },
-
     translateStatus(status) {
         const map = {
             'new': 'جدید',
-            'pending': 'در حال بررسی',
-            'completed': 'تکمیل شده',
+            'pending': 'در انتظار',
+            'preparing': 'در حال پخت',
+            'ready': 'آماده تحویل',
+            'completed': 'تحویل شده',
             'cancelled': 'لغو شده'
         };
         return map[status] || status;
@@ -96,4 +113,4 @@ export const OrdersModule = {
 };
 
 window.OrdersModule = OrdersModule;
-window.closeOrderModal = () => document.getElementById('order-modal').style.display = 'none';
+window.closeOrderDetailModal = () => document.getElementById('order-detail-modal').style.display = 'none';

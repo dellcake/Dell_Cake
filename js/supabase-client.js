@@ -19,6 +19,12 @@ if (!isConfigValid) {
 export const supabase = isConfigValid
     ? createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
     : {
+        auth: {
+            getSession: async () => ({ data: { session: null }, error: null }),
+            onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+            signInWithOAuth: async () => ({ data: {}, error: null }),
+            signOut: async () => ({ error: null })
+        },
         from: () => ({
             select: () => ({
                 order: () => ({ limit: () => ({ single: async () => ({ data: null, error: null }) }) }),

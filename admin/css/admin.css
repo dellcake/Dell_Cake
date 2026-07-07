@@ -7,10 +7,10 @@
     --white: #ffffff;
     --text-dark: #e0e0e0;
     --text-muted: #a0a0a0;
-    --bg-dark: #121212;
-    --bg-card: #1e1e1e;
-    --bg-sidebar: #181818;
-    --border-color: #333333;
+    --bg-dark: #fdf6f0;
+    --bg-card: rgba(255, 255, 255, 0.7);
+    --bg-sidebar: #6b3d2a;
+    --border-color: rgba(107, 61, 42, 0.1);
     --sidebar-width: 260px;
     --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     --radius: 15px;
@@ -27,8 +27,9 @@ body {
     font-family: "Vazirmatn", sans-serif;
     direction: rtl;
     background-color: var(--bg-dark);
-    color: var(--text-dark);
+    color: #444;
     overflow-x: hidden;
+    background-image: radial-gradient(circle at 10% 20%, rgba(232, 120, 154, 0.05) 0%, transparent 40%);
 }
 
 .admin-container {
@@ -40,7 +41,7 @@ body {
 .sidebar {
     width: var(--sidebar-width);
     background-color: var(--bg-sidebar);
-    border-left: 1px solid var(--border-color);
+    border-left: none;
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -95,7 +96,7 @@ body {
     gap: 15px;
     cursor: pointer;
     transition: all 0.3s ease;
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.7);
     font-weight: 500;
     border-radius: 12px;
 }
@@ -182,10 +183,11 @@ body {
 /* Cards */
 .card {
     background: var(--bg-card);
+    backdrop-filter: blur(10px);
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
     padding: 25px;
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
