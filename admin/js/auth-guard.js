@@ -1,6 +1,6 @@
 import { supabase } from '../../js/supabase-client.js';
 
-const ADMIN_EMAIL = 'sobhanrahimisrj@gmail.com';
+const ADMIN_EMAIL = 'dellcake.orders@gmail.com';
 
 async function checkAuth() {
     const { data: { session } } = await supabase.auth.getSession();

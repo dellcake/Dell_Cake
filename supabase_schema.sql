@@ -298,7 +298,7 @@ BEGIN
     NEW.email,
     NEW.raw_user_meta_data->>'avatar_url',
     CASE
-      WHEN NEW.email = 'sobhanrahimisrj@gmail.com' THEN 'admin'
+      WHEN NEW.email = 'dellcake.orders@gmail.com' THEN 'admin'
       ELSE 'user'
     END
   );
