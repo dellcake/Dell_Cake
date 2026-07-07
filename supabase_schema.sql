@@ -149,13 +149,37 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- Gallery Categories
+CREATE TABLE IF NOT EXISTS public.gallery_categories (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    display_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
 -- Gallery
 CREATE TABLE IF NOT EXISTS public.gallery (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    title TEXT,
+    description TEXT,
+    slug TEXT UNIQUE,
     url TEXT NOT NULL,
-    category TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+    thumbnail_url TEXT,
+    category_id UUID REFERENCES public.gallery_categories(id) ON DELETE SET NULL,
+    category TEXT, -- Legacy support / search cache
+    is_featured BOOLEAN DEFAULT false,
+    status TEXT DEFAULT 'published' CHECK (status IN ('published', 'draft')),
+    tags TEXT[],
+    alt_text TEXT,
+    seo_title TEXT,
+    seo_description TEXT,
+    display_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+-- Watermark Settings (added to site_settings trigger or handled as key-value)
 
 -- Blog
 CREATE TABLE IF NOT EXISTS public.blog (
@@ -201,6 +225,7 @@ ALTER TABLE public.favorites ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.contact_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.gallery_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.gallery ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.blog ENABLE ROW LEVEL SECURITY;
 
@@ -278,9 +303,11 @@ CREATE POLICY "Site settings view" ON public.site_settings FOR SELECT TO authent
 CREATE POLICY "Site settings admin" ON public.site_settings FOR ALL TO authenticated USING (is_admin());
 
 -- Gallery & Blog: Authenticated users can view
-CREATE POLICY "Gallery view" ON public.gallery FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Gallery view" ON public.gallery FOR SELECT TO authenticated USING (status = 'published' OR is_admin());
+CREATE POLICY "Gallery categories view" ON public.gallery_categories FOR SELECT TO authenticated USING (true);
 CREATE POLICY "Blog view" ON public.blog FOR SELECT TO authenticated USING (status = 'published' OR is_admin());
 CREATE POLICY "Admin gallery admin" ON public.gallery FOR ALL TO authenticated USING (is_admin());
+CREATE POLICY "Admin gallery categories admin" ON public.gallery_categories FOR ALL TO authenticated USING (is_admin());
 CREATE POLICY "Admin blog all" ON public.blog FOR ALL TO authenticated USING (is_admin());
 
 -- ==========================================
@@ -324,6 +351,7 @@ CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON public.profiles FOR E
 CREATE TRIGGER update_courses_updated_at BEFORE UPDATE ON public.courses FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER update_orders_updated_at BEFORE UPDATE ON public.orders FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER update_blog_updated_at BEFORE UPDATE ON public.blog FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+CREATE TRIGGER update_gallery_updated_at BEFORE UPDATE ON public.gallery FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 
 -- ==========================================
 -- 6. STORAGE BUCKETS & POLICIES

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="گالری نمونه‌کارهای دل‌کیک - مشاهده بهترین کیک‌ها و شیرینی‌های خانگی">
+    <title>گالری نمونه‌کارها | دل‌کیک</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/gallery-page.css">
+
+    <!-- GLightbox CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <main class="gallery-page-container">
+        <header class="gallery-header">
+            <h1 class="page-title">گالری نمونه‌کارها</h1>
+            <p class="page-subtitle">هر محصول داستانی شیرین برای گفتن دارد</p>
+        </header>
+
+        <!-- Category Filter -->
+        <nav class="gallery-filter" id="gallery-categories">
+            <button class="filter-btn active" data-filter="all">همه موارد</button>
+            <!-- Categories loaded dynamically -->
+            <div class="category-skeleton"></div>
+            <div class="category-skeleton"></div>
+            <div class="category-skeleton"></div>
+        </nav>
+
+        <!-- Gallery Grid -->
+        <div class="gallery-main-grid" id="main-gallery-grid">
+            <!-- Skeleton items -->
+            <div class="grid-skeleton"></div>
+            <div class="grid-skeleton"></div>
+            <div class="grid-skeleton"></div>
+            <div class="grid-skeleton"></div>
+            <div class="grid-skeleton"></div>
+            <div class="grid-skeleton"></div>
+        </div>
+
+        <div id="gallery-loader" class="gallery-loader hidden">
+            <div class="dot-loader"></div>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <script src="js/load-components.js" defer></script>
+    <script type="module" src="js/gallery-page.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            loadComponent("header-placeholder", "components/header.html");
+            loadComponent("sidebar-placeholder", "components/sidebar.html");
+            loadComponent("footer-container", "components/footer.html");
+        });
+    </script>
+</body>
+</html>

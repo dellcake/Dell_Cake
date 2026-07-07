@@ -101,31 +101,30 @@
 
 
           <div class="gallery hidden" id="gallerySection">
-
              <h2>نمونه‌ای از سفارش‌های دوست‌داشتنی شما 💕</h2>
 
-<div class="gallery-grid">
+             <!-- Modern Portfolio Slider -->
+             <div class="swiper portfolio-swiper">
+                <div class="swiper-wrapper" id="home-gallery-wrapper">
+                    <!-- Dynamic Items from Supabase -->
+                    <div class="swiper-slide skeleton-slide"></div>
+                    <div class="swiper-slide skeleton-slide"></div>
+                    <div class="swiper-slide skeleton-slide"></div>
+                </div>
+                <!-- Navigation -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <!-- Pagination -->
+                <div class="swiper-pagination"></div>
+             </div>
 
-<img src="images/gallery/cake1.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake2.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake3.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake4.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake5.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake6.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake7.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake8.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake9.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake10.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake11.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake12.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake13.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake14.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake15.jpg" alt="کیک دل کیک" loading="lazy">
-<img src="images/gallery/cake16.jpg" alt="کیک دل کیک" loading="lazy">
-
-</div>
-
-</div>
+             <div class="view-all-container">
+                <a href="gallery.html" class="btn-view-all">
+                    مشاهده همه نمونه‌کارها
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+             </div>
+          </div>
     </div>
 
 </div>
@@ -142,6 +141,7 @@
     <script src="js/homepage-animation.js" defer></script>
     <script src="js/academy-popup.js" defer></script>
     <script type="module" src="js/site-settings.js"></script>
+    <script type="module" src="js/home-gallery.js"></script>
 
 <div id="footer-container"></div>
 
