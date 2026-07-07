@@ -22,7 +22,11 @@ export const supabase = isConfigValid
         auth: {
             getSession: async () => ({ data: { session: null }, error: null }),
             onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
-            signInWithOAuth: async () => ({ data: {}, error: null }),
+            signInWithOAuth: async () => {
+                const msg = "❌ خطا: اطلاعات Supabase تنظیم نشده است. لطفا فایل js/supabase-config.js را ویرایش کنید.";
+                alert(msg);
+                return { data: {}, error: { message: msg } };
+            },
             signOut: async () => ({ error: null })
         },
         from: () => ({

@@ -1,11 +1,12 @@
 import { supabase } from '../../js/supabase-client.js';
 
-const ADMIN_EMAIL = 'sobhanrahimisrj@gmail.com';
+const ADMIN_EMAIL = 'dellcake.orders@gmail.com';
 const loginBtn = document.getElementById('google-login-btn');
 const errorBox = document.getElementById('error-box');
 
 if (loginBtn) {
     loginBtn.addEventListener('click', async () => {
+        console.log('Login button clicked...');
         try {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
@@ -14,12 +15,16 @@ if (loginBtn) {
                 }
             });
 
-            if (error) throw error;
-            // Note: For OAuth, the redirect happens automatically.
-            // The auth-guard will handle the session check on the index.html page.
+            if (error) {
+                console.error('Supabase Auth Error:', error);
+                showError(error.message || 'خطا در برقراری ارتباط با گوگل.');
+                return;
+            }
+
+            console.log('OAuth sign-in initiated successfully');
         } catch (error) {
-            console.error('Login Error:', error);
-            showError('خطا در برقراری ارتباط با گوگل. لطفا دوباره تلاش کنید.');
+            console.error('Unexpected Login Error:', error);
+            showError('خطای غیرمنتظره رخ داد. لطفا کنسول مرورگر را بررسی کنید.');
         }
     });
 }
