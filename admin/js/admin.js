@@ -1,4 +1,3 @@
-import { supabase } from "../../js/supabase-client.js";
 import { CoursesModule } from "./modules/courses.js";
 import { GalleryModule } from "./modules/gallery.js";
 import { ProductsModule } from "./modules/products.js";
@@ -53,4 +52,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     window.navigateTo('Dashboard');
+
+    // Handle logout
+    document.addEventListener('click', async (e) => {
+        const logoutLi = e.target.closest('.logout-item');
+        if (logoutLi) {
+            const { supabase } = await import('../../js/supabase-client.js');
+            await supabase.auth.signOut();
+            location.replace('login.html');
+        }
+    });
 });

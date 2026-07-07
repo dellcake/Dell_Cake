@@ -1,55 +1,89 @@
 import { supabase } from "../../../js/supabase-client.js";
 
 /**
- * Enhanced Gallery Management Module
+ * Gallery Management Module - Supabase Version
  */
 export const GalleryModule = {
     items: [],
 
     async load() {
-        const { data, error } = await supabase
-            .from('gallery')
-            .select('*')
-            .order('created_at', { ascending: false });
+        try {
+            const { data, error } = await supabase
+                .from('gallery')
+                .select('*')
+                .order('created_at', { ascending: false });
 
-        if (error) {
+            if (error) throw error;
+            this.items = data || [];
+            this.render();
+        } catch (error) {
             console.error('Error fetching gallery:', error);
-            return;
+            this.render();
         }
-        this.items = data;
-        this.render();
     },
 
     render() {
         const grid = document.getElementById('gallery-grid');
         if (!grid) return;
 
-        grid.innerHTML = this.items.map(item => `
-            <div class="gallery-item">
-                <span class="category-badge">${item.category}</span>
-                <img src="${item.url}">
-                <div class="gallery-item-info">
-                    <h4>${item.description || 'بدون توضیحات'}</h4>
+        if (this.items.length === 0) {
+            grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted);">تصویری در گالری موجود نیست.</p>';
+        } else {
+            grid.innerHTML = this.items.map(item => `
+                <div class="gallery-item-card">
+                    <img src="${item.url}" alt="${item.title || 'تصویر گالری'}">
+                    <div class="item-overlay">
+                        <div class="item-info">
+                            <h4>${item.title || 'بدون عنوان'}</h4>
+                            <span>${this.translateCategory(item.category)}</span>
+                        </div>
+                        <div class="item-actions">
+                            <button onclick="GalleryModule.delete('${item.id}')"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
                 </div>
-                <div class="gallery-item-overlay">
-                    <button class="btn-icon btn-delete" onclick="GalleryModule.delete('${item.id}')">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        `).join('');
+            `).join('');
+        }
     },
 
-    async upload(event) {
-        // Implementation for upload with description, category, and tags
-        alert('بخش آپلود پیشرفته آماده اتصال به Storage است.');
+    async add(event) {
+        event.preventDefault();
+        const form = event.target;
+        const data = {
+            url: form.imageUrl.value,
+            category: form.category.value
+        };
+
+        try {
+            const { error } = await supabase.from('gallery').insert([data]);
+            if (error) throw error;
+
+            form.reset();
+            document.getElementById('add-gallery-modal').style.display = 'none';
+            this.load();
+        } catch (err) {
+            alert('خطا در افزودن به گالری: ' + err.message);
+        }
     },
 
     async delete(id) {
         if (!confirm('آیا از حذف این تصویر اطمینان دارید؟')) return;
-        await supabase.from('gallery').delete().eq('id', id);
-        this.load();
+        try {
+            const { error } = await supabase.from('gallery').delete().eq('id', id);
+            if (error) throw error;
+            this.load();
+        } catch (err) {
+            alert('خطا در حذف: ' + err.message);
+        }
+    },
+
+    translateCategory(cat) {
+        const map = { 'cake': 'کیک', 'cupcake': 'کاپ کیک', 'dessert': 'دسر', 'pastry': 'شیرینی' };
+        return map[cat] || cat;
     }
 };
 
 window.GalleryModule = GalleryModule;
+window.addGalleryItem = (e) => GalleryModule.add(e);
+window.openGalleryModal = () => document.getElementById('add-gallery-modal').style.display = 'flex';
+window.closeGalleryModal = () => document.getElementById('add-gallery-modal').style.display = 'none';

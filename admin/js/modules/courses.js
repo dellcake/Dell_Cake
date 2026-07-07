@@ -1,23 +1,25 @@
 import { supabase } from "../../../js/supabase-client.js";
 
 /**
- * Courses Management Module
+ * Courses Management Module - Supabase Version
  */
 export const CoursesModule = {
     courses: [],
 
     async load() {
-        const { data, error } = await supabase
-            .from('courses')
-            .select('*')
-            .order('created_at', { ascending: false });
+        try {
+            const { data, error } = await supabase
+                .from('courses')
+                .select('*')
+                .order('created_at', { ascending: false });
 
-        if (error) {
+            if (error) throw error;
+            this.courses = data || [];
+            this.render();
+        } catch (error) {
             console.error('Error fetching courses:', error);
-            return;
+            this.render();
         }
-        this.courses = data;
-        this.render();
     },
 
     render() {
@@ -53,17 +55,24 @@ export const CoursesModule = {
         if (id) {
             const course = this.courses.find(c => c.id === id);
             form.courseId.value = course.id;
-            form.title.value = course.title;
-            form.slug.value = course.slug;
-            form.category.value = course.category;
-            form.price.value = course.price;
-            form.status.value = course.status;
-            form.imageUrl.value = course.image_url;
+            form.title.value = course.title || '';
+            form.slug.value = course.slug || '';
+            form.category.value = course.category || 'cake';
+            form.price.value = course.price || 0;
+            form.status.value = course.status || 'published';
+            form.imageUrl.value = course.image_url || '';
             form.description.value = course.description || '';
-            form.packageContent.value = Array.isArray(course.package_content) ? course.package_content.join('\n') : '';
+            form.packageContent.value = Array.isArray(course.package_content) ? course.package_content.join('\n') : (course.package_content || '');
+
+            const preview = document.getElementById('image-preview');
+            if (preview) {
+                preview.innerHTML = course.image_url ? `<img src="${course.image_url}" style="max-height:100%; max-width:100%; border-radius:8px;">` : '<span>پیش‌نمایش تصویر</span>';
+            }
         } else {
             form.reset();
             form.courseId.value = '';
+            const preview = document.getElementById('image-preview');
+            if (preview) preview.innerHTML = '<span>پیش‌نمایش تصویر</span>';
         }
         modal.style.display = 'flex';
     },
@@ -80,15 +89,16 @@ export const CoursesModule = {
             image_url: form.imageUrl.value,
             description: form.description.value,
             package_content: form.packageContent.value.split('\n').filter(i => i.trim()),
-            updated_at: new Date().toISOString()
         };
 
         const id = form.courseId.value;
         try {
             if (id) {
-                await supabase.from('courses').update(data).eq('id', id);
+                const { error } = await supabase.from('courses').update(data).eq('id', id);
+                if (error) throw error;
             } else {
-                await supabase.from('courses').insert([{ ...data, created_at: new Date().toISOString() }]);
+                const { error } = await supabase.from('courses').insert([data]);
+                if (error) throw error;
             }
             document.getElementById('course-modal').style.display = 'none';
             this.load();
@@ -99,8 +109,13 @@ export const CoursesModule = {
 
     async delete(id) {
         if (!confirm('آیا از حذف این دوره اطمینان دارید؟')) return;
-        await supabase.from('courses').delete().eq('id', id);
-        this.load();
+        try {
+            const { error } = await supabase.from('courses').delete().eq('id', id);
+            if (error) throw error;
+            this.load();
+        } catch (err) {
+            alert('خطا در حذف: ' + err.message);
+        }
     },
 
     translateCategory(cat) {
@@ -118,3 +133,17 @@ window.CoursesModule = CoursesModule;
 window.saveCourse = (e) => CoursesModule.save(e);
 window.openCourseModal = (id) => CoursesModule.openModal(id);
 window.closeCourseModal = () => document.getElementById('course-modal').style.display = 'none';
+
+window.switchFormTab = (tab) => {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+    event.target.classList.add('active');
+    document.getElementById(`tab-${tab}`).classList.add('active');
+};
+
+window.generateSlug = (text) => {
+    const slug = text.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+    const slugInput = document.querySelector('input[name="slug"]');
+    if (slugInput && !slugInput.value) slugInput.value = slug;
+};
