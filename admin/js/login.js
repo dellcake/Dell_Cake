@@ -11,7 +11,7 @@ if (loginBtn) {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: window.location.origin + '/admin/index.html'
+                    redirectTo: window.location.origin + window.location.pathname.replace('login.html', 'index.html')
                 }
             });
 

@@ -6,16 +6,28 @@ async function checkAuth() {
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {
-        location.replace('login.html');
+        if (!location.pathname.endsWith('login.html')) {
+            location.replace('login.html');
+        }
         return;
     }
 
     const user = session.user;
 
     if (user.email !== ADMIN_EMAIL) {
-        await supabase.auth.signOut();
-        location.replace('login.html?error=unauthorized');
-        return;
+        // Double check if role is admin in profiles just in case
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single();
+
+        if (!profile || profile.role !== 'admin') {
+            console.warn('Access denied for:', user.email);
+            await supabase.auth.signOut();
+            location.replace('login.html?error=unauthorized');
+            return;
+        }
     }
 
     // Authorized admin
