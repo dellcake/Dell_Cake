@@ -241,7 +241,7 @@ font-weight:800;
 
 .gallery h2 {
     font-size: clamp(24px, 5vw, 32px);
-    color: #6b3d2a;
+    color: #f01873;
     margin-bottom: 30px;
     position: relative;
     display: inline-block;
@@ -512,6 +512,7 @@ font-weight:800;
 .service-card h3{
     font-size: 19px;
     font-weight: 700;
+    color: #f01873;
 }
 @media (min-width:992px){
 
@@ -524,8 +525,10 @@ font-weight:800;
 
 }
 .top-header{
-    position: sticky;
+    position: fixed;
     top: 0;
+    right: 0;
+    left: 0;
     z-index: 9999;
 
     display: flex;
@@ -540,6 +543,10 @@ font-weight:800;
     -webkit-backdrop-filter: blur(14px);
 
     box-shadow: 0 5px 20px rgba(0,0,0,.06);
+}
+
+body:not(.admin-body) {
+    padding-top: 70px; /* Offset for fixed header */
 }
 
 .academy-btn{
@@ -605,7 +612,7 @@ font-weight:800;
 .hero-title{
     font-family: 'Lalezar', cursive;
     font-size: clamp(64px, 12vw, 110px);
-    color: #6b3d2a;
+    color: #f01873;
     line-height: 1.1;
     margin-bottom: 20px;
     text-shadow: 2px 2px 0px rgba(255,255,255,1), 4px 4px 15px rgba(107, 61, 42, 0.15);
