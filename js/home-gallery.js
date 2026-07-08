@@ -12,8 +12,9 @@ export async function initHomeGallery() {
         if (supabase.isMock) {
             wrapper.innerHTML = `
                 <div class="swiper-slide portfolio-slide">
-                    <div class="portfolio-item-inner no-data">
-                        <p style="color: #6b3d2a; font-size: 0.9rem;">لطفا تنظیمات Supabase را در فایل <br><code>js/supabase-config.js</code> وارد کنید.</p>
+                    <div class="portfolio-item-inner no-data mock-data">
+                        <i class="fas fa-plug-circle-exclamation" style="font-size: 2rem; color: #e8789a; margin-bottom: 10px;"></i>
+                        <p style="color: #6b3d2a; font-size: 0.8rem; text-align:center;">لطفا تنظیمات Supabase را در <br><code>js/supabase-config.js</code> وارد کنید.</p>
                     </div>
                 </div>
             `;
@@ -35,8 +36,8 @@ export async function initHomeGallery() {
             wrapper.innerHTML = `
                 <div class="swiper-slide portfolio-slide">
                     <div class="portfolio-item-inner no-data">
-                        <img src="images/logo/sweet-.png" alt="دل‌کیک" style="opacity: 0.2; width: 150px; height: auto;">
-                        <p style="margin-top: 15px; color: #6b3d2a; font-weight: bold;">هنوز نمونه‌کاری ثبت نشده است</p>
+                        <img src="images/logo/sweet-.png" alt="دل‌کیک" style="opacity: 0.2; width: 100px; height: auto;">
+                        <p style="margin-top: 15px; color: #6b3d2a; font-weight: bold; font-size: 0.9rem;">هنوز نمونه‌کاری ثبت نشده است</p>
                     </div>
                 </div>
             `;
@@ -46,7 +47,7 @@ export async function initHomeGallery() {
         wrapper.innerHTML = data.map(item => `
             <div class="swiper-slide portfolio-slide">
                 <div class="portfolio-item-inner">
-                    <img src="${item.thumbnail_url || item.url}" loading="lazy" alt="${item.alt_text || item.title || 'Dell Cake Portfolio'}">
+                    <img src="${item.thumbnail_url || item.url}" loading="lazy" alt="${item.alt_text || item.title || 'Dell Cake Portfolio'}" onerror="this.src='images/logo/sweet-.png'">
                     <div class="portfolio-overlay">
                         <div class="portfolio-info">
                             <h4>${item.title || ''}</h4>
@@ -58,38 +59,42 @@ export async function initHomeGallery() {
         `).join('');
 
         // Initialize Swiper
-        if (typeof Swiper === 'undefined') {
-            console.error('Swiper is not loaded');
-            return;
+        if (typeof Swiper !== 'undefined') {
+            new Swiper('.portfolio-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: data.length > 4,
+                autoplay: {
+                    delay: 4000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    640: { slidesPerView: 2 },
+                    992: { slidesPerView: 3 },
+                    1200: { slidesPerView: 4 }
+                }
+            });
         }
-
-        new Swiper('.portfolio-swiper', {
-            slidesPerView: 1,
-            spaceBetween: 20,
-            loop: data.length > 4,
-            autoplay: {
-                delay: 4000,
-                disableOnInteraction: false,
-                pauseOnMouseEnter: true,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            breakpoints: {
-                640: { slidesPerView: 2 },
-                992: { slidesPerView: 3 },
-                1200: { slidesPerView: 4 }
-            }
-        });
 
     } catch (err) {
         console.error('Home Gallery Error:', err);
-        wrapper.innerHTML = '<div class="swiper-slide">خطا در بارگذاری گالری</div>';
+        wrapper.innerHTML = `
+            <div class="swiper-slide">
+                <div class="portfolio-item-inner no-data error-data">
+                    <p style="color: #6b3d2a;">خطا در بارگذاری گالری</p>
+                    <button onclick="location.reload()" style="margin-top:10px; background:#e8789a; color:white; border:none; padding:5px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer;">تلاش مجدد</button>
+                </div>
+            </div>
+        `;
     }
 }
 
