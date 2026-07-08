@@ -122,3 +122,17 @@ window.ProductsModule = ProductsModule;
 window.saveProduct = (e) => ProductsModule.save(e);
 window.openProductModal = (id) => ProductsModule.openModal(id);
 window.closeProductModal = () => document.getElementById('product-modal').style.display = 'none';
+
+window.previewProductImage = (event) => {
+    const input = event.target;
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            // Preview logic if we have a preview element in products.html
+            // For now just update the hidden input value if we want dataURL or similar
+            // Usually we'd want to upload it, but for simplicity:
+            document.querySelector('input[name="imageUrl"]').value = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+};

@@ -3,6 +3,7 @@ import { GalleryModule } from "./modules/gallery.js";
 import { CategoriesModule } from "./modules/categories.js";
 import { ProductsModule } from "./modules/products.js";
 import { OrdersModule } from "./modules/orders.js";
+import { SettingsModule } from "./modules/settings.js";
 import { BlogModule, MessagesModule } from "./modules/common.js";
 import { loadDashboardData } from "./modules/dashboard.js";
 
@@ -33,6 +34,7 @@ window.navigateTo = async (viewName) => {
         if (viewName === 'Categories') CategoriesModule.load();
         if (viewName === 'Products') ProductsModule.load();
         if (viewName === 'Orders') OrdersModule.load();
+        if (viewName === 'Settings') SettingsModule.load();
         if (viewName === 'Blog') BlogModule.load();
         if (viewName === 'Messages') MessagesModule.load();
     }

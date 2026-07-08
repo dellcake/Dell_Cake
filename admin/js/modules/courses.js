@@ -22,14 +22,16 @@ export const CoursesModule = {
         }
     },
 
-    render() {
+    render(filteredCourses = null) {
         const tbody = document.getElementById('courses-tbody');
         if (!tbody) return;
 
-        if (this.courses.length === 0) {
+        const displayCourses = filteredCourses || this.courses;
+
+        if (displayCourses.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">دوره ای یافت نشد.</td></tr>';
         } else {
-            tbody.innerHTML = this.courses.map(course => `
+            tbody.innerHTML = displayCourses.map(course => `
                 <tr>
                     <td><img src="${course.image_url || '../images/logo/sweet-.png'}" width="50" height="50" style="border-radius:8px; object-fit:cover;"></td>
                     <td>${course.title}</td>
@@ -126,10 +128,22 @@ export const CoursesModule = {
     translateStatus(status) {
         const map = { 'published': 'منتشر شده', 'draft': 'پیش‌نویس' };
         return map[status] || status;
+    },
+
+    handleFilter() {
+        const cat = document.getElementById('filter-category').value;
+        const status = document.getElementById('filter-status').value;
+
+        let filtered = this.courses;
+        if (cat !== 'all') filtered = filtered.filter(c => c.category === cat);
+        if (status !== 'all') filtered = filtered.filter(c => c.status === status);
+
+        this.render(filtered);
     }
 };
 
 window.CoursesModule = CoursesModule;
+window.handleCourseFilter = () => CoursesModule.handleFilter();
 window.saveCourse = (e) => CoursesModule.save(e);
 window.openCourseModal = (id) => CoursesModule.openModal(id);
 window.closeCourseModal = () => document.getElementById('course-modal').style.display = 'none';
