@@ -27,6 +27,11 @@
                 </select>
             </div>
 
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="gallery-is-featured" style="width: 20px; height: 20px;">
+                <label for="gallery-is-featured" style="margin: 0;">نمایش در اسلایدر صفحه اصلی</label>
+            </div>
+
             <div id="gallery-preview-container" style="display: none; margin-bottom: 20px;">
                 <p style="font-size: 0.8rem; margin-bottom: 5px; color: var(--text-muted);">پیش‌نمایش (واترمارک هنگام آپلود اعمال می‌شود):</p>
                 <img id="gallery-upload-preview" style="width: 100%; border-radius: 10px; border: 1px solid var(--border-color);">
@@ -40,12 +45,8 @@
         <!-- Gallery Grid -->
         <div class="card">
             <div class="card-header">
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;" id="admin-gallery-filters">
                     <button class="btn btn-outline btn-sm filter-btn active" onclick="filterGallery('all')">همه</button>
-                    <button class="btn btn-outline btn-sm filter-btn" onclick="filterGallery('cake')">کیک</button>
-                    <button class="btn btn-outline btn-sm filter-btn" onclick="filterGallery('pastry')">شیرینی</button>
-                    <button class="btn btn-outline btn-sm filter-btn" onclick="filterGallery('cafe-cake')">کیک کافه‌ای</button>
-                    <button class="btn btn-outline btn-sm filter-btn" onclick="filterGallery('cupcake')">کاپ کیک</button>
                 </div>
             </div>
 
