@@ -30,13 +30,22 @@
         </section>
 
         <!-- Category Filter -->
-        <nav class="gallery-filter" id="gallery-categories">
-            <button class="filter-btn active" data-filter="all">همه موارد</button>
-            <!-- Categories loaded dynamically -->
-            <div class="category-skeleton"></div>
-            <div class="category-skeleton"></div>
-            <div class="category-skeleton"></div>
-        </nav>
+        <div class="gallery-controls">
+            <!-- Search Bar -->
+            <div class="gallery-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="gallery-search-input" placeholder="جستجو در نمونه‌کارها...">
+            </div>
+
+            <!-- Category Filter -->
+            <nav class="gallery-filter" id="gallery-categories">
+                <button class="filter-btn active" data-filter="all">همه موارد</button>
+                <!-- Categories loaded dynamically -->
+                <div class="category-skeleton"></div>
+                <div class="category-skeleton"></div>
+                <div class="category-skeleton"></div>
+            </nav>
+        </div>
 
         <!-- Gallery Grid -->
         <div class="gallery-main-grid" id="main-gallery-grid">

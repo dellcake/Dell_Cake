@@ -1,7 +1,7 @@
 import { supabase } from "./supabase-client.js";
 
 /**
- * Professional Gallery Page Logic
+ * Professional Gallery Page Logic - Supabase Only Version
  */
 const GalleryPage = {
     grid: null,
@@ -11,6 +11,7 @@ const GalleryPage = {
     items: [],
     categories: [],
     currentFilter: 'all',
+    searchQuery: '',
     page: 0,
     perPage: 12,
     hasMore: true,
@@ -28,6 +29,7 @@ const GalleryPage = {
             await this.loadItems();
             this.initLightbox();
             this.initScroll();
+            this.initSearch();
         } catch (err) {
             console.error('Gallery initialization failed:', err);
             this.showError('بروز خطا در راه‌اندازی گالری');
@@ -39,6 +41,7 @@ const GalleryPage = {
             const { data, error } = await supabase
                 .from('gallery_categories')
                 .select('*')
+                .eq('is_active', true)
                 .order('display_order', { ascending: true });
 
             if (error) throw error;
@@ -55,7 +58,7 @@ const GalleryPage = {
         const html = `
             <button class="filter-btn ${this.currentFilter === 'all' ? 'active' : ''}" data-filter="all">همه موارد</button>
             ${this.categories.map(cat => `
-                <button class="filter-btn ${this.currentFilter === cat.slug ? 'active' : ''}" data-filter="${cat.slug}">
+                <button class="filter-btn ${this.currentFilter === cat.id ? 'active' : ''}" data-filter="${cat.id}">
                     ${cat.name}
                 </button>
             `).join('')}
@@ -67,17 +70,35 @@ const GalleryPage = {
         });
     },
 
-    async handleFilter(slug) {
-        if (this.currentFilter === slug) return;
+    async handleFilter(catId) {
+        if (this.currentFilter === catId) return;
 
-        this.currentFilter = slug;
+        this.currentFilter = catId;
+        this.resetPagination();
+        this.renderCategories();
+        await this.loadItems();
+    },
+
+    initSearch() {
+        const searchInput = document.getElementById('gallery-search-input');
+        if (!searchInput) return;
+
+        let debounceTimer;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+                this.searchQuery = e.target.value.trim();
+                this.resetPagination();
+                await this.loadItems();
+            }, 500);
+        });
+    },
+
+    resetPagination() {
         this.page = 0;
         this.items = [];
         this.hasMore = true;
         this.grid.innerHTML = '';
-
-        this.renderCategories();
-        await this.loadItems();
     },
 
     async loadItems() {
@@ -95,13 +116,18 @@ const GalleryPage = {
 
             let query = supabase
                 .from('gallery')
-                .select('*')
+                .select('*, gallery_categories(name)')
                 .eq('status', 'published')
+                .order('display_order', { ascending: true })
                 .order('created_at', { ascending: false })
                 .range(this.page * this.perPage, (this.page + 1) * this.perPage - 1);
 
             if (this.currentFilter !== 'all') {
-                query = query.eq('category', this.currentFilter);
+                query = query.eq('category_id', this.currentFilter);
+            }
+
+            if (this.searchQuery) {
+                query = query.or(`title.ilike.%${this.searchQuery}%,description.ilike.%${this.searchQuery}%`);
             }
 
             const { data, error } = await query;
@@ -136,12 +162,13 @@ const GalleryPage = {
 
     renderItems(newItems) {
         const html = newItems.map(item => `
-            <article class="gallery-card glightbox" data-glightbox="title: ${item.title || ''}; description: ${item.description || ''}" href="${item.url}">
+            <article class="gallery-card glightbox" data-glightbox="title: ${item.title || ''}; description: ${item.description || ''}" href="${item.image_url}">
                 <div class="gallery-img-wrapper">
-                    <img src="${item.thumbnail_url || item.url}" alt="${item.alt_text || item.title || 'Dell Cake'}" loading="lazy" onerror="this.src='images/logo/sweet-.png'">
+                    <img src="${item.thumbnail_url || item.image_url}" alt="${item.alt_text || item.title || 'Dell Cake'}" loading="lazy" onerror="this.src='images/logo/sweet-.png'">
+                    ${item.watermark_enabled ? '<div class="wm-indicator"><i class="fas fa-copyright"></i></div>' : ''}
                 </div>
                 <div class="card-content">
-                    <span class="card-category">${this.getCategoryName(item.category)}</span>
+                    <span class="card-category">${item.gallery_categories?.name || 'سایر'}</span>
                     <h3 class="card-title">${item.title || 'محصول دل‌کیک'}</h3>
                     <p class="card-desc">${item.description || ''}</p>
                 </div>
@@ -185,11 +212,6 @@ const GalleryPage = {
         `;
     },
 
-    getCategoryName(slug) {
-        const cat = this.categories.find(c => c.slug === slug);
-        return cat ? cat.name : slug;
-    },
-
     initLightbox() {
         if (typeof GLightbox !== 'undefined') {
             this.lightbox = GLightbox({
@@ -224,7 +246,7 @@ const GalleryPage = {
             "@type": "ImageGallery",
             "name": "گالری نمونه‌کارهای دل‌کیک",
             "description": "مجموعه‌ای از زیباترین و خوشمزه‌ترین کیک‌ها و شیرینی‌های خانگی دل‌کیک",
-            "image": this.items.slice(0, 5).map(item => item.url),
+            "image": this.items.slice(0, 5).map(item => item.image_url),
             "author": {
                 "@type": "Organization",
                 "name": "دل‌کیک"

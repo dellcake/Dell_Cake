@@ -155,7 +155,9 @@ CREATE TABLE IF NOT EXISTS public.gallery_categories (
     name TEXT NOT NULL,
     slug TEXT UNIQUE NOT NULL,
     display_order INTEGER DEFAULT 0,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
 -- Gallery
@@ -163,18 +165,14 @@ CREATE TABLE IF NOT EXISTS public.gallery (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     title TEXT,
     description TEXT,
-    slug TEXT UNIQUE,
-    url TEXT NOT NULL,
-    thumbnail_url TEXT,
     category_id UUID REFERENCES public.gallery_categories(id) ON DELETE SET NULL,
-    category TEXT, -- Legacy support / search cache
-    is_featured BOOLEAN DEFAULT false,
-    status TEXT DEFAULT 'published' CHECK (status IN ('published', 'draft')),
-    tags TEXT[],
+    image_url TEXT NOT NULL,
+    thumbnail_url TEXT,
     alt_text TEXT,
-    seo_title TEXT,
-    seo_description TEXT,
+    watermark_enabled BOOLEAN DEFAULT true,
+    is_featured BOOLEAN DEFAULT false,
     display_order INTEGER DEFAULT 0,
+    status TEXT DEFAULT 'published' CHECK (status IN ('published', 'draft')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
@@ -352,6 +350,7 @@ CREATE TRIGGER update_courses_updated_at BEFORE UPDATE ON public.courses FOR EAC
 CREATE TRIGGER update_orders_updated_at BEFORE UPDATE ON public.orders FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER update_blog_updated_at BEFORE UPDATE ON public.blog FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER update_gallery_updated_at BEFORE UPDATE ON public.gallery FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+CREATE TRIGGER update_gallery_categories_updated_at BEFORE UPDATE ON public.gallery_categories FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 
 -- ==========================================
 -- 6. STORAGE BUCKETS & POLICIES

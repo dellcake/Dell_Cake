@@ -2,34 +2,17 @@ import { supabase } from "../../../js/supabase-client.js";
 import { ImageProcessor } from "../utils/image-processor.js";
 
 /**
- * Enhanced Gallery Management Module
+ * Professional Gallery Management Module
  */
 export const GalleryModule = {
     items: [],
     categories: [],
     currentFilter: 'all',
+    searchQuery: '',
 
     async load() {
         await this.loadCategories();
-        try {
-            let query = supabase
-                .from('gallery')
-                .select('*, gallery_categories(name)')
-                .order('created_at', { ascending: false });
-
-            if (this.currentFilter !== 'all') {
-                query = query.eq('category', this.currentFilter);
-            }
-
-            const { data, error } = await query;
-
-            if (error) throw error;
-            this.items = data || [];
-            this.render();
-        } catch (error) {
-            console.error('Error fetching gallery:', error);
-            this.render();
-        }
+        await this.fetchItems();
     },
 
     async loadCategories() {
@@ -41,10 +24,39 @@ export const GalleryModule = {
 
             if (error) throw error;
             this.categories = data || [];
-            this.renderFilterButtons();
+            this.renderCategoryFilters();
             this.renderCategorySelect();
         } catch (err) {
             console.error('Error loading categories:', err);
+        }
+    },
+
+    async fetchItems() {
+        try {
+            let query = supabase
+                .from('gallery')
+                .select('*, gallery_categories(name)')
+                .order('display_order', { ascending: true })
+                .order('created_at', { ascending: false });
+
+            if (this.currentFilter !== 'all') {
+                query = query.eq('category_id', this.currentFilter);
+            }
+
+            if (this.searchQuery) {
+                query = query.or(`title.ilike.%${this.searchQuery}%,description.ilike.%${this.searchQuery}%`);
+            }
+
+            const { data, error } = await query;
+
+            if (error) throw error;
+            this.items = data || [];
+            this.render();
+
+            const countEl = document.getElementById('total-gallery-count');
+            if (countEl) countEl.innerText = `تعداد: ${this.items.length}`;
+        } catch (error) {
+            console.error('Error fetching gallery:', error);
         }
     },
 
@@ -53,18 +65,25 @@ export const GalleryModule = {
         if (!grid) return;
 
         if (this.items.length === 0) {
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-muted);">تصویری در این دسته موجود نیست.</p>';
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 50px; background: var(--accent); border-radius: 15px;">تصویری یافت نشد.</div>';
         } else {
             grid.innerHTML = this.items.map(item => `
-                <div class="gallery-item" onclick="openLightbox('${item.url}', '${item.title || ''}')">
-                    <img src="${item.thumbnail_url || item.url}" alt="${item.alt_text || ''}" loading="lazy">
-                    <span class="category-badge">${item.gallery_categories?.name || item.category || 'سایر'}</span>
-                    <div class="gallery-item-overlay">
-                        <div style="text-align: center;">
-                            <h4 style="color: white; margin-bottom: 10px;">${item.title || ''}</h4>
-                            <button class="btn-delete-image" onclick="event.stopPropagation(); GalleryModule.delete('${item.id}', '${item.url}')">
-                                <i class="fas fa-trash"></i> حذف
-                            </button>
+                <div class="gallery-admin-card">
+                    ${item.is_featured ? '<div class="featured-star"><i class="fas fa-star"></i></div>' : ''}
+                    <img src="${item.thumbnail_url || item.image_url}" class="gallery-card-img" loading="lazy">
+                    <div class="gallery-card-info">
+                        <h4>${item.title || 'بدون عنوان'}</h4>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">
+                            ${item.gallery_categories?.name || 'بدون دسته'} | ترتیب: ${item.display_order}
+                        </div>
+                        <div class="gallery-card-actions">
+                            <span class="status-badge ${item.status === 'published' ? 'published' : 'draft'}">
+                                ${item.status === 'published' ? 'منتشر شده' : 'پیش‌نویس'}
+                            </span>
+                            <div class="actions">
+                                <button class="btn-icon" onclick="GalleryModule.edit('${item.id}')" title="ویرایش"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon btn-delete" onclick="GalleryModule.delete('${item.id}')" title="حذف"><i class="fas fa-trash"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -72,147 +91,170 @@ export const GalleryModule = {
         }
     },
 
-    renderFilterButtons() {
-        const container = document.getElementById('admin-gallery-filters');
-        if (!container) return;
+    renderCategoryFilters() {
+        const select = document.getElementById('gallery-category-filter');
+        if (!select) return;
 
-        container.innerHTML = `
-            <button class="btn btn-outline btn-sm filter-btn ${this.currentFilter === 'all' ? 'active' : ''}" onclick="GalleryModule.setFilter('all')">همه</button>
-            ${this.categories.map(cat => `
-                <button class="btn btn-outline btn-sm filter-btn ${this.currentFilter === cat.slug ? 'active' : ''}" onclick="GalleryModule.setFilter('${cat.slug}')">${cat.name}</button>
-            `).join('')}
-        `;
+        const currentVal = select.value;
+        select.innerHTML = '<option value="all">همه دسته‌ها</option>' +
+            this.categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+        select.value = currentVal;
     },
 
     renderCategorySelect() {
-        const select = document.getElementById('gallery-upload-category');
+        const select = document.getElementById('gallery-modal-category');
         if (!select) return;
-        select.innerHTML = this.categories.map(cat => `<option value="${cat.slug}" data-id="${cat.id}">${cat.name}</option>`).join('') + '<option value="other">سایر</option>';
+        select.innerHTML = '<option value="">انتخاب دسته...</option>' +
+            this.categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
     },
 
-    setFilter(slug) {
-        this.currentFilter = slug;
-        this.load();
+    setFilter(catId) {
+        this.currentFilter = catId;
+        this.fetchItems();
     },
 
-    async handleUpload() {
+    setSearch(query) {
+        this.searchQuery = query;
+        this.fetchItems();
+    },
+
+    async save(event) {
+        event.preventDefault();
+        const id = document.getElementById('gallery-id').value;
         const fileInput = document.getElementById('gallery-file-input');
-        const categorySelect = document.getElementById('gallery-upload-category');
-        const uploadBtn = document.getElementById('upload-gallery-btn');
-        const isFeatured = document.getElementById('gallery-is-featured')?.checked || false;
+        const saveBtn = document.getElementById('save-gallery-btn');
 
-        if (!fileInput.files || fileInput.files.length === 0) {
-            alert('لطفاً یک تصویر انتخاب کنید.');
-            return;
-        }
+        const payload = {
+            title: document.getElementById('gallery-title').value,
+            description: document.getElementById('gallery-description').value,
+            category_id: document.getElementById('gallery-modal-category').value || null,
+            alt_text: document.getElementById('gallery-alt').value,
+            display_order: parseInt(document.getElementById('gallery-order').value) || 0,
+            status: document.getElementById('gallery-status').value,
+            is_featured: document.getElementById('gallery-is-featured-modal').checked,
+            watermark_enabled: document.getElementById('gallery-watermark').checked,
+            image_url: document.getElementById('gallery-image-url').value,
+            thumbnail_url: document.getElementById('gallery-thumb-url').value
+        };
 
-        const file = fileInput.files[0];
-        const categorySlug = categorySelect.value;
-        const categoryId = categorySelect.options[categorySelect.selectedIndex].dataset.id;
-
-        uploadBtn.disabled = true;
-        uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال پردازش...';
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ذخیره...';
 
         try {
-            // 1. Process Image (Resize + Watermark + WebP)
-            const processedBlob = await ImageProcessor.process(file);
-            const thumbBlob = await ImageProcessor.generateThumbnail(file);
+            // 1. If new file selected, upload it
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.webp`;
 
-            // 2. Upload to Supabase Storage
-            const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.webp`;
+                // Process (Resizing + Watermark if enabled)
+                const processedBlob = await ImageProcessor.process(file, {
+                    watermarkText: 'Dell Cake | دل‌کیک',
+                    watermarkEnabled: payload.watermark_enabled
+                });
+                const thumbBlob = await ImageProcessor.generateThumbnail(file);
 
-            // Upload main image
-            const { data: mainData, error: mainError } = await supabase.storage
-                .from('gallery')
-                .upload(`full/${fileName}`, processedBlob, { contentType: 'image/webp' });
+                // Upload to Storage
+                const { data: mainData, error: mainError } = await supabase.storage
+                    .from('gallery')
+                    .upload(`full/${fileName}`, processedBlob, { contentType: 'image/webp' });
+                if (mainError) throw mainError;
 
-            if (mainError) throw mainError;
+                const { data: thumbData, error: thumbError } = await supabase.storage
+                    .from('gallery')
+                    .upload(`thumbs/${fileName}`, thumbBlob, { contentType: 'image/webp' });
+                if (thumbError) throw thumbError;
 
-            // Upload thumbnail
-            const { data: thumbData, error: thumbError } = await supabase.storage
-                .from('gallery')
-                .upload(`thumbs/${fileName}`, thumbBlob, { contentType: 'image/webp' });
+                payload.image_url = supabase.storage.from('gallery').getPublicUrl(`full/${fileName}`).data.publicUrl;
+                payload.thumbnail_url = supabase.storage.from('gallery').getPublicUrl(`thumbs/${fileName}`).data.publicUrl;
+            }
 
-            if (thumbError) throw thumbError;
+            if (!payload.image_url) throw new Error('لطفاً یک تصویر انتخاب کنید.');
 
-            // 3. Get Public URLs
-            const mainUrl = supabase.storage.from('gallery').getPublicUrl(`full/${fileName}`).data.publicUrl;
-            const thumbUrl = supabase.storage.from('gallery').getPublicUrl(`thumbs/${fileName}`).data.publicUrl;
+            // 2. Save to Database
+            let error;
+            if (id) {
+                const { error: err } = await supabase.from('gallery').update(payload).eq('id', id);
+                error = err;
+            } else {
+                const { error: err } = await supabase.from('gallery').insert([payload]);
+                error = err;
+            }
 
-            // 4. Save to Database
-            const { error: dbError } = await supabase.from('gallery').insert([{
-                url: mainUrl,
-                thumbnail_url: thumbUrl,
-                category: categorySlug,
-                category_id: categoryId,
-                is_featured: isFeatured,
-                status: 'published',
-                title: file.name.split('.')[0], // Default title
-                alt_text: `Dell Cake - ${categorySlug}`
-            }]);
+            if (error) throw error;
 
-            if (dbError) throw dbError;
-
-            alert('تصویر با موفقیت آپلود شد.');
-            fileInput.value = '';
-            document.getElementById('gallery-preview-container').style.display = 'none';
-            this.load();
-
+            alert('با موفقیت ذخیره شد.');
+            this.closeModal();
+            this.fetchItems();
         } catch (err) {
-            console.error('Upload Error:', err);
-            alert('خطا در آپلود: ' + err.message);
+            console.error('Save Error:', err);
+            alert('خطا در ذخیره: ' + err.message);
         } finally {
-            uploadBtn.disabled = false;
-            uploadBtn.innerHTML = '<i class="fas fa-upload"></i> آپلود تصویر';
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fas fa-save"></i> ذخیره در گالری';
         }
     },
 
-    async delete(id, url) {
+    edit(id) {
+        const item = this.items.find(i => i.id === id);
+        if (!item) return;
+
+        document.getElementById('gallery-id').value = item.id;
+        document.getElementById('gallery-title').value = item.title || '';
+        document.getElementById('gallery-description').value = item.description || '';
+        document.getElementById('gallery-modal-category').value = item.category_id || '';
+        document.getElementById('gallery-alt').value = item.alt_text || '';
+        document.getElementById('gallery-order').value = item.display_order || 0;
+        document.getElementById('gallery-status').value = item.status || 'published';
+        document.getElementById('gallery-is-featured-modal').checked = item.is_featured || false;
+        document.getElementById('gallery-watermark').checked = item.watermark_enabled ?? true;
+        document.getElementById('gallery-image-url').value = item.image_url || '';
+        document.getElementById('gallery-thumb-url').value = item.thumbnail_url || '';
+
+        document.getElementById('gallery-preview').src = item.thumbnail_url || item.image_url || '../images/logo/sweet-.png';
+        document.getElementById('gallery-modal-title').innerText = 'ویرایش تصویر گالری';
+        document.getElementById('gallery-modal').style.display = 'flex';
+    },
+
+    async delete(id) {
         if (!confirm('آیا از حذف این تصویر اطمینان دارید؟')) return;
-
         try {
-            // 1. Delete from DB
-            const { error: dbError } = await supabase.from('gallery').delete().eq('id', id);
-            if (dbError) throw dbError;
-
-            // 2. Delete from Storage (Optional, recommended)
-            // Path extraction from URL might be needed if you want to clean up storage
-
-            this.load();
+            const { error } = await supabase.from('gallery').delete().eq('id', id);
+            if (error) throw error;
+            this.fetchItems();
         } catch (err) {
             alert('خطا در حذف: ' + err.message);
         }
+    },
+
+    openModal() {
+        document.getElementById('gallery-form').reset();
+        document.getElementById('gallery-id').value = '';
+        document.getElementById('gallery-image-url').value = '';
+        document.getElementById('gallery-thumb-url').value = '';
+        document.getElementById('gallery-preview').src = '../images/logo/sweet-.png';
+        document.getElementById('gallery-modal-title').innerText = 'افزودن تصویر به گالری';
+        document.getElementById('gallery-modal').style.display = 'flex';
+    },
+
+    closeModal() {
+        document.getElementById('gallery-modal').style.display = 'none';
     }
 };
 
-// Global handlers for the HTML
 window.GalleryModule = GalleryModule;
-window.handleGalleryUpload = () => GalleryModule.handleUpload();
+window.handleGallerySave = (e) => GalleryModule.save(e);
+window.handleGallerySearch = (val) => GalleryModule.setSearch(val);
+window.handleGalleryCategoryFilter = (val) => GalleryModule.setFilter(val);
+window.openGalleryModal = () => GalleryModule.openModal();
+window.closeGalleryModal = () => GalleryModule.closeModal();
 
 window.previewGalleryImage = (event) => {
     const input = event.target;
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = (e) => {
-            const preview = document.getElementById('gallery-upload-preview');
-            preview.src = e.target.result;
-            document.getElementById('gallery-preview-container').style.display = 'block';
+            document.getElementById('gallery-preview').src = e.target.result;
         };
         reader.readAsDataURL(input.files[0]);
     }
 };
-
-window.openLightbox = (url, title) => {
-    const lb = document.getElementById('lightbox');
-    const img = document.getElementById('lightbox-img');
-    const caption = document.getElementById('lightbox-caption');
-    img.src = url;
-    caption.innerText = title;
-    lb.style.display = 'flex';
-};
-
-window.closeLightbox = () => {
-    document.getElementById('lightbox').style.display = 'none';
-};
-
-window.filterGallery = (slug) => GalleryModule.setFilter(slug);

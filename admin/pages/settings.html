@@ -1,9 +1,28 @@
-<section class="content-section">
+<div class="content-section">
     <div class="section-header">
-        <h2>تنظیمات سایت</h2>
+        <h2>تنظیمات سایت و مهاجرت داده‌ها</h2>
         <button class="add-btn" onclick="saveSiteSettings()">
             <i class="fa-solid fa-floppy-disk"></i>
             ذخیره تغییرات
+        </button>
+    </div>
+
+    <!-- Migration Section -->
+    <div class="card" style="margin-bottom: 25px; border-right: 5px solid var(--primary);">
+        <h3><i class="fas fa-truck-ramp-box"></i> انتقال گالری محلی به ابری</h3>
+        <p style="margin: 10px 0; font-size: 0.9rem;">با کلیک روی دکمه زیر، تمام تصاویر موجود در پوشه <code>images/gallery</code> پروژه به صورت خودکار به فضای ذخیره‌سازی Supabase منتقل شده و در دیتابیس ثبت می‌شوند.</p>
+
+        <div id="migration-progress" style="display: none; margin: 15px 0;">
+            <div style="background: var(--accent); height: 10px; border-radius: 5px; overflow: hidden;">
+                <div class="progress-bar-fill" style="width: 0%; height: 100%; background: var(--secondary); transition: width 0.3s;"></div>
+            </div>
+            <div id="migration-log" style="height: 100px; overflow-y: auto; background: #222; color: #0f0; padding: 10px; font-family: monospace; font-size: 0.75rem; margin-top: 10px; border-radius: 8px;">
+                <!-- Log entries here -->
+            </div>
+        </div>
+
+        <button class="btn btn-secondary" onclick="MigrationModule.startMigration()">
+            <i class="fas fa-play"></i> شروع مهاجرت تصاویر
         </button>
     </div>
 

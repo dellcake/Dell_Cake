@@ -41,11 +41,13 @@ export const ImageProcessor = {
                     ctx.drawImage(img, 0, 0, width, height);
 
                     // Add Watermark Logo
-                    try {
-                        await this.addLogoWatermark(ctx, width, height, logoUrl);
-                    } catch (e) {
-                        console.warn('Logo watermark failed, falling back to text:', e);
-                        this.addTextWatermark(ctx, width, height, watermarkText);
+                    if (options.watermarkEnabled !== false) {
+                        try {
+                            await this.addLogoWatermark(ctx, width, height, logoUrl);
+                        } catch (e) {
+                            console.warn('Logo watermark failed, falling back to text:', e);
+                            this.addTextWatermark(ctx, width, height, watermarkText);
+                        }
                     }
 
                     // Convert to WebP
