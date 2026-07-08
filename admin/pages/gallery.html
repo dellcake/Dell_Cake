@@ -2,121 +2,206 @@
     <div class="section-header">
         <div class="header-left">
             <h2><i class="fas fa-images"></i> مدیریت گالری</h2>
-            <p>تصاویر نمونه کارها با واترمارک خودکار "دل‌کیک"</p>
+            <p>کنترل کامل بر تصاویر، دسته‌بندی‌ها و واترمارک خودکار</p>
+        </div>
+        <button class="add-btn" onclick="openGalleryModal()">
+            <i class="fas fa-plus"></i> افزودن تصویر جدید
+        </button>
+    </div>
+
+    <!-- Stats & Filters -->
+    <div class="card" style="margin-bottom: 25px;">
+        <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+            <div class="form-group" style="margin: 0; min-width: 200px;">
+                <input type="text" id="gallery-search" class="form-control" placeholder="جستجو در عنوان یا توضیحات..." oninput="handleGallerySearch(this.value)">
+            </div>
+            <div class="form-group" style="margin: 0; min-width: 180px;">
+                <select id="gallery-category-filter" class="form-control" onchange="handleGalleryCategoryFilter(this.value)">
+                    <option value="all">همه دسته‌ها</option>
+                </select>
+            </div>
+            <div style="margin-right: auto; display: flex; gap: 10px;">
+                <span class="status-badge new" id="total-gallery-count">تعداد: ۰</span>
+            </div>
         </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 25px;">
-        <!-- Upload Card -->
-        <div class="card" style="height: fit-content;">
-            <div class="card-header">
-                <h2><i class="fas fa-upload"></i> آپلود تصویر جدید</h2>
-            </div>
-            <div class="form-group">
-                <label>انتخاب فایل</label>
-                <input type="file" id="gallery-file-input" class="form-control" accept="image/*" onchange="previewGalleryImage(event)">
-            </div>
-            <div class="form-group">
-                <label>دسته‌بندی</label>
-                <select id="gallery-upload-category" class="form-control">
-                    <option value="cake">کیک</option>
-                    <option value="pastry">شیرینی</option>
-                    <option value="cafe-cake">کیک کافه‌ای</option>
-                    <option value="cupcake">کاپ کیک</option>
-                    <option value="other">سایر</option>
-                </select>
-            </div>
-
-            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
-                <input type="checkbox" id="gallery-is-featured" style="width: 20px; height: 20px;">
-                <label for="gallery-is-featured" style="margin: 0;">نمایش در اسلایدر صفحه اصلی</label>
-            </div>
-
-            <div id="gallery-preview-container" style="display: none; margin-bottom: 20px;">
-                <p style="font-size: 0.8rem; margin-bottom: 5px; color: var(--text-muted);">پیش‌نمایش (واترمارک هنگام آپلود اعمال می‌شود):</p>
-                <img id="gallery-upload-preview" style="width: 100%; border-radius: 10px; border: 1px solid var(--border-color);">
-            </div>
-
-            <button class="btn btn-primary" style="width: 100%;" id="upload-gallery-btn" onclick="handleGalleryUpload()">
-                <i class="fas fa-upload"></i> آپلود تصویر
-            </button>
-        </div>
-
-        <!-- Gallery Grid -->
-        <div class="card">
-            <div class="card-header">
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;" id="admin-gallery-filters">
-                    <button class="btn btn-outline btn-sm filter-btn active" onclick="filterGallery('all')">همه</button>
-                </div>
-            </div>
-
-            <div id="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
-                <!-- Loaded by JS -->
-            </div>
-        </div>
+    <!-- Gallery Grid -->
+    <div id="gallery-grid" class="gallery-management-grid">
+        <!-- Loaded by JS -->
     </div>
 </div>
 
-<!-- Lightbox -->
-<div id="lightbox" class="modal" onclick="closeLightbox()">
-    <div style="max-width: 90%; max-height: 90%; position: relative;">
-        <img id="lightbox-img" style="max-width: 100%; max-height: 100vh; border-radius: 10px; box-shadow: 0 0 30px rgba(0,0,0,0.5);">
-        <p id="lightbox-caption" style="text-align: center; color: white; margin-top: 10px; font-weight: bold;"></p>
+<!-- Gallery Upload/Edit Modal -->
+<div id="gallery-modal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+            <h2 id="gallery-modal-title">افزودن تصویر به گالری</h2>
+            <span class="close" onclick="closeGalleryModal()">&times;</span>
+        </div>
+        <form id="gallery-form" onsubmit="handleGallerySave(event)">
+            <input type="hidden" id="gallery-id">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="left-col">
+                    <div class="form-group">
+                        <label>تصویر اصلی</label>
+                        <div class="image-upload-box" onclick="document.getElementById('gallery-file-input').click()">
+                            <img id="gallery-preview" src="../images/logo/sweet-.png">
+                            <div class="upload-overlay">
+                                <i class="fas fa-camera"></i>
+                                <span>تغییر تصویر</span>
+                            </div>
+                        </div>
+                        <input type="file" id="gallery-file-input" hidden accept="image/*" onchange="previewGalleryImage(event)">
+                        <input type="hidden" id="gallery-image-url">
+                        <input type="hidden" id="gallery-thumb-url">
+                    </div>
+                </div>
+                <div class="right-col">
+                    <div class="form-group">
+                        <label>عنوان تصویر</label>
+                        <input type="text" id="gallery-title" class="form-control" placeholder="مثلاً: کیک تولد شکلاتی">
+                    </div>
+                    <div class="form-group">
+                        <label>دسته‌بندی</label>
+                        <select id="gallery-modal-category" class="form-control" required>
+                            <!-- Loaded from categories -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>متن جایگزین (Alt Text)</label>
+                        <input type="text" id="gallery-alt" class="form-control" placeholder="برای سئو بهتر">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label>ترتیب نمایش</label>
+                            <input type="number" id="gallery-order" class="form-control" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>وضعیت انتشار</label>
+                            <select id="gallery-status" class="form-control">
+                                <option value="published">منتشر شده</option>
+                                <option value="draft">پیش‌نویس</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>توضیحات</label>
+                <textarea id="gallery-description" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 20px; background: var(--accent); padding: 15px; border-radius: 12px; margin-top: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="gallery-is-featured-modal" style="width: 18px; height: 18px;">
+                    <label for="gallery-is-featured-modal" style="margin: 0;">ستاره‌دار (اسلایدر اصلی)</label>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="gallery-watermark" style="width: 18px; height: 18px;" checked>
+                    <label for="gallery-watermark" style="margin: 0;">فعال‌سازی واترمارک</label>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px; display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" class="btn btn-outline" onclick="closeGalleryModal()">انصراف</button>
+                <button type="submit" class="btn btn-primary" id="save-gallery-btn">
+                    <i class="fas fa-save"></i> ذخیره در گالری
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
 <style>
-.gallery-item {
-    position: relative;
-    border-radius: 10px;
+.gallery-management-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+.gallery-admin-card {
+    background: white;
+    border-radius: 15px;
     overflow: hidden;
-    aspect-ratio: 1;
-    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s;
+    position: relative;
     border: 1px solid var(--border-color);
 }
-.gallery-item img {
+.gallery-admin-card:hover {
+    transform: translateY(-5px);
+}
+.gallery-card-img {
     width: 100%;
-    height: 100%;
+    aspect-ratio: 1;
     object-fit: cover;
-    transition: transform 0.3s;
+    border-bottom: 1px solid var(--border-color);
 }
-.gallery-item:hover img {
-    transform: scale(1.1);
+.gallery-card-info {
+    padding: 12px;
 }
-.gallery-item-overlay {
+.gallery-card-info h4 {
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.gallery-card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+.featured-star {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
+    top: 10px;
+    right: 10px;
+    color: #f1c40f;
+    background: rgba(255,255,255,0.8);
+    width: 25px;
+    height: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.image-upload-box {
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--accent);
+    border: 2px dashed var(--border-color);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+.image-upload-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+.upload-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.75rem;
     opacity: 0;
     transition: opacity 0.3s;
 }
-.gallery-item:hover .gallery-item-overlay {
+.image-upload-box:hover .upload-overlay {
     opacity: 1;
-}
-.category-badge {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: var(--primary);
-    color: white;
-    font-size: 0.65rem;
-    padding: 2px 6px;
-    border-radius: 4px;
-    z-index: 2;
-}
-.btn-delete-image {
-    background: #e74c3c;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.8rem;
 }
 </style>

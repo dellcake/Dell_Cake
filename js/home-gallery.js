@@ -1,14 +1,14 @@
 import { supabase } from "./supabase-client.js";
 
 /**
- * Home Gallery Logic
+ * Home Gallery Logic - Supabase Dynamic Version
+ * Fetches only Featured items from the database
  */
 export async function initHomeGallery() {
     const wrapper = document.getElementById('home-gallery-wrapper');
     if (!wrapper) return;
 
     try {
-        // Check if supabase is mock (not configured)
         if (supabase.isMock) {
             wrapper.innerHTML = `
                 <div class="swiper-slide portfolio-slide">
@@ -21,12 +21,13 @@ export async function initHomeGallery() {
             return;
         }
 
-        // Fetch featured or latest gallery items
+        // Fetch only Featured & Published gallery items
         const { data, error } = await supabase
             .from('gallery')
-            .select('*')
+            .select('*, gallery_categories(name)')
             .eq('status', 'published')
-            .order('is_featured', { ascending: false })
+            .eq('is_featured', true)
+            .order('display_order', { ascending: true })
             .order('created_at', { ascending: false })
             .limit(10);
 
@@ -37,7 +38,7 @@ export async function initHomeGallery() {
                 <div class="swiper-slide portfolio-slide">
                     <div class="portfolio-item-inner no-data">
                         <img src="images/logo/sweet-.png" alt="دل‌کیک" style="opacity: 0.2; width: 100px; height: auto;">
-                        <p style="margin-top: 15px; color: #6b3d2a; font-weight: bold; font-size: 0.9rem;">هنوز نمونه‌کاری ثبت نشده است</p>
+                        <p style="margin-top: 15px; color: #6b3d2a; font-weight: bold; font-size: 0.9rem;">هنوز نمونه‌کار ویژه‌ای ثبت نشده است</p>
                     </div>
                 </div>
             `;
@@ -47,11 +48,11 @@ export async function initHomeGallery() {
         wrapper.innerHTML = data.map(item => `
             <div class="swiper-slide portfolio-slide">
                 <div class="portfolio-item-inner">
-                    <img src="${item.thumbnail_url || item.url}" loading="lazy" alt="${item.alt_text || item.title || 'Dell Cake Portfolio'}" onerror="this.src='images/logo/sweet-.png'">
+                    <img src="${item.thumbnail_url || item.image_url}" loading="lazy" alt="${item.alt_text || item.title || 'Dell Cake Portfolio'}" onerror="this.src='images/logo/sweet-.png'">
                     <div class="portfolio-overlay">
                         <div class="portfolio-info">
                             <h4>${item.title || ''}</h4>
-                            <span>${item.category || ''}</span>
+                            <span>${item.gallery_categories?.name || 'سایر'}</span>
                         </div>
                     </div>
                 </div>
@@ -90,7 +91,7 @@ export async function initHomeGallery() {
         wrapper.innerHTML = `
             <div class="swiper-slide">
                 <div class="portfolio-item-inner no-data error-data">
-                    <p style="color: #6b3d2a;">خطا در بارگذاری گالری</p>
+                    <p style="color: #6b3d2a;">خطا در بارگذاری گالری ویژه</p>
                     <button onclick="location.reload()" style="margin-top:10px; background:#e8789a; color:white; border:none; padding:5px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer;">تلاش مجدد</button>
                 </div>
             </div>
@@ -98,7 +99,6 @@ export async function initHomeGallery() {
     }
 }
 
-// Call on DOMContentLoaded if index.html
 if (document.querySelector('.portfolio-swiper')) {
     document.addEventListener('DOMContentLoaded', initHomeGallery);
 }

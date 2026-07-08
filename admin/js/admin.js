@@ -4,6 +4,7 @@ import { CategoriesModule } from "./modules/categories.js";
 import { ProductsModule } from "./modules/products.js";
 import { OrdersModule } from "./modules/orders.js";
 import { SettingsModule } from "./modules/settings.js";
+import { MigrationModule } from "./modules/migration.js";
 import { BlogModule, MessagesModule } from "./modules/common.js";
 import { loadDashboardData } from "./modules/dashboard.js";
 
