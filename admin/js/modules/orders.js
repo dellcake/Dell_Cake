@@ -22,14 +22,16 @@ export const OrdersModule = {
         }
     },
 
-    render() {
+    render(filteredOrders = null) {
         const tbody = document.getElementById('orders-tbody');
         if (!tbody) return;
 
-        if (this.orders.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">سفارشی ثبت نشده است.</td></tr>';
+        const displayOrders = filteredOrders || this.orders;
+
+        if (displayOrders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">سفارشی یافت نشد.</td></tr>';
         } else {
-            tbody.innerHTML = this.orders.map(order => `
+            tbody.innerHTML = displayOrders.map(order => `
                 <tr>
                     <td>${order.id.substring(0, 8)}</td>
                     <td>${order.customer_name}</td>
@@ -46,6 +48,34 @@ export const OrdersModule = {
                 </tr>
             `).join('');
         }
+    },
+
+    handleSearch(query) {
+        const q = query.toLowerCase();
+        const filtered = this.orders.filter(o =>
+            o.customer_name.toLowerCase().includes(q) ||
+            o.phone.includes(q) ||
+            o.id.includes(q) ||
+            (o.details?.cake_type && o.details.cake_type.toLowerCase().includes(q))
+        );
+        this.render(filtered);
+    },
+
+    exportCSV() {
+        if (this.orders.length === 0) return alert('سفارشی برای خروجی وجود ندارد.');
+
+        let csv = 'ID,Customer,Phone,Cake Type,Delivery Date,Status\n';
+        this.orders.forEach(o => {
+            csv += `${o.id},${o.customer_name},${o.phone},${o.details?.cake_type || ''},${o.details?.delivery_date || ''},${o.status}\n`;
+        });
+
+        const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute("download", "dellcake-orders.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     },
 
     async updateStatus(id, newStatus) {
@@ -114,3 +144,5 @@ export const OrdersModule = {
 
 window.OrdersModule = OrdersModule;
 window.closeOrderDetailModal = () => document.getElementById('order-detail-modal').style.display = 'none';
+window.handleOrderSearch = (val) => OrdersModule.handleSearch(val);
+window.exportOrdersToCSV = () => OrdersModule.exportCSV();

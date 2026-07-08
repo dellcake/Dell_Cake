@@ -16,6 +16,19 @@ if (!isConfigValid) {
 }
 
 // Export a placeholder if config is invalid to prevent breaking imports
+const mockQuery = {
+    select: () => mockQuery,
+    eq: () => mockQuery,
+    order: () => mockQuery,
+    limit: () => mockQuery,
+    range: () => mockQuery,
+    single: () => mockQuery,
+    // Add then/catch/finally to make it thenable (awaitable)
+    then: (onFullfilled) => onFullfilled({ data: [], error: null }),
+    catch: (onRejected) => onRejected(new Error("Supabase not configured")),
+    finally: (onFinally) => onFinally()
+};
+
 export const supabase = isConfigValid
     ? createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
     : {
@@ -29,10 +42,6 @@ export const supabase = isConfigValid
             },
             signOut: async () => ({ error: null })
         },
-        from: () => ({
-            select: () => ({
-                order: () => ({ limit: () => ({ single: async () => ({ data: null, error: null }) }) }),
-                eq: () => ({ single: async () => ({ data: null, error: null }) })
-            })
-        })
+        from: () => mockQuery,
+        isMock: true // Helper flag
     };

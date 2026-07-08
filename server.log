@@ -1,24 +1,45 @@
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /index.html HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /css/academy-popup.css HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /css/style.css HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /css/footer.css HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /js/home-gallery.js HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /js/site-settings.js HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /css/order-rules.css HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /images/hero/baker-girl.png HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /js/menu.js HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /js/supabase-client.js HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /js/academy-popup.js HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /js/homepage-animation.js HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /js/load-components.js HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:09] "GET /js/supabase-config.js HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:10] "GET /components/header.html HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:10] "GET /components/sidebar.html HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:10] "GET /components/footer.html HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:10] "GET /images/logo/sweet-.png HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:10] "GET /images/icons/bale.svg HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:11] "GET /gallery.html HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:11] "GET /css/gallery-page.css HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:11] "GET /js/gallery-page.js HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:12] "GET /admin/login.html HTTP/1.1" 200 -
-127.0.0.1 - - [08/Jul/2026 01:36:12] "GET /admin/js/login.js HTTP/1.1" 200 -
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 1329, in <module>
+    test(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 1276, in test
+    with ServerClass(addr, HandlerClass) as httpd:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 1323, in server_bind
+    return super().server_bind()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 140, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /css/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /css/academy-popup.css HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /css/footer.css HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /js/site-settings.js HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /js/home-gallery.js HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /images/hero/baker-girl.png HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /js/menu.js HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /css/order-rules.css HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /js/homepage-animation.js HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /js/academy-popup.js HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /js/supabase-client.js HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /js/load-components.js HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:16] "GET /js/supabase-config.js HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:18] "GET /components/header.html HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:18] "GET /components/sidebar.html HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:18] "GET /components/footer.html HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:18] "GET /images/logo/sweet-.png HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:18] "GET /images/icons/bale.svg HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:23] "GET /gallery.html HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:23] "GET /css/gallery-page.css HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:37:23] "GET /js/gallery-page.js HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:43:44] "GET /admin/login.html HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:43:44] "GET /admin/js/login.js HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:43:44] "GET /images/logo/sweet-.png HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:43:44] "GET /js/supabase-client.js HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jul/2026 03:43:44] "GET /js/supabase-config.js HTTP/1.1" 200 -

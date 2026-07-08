@@ -8,6 +8,18 @@ export async function initHomeGallery() {
     if (!wrapper) return;
 
     try {
+        // Check if supabase is mock (not configured)
+        if (supabase.isMock) {
+            wrapper.innerHTML = `
+                <div class="swiper-slide portfolio-slide">
+                    <div class="portfolio-item-inner no-data">
+                        <p style="color: #6b3d2a; font-size: 0.9rem;">لطفا تنظیمات Supabase را در فایل <br><code>js/supabase-config.js</code> وارد کنید.</p>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
         // Fetch featured or latest gallery items
         const { data, error } = await supabase
             .from('gallery')

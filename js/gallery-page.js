@@ -77,9 +77,20 @@ const GalleryPage = {
         if (this.loading || !this.hasMore) return;
 
         this.loading = true;
-        this.loader.classList.remove('hidden');
+        if (this.loader) this.loader.classList.remove('hidden');
 
         try {
+            if (supabase.isMock) {
+                this.grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align:center; padding:50px; background: rgba(255,255,255,0.5); border-radius: 15px; border: 1px dashed #e8789a;">
+                        <p style="color: #6b3d2a; margin-bottom: 10px;">اتصال به پایگاه داده برقرار نیست.</p>
+                        <p style="font-size: 0.85rem; color: #888;">لطفا تنظیمات Supabase را در فایل <code>js/supabase-config.js</code> وارد کنید.</p>
+                    </div>
+                `;
+                this.hasMore = false;
+                return;
+            }
+
             let query = supabase
                 .from('gallery')
                 .select('*')
@@ -110,7 +121,7 @@ const GalleryPage = {
             console.error('Error loading gallery items:', err);
         } finally {
             this.loading = false;
-            this.loader.classList.add('hidden');
+            if (this.loader) this.loader.classList.add('hidden');
         }
     },
 
