@@ -20,15 +20,21 @@ export async function initHomeGallery() {
         if (error) throw error;
 
         if (!data || data.length === 0) {
-            wrapper.innerHTML = '<div class="swiper-slide">موردی برای نمایش یافت نشد</div>';
+            wrapper.innerHTML = `
+                <div class="swiper-slide portfolio-slide">
+                    <div class="portfolio-item-inner no-data">
+                        <img src="images/logo/sweet-.png" alt="دل‌کیک" style="opacity: 0.2; width: 150px; height: auto;">
+                        <p style="margin-top: 15px; color: #6b3d2a; font-weight: bold;">هنوز نمونه‌کاری ثبت نشده است</p>
+                    </div>
+                </div>
+            `;
             return;
         }
 
         wrapper.innerHTML = data.map(item => `
             <div class="swiper-slide portfolio-slide">
                 <div class="portfolio-item-inner">
-                    <img data-src="${item.url}" class="swiper-lazy" alt="${item.alt_text || item.title || 'Dell Cake Portfolio'}">
-                    <div class="swiper-lazy-preloader"></div>
+                    <img src="${item.thumbnail_url || item.url}" loading="lazy" alt="${item.alt_text || item.title || 'Dell Cake Portfolio'}">
                     <div class="portfolio-overlay">
                         <div class="portfolio-info">
                             <h4>${item.title || ''}</h4>
@@ -40,17 +46,19 @@ export async function initHomeGallery() {
         `).join('');
 
         // Initialize Swiper
+        if (typeof Swiper === 'undefined') {
+            console.error('Swiper is not loaded');
+            return;
+        }
+
         new Swiper('.portfolio-swiper', {
             slidesPerView: 1,
             spaceBetween: 20,
-            loop: true,
+            loop: data.length > 4,
             autoplay: {
-                delay: 3000,
+                delay: 4000,
                 disableOnInteraction: false,
                 pauseOnMouseEnter: true,
-            },
-            lazy: {
-                loadPrevNext: true,
             },
             pagination: {
                 el: '.swiper-pagination',

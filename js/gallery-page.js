@@ -88,9 +88,6 @@ const GalleryPage = {
                 .range(this.page * this.perPage, (this.page + 1) * this.perPage - 1);
 
             if (this.currentFilter !== 'all') {
-                // If using direct string categories for legacy or new category_id
-                // Here we assume slug matches category name or handled via a join if we had category_id
-                // For simplicity in this implementation, we use the 'category' field
                 query = query.eq('category', this.currentFilter);
             }
 

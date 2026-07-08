@@ -14,7 +14,7 @@ export const ImageProcessor = {
             maxWidth = 1200,
             quality = 0.8,
             watermarkText = 'Dell Cake | دل‌کیک',
-            logoUrl = '/images/logo/sweet-.png' // Default logo
+            logoUrl = '../images/logo/sweet-.png' // Default logo
         } = options;
 
         return new Promise((resolve, reject) => {

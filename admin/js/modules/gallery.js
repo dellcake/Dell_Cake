@@ -73,7 +73,7 @@ export const GalleryModule = {
     },
 
     renderFilterButtons() {
-        const container = document.querySelector('.card-header div');
+        const container = document.getElementById('admin-gallery-filters');
         if (!container) return;
 
         container.innerHTML = `
@@ -87,7 +87,7 @@ export const GalleryModule = {
     renderCategorySelect() {
         const select = document.getElementById('gallery-upload-category');
         if (!select) return;
-        select.innerHTML = this.categories.map(cat => `<option value="${cat.slug}" data-id="${cat.id}">${cat.name}</option>`).join('');
+        select.innerHTML = this.categories.map(cat => `<option value="${cat.slug}" data-id="${cat.id}">${cat.name}</option>`).join('') + '<option value="other">سایر</option>';
     },
 
     setFilter(slug) {
@@ -99,6 +99,7 @@ export const GalleryModule = {
         const fileInput = document.getElementById('gallery-file-input');
         const categorySelect = document.getElementById('gallery-upload-category');
         const uploadBtn = document.getElementById('upload-gallery-btn');
+        const isFeatured = document.getElementById('gallery-is-featured')?.checked || false;
 
         if (!fileInput.files || fileInput.files.length === 0) {
             alert('لطفاً یک تصویر انتخاب کنید.');
@@ -144,6 +145,7 @@ export const GalleryModule = {
                 thumbnail_url: thumbUrl,
                 category: categorySlug,
                 category_id: categoryId,
+                is_featured: isFeatured,
                 status: 'published',
                 title: file.name.split('.')[0], // Default title
                 alt_text: `Dell Cake - ${categorySlug}`
