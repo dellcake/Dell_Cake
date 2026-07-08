@@ -17,14 +17,21 @@ const GalleryPage = {
     loading: false,
 
     async init() {
-        this.grid = document.getElementById('main-gallery-grid');
-        this.filterContainer = document.getElementById('gallery-categories');
-        this.loader = document.getElementById('gallery-loader');
+        try {
+            this.grid = document.getElementById('main-gallery-grid');
+            this.filterContainer = document.getElementById('gallery-categories');
+            this.loader = document.getElementById('gallery-loader');
 
-        await this.loadCategories();
-        await this.loadItems();
-        this.initLightbox();
-        this.initScroll();
+            if (!this.grid) return;
+
+            await this.loadCategories();
+            await this.loadItems();
+            this.initLightbox();
+            this.initScroll();
+        } catch (err) {
+            console.error('Gallery initialization failed:', err);
+            this.showError('بروز خطا در راه‌اندازی گالری');
+        }
     },
 
     async loadCategories() {
@@ -77,16 +84,11 @@ const GalleryPage = {
         if (this.loading || !this.hasMore) return;
 
         this.loading = true;
-        if (this.loader) this.loader.classList.remove('hidden');
+        if (this.loader) this.loader.style.display = 'block';
 
         try {
             if (supabase.isMock) {
-                this.grid.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align:center; padding:50px; background: rgba(255,255,255,0.5); border-radius: 15px; border: 1px dashed #e8789a;">
-                        <p style="color: #6b3d2a; margin-bottom: 10px;">اتصال به پایگاه داده برقرار نیست.</p>
-                        <p style="font-size: 0.85rem; color: #888;">لطفا تنظیمات Supabase را در فایل <code>js/supabase-config.js</code> وارد کنید.</p>
-                    </div>
-                `;
+                this.renderMockState();
                 this.hasMore = false;
                 return;
             }
@@ -106,7 +108,13 @@ const GalleryPage = {
 
             if (error) throw error;
 
-            if (!data || data.length < this.perPage) {
+            if (!data || data.length === 0) {
+                if (this.page === 0) this.renderEmptyState();
+                this.hasMore = false;
+                return;
+            }
+
+            if (data.length < this.perPage) {
                 this.hasMore = false;
             }
 
@@ -119,22 +127,18 @@ const GalleryPage = {
 
         } catch (err) {
             console.error('Error loading gallery items:', err);
+            if (this.page === 0) this.showError('خطا در دریافت اطلاعات. لطفا دوباره تلاش کنید.');
         } finally {
             this.loading = false;
-            if (this.loader) this.loader.classList.add('hidden');
+            if (this.loader) this.loader.style.display = 'none';
         }
     },
 
     renderItems(newItems) {
-        if (this.page === 0 && (!newItems || newItems.length === 0)) {
-            this.grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding:50px;">موردی برای نمایش یافت نشد.</p>';
-            return;
-        }
-
         const html = newItems.map(item => `
             <article class="gallery-card glightbox" data-glightbox="title: ${item.title || ''}; description: ${item.description || ''}" href="${item.url}">
                 <div class="gallery-img-wrapper">
-                    <img src="${item.thumbnail_url || item.url}" alt="${item.alt_text || item.title || 'Dell Cake'}" loading="lazy">
+                    <img src="${item.thumbnail_url || item.url}" alt="${item.alt_text || item.title || 'Dell Cake'}" loading="lazy" onerror="this.src='images/logo/sweet-.png'">
                 </div>
                 <div class="card-content">
                     <span class="card-category">${this.getCategoryName(item.category)}</span>
@@ -151,18 +155,50 @@ const GalleryPage = {
         }
     },
 
+    renderEmptyState() {
+        this.grid.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-images"></i>
+                <p>هنوز نمونه کاری در این دسته ثبت نشده است.</p>
+            </div>
+        `;
+    },
+
+    renderMockState() {
+        this.grid.innerHTML = `
+            <div class="empty-state mock-state">
+                <i class="fas fa-plug-circle-exclamation"></i>
+                <p>اتصال به پایگاه داده برقرار نیست.</p>
+                <span>لطفا تنظیمات Supabase را در فایل <code>js/supabase-config.js</code> وارد کنید.</span>
+            </div>
+        `;
+    },
+
+    showError(message) {
+        if (!this.grid) return;
+        this.grid.innerHTML = `
+            <div class="error-state">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>${message}</p>
+                <button onclick="location.reload()" class="retry-btn">تلاش مجدد</button>
+            </div>
+        `;
+    },
+
     getCategoryName(slug) {
         const cat = this.categories.find(c => c.slug === slug);
         return cat ? cat.name : slug;
     },
 
     initLightbox() {
-        this.lightbox = GLightbox({
-            selector: '.glightbox',
-            touchNavigation: true,
-            loop: true,
-            autoplayVideos: true
-        });
+        if (typeof GLightbox !== 'undefined') {
+            this.lightbox = GLightbox({
+                selector: '.glightbox',
+                touchNavigation: true,
+                loop: true,
+                autoplayVideos: true
+            });
+        }
     },
 
     initScroll() {
