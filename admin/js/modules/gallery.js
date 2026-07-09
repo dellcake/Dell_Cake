@@ -234,10 +234,81 @@ export const GalleryModule = {
         document.getElementById('gallery-preview').src = '../images/logo/sweet-.png';
         document.getElementById('gallery-modal-title').innerText = 'افزودن تصویر به گالری';
         document.getElementById('gallery-modal').style.display = 'flex';
+
+        this.initDragAndDrop();
     },
 
     closeModal() {
         document.getElementById('gallery-modal').style.display = 'none';
+    },
+
+    initDragAndDrop() {
+        const dropZoneElement = document.getElementById('gallery-drop-zone');
+        const inputElement = document.getElementById('gallery-file-input');
+
+        if (!dropZoneElement || !inputElement) return;
+
+        dropZoneElement.addEventListener('click', (e) => {
+            inputElement.click();
+        });
+
+        inputElement.addEventListener('change', (e) => {
+            if (inputElement.files.length) {
+                this.updateThumbnail(dropZoneElement, inputElement.files[0]);
+            }
+        });
+
+        dropZoneElement.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZoneElement.classList.add('drop-zone--over');
+        });
+
+        ['dragleave', 'dragend'].forEach((type) => {
+            dropZoneElement.addEventListener(type, (e) => {
+                dropZoneElement.classList.remove('drop-zone--over');
+            });
+        });
+
+        dropZoneElement.addEventListener('drop', (e) => {
+            e.preventDefault();
+
+            if (e.dataTransfer.files.length) {
+                inputElement.files = e.dataTransfer.files;
+                this.updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
+            }
+
+            dropZoneElement.classList.remove('drop-zone--over');
+        });
+    },
+
+    updateThumbnail(dropZoneElement, file) {
+        let thumbnailElement = dropZoneElement.querySelector('.drop-zone__thumb');
+
+        // First time - remove the prompt
+        if (dropZoneElement.querySelector('.drop-zone__prompt')) {
+            dropZoneElement.querySelector('.drop-zone__prompt').style.display = 'none';
+        }
+
+        if (!thumbnailElement) {
+            thumbnailElement = document.createElement('div');
+            thumbnailElement.classList.add('drop-zone__thumb');
+            dropZoneElement.appendChild(thumbnailElement);
+        }
+
+        thumbnailElement.dataset.label = file.name;
+
+        // Show thumbnail for image files
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                thumbnailElement.style.backgroundImage = `url('${reader.result}')`;
+                document.getElementById('gallery-preview').src = reader.result;
+            };
+        } else {
+            thumbnailElement.style.backgroundImage = null;
+        }
     }
 };
 
@@ -247,14 +318,3 @@ window.handleGallerySearch = (val) => GalleryModule.setSearch(val);
 window.handleGalleryCategoryFilter = (val) => GalleryModule.setFilter(val);
 window.openGalleryModal = () => GalleryModule.openModal();
 window.closeGalleryModal = () => GalleryModule.closeModal();
-
-window.previewGalleryImage = (event) => {
-    const input = event.target;
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            document.getElementById('gallery-preview').src = e.target.result;
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-};
