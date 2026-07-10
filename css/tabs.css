@@ -1,48 +1,95 @@
-/* Tabs Styling */
-.order-tabs {
+/* Modern Segmented Control Tabs */
+.tabs-container {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
+    margin: 30px 0 50px;
+    padding: 0 20px;
+}
+
+.order-tabs {
+    background: #ffffff;
+    padding: 6px;
+    border-radius: 100px;
+    display: flex;
+    gap: 4px;
+    box-shadow: 0 10px 25px rgba(107, 61, 42, 0.08);
+    border: 1px solid rgba(240, 24, 115, 0.1);
+    max-width: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
 .tab-link {
-    background: white;
-    color: var(--secondary);
-    border: 2px solid #eee;
-    padding: 12px 30px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-family: inherit;
+    border: none;
+    background: transparent;
+    padding: 12px 45px;
+    border-radius: 100px;
+    font-size: 1.05rem;
     font-weight: 600;
-    transition: all 0.3s ease;
+    color: #6b3d2a;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    white-space: nowrap;
+    font-family: 'Vazirmatn', sans-serif;
+    z-index: 1;
 }
 
 .tab-link i {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.tab-link:hover:not(.active) {
+    background: rgba(240, 24, 115, 0.05);
+    color: #f01873;
 }
 
 .tab-link.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-    box-shadow: 0 5px 15px rgba(232, 120, 154, 0.3);
+    background: #f01873;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(240, 24, 115, 0.3);
 }
 
+.tab-link.active i {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+/* Tab Content Transitions */
 .tab-content {
     display: none;
-    animation: fadeIn 0.5s ease;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.5s ease;
 }
 
 .tab-content.active {
     display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+@media (max-width: 600px) {
+    .tabs-container {
+        margin: 20px 0 40px;
+    }
+
+    .order-tabs {
+        width: 100%;
+        padding: 4px;
+    }
+
+    .tab-link {
+        flex: 1;
+        padding: 12px 10px;
+        font-size: 0.9rem;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .tab-link i {
+        font-size: 1rem;
+    }
 }
