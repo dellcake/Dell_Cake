@@ -24,10 +24,11 @@ export const GalleryModule = {
 
             if (error) throw error;
             this.categories = data || [];
-            this.renderCategoryFilters();
-            this.renderCategorySelect();
         } catch (err) {
             console.error('Error loading categories:', err);
+        } finally {
+            this.renderCategoryFilters();
+            this.renderCategorySelect();
         }
     },
 
@@ -104,8 +105,28 @@ export const GalleryModule = {
     renderCategorySelect() {
         const select = document.getElementById('gallery-modal-category');
         if (!select) return;
-        select.innerHTML = '<option value="">انتخاب دسته...</option>' +
-            this.categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+
+        if (this.categories.length === 0) {
+            select.innerHTML = '<option value="">⚠️ دسته‌بندی یافت نشد!</option>';
+            // Add a small hint if empty
+            const parent = select.parentElement;
+            if (parent && !parent.querySelector('.empty-hint')) {
+                const hint = document.createElement('small');
+                hint.className = 'empty-hint';
+                hint.style.color = '#e74c3c';
+                hint.style.marginTop = '5px';
+                hint.style.display = 'block';
+                hint.innerHTML = 'ابتدا از بخش <a href="#" onclick="navigateTo(\'Categories\')" style="color: var(--primary); font-weight: bold;">مدیریت دسته‌ها</a> یک دسته بسازید.';
+                parent.appendChild(hint);
+            }
+        } else {
+            select.innerHTML = '<option value="">انتخاب دسته...</option>' +
+                this.categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+
+            // Remove hint if categories now exist
+            const hint = select.parentElement.querySelector('.empty-hint');
+            if (hint) hint.remove();
+        }
     },
 
     setFilter(catId) {
@@ -235,6 +256,7 @@ export const GalleryModule = {
         document.getElementById('gallery-modal-title').innerText = 'افزودن تصویر به گالری';
         document.getElementById('gallery-modal').style.display = 'flex';
 
+        this.renderCategorySelect();
         this.initDragAndDrop();
     },
 
