@@ -9,27 +9,30 @@ export const SettingsModule = {
             const { data, error } = await supabase
                 .from('site_settings')
                 .select('*')
+                .eq('key', 'global_settings')
                 .single();
 
             if (error && error.code !== 'PGRST116') throw error;
 
-            if (data) {
+            if (data && data.value) {
                 const form = document.getElementById('settings-form');
                 if (!form) return;
 
+                const settings = data.value;
+
                 // Fill form fields
-                Object.keys(data.settings_json || {}).forEach(key => {
+                Object.keys(settings).forEach(key => {
                     const input = form.querySelector(`[name="${key}"]`);
                     if (input) {
-                        if (input.type === 'checkbox') input.checked = data.settings_json[key];
-                        else input.value = data.settings_json[key];
+                        if (input.type === 'checkbox') input.checked = settings[key];
+                        else input.value = settings[key];
                     }
                 });
 
                 // Update logo preview
-                if (data.settings_json.logoUrl) {
+                if (settings.logoUrl) {
                     const preview = document.getElementById('settings-logo-preview');
-                    if (preview) preview.innerHTML = `<img src="${data.settings_json.logoUrl}" alt="Logo">`;
+                    if (preview) preview.innerHTML = `<img src="${settings.logoUrl}" alt="Logo">`;
                 }
             }
         } catch (err) {
@@ -41,6 +44,12 @@ export const SettingsModule = {
         const form = document.getElementById('settings-form');
         if (!form) return;
 
+        const saveBtn = document.querySelector('button[onclick="saveSiteSettings()"]');
+        if (saveBtn) {
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ذخیره...';
+        }
+
         const formData = new FormData(form);
         const settings = {};
         formData.forEach((value, key) => {
@@ -48,27 +57,24 @@ export const SettingsModule = {
         });
 
         try {
-            // Check if settings record exists
-            const { data: existing } = await supabase.from('site_settings').select('id').single();
-
-            let error;
-            if (existing) {
-                const { error: err } = await supabase
-                    .from('site_settings')
-                    .update({ settings_json: settings, updated_at: new Date() })
-                    .eq('id', existing.id);
-                error = err;
-            } else {
-                const { error: err } = await supabase
-                    .from('site_settings')
-                    .insert([{ settings_json: settings }]);
-                error = err;
-            }
+            const { error } = await supabase
+                .from('site_settings')
+                .upsert({
+                    key: 'global_settings',
+                    value: settings,
+                    updated_at: new Date()
+                });
 
             if (error) throw error;
             alert('تنظیمات با موفقیت ذخیره شد.');
         } catch (err) {
+            console.error('Save settings error:', err);
             alert('خطا در ذخیره تنظیمات: ' + err.message);
+        } finally {
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> ذخیره تغییرات';
+            }
         }
     }
 };
