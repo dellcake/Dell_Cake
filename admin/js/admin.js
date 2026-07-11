@@ -58,13 +58,55 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.navigateTo('Dashboard');
 
-    // Handle logout
+    // Profile Dropdown Logic
+    setupProfileDropdown();
+
+    // Initial Profile Data
+    updateProfileInfo();
+});
+
+function setupProfileDropdown() {
+    document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('#profile-trigger');
+        const dropdown = document.getElementById('profile-dropdown');
+
+        if (trigger) {
+            trigger.classList.toggle('active');
+            dropdown.classList.toggle('show');
+        } else if (!e.target.closest('.admin-profile-container')) {
+            const activeTrigger = document.querySelector('#profile-trigger.active');
+            const openDropdown = document.querySelector('#profile-dropdown.show');
+            if (activeTrigger) activeTrigger.classList.remove('active');
+            if (openDropdown) openDropdown.classList.remove('show');
+        }
+    });
+
+    // Handle logout from dropdown
     document.addEventListener('click', async (e) => {
-        const logoutLi = e.target.closest('.logout-item');
-        if (logoutLi) {
+        const logoutBtn = e.target.closest('#logout-btn-dropdown');
+        if (logoutBtn) {
+            e.preventDefault();
             const { supabase } = await import('../../js/supabase-client.js');
             await supabase.auth.signOut();
             location.replace('login.html');
         }
     });
-});
+}
+
+async function updateProfileInfo() {
+    const { supabase } = await import('../../js/supabase-client.js');
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (session) {
+        const user = session.user;
+        const nameElem = document.getElementById('admin-name');
+        const emailElem = document.getElementById('dropdown-admin-email');
+        const avatarElem = document.getElementById('admin-avatar');
+
+        if (nameElem) nameElem.textContent = user.user_metadata?.full_name || 'مدیر سایت';
+        if (emailElem) emailElem.textContent = user.email;
+        if (avatarElem && user.user_metadata?.avatar_url) {
+            avatarElem.src = user.user_metadata.avatar_url;
+        }
+    }
+}
