@@ -245,16 +245,17 @@ CREATE POLICY "Profiles access" ON public.profiles
     USING (auth.uid() = id OR is_admin());
 
 -- Courses: Authenticated to see published, Admin all
+-- Courses: Everyone can see published, Admin all
 CREATE POLICY "Courses access" ON public.courses
-    FOR SELECT TO authenticated
+    FOR SELECT TO anon, authenticated
     USING (status = 'published' OR is_admin());
 CREATE POLICY "Courses admin" ON public.courses
     FOR ALL TO authenticated
     USING (is_admin());
 
--- Products: Authenticated view, Admin all
+-- Products: Everyone can view, Admin all
 CREATE POLICY "Products access" ON public.products
-    FOR SELECT TO authenticated
+    FOR SELECT TO anon, authenticated
     USING (status = 'active' OR is_admin());
 CREATE POLICY "Products admin" ON public.products
     FOR ALL TO authenticated
@@ -296,14 +297,14 @@ CREATE POLICY "Notifications access" ON public.notifications
 CREATE POLICY "Contact messages insert" ON public.contact_messages FOR INSERT TO authenticated WITH CHECK (true);
 CREATE POLICY "Contact messages admin" ON public.contact_messages FOR ALL TO authenticated USING (is_admin());
 
--- Site Settings: View authenticated, Edit Admin
-CREATE POLICY "Site settings view" ON public.site_settings FOR SELECT TO authenticated USING (true);
+-- Site Settings: View everyone, Edit Admin
+CREATE POLICY "Site settings view" ON public.site_settings FOR SELECT TO anon, authenticated USING (true);
 CREATE POLICY "Site settings admin" ON public.site_settings FOR ALL TO authenticated USING (is_admin());
 
--- Gallery & Blog: Authenticated users can view
-CREATE POLICY "Gallery view" ON public.gallery FOR SELECT TO authenticated USING (status = 'published' OR is_admin());
-CREATE POLICY "Gallery categories view" ON public.gallery_categories FOR SELECT TO authenticated USING (true);
-CREATE POLICY "Blog view" ON public.blog FOR SELECT TO authenticated USING (status = 'published' OR is_admin());
+-- Gallery & Blog: Everyone can view
+CREATE POLICY "Gallery view" ON public.gallery FOR SELECT TO anon, authenticated USING (status = 'published' OR is_admin());
+CREATE POLICY "Gallery categories view" ON public.gallery_categories FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "Blog view" ON public.blog FOR SELECT TO anon, authenticated USING (status = 'published' OR is_admin());
 CREATE POLICY "Admin gallery admin" ON public.gallery FOR ALL TO authenticated USING (is_admin());
 CREATE POLICY "Admin gallery categories admin" ON public.gallery_categories FOR ALL TO authenticated USING (is_admin());
 CREATE POLICY "Admin blog all" ON public.blog FOR ALL TO authenticated USING (is_admin());
@@ -363,9 +364,9 @@ CREATE POLICY "Avatar upload" ON storage.objects
     FOR INSERT TO authenticated
     WITH CHECK (bucket_id = 'profiles' AND (storage.foldername(name))[1] = auth.uid()::text);
 
-CREATE POLICY "Avatar view" ON storage.objects
-    FOR SELECT TO authenticated
-    USING (bucket_id = 'profiles');
+CREATE POLICY "Public view" ON storage.objects
+    FOR SELECT TO anon, authenticated
+    USING (bucket_id IN ('profiles', 'gallery', 'courses', 'products', 'blog'));
 
 -- Admin access to all storage
 CREATE POLICY "Admin storage" ON storage.objects
