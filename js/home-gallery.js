@@ -1,15 +1,15 @@
-import { supabase } from "./supabase-client.js";
+import { publicSupabase } from "./supabase-client.js";
 
 /**
  * Home Gallery Logic - Supabase Dynamic Version
- * Fetches only Featured items from the database
+ * Fetches only Featured items from the database using publicSupabase
  */
 export async function initHomeGallery() {
     const wrapper = document.getElementById('home-gallery-wrapper');
     if (!wrapper) return;
 
     try {
-        if (supabase.isMock) {
+        if (publicSupabase.isMock) {
             wrapper.innerHTML = `
                 <div class="swiper-slide portfolio-slide">
                     <div class="portfolio-item-inner no-data mock-data">
@@ -21,8 +21,8 @@ export async function initHomeGallery() {
             return;
         }
 
-        // Fetch only Featured & Published gallery items
-        const { data, error } = await supabase
+        // Fetch only Featured & Published gallery items via public client
+        const { data, error } = await publicSupabase
             .from('gallery')
             .select('*, gallery_categories(name)')
             .eq('status', 'published')

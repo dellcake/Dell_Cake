@@ -43,5 +43,16 @@ export const supabase = isConfigValid
             signOut: async () => ({ error: null })
         },
         from: () => mockQuery,
-        isMock: true // Helper flag
+        isMock: true
     };
+
+// Dedicated Public Client for Guest Access (No session persistence)
+export const publicSupabase = isConfigValid
+    ? createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey, {
+        auth: {
+            persistSession: false,
+            autoRefreshToken: false,
+            detectSessionInUrl: false
+        }
+    })
+    : supabase;

@@ -1,4 +1,4 @@
-import { supabase } from "./supabase-client.js";
+import { publicSupabase } from "./supabase-client.js";
 
 /**
  * Professional Gallery Page Logic - Supabase Only Version
@@ -38,7 +38,7 @@ const GalleryPage = {
 
     async loadCategories() {
         try {
-            const { data, error } = await supabase
+            const { data, error } = await publicSupabase
                 .from('gallery_categories')
                 .select('*')
                 .eq('is_active', true)
@@ -108,13 +108,13 @@ const GalleryPage = {
         if (this.loader) this.loader.style.display = 'block';
 
         try {
-            if (supabase.isMock) {
+            if (publicSupabase.isMock) {
                 this.renderMockState();
                 this.hasMore = false;
                 return;
             }
 
-            let query = supabase
+            let query = publicSupabase
                 .from('gallery')
                 .select('*, gallery_categories(name)')
                 .eq('status', 'published')
