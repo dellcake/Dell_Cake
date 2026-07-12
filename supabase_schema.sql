@@ -357,6 +357,16 @@ CREATE TRIGGER update_gallery_categories_updated_at BEFORE UPDATE ON public.gall
 -- 6. STORAGE BUCKETS & POLICIES
 -- ==========================================
 
+-- Ensure Public Buckets exist and are correctly configured
+INSERT INTO storage.buckets (id, name, public)
+VALUES
+  ('gallery', 'gallery', true),
+  ('products', 'products', true),
+  ('courses', 'courses', true),
+  ('blog', 'blog', true),
+  ('profiles', 'profiles', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
+
 -- Policies for 'storage.objects'
 
 -- Allow users to upload their own avatar

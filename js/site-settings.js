@@ -1,8 +1,8 @@
-import { supabase } from "./supabase-client.js";
+import { publicSupabase } from "./supabase-client.js";
 
 async function applySiteSettings() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await publicSupabase
             .from('site_settings')
             .select('value')
             .eq('key', 'site_config')
@@ -98,7 +98,7 @@ async function loadDynamicGallery() {
     if (!galleryGrid) return;
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await publicSupabase
             .from('gallery')
             .select('url')
             .order('created_at', { ascending: false })
