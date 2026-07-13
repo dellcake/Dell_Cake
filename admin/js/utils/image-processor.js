@@ -18,6 +18,10 @@ export const ImageProcessor = {
         } = options;
 
         return new Promise((resolve, reject) => {
+            if (!file) {
+                return reject(new Error('No file provided to ImageProcessor'));
+            }
+
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = (event) => {
@@ -55,9 +59,9 @@ export const ImageProcessor = {
                         resolve(blob);
                     }, 'image/webp', quality);
                 };
-                img.onerror = reject;
+                img.onerror = () => reject(new Error('Failed to load image into ImageProcessor'));
             };
-            reader.onerror = reject;
+            reader.onerror = () => reject(new Error('Failed to read file in ImageProcessor'));
         });
     },
 
