@@ -185,7 +185,7 @@ async function shareOrder() {
     }
 
     const baleUrl =
-        `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
+        `https://ble.ir/Dellmanager_pv?text=${encodeURIComponent(message)}`;
 
         openShareModal(message);
 
@@ -207,13 +207,13 @@ function closeShareModal() {
 
 /* تلگرام */
 function openTelegram() {
-    const url = `https://t.me/share/url?text=${encodeURIComponent(currentMessage)}`;
+    const url = `https://t.me/Dellmanager_pv?text=${encodeURIComponent(currentMessage)}`;
     window.open(url, "_blank");
 }
 
 /* بله */
 function openBale() {
-    const url = `https://ble.ir/dellcake_pv?text=${encodeURIComponent(currentMessage)}`;
+    const url = `https://ble.ir/Dellmanager_pv?text=${encodeURIComponent(currentMessage)}`;
     window.open(url, "_blank");
 }
 

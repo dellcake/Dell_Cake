@@ -57,6 +57,8 @@ async function applySiteSettings() {
             if (config.telegram) {
                 document.querySelectorAll('a[href*="t.me"]').forEach(a => {
                     a.href = `https://t.me/${config.telegram}`;
+                    a.setAttribute('target', '_blank');
+                    a.setAttribute('rel', 'noopener noreferrer');
                 });
             }
             if (config.bale) {
