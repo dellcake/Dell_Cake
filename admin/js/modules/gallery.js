@@ -141,6 +141,8 @@ export const GalleryModule = {
 
     async save(event) {
         event.preventDefault();
+        console.log('--- Start Gallery Save Process ---');
+
         const id = document.getElementById('gallery-id').value;
         const fileInput = document.getElementById('gallery-file-input');
         const saveBtn = document.getElementById('save-gallery-btn');
@@ -158,6 +160,8 @@ export const GalleryModule = {
             thumbnail_url: document.getElementById('gallery-thumb-url').value
         };
 
+        console.log('Payload prepared:', payload);
+
         saveBtn.disabled = true;
         saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ذخیره...';
 
@@ -165,53 +169,76 @@ export const GalleryModule = {
             // 1. If new file selected, upload it
             if (fileInput.files && fileInput.files[0]) {
                 const file = fileInput.files[0];
+                console.log('New file detected for upload:', file.name);
+
                 const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.webp`;
 
                 // Process (Resizing + Watermark if enabled)
+                console.log('Processing image (resizing/watermark)...');
                 const processedBlob = await ImageProcessor.process(file, {
                     watermarkText: 'Dell Cake | دل‌کیک',
                     watermarkEnabled: payload.watermark_enabled
                 });
                 const thumbBlob = await ImageProcessor.generateThumbnail(file);
+                console.log('Image processing complete.');
 
                 // Upload to Storage
+                console.log('Uploading to Storage: full/' + fileName);
                 const { data: mainData, error: mainError } = await supabase.storage
                     .from('gallery')
                     .upload(`full/${fileName}`, processedBlob, { contentType: 'image/webp' });
-                if (mainError) throw mainError;
 
+                if (mainError) {
+                    console.error('Storage Upload (Full) Failed:', mainError);
+                    throw mainError;
+                }
+
+                console.log('Uploading to Storage: thumbs/' + fileName);
                 const { data: thumbData, error: thumbError } = await supabase.storage
                     .from('gallery')
                     .upload(`thumbs/${fileName}`, thumbBlob, { contentType: 'image/webp' });
-                if (thumbError) throw thumbError;
+
+                if (thumbError) {
+                    console.error('Storage Upload (Thumb) Failed:', thumbError);
+                    throw thumbError;
+                }
 
                 payload.image_url = supabase.storage.from('gallery').getPublicUrl(`full/${fileName}`).data.publicUrl;
                 payload.thumbnail_url = supabase.storage.from('gallery').getPublicUrl(`thumbs/${fileName}`).data.publicUrl;
+                console.log('Storage URLs generated:', { main: payload.image_url, thumb: payload.thumbnail_url });
             }
 
-            if (!payload.image_url) throw new Error('لطفاً یک تصویر انتخاب کنید.');
+            if (!payload.image_url) {
+                console.warn('Save attempted without image URL');
+                throw new Error('لطفاً یک تصویر انتخاب کنید.');
+            }
 
             // 2. Save to Database
-            let error;
+            console.log(id ? `Updating record ${id}...` : 'Inserting new record...');
+            let dbResult;
             if (id) {
-                const { error: err } = await supabase.from('gallery').update(payload).eq('id', id);
-                error = err;
+                dbResult = await supabase.from('gallery').update(payload).eq('id', id);
             } else {
-                const { error: err } = await supabase.from('gallery').insert([payload]);
-                error = err;
+                dbResult = await supabase.from('gallery').insert([payload]);
             }
 
-            if (error) throw error;
+            if (dbResult.error) {
+                console.error('Database Operation Failed:', dbResult.error);
+                throw dbResult.error;
+            }
 
+            console.log('Database operation successful.');
             alert('با موفقیت ذخیره شد.');
             this.closeModal();
             this.fetchItems();
         } catch (err) {
-            console.error('Save Error:', err);
-            alert('خطا در ذخیره: ' + err.message);
+            console.error('Full Save Error Object:', err);
+            const errorMsg = err.message || err.error_description || err.details || err.hint || (typeof err === 'string' ? err : 'Unknown upload error');
+            alert('خطا در ذخیره: ' + errorMsg);
         } finally {
             saveBtn.disabled = false;
             saveBtn.innerHTML = '<i class="fas fa-save"></i> ذخیره در گالری';
+            console.log('--- End Gallery Save Process ---');
         }
     },
 
@@ -243,7 +270,9 @@ export const GalleryModule = {
             if (error) throw error;
             this.fetchItems();
         } catch (err) {
-            alert('خطا در حذف: ' + err.message);
+            console.error('Delete Error:', err);
+            const errorMsg = err.message || err.error_description || err.details || err.hint || 'Unknown delete error';
+            alert('خطا در حذف: ' + errorMsg);
         }
     },
 

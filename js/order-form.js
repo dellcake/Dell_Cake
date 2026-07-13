@@ -185,7 +185,7 @@ async function shareOrder() {
     }
 
     const baleUrl =
-        `https://ble.ir/Dellmanager_pv?text=${encodeURIComponent(message)}`;
+        `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
 
         openShareModal(message);
 
@@ -213,7 +213,7 @@ function openTelegram() {
 
 /* بله */
 function openBale() {
-    const url = `https://ble.ir/Dellmanager_pv?text=${encodeURIComponent(currentMessage)}`;
+    const url = `https://ble.ir/dellcake_pv?text=${encodeURIComponent(currentMessage)}`;
     window.open(url, "_blank");
 }
 
