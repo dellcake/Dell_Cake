@@ -47,12 +47,14 @@ export const supabase = isConfigValid
     };
 
 // Dedicated Public Client for Guest Access (No session persistence)
+// storageKey is added to avoid "Multiple GoTrueClient instances" warning
 export const publicSupabase = isConfigValid
     ? createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey, {
         auth: {
             persistSession: false,
             autoRefreshToken: false,
-            detectSessionInUrl: false
+            detectSessionInUrl: false,
+            storageKey: 'dellcake-public-session'
         }
     })
     : supabase;

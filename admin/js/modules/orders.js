@@ -33,11 +33,14 @@ export const OrdersModule = {
         } else {
             tbody.innerHTML = displayOrders.map(order => `
                 <tr>
-                    <td>${order.id.substring(0, 8)}</td>
-                    <td>${order.customer_name}</td>
-                    <td>${order.phone}</td>
-                    <td>${order.details?.cake_type || 'نامشخص'}</td>
-                    <td>${order.details?.delivery_date ? new Date(order.details.delivery_date).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
+                    <td style="font-family: monospace; font-size: 0.8rem;">#${order.id.substring(0, 8)}</td>
+                    <td>
+                        <div style="font-weight: 700;">${order.customer_name}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">${order.phone}</div>
+                    </td>
+                    <td>${order.product_name || 'نامشخص'}</td>
+                    <td style="font-size: 0.85rem;">${new Date(order.created_at).toLocaleDateString('fa-IR')}</td>
+                    <td style="font-size: 0.85rem;">${order.details?.deliveryDate || order.details?.delivery_date || 'نامشخص'}</td>
                     <td><span class="status-badge ${order.status}">${this.translateStatus(order.status)}</span></td>
                     <td>
                         <div class="actions">
@@ -101,32 +104,69 @@ export const OrdersModule = {
 
     viewDetail(id) {
         const order = this.orders.find(o => o.id === id);
-        const modal = document.getElementById('order-detail-modal');
-        const content = document.getElementById('order-detail-content');
+        const modal = document.getElementById('order-modal');
+        const content = document.getElementById('order-details-content');
         if (!modal || !content) return;
 
+        // Extract extra fields if any
+        let fieldsHtml = '';
+        if (order.details?.fields) {
+            fieldsHtml = Object.entries(order.details.fields)
+                .filter(([k, v]) => v)
+                .map(([k, v]) => `<div class="detail-item"><label>${this.translateFieldKey(k)}:</label> <span>${v}</span></div>`)
+                .join('');
+        }
+
         content.innerHTML = `
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div class="detail-item"><label>نام مشتری:</label> <span>${order.customer_name}</span></div>
-                <div class="detail-item"><label>شماره تماس:</label> <span>${order.phone}</span></div>
-                <div class="detail-item"><label>نوع کیک:</label> <span>${order.details?.cake_type || 'نامشخص'}</span></div>
-                <div class="detail-item"><label>تاریخ تحویل:</label> <span>${order.details?.delivery_date ? new Date(order.details.delivery_date).toLocaleDateString('fa-IR') : 'نامشخص'}</span></div>
-                <div class="detail-item order-full-width"><label>آدرس:</label> <span>${order.address || 'آدرسی ثبت نشده'}</span></div>
-                <div class="detail-item order-full-width"><label>توضیحات:</label> <span>${order.details?.description || 'توضیحاتی ثبت نشده'}</span></div>
-                <div class="detail-item order-full-width">
-                    <label>تغییر وضعیت:</label>
-                    <select class="form-control" onchange="OrdersModule.updateStatus('${order.id}', this.value)">
-                        <option value="new" ${order.status === 'new' ? 'selected' : ''}>جدید</option>
-                        <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>در انتظار بررسی</option>
-                        <option value="preparing" ${order.status === 'preparing' ? 'selected' : ''}>در حال آماده‌سازی</option>
-                        <option value="ready" ${order.status === 'ready' ? 'selected' : ''}>آماده تحویل</option>
-                        <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>تکمیل شده</option>
-                        <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>لغو شده</option>
-                    </select>
+            <div style="grid-column: 1/-1; background: var(--accent); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h4 style="color: var(--secondary); margin-bottom: 5px;">${order.customer_name}</h4>
+                    <span class="status-badge ${order.status}">${this.translateStatus(order.status)}</span>
                 </div>
+                <div style="display: flex; gap: 10px;">
+                    <a href="tel:${order.phone}" class="btn btn-outline btn-sm"><i class="fas fa-phone"></i> تماس</a>
+                    <a href="https://t.me/${order.phone.replace(/^0/, '+98')}" target="_blank" class="btn btn-outline btn-sm"><i class="fab fa-telegram"></i> تلگرام</a>
+                </div>
+            </div>
+
+            <div class="detail-item"><label>نوع سفارش:</label> <span>${order.product_name || 'نامشخص'}</span></div>
+            <div class="detail-item"><label>شماره تماس:</label> <span>${order.phone}</span></div>
+            <div class="detail-item"><label>وزن تقریبی:</label> <span>${order.details?.weight || 'نامشخص'} کیلوگرم</span></div>
+            <div class="detail-item"><label>تاریخ تحویل:</label> <span>${order.details?.deliveryDate || order.details?.delivery_date || 'نامشخص'}</span></div>
+            <div class="detail-item"><label>ساعت تحویل:</label> <span>${order.details?.deliveryTime || 'نامشخص'}</span></div>
+            <div class="detail-item"><label>تاریخ ثبت:</label> <span>${new Date(order.created_at).toLocaleDateString('fa-IR')}</span></div>
+
+            ${fieldsHtml}
+
+            <div class="detail-item order-full-width" style="border-top: 1px solid var(--border-color); padding-top: 15px;">
+                <label>توضیحات و آدرس:</label>
+                <p style="background: #f9f9f9; padding: 12px; border-radius: 8px; font-size: 0.9rem; white-space: pre-wrap;">${order.address || 'توضیحاتی ثبت نشده'}</p>
+            </div>
+
+            <div class="detail-item order-full-width">
+                <label>تغییر وضعیت سفارش:</label>
+                <select class="form-control" onchange="OrdersModule.updateStatus('${order.id}', this.value)">
+                    <option value="new" ${order.status === 'new' ? 'selected' : ''}>جدید (بررسی نشده)</option>
+                    <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>در حال بررسی</option>
+                    <option value="preparing" ${order.status === 'preparing' ? 'selected' : ''}>در حال آماده‌سازی</option>
+                    <option value="ready" ${order.status === 'ready' ? 'selected' : ''}>آماده تحویل / ارسال</option>
+                    <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>تحویل شده (پایان)</option>
+                    <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>لغو شده</option>
+                </select>
             </div>
         `;
         modal.style.display = 'flex';
+    },
+
+    translateFieldKey(key) {
+        const map = {
+            'birthdayFlavor': 'طعم کیک', 'birthdayFilling': 'فیلینگ', 'birthdayDesign': 'سبک طراحی', 'birthdayColors': 'رنگ‌ها', 'birthdayText': 'متن روی کیک',
+            'kidFlavor': 'طعم', 'kidFilling': 'فیلینگ', 'kidDesign': 'طراحی', 'kidCharacter': 'شخصیت', 'kidColors': 'رنگ‌ها',
+            'engagementFlavor': 'طعم', 'engagementFilling': 'فیلینگ', 'engagementDesign': 'طراحی', 'engagementTheme': 'تم', 'engagementText': 'متن',
+            'weddingFloors': 'تعداد طبقات', 'weddingFlavor': 'طعم', 'weddingFilling': 'فیلینگ', 'weddingDesign': 'طراحی', 'weddingTheme': 'تم مراسم', 'weddingColors': 'رنگ‌ها',
+            'customTheme': 'موضوع', 'customFlavor': 'طعم', 'customFilling': 'فیلینگ', 'customDesign': 'طراحی', 'customColors': 'رنگ‌ها', 'customText': 'متن'
+        };
+        return map[key] || key;
     },
 
     translateStatus(status) {

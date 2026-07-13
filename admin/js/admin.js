@@ -81,9 +81,9 @@ function setupProfileDropdown() {
         }
     });
 
-    // Handle logout from dropdown
+    // Handle logout from dropdown and sidebar
     document.addEventListener('click', async (e) => {
-        const logoutBtn = e.target.closest('#logout-btn-dropdown');
+        const logoutBtn = e.target.closest('#logout-btn-dropdown') || e.target.closest('.logout-item');
         if (logoutBtn) {
             e.preventDefault();
             const { supabase } = await import('../../js/supabase-client.js');
@@ -105,8 +105,15 @@ async function updateProfileInfo() {
 
         if (nameElem) nameElem.textContent = user.user_metadata?.full_name || 'مدیر سایت';
         if (emailElem) emailElem.textContent = user.email;
-        if (avatarElem && user.user_metadata?.avatar_url) {
-            avatarElem.src = user.user_metadata.avatar_url;
+
+        // Admin Avatar: Show Dell Cake logo for specific admin or if avatar is missing
+        if (avatarElem) {
+            const isOfficialAdmin = user.email === 'dellcake.orders@gmail.com';
+            if (isOfficialAdmin || !user.user_metadata?.avatar_url) {
+                avatarElem.src = '../images/logo/sweet-.png';
+            } else {
+                avatarElem.src = user.user_metadata.avatar_url;
+            }
         }
     }
 }
