@@ -29,14 +29,19 @@ CREATE TABLE IF NOT EXISTS public.courses (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     title TEXT NOT NULL,
     slug TEXT UNIQUE NOT NULL,
-    category TEXT CHECK (category IN ('cake', 'pastry', 'dessert')),
+    category TEXT,
     price NUMERIC NOT NULL DEFAULT 0,
     discount NUMERIC DEFAULT 0,
-    level TEXT CHECK (level IN ('beginner', 'intermediate', 'advanced')),
-    status TEXT DEFAULT 'published' CHECK (status IN ('published', 'draft')),
+    level TEXT,
+    status TEXT DEFAULT 'published' CHECK (status IN ('published', 'draft', 'archived')),
     duration TEXT,
+    sessions_count INTEGER DEFAULT 1,
+    teacher_name TEXT DEFAULT 'مدیر دل‌کیک',
+    display_order INTEGER DEFAULT 0,
     image_url TEXT,
+    video_url TEXT,
     description TEXT,
+    short_description TEXT,
     package_content TEXT[],
     seo_title TEXT,
     seo_description TEXT,
@@ -64,6 +69,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
     user_id UUID REFERENCES auth.users ON DELETE SET NULL,
     customer_name TEXT,
     phone TEXT,
+    product_name TEXT,
     price NUMERIC NOT NULL DEFAULT 0,
     status TEXT DEFAULT 'new' CHECK (status IN ('new', 'pending', 'preparing', 'ready', 'completed', 'cancelled')),
     address TEXT,
@@ -149,6 +155,17 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- Course Categories
+CREATE TABLE IF NOT EXISTS public.course_categories (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    display_order INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
 -- Gallery Categories
 CREATE TABLE IF NOT EXISTS public.gallery_categories (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -223,6 +240,7 @@ ALTER TABLE public.favorites ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.contact_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.course_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.gallery_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.gallery ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.blog ENABLE ROW LEVEL SECURITY;
@@ -304,6 +322,10 @@ CREATE POLICY "Contact messages admin" ON public.contact_messages FOR ALL TO aut
 CREATE POLICY "Site settings view" ON public.site_settings FOR SELECT TO anon, authenticated USING (true);
 CREATE POLICY "Site settings admin" ON public.site_settings FOR ALL TO authenticated USING (is_admin());
 
+-- Course Categories: Everyone view, Admin all
+CREATE POLICY "Course categories view" ON public.course_categories FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "Course categories admin" ON public.course_categories FOR ALL TO authenticated USING (is_admin());
+
 -- Gallery & Blog: Everyone can view
 CREATE POLICY "Gallery view" ON public.gallery FOR SELECT TO anon, authenticated USING (status = 'published' OR is_admin());
 CREATE POLICY "Gallery categories view" ON public.gallery_categories FOR SELECT TO anon, authenticated USING (true);
@@ -351,6 +373,7 @@ $$ language 'plpgsql';
 
 CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER update_courses_updated_at BEFORE UPDATE ON public.courses FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+CREATE TRIGGER update_course_categories_updated_at BEFORE UPDATE ON public.course_categories FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER update_orders_updated_at BEFORE UPDATE ON public.orders FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER update_blog_updated_at BEFORE UPDATE ON public.blog FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER update_gallery_updated_at BEFORE UPDATE ON public.gallery FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();

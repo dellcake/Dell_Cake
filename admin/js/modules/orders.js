@@ -108,13 +108,21 @@ export const OrdersModule = {
         const content = document.getElementById('order-details-content');
         if (!modal || !content) return;
 
-        // Extract extra fields if any
+        // Extract extra fields if any (handle both cake and cookie formats)
         let fieldsHtml = '';
-        if (order.details?.fields) {
-            fieldsHtml = Object.entries(order.details.fields)
+        const details = order.details || {};
+
+        // Handle Cake Form (details.fields)
+        if (details.fields) {
+            fieldsHtml += Object.entries(details.fields)
                 .filter(([k, v]) => v)
                 .map(([k, v]) => `<div class="detail-item"><label>${this.translateFieldKey(k)}:</label> <span>${v}</span></div>`)
                 .join('');
+        }
+
+        // Handle Cookie Form (direct fields in details)
+        if (details.flavors) {
+            fieldsHtml += `<div class="detail-item"><label>طعم‌ها:</label> <span>${details.flavors}</span></div>`;
         }
 
         content.innerHTML = `

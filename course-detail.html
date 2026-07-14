@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جزئیات دوره | آکادمی دل‌کیک</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/academy.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        .course-detail-page { padding-top: 120px; background: #fdfdfd; min-height: 100vh; }
+        .course-header { display: grid; grid-template-columns: 1fr 400px; gap: 40px; margin-bottom: 60px; }
+        .video-placeholder { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 20px; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
+        .video-placeholder i { color: #fff; font-size: 5rem; opacity: 0.8; cursor: pointer; transition: 0.3s; }
+        .video-placeholder i:hover { transform: scale(1.1); opacity: 1; }
+        .course-sidebar { position: sticky; top: 120px; }
+        .purchase-card { background: #fff; border-radius: 25px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border: 1px solid #f0f0f0; }
+        .syllabus-item { background: #fff; border: 1px solid #eee; padding: 15px 20px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .syllabus-item i { color: var(--academy-primary); }
+        .teacher-box-v2 { display: flex; align-items: center; gap: 20px; background: var(--academy-accent); padding: 25px; border-radius: 20px; margin-top: 40px; }
+        .teacher-box-v2 img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
+        @media (max-width: 992px) {
+            .course-header { grid-template-columns: 1fr; }
+            .course-sidebar { position: static; margin-top: 40px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <main class="course-detail-page container" id="course-content">
+        <!-- Loaded by JS -->
+        <div style="text-align: center; padding: 100px;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--academy-primary);"></i>
+            <p style="margin-top: 20px;">در حال بارگذاری اطلاعات دوره...</p>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script type="module">
+        import { publicSupabase } from './js/supabase-client.js';
+
+        async function loadCourse() {
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get('slug');
+
+            if (!slug) {
+                window.location.href = 'academy.html';
+                return;
+            }
+
+            try {
+                const { data: course, error } = await publicSupabase
+                    .from('courses')
+                    .select('*')
+                    .eq('slug', slug)
+                    .single();
+
+                if (error || !course) throw new Error('Course not found');
+
+                renderCourse(course);
+            } catch (err) {
+                document.getElementById('course-content').innerHTML = `
+                    <div style="text-align:center; padding: 100px;">
+                        <h2>دوره مورد نظر یافت نشد!</h2>
+                        <a href="academy.html" class="primary-btn" style="display:inline-block; margin-top:20px;">بازگشت به آکادمی</a>
+                    </div>
+                `;
+            }
+        }
+
+        function renderCourse(c) {
+            const finalPrice = c.price - (c.discount || 0);
+            const content = document.getElementById('course-content');
+
+            content.innerHTML = `
+                <div class="course-header">
+                    <div class="course-info-main">
+                        <span class="academy-badge">${c.level === 'beginner' ? 'مبتدی' : c.level === 'intermediate' ? 'متوسط' : 'پیشرفته'}</span>
+                        <h1 style="font-family: 'Lalezar'; font-size: 3rem; color: var(--academy-secondary); margin-bottom: 20px;">${c.title}</h1>
+                        <p style="font-size: 1.2rem; line-height: 2; color: #555; margin-bottom: 40px;">${c.description || ''}</p>
+
+                        <div class="video-placeholder">
+                            ${c.video_url ? `<iframe src="${c.video_url}" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allowfullscreen></iframe>` : '<i class="fas fa-play-circle"></i>'}
+                        </div>
+
+                        <div style="margin-top: 60px;">
+                            <h2 style="font-family: 'Lalezar'; color: var(--academy-secondary); margin-bottom: 25px;">سرفصل‌های دوره</h2>
+                            <div class="syllabus-list">
+                                ${c.package_content ? c.package_content.map((item, i) => `
+                                    <div class="syllabus-item">
+                                        <strong>${i+1}</strong>
+                                        <span>${item}</span>
+                                        <i class="fas fa-lock" style="margin-right: auto; opacity: 0.3;"></i>
+                                    </div>
+                                `).join('') : '<p>سرفصلی ثبت نشده است.</p>'}
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="info-card" style="background: #fcfcfc; padding: 20px; border-radius: 15px; border: 1px solid #f0f0f0;">
+                                <h4 style="color: var(--academy-primary); margin-bottom: 10px;"><i class="fas fa-check-circle"></i> پیش‌نیازها</h4>
+                                <p style="font-size: 0.9rem; color: #666;">علاقه به قنادی و داشتن ابزار اولیه (بسته به نوع دوره)</p>
+                            </div>
+                            <div class="info-card" style="background: #fcfcfc; padding: 20px; border-radius: 15px; border: 1px solid #f0f0f0;">
+                                <h4 style="color: var(--academy-primary); margin-bottom: 10px;"><i class="fas fa-users"></i> مخاطبین دوره</h4>
+                                <p style="font-size: 0.9rem; color: #666;">علاقمندان به کسب درآمد از قنادی و بانوان خانه‌دار</p>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 60px;">
+                            <h2 style="font-family: 'Lalezar'; color: var(--academy-secondary); margin-bottom: 25px;">سوالات متداول</h2>
+                            <div class="faq-item" style="border-bottom: 1px solid #eee; padding: 15px 0;">
+                                <h4 style="margin-bottom: 10px;">آیا پس از پایان دوره مدرک اعطا می‌شود؟</h4>
+                                <p style="font-size: 0.9rem; color: #777;">بله، پس از ارسال نمونه‌کارها مدرک داخلی آکادمی دل‌کیک اعطا خواهد شد.</p>
+                            </div>
+                            <div class="faq-item" style="border-bottom: 1px solid #eee; padding: 15px 0;">
+                                <h4 style="margin-bottom: 10px;">دسترسی به ویدئوها دائمی است؟</h4>
+                                <p style="font-size: 0.9rem; color: #777;">بله، شما محدودیت زمانی برای مشاهده آموزش‌ها ندارید.</p>
+                            </div>
+                        </div>
+
+                        <div class="teacher-box-v2">
+                            <img src="images/logo/sweet-.png" alt="Teacher">
+                            <div>
+                                <h3 style="margin-bottom: 5px;">${c.teacher_name || 'مدیر دل‌کیک'}</h3>
+                                <p style="font-size: 0.9rem; opacity: 0.7;">مدرس قنادی و دکوراتوری کیک</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-sidebar">
+                        <div class="purchase-card">
+                            <img src="${c.image_url}" style="width: 100%; border-radius: 15px; margin-bottom: 25px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                                <span style="font-weight: 700; color: #555;">قیمت دوره:</span>
+                                <div style="text-align: left;">
+                                    ${c.discount > 0 ? `<div style="text-decoration: line-through; color: #ccc; font-size: 0.9rem;">${c.price.toLocaleString('fa-IR')}</div>` : ''}
+                                    <div style="font-size: 1.8rem; font-weight: 800; color: var(--academy-primary);">${finalPrice.toLocaleString('fa-IR')} <small style="font-size: 0.8rem;">تومان</small></div>
+                                </div>
+                            </div>
+
+                            <ul style="list-style: none; margin-bottom: 30px;">
+                                <li style="padding: 10px 0; border-bottom: 1px solid #f5f5f5; display: flex; justify-content: space-between;">
+                                    <span><i class="fas fa-clock" style="color: var(--academy-primary);"></i> مدت زمان:</span>
+                                    <span>${c.duration || 'نامشخص'}</span>
+                                </li>
+                                <li style="padding: 10px 0; border-bottom: 1px solid #f5f5f5; display: flex; justify-content: space-between;">
+                                    <span><i class="fas fa-play-circle" style="color: var(--academy-primary);"></i> تعداد جلسات:</span>
+                                    <span>${c.sessions_count || 1} جلسه</span>
+                                </li>
+                                <li style="padding: 10px 0; display: flex; justify-content: space-between;">
+                                    <span><i class="fas fa-headset" style="color: var(--academy-primary);"></i> پشتیبانی:</span>
+                                    <span>دائمی</span>
+                                </li>
+                            </ul>
+
+                            <button class="primary-btn" style="width: 100%; border: none; cursor: pointer; font-size: 1.1rem;">ثبت‌نام در دوره</button>
+                            <p style="text-align: center; font-size: 0.8rem; margin-top: 15px; color: #888;">تضمین بازگشت وجه در صورت نارضایتی</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', loadCourse);
+    </script>
+
+    <script src="js/load-components.js" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            loadComponent("header-placeholder", "components/header.html");
+            loadComponent("sidebar-placeholder", "components/sidebar.html");
+            loadComponent("footer-container", "components/footer.html");
+        });
+    </script>
+</body>
+</html>
