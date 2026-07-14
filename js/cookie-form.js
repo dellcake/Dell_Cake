@@ -1,4 +1,4 @@
-import { supabase } from "./supabase-client.js";
+import { supabase, publicSupabase } from "./supabase-client.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -46,8 +46,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Save to Database
         try {
-            const { data: { session } } = await Promise.resolve({data:{session:null}});
-            await supabase.from('orders').insert([{
+            const { data: { session } } = await supabase.auth.getSession();
+            await publicSupabase.from('orders').insert([{
                 user_id: session?.user?.id || null,
                 customer_name: name,
                 phone: phone,
@@ -56,8 +56,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 details: { weight, flavors, deliveryDate: date, deliveryTime: time },
                 status: 'new'
             }]);
+            console.log("✅ Cookie order saved successfully.");
         } catch (err) {
-            console.warn("Could not save cookie order to DB:", err);
+            console.warn("⚠️ Could not save cookie order to DB:", err);
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerHTML = 'ثبت سفارش شیرینی 🍪';
