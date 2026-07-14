@@ -1,4 +1,5 @@
 import { CoursesModule } from "./modules/courses.js";
+import { CourseCategoriesModule } from "./modules/course-categories.js";
 import { GalleryModule } from "./modules/gallery.js";
 import { CategoriesModule } from "./modules/categories.js";
 import { ProductsModule } from "./modules/products.js";
@@ -31,6 +32,7 @@ window.navigateTo = async (viewName) => {
     if (success) {
         if (viewName === 'Dashboard') loadDashboardData();
         if (viewName === 'Courses') CoursesModule.load();
+        if (viewName === 'Course-categories') CourseCategoriesModule.load();
         if (viewName === 'Gallery') GalleryModule.load();
         if (viewName === 'Categories') CategoriesModule.load();
         if (viewName === 'Products') ProductsModule.load();

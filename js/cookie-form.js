@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Save to Database
         try {
             const { data: { session } } = await supabase.auth.getSession();
-            await publicSupabase.from('orders').insert([{
+            const { error: dbError } = await publicSupabase.from('orders').insert([{
                 user_id: session?.user?.id || null,
                 customer_name: name,
                 phone: phone,
@@ -56,9 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 details: { weight, flavors, deliveryDate: date, deliveryTime: time },
                 status: 'new'
             }]);
+
+            if (dbError) throw dbError;
             console.log("✅ Cookie order saved successfully.");
         } catch (err) {
-            console.warn("⚠️ Could not save cookie order to DB:", err);
+            console.error("⚠️ Error saving cookie order to DB:", err);
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerHTML = 'ثبت سفارش شیرینی 🍪';

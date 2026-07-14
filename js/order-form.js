@@ -84,18 +84,21 @@ async function shareOrder() {
         });
 
         // Use publicSupabase for insertion to avoid session conflicts for anonymous users
-        await publicSupabase.from('orders').insert([{
+        const { error: dbError } = await publicSupabase.from('orders').insert([{
             user_id: session?.user?.id || null,
             customer_name: name,
             phone: phone,
-            product_name: typeMap[type],
+            product_name: typeMap[type] || type,
             address: desc,
             details: orderDetails,
             status: 'new'
         }]);
+
+        if (dbError) throw dbError;
         console.log("✅ Order saved successfully to database.");
     } catch (err) {
-        console.warn("⚠️ Could not save order to DB, proceeding with share:", err);
+        console.error("⚠️ Error saving order to database:", err);
+        // We still proceed with sharing even if DB fails, but we log it
     }
 
     let message = "💗 سفارش جدید دل‌کیک\n\n";

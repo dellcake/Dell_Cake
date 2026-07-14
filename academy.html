@@ -23,71 +23,128 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 <div id="sidebar-placeholder"></div>
     
-<div class="academy-page">
+<div class="academy-page-v2">
 
-  <!-- HERO -->
-  <section class="academy-hero">
-
-    <img
-        src="images/academy/camera-academy.png"
-        class="academy-camera"
-        alt="Dell Cake Academy"
-    >
-
-    <div class="hero-content">
-
-        <h1>آکادمی دل‌کیک</h1>
-
-        <p>
-            یاد بگیر، تمرین کن و تبدیل به یک قناد حرفه‌ای شو 🍰
-        </p>
-
+  <!-- MODERN HERO -->
+  <section class="academy-hero-modern">
+    <div class="hero-container">
+        <div class="hero-text-side">
+            <span class="academy-badge">✨ مرجع تخصصی آموزش قنادی</span>
+            <h1>آکادمی قنادی <span class="highlight">دل‌کیک</span></h1>
+            <p>
+                هنر شیرینی‌پزی را از پایه و به صورت اصولی یاد بگیرید.
+                ما در این مسیر همراه شما هستیم تا از یک علاقمند به یک استاد تبدیل شوید.
+            </p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <strong>+۱۰</strong>
+                    <span>دوره تخصصی</span>
+                </div>
+                <div class="stat-item">
+                    <strong>+۵۰۰</strong>
+                    <span>دانشجو</span>
+                </div>
+                <div class="stat-item">
+                    <strong>پشتیبانی</strong>
+                    <span>دائمی</span>
+                </div>
+            </div>
+            <div class="hero-actions">
+                <a href="#courses-grid" class="primary-btn">مشاهده دوره‌ها</a>
+                <a href="#about" class="secondary-btn">چرا دل‌کیک؟</a>
+            </div>
+        </div>
+        <div class="hero-image-side">
+            <img src="images/academy/camera-academy.png" alt="Academy">
+            <div class="floating-card c1">🧁 کیفیت تضمینی</div>
+            <div class="floating-card c2">🎓 مدرک معتبر</div>
+        </div>
     </div>
-
   </section>
 
-  <!-- COURSES -->
-  <section class="courses-section">
-    <h2>دوره‌های آموزشی</h2>
+  <!-- CATEGORY PILLS -->
+  <div class="categories-bar">
+      <div class="container" id="category-pills">
+          <!-- Loaded by JS -->
+      </div>
+  </div>
 
-    <div class="courses-grid">
+  <!-- FILTERS & SEARCH -->
+  <section class="academy-main container">
+      <div class="filters-sidebar">
+          <div class="filter-card">
+              <h3><i class="fas fa-search"></i> جستجو</h3>
+              <div class="search-box">
+                  <input type="text" id="academy-search" placeholder="نام دوره را بنویسید...">
+                  <i class="fas fa-search"></i>
+              </div>
+          </div>
 
-     <a class="course-card" href="cake-birthday-course.html">
-        <div class="course-badge">پرفروش</div>
-        <h3>آموزش کیک تولد حرفه‌ای</h3>
-        <p>از پایه تا طراحی‌های لاکچری و خامه‌کشی مدرن</p>
-        <div class="course-meta">
-          <span>⏱ 6 ساعت</span>
-          <span>🎓 مبتدی تا پیشرفته</span>
-        </div>
-      </a>
+          <div class="filter-card">
+              <h3><i class="fas fa-filter"></i> فیلترها</h3>
 
-      <a class="course-card" href="dessert-course.html">
-        <h3>دسرهای مدرن کافی‌شاپی</h3>
-        <p>یادگیری دسرهای ترند اینستاگرامی</p>
-        <div class="course-meta">
-          <span>⏱ 4 ساعت</span>
-          <span>🍮 متوسط</span>
-        </div>
-      </a>
+              <div class="filter-group">
+                  <label>دسته‌بندی</label>
+                  <select id="filter-category" class="modern-select">
+                      <option value="all">همه دسته‌ها</option>
+                  </select>
+              </div>
 
-      <a class="course-card" href="cake-decoration-course.html">
-        <h3>تزئین حرفه‌ای کیک</h3>
-        <p>تکنیک‌های خامه‌کشی، ماسوره و فوندانت</p>
-        <div class="course-meta">
-          <span>⏱ 5 ساعت</span>
-          <span>🎂 پیشرفته</span>
-        </div>
-      </a>
+              <div class="filter-group">
+                  <label>سطح دوره</label>
+                  <select id="filter-level" class="modern-select">
+                      <option value="all">همه سطح‌ها</option>
+                      <option value="beginner">مبتدی</option>
+                      <option value="intermediate">متوسط</option>
+                      <option value="advanced">پیشرفته</option>
+                  </select>
+              </div>
 
-    </div>
+              <div class="filter-group">
+                  <label>محدوده قیمت (تومان)</label>
+                  <select id="filter-price" class="modern-select">
+                      <option value="all">همه قیمت‌ها</option>
+                      <option value="100000">تا ۱۰۰,۰۰۰</option>
+                      <option value="500000">تا ۵۰۰,۰۰۰</option>
+                      <option value="1000000">تا ۱,۰۰۰,۰۰۰</option>
+                      <option value="5000000">تا ۵,۰۰۰,۰۰۰</option>
+                  </select>
+              </div>
+          </div>
+
+          <div class="filter-card">
+              <h3><i class="fas fa-sort-amount-down"></i> مرتب‌سازی</h3>
+              <select id="academy-sort" class="modern-select">
+                  <option value="newest">جدیدترین‌ها</option>
+                  <option value="price-asc">ارزان‌ترین</option>
+                  <option value="price-desc">گران‌ترین</option>
+              </select>
+          </div>
+      </div>
+
+      <div class="courses-content">
+          <div class="section-title">
+              <h2>دوره‌های آموزشی <span id="results-count"></span></h2>
+          </div>
+
+          <div class="courses-grid-v2" id="courses-grid">
+              <!-- Loaded by Academy.js -->
+              <div class="skeleton-loader"></div>
+              <div class="skeleton-loader"></div>
+              <div class="skeleton-loader"></div>
+          </div>
+      </div>
   </section>
 
   <!-- CTA -->
-  <section class="academy-cta">
-    <h2>آماده شروع هستی؟</h2>
-    <p>اولین قدمت رو برای حرفه‌ای شدن در دنیای شیرینی‌پزی بردار</p>
-    <a href="#" class="cta-btn">شروع یادگیری ✨</a>
+  <section class="academy-cta-modern">
+    <div class="container">
+        <div class="cta-inner">
+            <h2>آماده شروع سفر شیرین خود هستید؟</h2>
+            <p>همین حالا در یکی از دوره‌های ما ثبت‌نام کنید و مهارت خود را ارتقا دهید.</p>
+            <a href="#" class="cta-btn-v2">شروع یادگیری <i class="fas fa-arrow-left"></i></a>
+        </div>
+    </div>
   </section>
 
 </div>
@@ -95,7 +152,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
     <script src="js/menu.js" defer></script>
     <script type="module" src="js/site-settings.js"></script>
-    <script type="module" src="js/academy-popup.js"></script>
+    <script type="module" src="js/academy.js"></script>
 
 <div id="footer-container"></div>
 

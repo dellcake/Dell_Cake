@@ -8,10 +8,25 @@ export const CoursesModule = {
 
     async load() {
         try {
+            // Load categories for filters and forms
+            const { data: categories } = await supabase.from('course_categories').select('*').order('display_order');
+            this.categories = categories || [];
+
+            const catFilter = document.getElementById('filter-category');
+            if (catFilter) {
+                catFilter.innerHTML = '<option value="all">همه دسته‌ها</option>' +
+                    this.categories.map(c => `<option value="${c.slug}">${c.name}</option>`).join('');
+            }
+
+            const catSelect = document.getElementById('course-form-category');
+            if (catSelect) {
+                catSelect.innerHTML = this.categories.map(c => `<option value="${c.slug}">${c.name}</option>`).join('');
+            }
+
             const { data, error } = await supabase
                 .from('courses')
                 .select('*')
-                .order('created_at', { ascending: false });
+                .order('display_order', { ascending: true });
 
             if (error) throw error;
             this.courses = data || [];
@@ -59,10 +74,18 @@ export const CoursesModule = {
             form.courseId.value = course.id;
             form.title.value = course.title || '';
             form.slug.value = course.slug || '';
-            form.category.value = course.category || 'cake';
+            form.category.value = course.category || '';
             form.price.value = course.price || 0;
+            form.discount.value = course.discount || 0;
+            form.level.value = course.level || 'beginner';
+            form.duration.value = course.duration || '';
+            form.sessions_count.value = course.sessions_count || 1;
+            form.teacher_name.value = course.teacher_name || 'مدیر دل‌کیک';
+            form.display_order.value = course.display_order || 0;
             form.status.value = course.status || 'published';
             form.imageUrl.value = course.image_url || '';
+            form.video_url.value = course.video_url || '';
+            form.short_description.value = course.short_description || '';
             form.description.value = course.description || '';
             form.packageContent.value = Array.isArray(course.package_content) ? course.package_content.join('\n') : (course.package_content || '');
 
@@ -87,8 +110,16 @@ export const CoursesModule = {
             slug: form.slug.value,
             category: form.category.value,
             price: Number(form.price.value),
+            discount: Number(form.discount.value),
+            level: form.level.value,
+            duration: form.duration.value,
+            sessions_count: parseInt(form.sessions_count.value) || 1,
+            teacher_name: form.teacher_name.value,
+            display_order: parseInt(form.display_order.value) || 0,
             status: form.status.value,
             image_url: form.imageUrl.value,
+            video_url: form.video_url.value,
+            short_description: form.short_description.value,
             description: form.description.value,
             package_content: form.packageContent.value.split('\n').filter(i => i.trim()),
         };
@@ -120,13 +151,14 @@ export const CoursesModule = {
         }
     },
 
-    translateCategory(cat) {
-        const map = { 'cake': 'کیک', 'pastry': 'شیرینی', 'dessert': 'دسر' };
-        return map[cat] || cat;
+    translateCategory(catSlug) {
+        if (!this.categories) return catSlug;
+        const cat = this.categories.find(c => c.slug === catSlug);
+        return cat ? cat.name : catSlug;
     },
 
     translateStatus(status) {
-        const map = { 'published': 'منتشر شده', 'draft': 'پیش‌نویس' };
+        const map = { 'published': 'منتشر شده', 'draft': 'پیش‌نویس', 'archived': 'بایگانی شده' };
         return map[status] || status;
     },
 
@@ -143,6 +175,14 @@ export const CoursesModule = {
 };
 
 window.CoursesModule = CoursesModule;
+window.handleCourseSearch = (val) => {
+    const q = val.toLowerCase();
+    const filtered = CoursesModule.courses.filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.description?.toLowerCase().includes(q)
+    );
+    CoursesModule.render(filtered);
+};
 window.handleCourseFilter = () => CoursesModule.handleFilter();
 window.saveCourse = (e) => CoursesModule.save(e);
 window.openCourseModal = (id) => CoursesModule.openModal(id);
@@ -160,4 +200,29 @@ window.generateSlug = (text) => {
     const slug = text.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
     const slugInput = document.querySelector('input[name="slug"]');
     if (slugInput && !slugInput.value) slugInput.value = slug;
+};
+
+window.previewCourseImage = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const preview = document.getElementById('image-preview');
+    preview.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال پردازش...';
+
+    try {
+        const { imageProcessor } = await import('../utils/image-processor.js');
+        const processed = await imageProcessor.process(file, { width: 800, height: 500, watermark: true });
+
+        const fileName = `course_${Date.now()}.webp`;
+        const { data, error } = await supabase.storage.from('courses').upload(fileName, processed);
+
+        if (error) throw error;
+
+        const { data: { publicUrl } } = supabase.storage.from('courses').getPublicUrl(fileName);
+        document.querySelector('input[name="imageUrl"]').value = publicUrl;
+        preview.innerHTML = `<img src="${publicUrl}" style="max-height:100%; max-width:100%; border-radius:8px;">`;
+    } catch (err) {
+        alert('خطا در آپلود تصویر: ' + err.message);
+        preview.innerHTML = '<span>خطا در آپلود</span>';
+    }
 };
