@@ -33,16 +33,16 @@ export const OrdersModule = {
         } else {
             tbody.innerHTML = displayOrders.map(order => `
                 <tr>
-                    <td style="font-family: monospace; font-size: 0.8rem;">#${order.id.substring(0, 8)}</td>
-                    <td>
+                    <td data-label="شناسه" style="font-family: monospace; font-size: 0.8rem;">#${order.id.substring(0, 8)}</td>
+                    <td data-label="مشتری">
                         <div style="font-weight: 700;">${order.customer_name}</div>
                         <div style="font-size: 0.8rem; color: var(--text-muted);">${order.phone}</div>
                     </td>
-                    <td>${order.product_name || 'نامشخص'}</td>
-                    <td style="font-size: 0.85rem;">${new Date(order.created_at).toLocaleDateString('fa-IR')}</td>
-                    <td style="font-size: 0.85rem;">${order.details?.deliveryDate || order.details?.delivery_date || 'نامشخص'}</td>
-                    <td><span class="status-badge ${order.status}">${this.translateStatus(order.status)}</span></td>
-                    <td>
+                    <td data-label="نوع سفارش">${order.product_name || 'نامشخص'}</td>
+                    <td data-label="تاریخ ثبت" style="font-size: 0.85rem;">${new Date(order.created_at).toLocaleDateString('fa-IR')}</td>
+                    <td data-label="تاریخ تحویل" style="font-size: 0.85rem;">${order.details?.deliveryDate || order.details?.delivery_date || 'نامشخص'}</td>
+                    <td data-label="وضعیت"><span class="status-badge ${order.status}">${this.translateStatus(order.status)}</span></td>
+                    <td data-label="عملیات">
                         <div class="actions">
                             <button class="btn-icon" onclick="OrdersModule.viewDetail('${order.id}')" title="مشاهده جزئیات"><i class="fa-solid fa-eye"></i></button>
                             <button class="btn-icon btn-delete" onclick="OrdersModule.delete('${order.id}')"><i class="fa-solid fa-trash"></i></button>
@@ -183,6 +183,9 @@ export const OrdersModule = {
 };
 
 window.OrdersModule = OrdersModule;
-window.closeOrderDetailModal = () => document.getElementById('order-detail-modal').style.display = 'none';
+window.closeOrderModal = () => document.getElementById('order-modal').style.display = 'none';
 window.handleOrderSearch = (val) => OrdersModule.handleSearch(val);
+window.handleOrderFilter = () => OrdersModule.render(); // Simple render for now as placeholder
 window.exportOrdersToCSV = () => OrdersModule.exportCSV();
+window.printOrder = () => window.print();
+window.changeOrderPage = (dir) => console.log('Pagination clicked:', dir);

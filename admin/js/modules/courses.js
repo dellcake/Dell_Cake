@@ -33,12 +33,12 @@ export const CoursesModule = {
         } else {
             tbody.innerHTML = displayCourses.map(course => `
                 <tr>
-                    <td><img src="${course.image_url || '../images/logo/sweet-.png'}" width="50" height="50" style="border-radius:8px; object-fit:cover;"></td>
-                    <td>${course.title}</td>
-                    <td>${Number(course.price).toLocaleString('fa-IR')} تومان</td>
-                    <td>${this.translateCategory(course.category)}</td>
-                    <td><span class="status-badge ${course.status || 'published'}">${this.translateStatus(course.status || 'published')}</span></td>
-                    <td>
+                    <td data-label="تصویر"><img src="${course.image_url || '../images/logo/sweet-.png'}" width="50" height="50" style="border-radius:8px; object-fit:cover;"></td>
+                    <td data-label="عنوان">${course.title}</td>
+                    <td data-label="قیمت">${Number(course.price).toLocaleString('fa-IR')} تومان</td>
+                    <td data-label="دسته‌بندی">${this.translateCategory(course.category)}</td>
+                    <td data-label="وضعیت"><span class="status-badge ${course.status || 'published'}">${this.translateStatus(course.status || 'published')}</span></td>
+                    <td data-label="عملیات">
                         <div class="actions">
                             <button class="btn-icon btn-edit" onclick="CoursesModule.openModal('${course.id}')"><i class="fa-solid fa-edit"></i></button>
                             <button class="btn-icon btn-delete" onclick="CoursesModule.delete('${course.id}')"><i class="fa-solid fa-trash"></i></button>

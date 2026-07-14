@@ -1,7 +1,7 @@
 /* =========================
    ثبت سفارش
 ========================= */
-import { supabase } from "./supabase-client.js";
+import { supabase, publicSupabase } from "./supabase-client.js";
 
 const orderForm = document.getElementById("orderForm");
 
@@ -61,7 +61,9 @@ async function shareOrder() {
 
     // Save to Database
     try {
-        const { data: { session } } = await Promise.resolve({data:{session:null}});
+        // Try to get real session if user is logged in
+        const { data: { session } } = await supabase.auth.getSession();
+
         const orderDetails = {
             weight,
             deliveryDate: date,
@@ -81,7 +83,8 @@ async function shareOrder() {
             orderDetails.fields[fid] = getValue(fid);
         });
 
-        await supabase.from('orders').insert([{
+        // Use publicSupabase for insertion to avoid session conflicts for anonymous users
+        await publicSupabase.from('orders').insert([{
             user_id: session?.user?.id || null,
             customer_name: name,
             phone: phone,
@@ -90,8 +93,9 @@ async function shareOrder() {
             details: orderDetails,
             status: 'new'
         }]);
+        console.log("✅ Order saved successfully to database.");
     } catch (err) {
-        console.warn("Could not save order to DB, proceeding with share:", err);
+        console.warn("⚠️ Could not save order to DB, proceeding with share:", err);
     }
 
     let message = "💗 سفارش جدید دل‌کیک\n\n";

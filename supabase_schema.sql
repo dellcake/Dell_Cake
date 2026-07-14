@@ -262,13 +262,16 @@ CREATE POLICY "Products admin" ON public.products
     USING (is_admin());
 
 -- Orders: Own data or Admin
+-- Orders: Anyone can insert (for guest checkout), View/Edit restricted to Own or Admin
+CREATE POLICY "Orders insert" ON public.orders FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Orders access" ON public.orders
-    FOR ALL TO authenticated
+    FOR SELECT, UPDATE, DELETE TO authenticated
     USING (user_id = auth.uid() OR is_admin());
 
--- Order Items: Linked to own orders or Admin
+-- Order Items: Anyone can insert, View/Edit restricted to linked order owners or Admin
+CREATE POLICY "Order items insert" ON public.order_items FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Order items access" ON public.order_items
-    FOR ALL TO authenticated
+    FOR SELECT, UPDATE, DELETE TO authenticated
     USING (
         EXISTS (SELECT 1 FROM public.orders WHERE id = order_id AND (user_id = auth.uid() OR is_admin()))
     );
