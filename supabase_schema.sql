@@ -282,17 +282,15 @@ CREATE POLICY "Products admin" ON public.products
 -- Orders: Own data or Admin
 -- Orders: Anyone can insert (for guest checkout), View/Edit restricted to Own or Admin
 CREATE POLICY "Orders insert" ON public.orders FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Orders access" ON public.orders
-    FOR SELECT, UPDATE, DELETE TO authenticated
-    USING (user_id = auth.uid() OR is_admin());
+CREATE POLICY "Orders select" ON public.orders FOR SELECT TO authenticated USING (user_id = auth.uid() OR is_admin());
+CREATE POLICY "Orders update" ON public.orders FOR UPDATE TO authenticated USING (user_id = auth.uid() OR is_admin()) WITH CHECK (user_id = auth.uid() OR is_admin());
+CREATE POLICY "Orders delete" ON public.orders FOR DELETE TO authenticated USING (user_id = auth.uid() OR is_admin());
 
 -- Order Items: Anyone can insert, View/Edit restricted to linked order owners or Admin
 CREATE POLICY "Order items insert" ON public.order_items FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Order items access" ON public.order_items
-    FOR SELECT, UPDATE, DELETE TO authenticated
-    USING (
-        EXISTS (SELECT 1 FROM public.orders WHERE id = order_id AND (user_id = auth.uid() OR is_admin()))
-    );
+CREATE POLICY "Order items select" ON public.order_items FOR SELECT TO authenticated USING (EXISTS (SELECT 1 FROM public.orders WHERE id = order_id AND (user_id = auth.uid() OR is_admin())));
+CREATE POLICY "Order items update" ON public.order_items FOR UPDATE TO authenticated USING (EXISTS (SELECT 1 FROM public.orders WHERE id = order_id AND (user_id = auth.uid() OR is_admin()))) WITH CHECK (EXISTS (SELECT 1 FROM public.orders WHERE id = order_id AND (user_id = auth.uid() OR is_admin())));
+CREATE POLICY "Order items delete" ON public.order_items FOR DELETE TO authenticated USING (EXISTS (SELECT 1 FROM public.orders WHERE id = order_id AND (user_id = auth.uid() OR is_admin())));
 
 -- Payments: Own payments or Admin
 CREATE POLICY "Payments access" ON public.payments
