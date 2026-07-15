@@ -1,14 +1,26 @@
+-- ==========================================
 -- Professional Supabase SQL Schema for Dell Cake
 -- Optimized for Users, Orders, Courses and Security
+-- ==========================================
 
--- ==========================================
--- 1. EXTENSIONS & SETUP
--- ==========================================
+-- 1. EXTENSIONS
+-- Using gen_random_uuid() (built-in since PG 13) instead of uuid-ossp for better compatibility
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- ==========================================
--- 2. TABLES
--- ==========================================
+-- 2. FUNCTIONS (Define early as they are used in RLS)
+-- Shared Admin Check Function
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN (
+    SELECT role = 'admin'
+    FROM public.profiles
+    WHERE id = auth.uid()
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 3. TABLES (Ordered by dependency)
 
 -- Profiles: Extended user data
 CREATE TABLE IF NOT EXISTS public.profiles (
@@ -24,12 +36,34 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- Course Categories
+CREATE TABLE IF NOT EXISTS public.course_categories (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    display_order INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Gallery Categories
+CREATE TABLE IF NOT EXISTS public.gallery_categories (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    display_order INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
 -- Courses: Educational content
 CREATE TABLE IF NOT EXISTS public.courses (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     title TEXT NOT NULL,
     slug TEXT UNIQUE NOT NULL,
-    category TEXT,
+    category TEXT, -- Slug reference
     price NUMERIC NOT NULL DEFAULT 0,
     discount NUMERIC DEFAULT 0,
     level TEXT,
@@ -51,7 +85,7 @@ CREATE TABLE IF NOT EXISTS public.courses (
 
 -- Products: Physical items
 CREATE TABLE IF NOT EXISTS public.products (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name TEXT NOT NULL,
     price NUMERIC NOT NULL DEFAULT 0,
     discount NUMERIC DEFAULT 0,
@@ -65,7 +99,7 @@ CREATE TABLE IF NOT EXISTS public.products (
 
 -- Orders: Customer orders
 CREATE TABLE IF NOT EXISTS public.orders (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES auth.users ON DELETE SET NULL,
     customer_name TEXT,
     phone TEXT,
@@ -80,7 +114,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
 
 -- Order Items: Line items for each order
 CREATE TABLE IF NOT EXISTS public.order_items (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     order_id UUID REFERENCES public.orders ON DELETE CASCADE NOT NULL,
     product_id UUID REFERENCES public.products ON DELETE SET NULL,
     course_id UUID REFERENCES public.courses ON DELETE SET NULL,
@@ -92,7 +126,7 @@ CREATE TABLE IF NOT EXISTS public.order_items (
 
 -- Payments: Transactions
 CREATE TABLE IF NOT EXISTS public.payments (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     order_id UUID REFERENCES public.orders ON DELETE CASCADE NOT NULL,
     user_id UUID REFERENCES auth.users ON DELETE SET NULL,
     amount NUMERIC NOT NULL,
@@ -104,7 +138,7 @@ CREATE TABLE IF NOT EXISTS public.payments (
 
 -- User Course Enrollments
 CREATE TABLE IF NOT EXISTS public.user_courses (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
     course_id UUID REFERENCES public.courses ON DELETE CASCADE NOT NULL,
     enrolled_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
@@ -113,7 +147,7 @@ CREATE TABLE IF NOT EXISTS public.user_courses (
 
 -- Favorites: User's saved items
 CREATE TABLE IF NOT EXISTS public.favorites (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
     course_id UUID REFERENCES public.courses ON DELETE CASCADE,
     product_id UUID REFERENCES public.products ON DELETE CASCADE,
@@ -127,7 +161,7 @@ CREATE TABLE IF NOT EXISTS public.favorites (
 
 -- Notifications: User alerts
 CREATE TABLE IF NOT EXISTS public.notifications (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
     title TEXT NOT NULL,
     message TEXT NOT NULL,
@@ -138,7 +172,7 @@ CREATE TABLE IF NOT EXISTS public.notifications (
 
 -- Contact Messages
 CREATE TABLE IF NOT EXISTS public.contact_messages (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name TEXT NOT NULL,
     email TEXT,
     phone TEXT,
@@ -155,31 +189,9 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Course Categories
-CREATE TABLE IF NOT EXISTS public.course_categories (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name TEXT NOT NULL,
-    slug TEXT UNIQUE NOT NULL,
-    display_order INTEGER DEFAULT 0,
-    is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
--- Gallery Categories
-CREATE TABLE IF NOT EXISTS public.gallery_categories (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name TEXT NOT NULL,
-    slug TEXT UNIQUE NOT NULL,
-    display_order INTEGER DEFAULT 0,
-    is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
 -- Gallery
 CREATE TABLE IF NOT EXISTS public.gallery (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     title TEXT,
     description TEXT,
     category_id UUID REFERENCES public.gallery_categories(id) ON DELETE SET NULL,
@@ -194,11 +206,9 @@ CREATE TABLE IF NOT EXISTS public.gallery (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Watermark Settings (added to site_settings trigger or handled as key-value)
-
 -- Blog
 CREATE TABLE IF NOT EXISTS public.blog (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     title TEXT NOT NULL,
     slug TEXT UNIQUE NOT NULL,
     content TEXT,
@@ -210,9 +220,7 @@ CREATE TABLE IF NOT EXISTS public.blog (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- ==========================================
--- 3. INDEXES FOR PERFORMANCE
--- ==========================================
+-- 4. INDEXES
 CREATE INDEX IF NOT EXISTS idx_orders_user_id ON public.orders(user_id);
 CREATE INDEX IF NOT EXISTS idx_orders_status ON public.orders(status);
 CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON public.order_items(order_id);
@@ -224,9 +232,7 @@ CREATE INDEX IF NOT EXISTS idx_notifications_is_read ON public.notifications(is_
 CREATE INDEX IF NOT EXISTS idx_courses_slug ON public.courses(slug);
 CREATE INDEX IF NOT EXISTS idx_blog_slug ON public.blog(slug);
 
--- ==========================================
--- 4. RLS POLICIES (Security)
--- ==========================================
+-- 5. RLS SECURITY
 
 -- Enable RLS on all tables
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
@@ -245,42 +251,29 @@ ALTER TABLE public.gallery_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.gallery ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.blog ENABLE ROW LEVEL SECURITY;
 
--- Shared Admin Check Function
-CREATE OR REPLACE FUNCTION public.is_admin()
-RETURNS BOOLEAN AS $$
+-- DROP OLD POLICIES (to ensure clean slate)
+DO $$
+DECLARE
+    pol RECORD;
 BEGIN
-  RETURN (
-    SELECT role = 'admin'
-    FROM public.profiles
-    WHERE id = auth.uid()
-  );
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+    FOR pol IN (SELECT policyname, tablename FROM pg_policies WHERE schemaname = 'public')
+    LOOP
+        EXECUTE format('DROP POLICY IF EXISTS %I ON %I', pol.policyname, pol.tablename);
+    END LOOP;
+END $$;
 
 -- Profiles: Own data or Admin
-CREATE POLICY "Profiles access" ON public.profiles
-    FOR ALL TO authenticated
-    USING (auth.uid() = id OR is_admin());
+CREATE POLICY "Profiles access" ON public.profiles FOR ALL TO authenticated USING (auth.uid() = id OR is_admin());
 
--- Courses: Authenticated to see published, Admin all
 -- Courses: Everyone can see published, Admin all
-CREATE POLICY "Courses access" ON public.courses
-    FOR SELECT TO anon, authenticated
-    USING (status = 'published' OR is_admin());
-CREATE POLICY "Courses admin" ON public.courses
-    FOR ALL TO authenticated
-    USING (is_admin());
+CREATE POLICY "Courses access select" ON public.courses FOR SELECT TO anon, authenticated USING (status = 'published' OR is_admin());
+CREATE POLICY "Courses access admin" ON public.courses FOR ALL TO authenticated USING (is_admin());
 
 -- Products: Everyone can view, Admin all
-CREATE POLICY "Products access" ON public.products
-    FOR SELECT TO anon, authenticated
-    USING (status = 'active' OR is_admin());
-CREATE POLICY "Products admin" ON public.products
-    FOR ALL TO authenticated
-    USING (is_admin());
+CREATE POLICY "Products access select" ON public.products FOR SELECT TO anon, authenticated USING (status = 'active' OR is_admin());
+CREATE POLICY "Products access admin" ON public.products FOR ALL TO authenticated USING (is_admin());
 
--- Orders: Own data or Admin
--- Orders: Anyone can insert (for guest checkout), View/Edit restricted to Own or Admin
+-- Orders: Anyone can insert (guest checkout), View/Edit restricted to Own or Admin
 CREATE POLICY "Orders insert" ON public.orders FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Orders select" ON public.orders FOR SELECT TO authenticated USING (user_id = auth.uid() OR is_admin());
 CREATE POLICY "Orders update" ON public.orders FOR UPDATE TO authenticated USING (user_id = auth.uid() OR is_admin()) WITH CHECK (user_id = auth.uid() OR is_admin());
@@ -293,48 +286,42 @@ CREATE POLICY "Order items update" ON public.order_items FOR UPDATE TO authentic
 CREATE POLICY "Order items delete" ON public.order_items FOR DELETE TO authenticated USING (EXISTS (SELECT 1 FROM public.orders WHERE id = order_id AND (user_id = auth.uid() OR is_admin())));
 
 -- Payments: Own payments or Admin
-CREATE POLICY "Payments access" ON public.payments
-    FOR ALL TO authenticated
-    USING (user_id = auth.uid() OR is_admin());
+CREATE POLICY "Payments access" ON public.payments FOR ALL TO authenticated USING (user_id = auth.uid() OR is_admin());
 
 -- User Courses: Own enrollments or Admin
-CREATE POLICY "User courses access" ON public.user_courses
-    FOR ALL TO authenticated
-    USING (user_id = auth.uid() OR is_admin());
+CREATE POLICY "User courses access" ON public.user_courses FOR ALL TO authenticated USING (user_id = auth.uid() OR is_admin());
 
 -- Favorites: Own favorites
-CREATE POLICY "Favorites access" ON public.favorites
-    FOR ALL TO authenticated
-    USING (user_id = auth.uid());
+CREATE POLICY "Favorites access" ON public.favorites FOR ALL TO authenticated USING (user_id = auth.uid());
 
 -- Notifications: Own notifications
-CREATE POLICY "Notifications access" ON public.notifications
-    FOR ALL TO authenticated
-    USING (user_id = auth.uid());
+CREATE POLICY "Notifications access" ON public.notifications FOR ALL TO authenticated USING (user_id = auth.uid());
 
--- Contact Messages: Insert anyone (auth), View Admin
-CREATE POLICY "Contact messages insert" ON public.contact_messages FOR INSERT TO authenticated WITH CHECK (true);
+-- Contact Messages: Insert anyone, View Admin
+CREATE POLICY "Contact messages insert" ON public.contact_messages FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Contact messages admin" ON public.contact_messages FOR ALL TO authenticated USING (is_admin());
 
 -- Site Settings: View everyone, Edit Admin
-CREATE POLICY "Site settings view" ON public.site_settings FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "Site settings select" ON public.site_settings FOR SELECT TO anon, authenticated USING (true);
 CREATE POLICY "Site settings admin" ON public.site_settings FOR ALL TO authenticated USING (is_admin());
 
 -- Course Categories: Everyone view, Admin all
-CREATE POLICY "Course categories view" ON public.course_categories FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "Course categories select" ON public.course_categories FOR SELECT TO anon, authenticated USING (true);
 CREATE POLICY "Course categories admin" ON public.course_categories FOR ALL TO authenticated USING (is_admin());
 
--- Gallery & Blog: Everyone can view
-CREATE POLICY "Gallery view" ON public.gallery FOR SELECT TO anon, authenticated USING (status = 'published' OR is_admin());
-CREATE POLICY "Gallery categories view" ON public.gallery_categories FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Blog view" ON public.blog FOR SELECT TO anon, authenticated USING (status = 'published' OR is_admin());
-CREATE POLICY "Admin gallery admin" ON public.gallery FOR ALL TO authenticated USING (is_admin());
-CREATE POLICY "Admin gallery categories admin" ON public.gallery_categories FOR ALL TO authenticated USING (is_admin());
-CREATE POLICY "Admin blog all" ON public.blog FOR ALL TO authenticated USING (is_admin());
+-- Gallery Categories: Everyone view, Admin all
+CREATE POLICY "Gallery categories select" ON public.gallery_categories FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "Gallery categories admin" ON public.gallery_categories FOR ALL TO authenticated USING (is_admin());
 
--- ==========================================
--- 5. FUNCTIONS & TRIGGERS
--- ==========================================
+-- Gallery: Everyone view published, Admin all
+CREATE POLICY "Gallery select" ON public.gallery FOR SELECT TO anon, authenticated USING (status = 'published' OR is_admin());
+CREATE POLICY "Gallery admin" ON public.gallery FOR ALL TO authenticated USING (is_admin());
+
+-- Blog: Everyone view published, Admin all
+CREATE POLICY "Blog select" ON public.blog FOR SELECT TO anon, authenticated USING (status = 'published' OR is_admin());
+CREATE POLICY "Blog admin" ON public.blog FOR ALL TO authenticated USING (is_admin());
+
+-- 6. TRIGGERS & FUNCTIONS
 
 -- Sync profiles with Auth users
 CREATE OR REPLACE FUNCTION public.handle_new_user()
@@ -344,7 +331,7 @@ BEGIN
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'display_name', 'کاربر جدید'),
-    NEW.email,
+    COALESCE(NEW.email, ''),
     NEW.raw_user_meta_data->>'avatar_url',
     CASE
       WHEN NEW.email = 'dellcake.orders@gmail.com' THEN 'admin'
@@ -369,19 +356,28 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+DROP TRIGGER IF EXISTS update_profiles_updated_at ON public.profiles;
 CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_courses_updated_at ON public.courses;
 CREATE TRIGGER update_courses_updated_at BEFORE UPDATE ON public.courses FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_course_categories_updated_at ON public.course_categories;
 CREATE TRIGGER update_course_categories_updated_at BEFORE UPDATE ON public.course_categories FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_orders_updated_at ON public.orders;
 CREATE TRIGGER update_orders_updated_at BEFORE UPDATE ON public.orders FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_blog_updated_at ON public.blog;
 CREATE TRIGGER update_blog_updated_at BEFORE UPDATE ON public.blog FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_gallery_updated_at ON public.gallery;
 CREATE TRIGGER update_gallery_updated_at BEFORE UPDATE ON public.gallery FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_gallery_categories_updated_at ON public.gallery_categories;
 CREATE TRIGGER update_gallery_categories_updated_at BEFORE UPDATE ON public.gallery_categories FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 
--- ==========================================
--- 6. STORAGE BUCKETS & POLICIES
--- ==========================================
-
--- Ensure Public Buckets exist and are correctly configured
+-- 7. STORAGE BUCKETS & POLICIES
 INSERT INTO storage.buckets (id, name, public)
 VALUES
   ('gallery', 'gallery', true),
@@ -391,31 +387,24 @@ VALUES
   ('profiles', 'profiles', true)
 ON CONFLICT (id) DO UPDATE SET public = true;
 
--- Policies for 'storage.objects'
+-- Storage Policies
+CREATE POLICY "Public view" ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id IN ('profiles', 'gallery', 'courses', 'products', 'blog'));
+CREATE POLICY "Avatar upload" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'profiles' AND (storage.foldername(name))[1] = auth.uid()::text);
+CREATE POLICY "Admin storage all" ON storage.objects FOR ALL TO authenticated USING (is_admin());
 
--- Allow users to upload their own avatar
-CREATE POLICY "Avatar upload" ON storage.objects
-    FOR INSERT TO authenticated
-    WITH CHECK (bucket_id = 'profiles' AND (storage.foldername(name))[1] = auth.uid()::text);
-
-CREATE POLICY "Public view" ON storage.objects
-    FOR SELECT TO anon, authenticated
-    USING (bucket_id IN ('profiles', 'gallery', 'courses', 'products', 'blog'));
-
--- Admin access to all storage
-CREATE POLICY "Admin storage" ON storage.objects
-    FOR ALL TO authenticated
-    USING (is_admin());
-
--- ==========================================
--- 7. REALTIME
--- ==========================================
+-- 8. REALTIME (Optional)
 BEGIN;
   DROP PUBLICATION IF EXISTS supabase_realtime;
   CREATE PUBLICATION supabase_realtime;
 COMMIT;
-
 ALTER PUBLICATION supabase_realtime ADD TABLE public.orders;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.notifications;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.payments;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.contact_messages;
+
+-- 9. FINAL ADMIN FIX
+-- Ensure the main admin has the correct role if already exists
+UPDATE public.profiles SET role = 'admin' WHERE email = 'dellcake.orders@gmail.com';
+
+-- Grant access to public schema
+GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL FUNCTIONS IN SCHEMA public TO anon, authenticated, service_role;
