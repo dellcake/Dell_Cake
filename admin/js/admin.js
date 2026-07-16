@@ -21,25 +21,26 @@ async function loadComponent(id, path) {
 }
 
 window.navigateTo = async (viewName) => {
+    const pageId = viewName.toLowerCase();
     document.getElementById('main-view').innerHTML = '<div class="loader-wrapper"><div class="loader"></div></div>';
 
     document.querySelectorAll('.sidebar-nav li').forEach(li => {
         li.classList.remove('active');
-        if (li.dataset.page === viewName.toLowerCase()) li.classList.add('active');
+        if (li.dataset.page === pageId) li.classList.add('active');
     });
 
-    const success = await loadComponent('main-view', `pages/${viewName.toLowerCase()}.html`);
+    const success = await loadComponent('main-view', `pages/${pageId}.html`);
     if (success) {
-        if (viewName === 'Dashboard') loadDashboardData();
-        if (viewName === 'Courses') CoursesModule.load();
-        if (viewName === 'Course-categories') CourseCategoriesModule.load();
-        if (viewName === 'Gallery') GalleryModule.load();
-        if (viewName === 'Categories') CategoriesModule.load();
-        if (viewName === 'Products') ProductsModule.load();
-        if (viewName === 'Orders') OrdersModule.load();
-        if (viewName === 'Settings') SettingsModule.load();
-        if (viewName === 'Blog') BlogModule.load();
-        if (viewName === 'Messages') MessagesModule.load();
+        if (pageId === 'dashboard') loadDashboardData();
+        if (pageId === 'courses') CoursesModule.load();
+        if (pageId === 'course-categories') CourseCategoriesModule.load();
+        if (pageId === 'gallery') GalleryModule.load();
+        if (pageId === 'categories') CategoriesModule.load();
+        if (pageId === 'products') ProductsModule.load();
+        if (pageId === 'orders') OrdersModule.load();
+        if (pageId === 'settings') SettingsModule.load();
+        if (pageId === 'blog') BlogModule.load();
+        if (pageId === 'messages') MessagesModule.load();
     }
 };
 
