@@ -1,14 +1,10 @@
--- ==========================================
 -- Professional Supabase SQL Schema for Dell Cake
 -- Optimized for Users, Orders, Courses and Security
--- ==========================================
 
 -- 1. EXTENSIONS
--- Using gen_random_uuid() (built-in since PG 13) instead of uuid-ossp for better compatibility
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- 2. FUNCTIONS (Define early as they are used in RLS)
--- Shared Admin Check Function
+-- 2. SHARED FUNCTIONS
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS BOOLEAN AS $$
 BEGIN
@@ -20,7 +16,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- 3. TABLES (Ordered by dependency)
+-- 3. TABLES
 
 -- Profiles: Extended user data
 CREATE TABLE IF NOT EXISTS public.profiles (
@@ -36,7 +32,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Course Categories
+-- Course Categories (Academy)
 CREATE TABLE IF NOT EXISTS public.course_categories (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name TEXT NOT NULL,
@@ -63,7 +59,7 @@ CREATE TABLE IF NOT EXISTS public.courses (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     title TEXT NOT NULL,
     slug TEXT UNIQUE NOT NULL,
-    category TEXT, -- Slug reference
+    category TEXT, -- Slug of course_categories
     price NUMERIC NOT NULL DEFAULT 0,
     discount NUMERIC DEFAULT 0,
     level TEXT,
@@ -112,7 +108,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Order Items: Line items for each order
+-- Order Items
 CREATE TABLE IF NOT EXISTS public.order_items (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     order_id UUID REFERENCES public.orders ON DELETE CASCADE NOT NULL,
@@ -124,7 +120,7 @@ CREATE TABLE IF NOT EXISTS public.order_items (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Payments: Transactions
+-- Payments
 CREATE TABLE IF NOT EXISTS public.payments (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     order_id UUID REFERENCES public.orders ON DELETE CASCADE NOT NULL,
@@ -145,7 +141,7 @@ CREATE TABLE IF NOT EXISTS public.user_courses (
     UNIQUE(user_id, course_id)
 );
 
--- Favorites: User's saved items
+-- Favorites
 CREATE TABLE IF NOT EXISTS public.favorites (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
@@ -159,7 +155,7 @@ CREATE TABLE IF NOT EXISTS public.favorites (
     UNIQUE(user_id, course_id, product_id)
 );
 
--- Notifications: User alerts
+-- Notifications
 CREATE TABLE IF NOT EXISTS public.notifications (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
@@ -222,19 +218,11 @@ CREATE TABLE IF NOT EXISTS public.blog (
 
 -- 4. INDEXES
 CREATE INDEX IF NOT EXISTS idx_orders_user_id ON public.orders(user_id);
-CREATE INDEX IF NOT EXISTS idx_orders_status ON public.orders(status);
 CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON public.order_items(order_id);
-CREATE INDEX IF NOT EXISTS idx_payments_order_id ON public.payments(order_id);
-CREATE INDEX IF NOT EXISTS idx_user_courses_user_id ON public.user_courses(user_id);
-CREATE INDEX IF NOT EXISTS idx_favorites_user_id ON public.favorites(user_id);
-CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON public.notifications(user_id);
-CREATE INDEX IF NOT EXISTS idx_notifications_is_read ON public.notifications(is_read);
 CREATE INDEX IF NOT EXISTS idx_courses_slug ON public.courses(slug);
 CREATE INDEX IF NOT EXISTS idx_blog_slug ON public.blog(slug);
 
 -- 5. RLS SECURITY
-
--- Enable RLS on all tables
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
@@ -251,7 +239,7 @@ ALTER TABLE public.gallery_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.gallery ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.blog ENABLE ROW LEVEL SECURITY;
 
--- DROP OLD POLICIES (to ensure clean slate)
+-- CLEANUP OLD POLICIES
 DO $$
 DECLARE
     pol RECORD;
@@ -262,92 +250,52 @@ BEGIN
     END LOOP;
 END $$;
 
--- Profiles: Own data or Admin
+-- 5.1 Profiles
 CREATE POLICY "Profiles access" ON public.profiles FOR ALL TO authenticated USING (auth.uid() = id OR is_admin());
 
--- Courses: Everyone can see published, Admin all
-CREATE POLICY "Courses access select" ON public.courses FOR SELECT TO anon, authenticated USING (status = 'published' OR is_admin());
-CREATE POLICY "Courses access admin" ON public.courses FOR ALL TO authenticated USING (is_admin());
+-- 5.2 Courses
+CREATE POLICY "Courses select" ON public.courses FOR SELECT TO anon, authenticated USING (status = 'published' OR is_admin());
+CREATE POLICY "Courses admin" ON public.courses FOR ALL TO authenticated USING (is_admin());
 
--- Products: Everyone can view, Admin all
-CREATE POLICY "Products access select" ON public.products FOR SELECT TO anon, authenticated USING (status = 'active' OR is_admin());
-CREATE POLICY "Products access admin" ON public.products FOR ALL TO authenticated USING (is_admin());
+-- 5.3 Products
+CREATE POLICY "Products select" ON public.products FOR SELECT TO anon, authenticated USING (status = 'active' OR is_admin());
+CREATE POLICY "Products admin" ON public.products FOR ALL TO authenticated USING (is_admin());
 
--- Orders: Anyone can insert (guest checkout), View/Edit restricted to Own or Admin
+-- 5.4 Orders
 CREATE POLICY "Orders insert" ON public.orders FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Orders select" ON public.orders FOR SELECT TO authenticated USING (user_id = auth.uid() OR is_admin());
 CREATE POLICY "Orders update" ON public.orders FOR UPDATE TO authenticated USING (user_id = auth.uid() OR is_admin()) WITH CHECK (user_id = auth.uid() OR is_admin());
 CREATE POLICY "Orders delete" ON public.orders FOR DELETE TO authenticated USING (user_id = auth.uid() OR is_admin());
 
--- Order Items: Anyone can insert, View/Edit restricted to linked order owners or Admin
+-- 5.5 Order Items
 CREATE POLICY "Order items insert" ON public.order_items FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Order items select" ON public.order_items FOR SELECT TO authenticated USING (EXISTS (SELECT 1 FROM public.orders WHERE id = order_id AND (user_id = auth.uid() OR is_admin())));
 CREATE POLICY "Order items update" ON public.order_items FOR UPDATE TO authenticated USING (EXISTS (SELECT 1 FROM public.orders WHERE id = order_id AND (user_id = auth.uid() OR is_admin()))) WITH CHECK (EXISTS (SELECT 1 FROM public.orders WHERE id = order_id AND (user_id = auth.uid() OR is_admin())));
 CREATE POLICY "Order items delete" ON public.order_items FOR DELETE TO authenticated USING (EXISTS (SELECT 1 FROM public.orders WHERE id = order_id AND (user_id = auth.uid() OR is_admin())));
 
--- Payments: Own payments or Admin
-CREATE POLICY "Payments access" ON public.payments FOR ALL TO authenticated USING (user_id = auth.uid() OR is_admin());
-
--- User Courses: Own enrollments or Admin
-CREATE POLICY "User courses access" ON public.user_courses FOR ALL TO authenticated USING (user_id = auth.uid() OR is_admin());
-
--- Favorites: Own favorites
-CREATE POLICY "Favorites access" ON public.favorites FOR ALL TO authenticated USING (user_id = auth.uid());
-
--- Notifications: Own notifications
-CREATE POLICY "Notifications access" ON public.notifications FOR ALL TO authenticated USING (user_id = auth.uid());
-
--- Contact Messages: Insert anyone, View Admin
-CREATE POLICY "Contact messages insert" ON public.contact_messages FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Contact messages admin" ON public.contact_messages FOR ALL TO authenticated USING (is_admin());
-
--- Site Settings: View everyone, Edit Admin
-CREATE POLICY "Site settings select" ON public.site_settings FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Site settings admin" ON public.site_settings FOR ALL TO authenticated USING (is_admin());
-
--- Course Categories: Everyone view, Admin all
+-- 5.6 Categories
 CREATE POLICY "Course categories select" ON public.course_categories FOR SELECT TO anon, authenticated USING (true);
 CREATE POLICY "Course categories admin" ON public.course_categories FOR ALL TO authenticated USING (is_admin());
-
--- Gallery Categories: Everyone view, Admin all
 CREATE POLICY "Gallery categories select" ON public.gallery_categories FOR SELECT TO anon, authenticated USING (true);
 CREATE POLICY "Gallery categories admin" ON public.gallery_categories FOR ALL TO authenticated USING (is_admin());
 
--- Gallery: Everyone view published, Admin all
+-- 5.7 Gallery & Blog
 CREATE POLICY "Gallery select" ON public.gallery FOR SELECT TO anon, authenticated USING (status = 'published' OR is_admin());
 CREATE POLICY "Gallery admin" ON public.gallery FOR ALL TO authenticated USING (is_admin());
-
--- Blog: Everyone view published, Admin all
 CREATE POLICY "Blog select" ON public.blog FOR SELECT TO anon, authenticated USING (status = 'published' OR is_admin());
 CREATE POLICY "Blog admin" ON public.blog FOR ALL TO authenticated USING (is_admin());
 
--- 6. TRIGGERS & FUNCTIONS
+-- 5.8 Others
+CREATE POLICY "Payments access" ON public.payments FOR ALL TO authenticated USING (user_id = auth.uid() OR is_admin());
+CREATE POLICY "User courses access" ON public.user_courses FOR ALL TO authenticated USING (user_id = auth.uid() OR is_admin());
+CREATE POLICY "Favorites access" ON public.favorites FOR ALL TO authenticated USING (user_id = auth.uid());
+CREATE POLICY "Notifications access" ON public.notifications FOR ALL TO authenticated USING (user_id = auth.uid());
+CREATE POLICY "Contact messages insert" ON public.contact_messages FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Contact messages admin" ON public.contact_messages FOR ALL TO authenticated USING (is_admin());
+CREATE POLICY "Site settings select" ON public.site_settings FOR SELECT TO anon, authenticated USING (true);
+CREATE POLICY "Site settings admin" ON public.site_settings FOR ALL TO authenticated USING (is_admin());
 
--- Sync profiles with Auth users
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO public.profiles (id, full_name, email, avatar_url, role)
-  VALUES (
-    NEW.id,
-    COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'display_name', 'کاربر جدید'),
-    COALESCE(NEW.email, ''),
-    NEW.raw_user_meta_data->>'avatar_url',
-    CASE
-      WHEN NEW.email = 'dellcake.orders@gmail.com' THEN 'admin'
-      ELSE 'user'
-    END
-  );
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-
--- Auto-update updated_at column
+-- 6. TRIGGERS
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -356,55 +304,47 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
-DROP TRIGGER IF EXISTS update_profiles_updated_at ON public.profiles;
-CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+-- Trigger Helper for tables
+DO $$
+DECLARE
+    t TEXT;
+BEGIN
+    FOR t IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename IN ('profiles', 'courses', 'course_categories', 'gallery', 'gallery_categories', 'products', 'orders', 'blog'))
+    LOOP
+        EXECUTE format('DROP TRIGGER IF EXISTS update_%I_updated_at ON public.%I', t, t);
+        EXECUTE format('CREATE TRIGGER update_%I_updated_at BEFORE UPDATE ON public.%I FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column()', t, t);
+    END LOOP;
+END $$;
 
-DROP TRIGGER IF EXISTS update_courses_updated_at ON public.courses;
-CREATE TRIGGER update_courses_updated_at BEFORE UPDATE ON public.courses FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+-- Auth Sync Trigger
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, full_name, email, avatar_url, role)
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'display_name', 'کاربر جدید'),
+    NEW.email,
+    NEW.raw_user_meta_data->>'avatar_url',
+    CASE WHEN NEW.email = 'dellcake.orders@gmail.com' THEN 'admin' ELSE 'user' END
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
-DROP TRIGGER IF EXISTS update_course_categories_updated_at ON public.course_categories;
-CREATE TRIGGER update_course_categories_updated_at BEFORE UPDATE ON public.course_categories FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
-DROP TRIGGER IF EXISTS update_orders_updated_at ON public.orders;
-CREATE TRIGGER update_orders_updated_at BEFORE UPDATE ON public.orders FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
-
-DROP TRIGGER IF EXISTS update_blog_updated_at ON public.blog;
-CREATE TRIGGER update_blog_updated_at BEFORE UPDATE ON public.blog FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
-
-DROP TRIGGER IF EXISTS update_gallery_updated_at ON public.gallery;
-CREATE TRIGGER update_gallery_updated_at BEFORE UPDATE ON public.gallery FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
-
-DROP TRIGGER IF EXISTS update_gallery_categories_updated_at ON public.gallery_categories;
-CREATE TRIGGER update_gallery_categories_updated_at BEFORE UPDATE ON public.gallery_categories FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
-
--- 7. STORAGE BUCKETS & POLICIES
+-- 7. STORAGE
 INSERT INTO storage.buckets (id, name, public)
-VALUES
-  ('gallery', 'gallery', true),
-  ('products', 'products', true),
-  ('courses', 'courses', true),
-  ('blog', 'blog', true),
-  ('profiles', 'profiles', true)
+VALUES ('gallery', 'gallery', true), ('products', 'products', true), ('courses', 'courses', true), ('blog', 'blog', true), ('profiles', 'profiles', true)
 ON CONFLICT (id) DO UPDATE SET public = true;
 
--- Storage Policies
-CREATE POLICY "Public view" ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id IN ('profiles', 'gallery', 'courses', 'products', 'blog'));
-CREATE POLICY "Avatar upload" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'profiles' AND (storage.foldername(name))[1] = auth.uid()::text);
+CREATE POLICY "Storage public view" ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id IN ('profiles', 'gallery', 'courses', 'products', 'blog'));
 CREATE POLICY "Admin storage all" ON storage.objects FOR ALL TO authenticated USING (is_admin());
 
--- 8. REALTIME (Optional)
-BEGIN;
-  DROP PUBLICATION IF EXISTS supabase_realtime;
-  CREATE PUBLICATION supabase_realtime;
-COMMIT;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.orders;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.notifications;
-
--- 9. FINAL ADMIN FIX
--- Ensure the main admin has the correct role if already exists
+-- 8. FINAL FIXES
 UPDATE public.profiles SET role = 'admin' WHERE email = 'dellcake.orders@gmail.com';
-
--- Grant access to public schema
 GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated, service_role;
 GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;
 GRANT ALL ON ALL FUNCTIONS IN SCHEMA public TO anon, authenticated, service_role;
