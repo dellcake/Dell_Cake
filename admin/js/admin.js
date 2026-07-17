@@ -8,6 +8,7 @@ import { SettingsModule } from "./modules/settings.js";
 import { MigrationModule } from "./modules/migration.js";
 import { BlogModule, MessagesModule } from "./modules/common.js";
 import { loadDashboardData } from "./modules/dashboard.js";
+import { BannersModule } from "./modules/banners.js";
 
 async function loadComponent(id, path) {
     try {
@@ -41,6 +42,7 @@ window.navigateTo = async (viewName) => {
         if (pageId === 'settings') SettingsModule.load();
         if (pageId === 'blog') BlogModule.load();
         if (pageId === 'messages') MessagesModule.load();
+        if (pageId === 'banners') BannersModule.load();
     }
 };
 
