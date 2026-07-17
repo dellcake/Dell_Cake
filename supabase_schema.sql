@@ -258,14 +258,14 @@ ALTER TABLE public.gallery ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.blog ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.banners ENABLE ROW LEVEL SECURITY;
 
--- CLEANUP OLD POLICIES
+-- CLEANUP OLD POLICIES (Targets both public and storage schemas to ensure absolute idempotency)
 DO $$
 DECLARE
     pol RECORD;
 BEGIN
-    FOR pol IN (SELECT policyname, tablename FROM pg_policies WHERE schemaname = 'public')
+    FOR pol IN (SELECT policyname, tablename, schemaname FROM pg_policies WHERE schemaname IN ('public', 'storage'))
     LOOP
-        EXECUTE format('DROP POLICY IF EXISTS %I ON %I', pol.policyname, pol.tablename);
+        EXECUTE format('DROP POLICY IF EXISTS %I ON %I.%I', pol.policyname, pol.schemaname, pol.tablename);
     END LOOP;
 END $$;
 
