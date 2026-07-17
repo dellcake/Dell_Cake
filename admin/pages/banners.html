@@ -1,8 +1,8 @@
 <div class="content-section">
     <div class="section-header">
         <div class="header-left">
-            <h2><i class="fas fa-ad"></i> مدیریت بنرها</h2>
-            <p>مدیریت اسلایدر و بنرهای تبلیغاتی صفحه اصلی</p>
+            <h2><i class="fas fa-ad"></i> مدیریت بنرهای تبلیغاتی</h2>
+            <p>افزودن، ویرایش و مدیریت نحوه نمایش بنرهای تبلیغاتی و کمپین‌ها در صفحه اول سایت</p>
         </div>
         <div class="header-right">
             <button class="btn btn-primary" onclick="openBannerModal()">
@@ -16,16 +16,16 @@
             <table>
                 <thead>
                     <tr>
-                        <th>تصویر</th>
-                        <th>عنوان</th>
-                        <th>لینک</th>
-                        <th>اولویت</th>
-                        <th>وضعیت</th>
-                        <th>عملیات</th>
+                        <th style="width: 100px;">پیش‌نمایش</th>
+                        <th>عنوان بنر</th>
+                        <th>نوع چیدمان</th>
+                        <th style="width: 80px;">ترتیب</th>
+                        <th style="width: 120px;">وضعیت نمایش</th>
+                        <th style="width: 120px;">عملیات</th>
                     </tr>
                 </thead>
                 <tbody id="banners-tbody">
-                    <!-- Loaded by JS -->
+                    <!-- Dynamic Rows -->
                 </tbody>
             </table>
         </div>
@@ -33,44 +33,94 @@
 </div>
 
 <div id="banner-modal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 850px;">
         <div class="modal-header">
-            <h3>افزودن بنر</h3>
+            <h3>تنظیمات بنر تبلیغاتی</h3>
             <span class="close" onclick="closeBannerModal()">&times;</span>
         </div>
         <form id="banner-form" onsubmit="saveBanner(event)">
             <input type="hidden" name="bannerId">
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>عنوان بنر</label>
-                    <input type="text" name="title" class="form-control">
+            <input type="hidden" name="desktopImageUrl">
+            <input type="hidden" name="mobileImageUrl">
+
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; padding: 20px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <div class="form-group">
+                            <label>عنوان اصلی بنر</label>
+                            <input type="text" name="title" class="form-control" placeholder="مثال: آکادمی دل‌کیک آغاز شد" required>
+                        </div>
+                        <div class="form-group">
+                            <label>زیرعنوان یا توضیحات کوتاه</label>
+                            <input type="text" name="subtitle" class="form-control" placeholder="توضیح کوتاه درباره بنر">
+                        </div>
+                        <div class="form-group">
+                            <label>متن روی دکمه</label>
+                            <input type="text" name="buttonText" class="form-control" value="مشاهده">
+                        </div>
+                        <div class="form-group">
+                            <label>آدرس لینک مقصد (URL)</label>
+                            <input type="text" name="buttonUrl" class="form-control" placeholder="https://..." dir="ltr">
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            <label>نوع چیدمان و ابعاد (Layout Type)</label>
+                            <select name="layoutType" class="form-control">
+                                <option value="half">نیم‌صفحه عریض (تک یا جفت در دسکتاپ)</option>
+                                <option value="wide">عریض تمام‌عرض</option>
+                                <option value="square">بلوک مربعی کوچک</option>
+                                <option value="hero">اسلایدر بالایی (هیرو)</option>
+                                <option value="full">پیشرفته و تمام‌صفحه</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>شفافیت بک‌گراند تیره (Background Overlay)</label>
+                            <input type="text" name="bgOverlay" class="form-control" value="rgba(0,0,0,0.4)" dir="ltr">
+                        </div>
+                        <div class="form-group">
+                            <label>رنگ متون بنر (کد رنگ)</label>
+                            <input type="text" name="textColor" class="form-control" value="#ffffff" dir="ltr">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div class="form-group">
+                                <label>ترتیب نمایش</label>
+                                <input type="number" name="displayOrder" class="form-control" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label>وضعیت انتشار</label>
+                                <select name="status" class="form-control">
+                                    <option value="active">فعال</option>
+                                    <option value="inactive">غیرفعال</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>لینک مقصد (URL)</label>
-                    <input type="text" name="link" class="form-control" dir="ltr">
-                </div>
-                <div class="form-group">
-                    <label>اولویت نمایش (عدد بزرگتر = نمایش زودتر)</label>
-                    <input type="number" name="priority" class="form-control" value="0">
-                </div>
-                <div class="form-group">
-                    <label>وضعیت</label>
-                    <select name="status" class="form-control">
-                        <option value="active">فعال</option>
-                        <option value="inactive">غیرفعال</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>تصویر بنر</label>
-                    <input type="file" id="banner-image-input" class="form-control" accept="image/*" onchange="previewBannerImage(event)">
-                    <div id="banner-preview" style="margin-top: 10px; height: 120px; border: 2px dashed var(--border-color); border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                        <span>انتخاب تصویر</span>
+
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border-color);">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>تصویر دسکتاپ بنر (عریض)</label>
+                        <input type="file" class="form-control" accept="image/*" onchange="uploadBannerImage(event, 'desktopImageUrl', 'desktop-image-preview')">
+                        <div id="desktop-image-preview" class="image-upload-zone" style="height: 140px; margin-top: 8px;">
+                            <span>تصویر دسکتاپ</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>تصویر موبایل بنر (عمودی - اختیاری)</label>
+                        <input type="file" class="form-control" accept="image/*" onchange="uploadBannerImage(event, 'mobileImageUrl', 'mobile-image-preview')">
+                        <div id="mobile-image-preview" class="image-upload-zone" style="height: 140px; margin-top: 8px;">
+                            <span>تصویر موبایل (اختیاری)</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" onclick="closeBannerModal()">انصراف</button>
-                <button type="submit" class="btn btn-primary" id="save-banner-btn">ذخیره بنر</button>
+                <button type="submit" class="btn btn-primary">ذخیره بنر</button>
             </div>
         </form>
     </div>

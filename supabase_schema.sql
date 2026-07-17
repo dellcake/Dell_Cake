@@ -216,6 +216,24 @@ CREATE TABLE IF NOT EXISTS public.blog (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- Banners: Modern Homepage Promotional Banners
+CREATE TABLE IF NOT EXISTS public.banners (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    title TEXT NOT NULL,
+    subtitle TEXT,
+    desktop_image_url TEXT NOT NULL,
+    mobile_image_url TEXT,
+    button_text TEXT DEFAULT 'مشاهده',
+    button_url TEXT,
+    layout_type TEXT DEFAULT 'half' CHECK (layout_type IN ('wide', 'half', 'square', 'hero', 'full')),
+    background_overlay TEXT DEFAULT 'rgba(0,0,0,0.4)',
+    text_color TEXT DEFAULT '#ffffff',
+    display_order INTEGER DEFAULT 0,
+    status TEXT DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
 -- 4. INDEXES
 CREATE INDEX IF NOT EXISTS idx_orders_user_id ON public.orders(user_id);
 CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON public.order_items(order_id);
@@ -238,6 +256,7 @@ ALTER TABLE public.course_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.gallery_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.gallery ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.blog ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.banners ENABLE ROW LEVEL SECURITY;
 
 -- CLEANUP OLD POLICIES
 DO $$
@@ -285,6 +304,10 @@ CREATE POLICY "Gallery admin" ON public.gallery FOR ALL TO authenticated USING (
 CREATE POLICY "Blog select" ON public.blog FOR SELECT TO anon, authenticated USING (status = 'published' OR is_admin());
 CREATE POLICY "Blog admin" ON public.blog FOR ALL TO authenticated USING (is_admin());
 
+-- Banners
+CREATE POLICY "Banners select" ON public.banners FOR SELECT TO anon, authenticated USING (status = 'active' OR is_admin());
+CREATE POLICY "Banners admin" ON public.banners FOR ALL TO authenticated USING (is_admin());
+
 -- 5.8 Others
 CREATE POLICY "Payments access" ON public.payments FOR ALL TO authenticated USING (user_id = auth.uid() OR is_admin());
 CREATE POLICY "User courses access" ON public.user_courses FOR ALL TO authenticated USING (user_id = auth.uid() OR is_admin());
@@ -309,7 +332,7 @@ DO $$
 DECLARE
     t TEXT;
 BEGIN
-    FOR t IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename IN ('profiles', 'courses', 'course_categories', 'gallery', 'gallery_categories', 'products', 'orders', 'blog'))
+    FOR t IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename IN ('profiles', 'courses', 'course_categories', 'gallery', 'gallery_categories', 'products', 'orders', 'blog', 'banners'))
     LOOP
         EXECUTE format('DROP TRIGGER IF EXISTS update_%I_updated_at ON public.%I', t, t);
         EXECUTE format('CREATE TRIGGER update_%I_updated_at BEFORE UPDATE ON public.%I FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column()', t, t);
@@ -337,10 +360,10 @@ CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXEC
 
 -- 7. STORAGE
 INSERT INTO storage.buckets (id, name, public)
-VALUES ('gallery', 'gallery', true), ('products', 'products', true), ('courses', 'courses', true), ('blog', 'blog', true), ('profiles', 'profiles', true)
+VALUES ('gallery', 'gallery', true), ('products', 'products', true), ('courses', 'courses', true), ('blog', 'blog', true), ('profiles', 'profiles', true), ('banners', 'banners', true)
 ON CONFLICT (id) DO UPDATE SET public = true;
 
-CREATE POLICY "Storage public view" ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id IN ('profiles', 'gallery', 'courses', 'products', 'blog'));
+CREATE POLICY "Storage public view" ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id IN ('profiles', 'gallery', 'courses', 'products', 'blog', 'banners'));
 CREATE POLICY "Admin storage all" ON storage.objects FOR ALL TO authenticated USING (is_admin());
 
 -- 8. FINAL FIXES

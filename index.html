@@ -61,42 +61,15 @@
 
       <!-- <h1>دل‌کیک</h1> -->
 
-        <section class="services-section">
-
-    <a href="#" class="service-card">
-
-        <i class="fas fa-cake-candles"></i>
-
-        <h3>کیک سفارشی</h3>
-
-    </a>
-
-    <a href="#" class="service-card">
-
-        <i class="fas fa-cookie-bite"></i>
-
-        <h3>شیرینی خانگی</h3>
-
-    </a>
-
-    <a href="#gallerySection" class="service-card">
-
-        <i class="fas fa-images"></i>
-
-        <h3>نمونه کارها</h3>
-
-    </a>
-
-    <a href="#"
-   class="service-card"
-   onclick="openAcademyPopup(); return false;">
-
-    <i class="fas fa-graduation-cap"></i>
-
-    <h3>آکادمی دل‌کیک</h3>
-
-    </a>
-
+        <!-- Dynamic Promotional Banners (Upgraded from Services Section) -->
+        <section class="promo-banners-container">
+            <h2 class="section-title-premium">دنیای شیرین دل‌کیک 💕</h2>
+            <p class="section-subtitle-premium">انتخاب کنید، یاد بگیرید و لحظات خود را شیرین‌تر کنید</p>
+            <div class="promo-banners-grid" id="promo-banners-grid">
+                <!-- Loaded dynamically by js/banners.js -->
+                <div class="banner-skeleton-loader"></div>
+                <div class="banner-skeleton-loader"></div>
+            </div>
         </section>
 
 
@@ -142,6 +115,7 @@
     <script src="js/academy-popup.js" defer></script>
     <script type="module" src="js/site-settings.js"></script>
     <script type="module" src="js/home-gallery.js"></script>
+    <script type="module" src="js/banners.js"></script>
 
 <div id="footer-container"></div>
 
