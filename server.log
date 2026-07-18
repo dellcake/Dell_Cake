@@ -1,41 +1,50 @@
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 1329, in <module>
-    test(
-  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 1276, in test
-    with ServerClass(addr, HandlerClass) as httpd:
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/socketserver.py", line 457, in __init__
-    self.server_bind()
-  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 1323, in server_bind
-    return super().server_bind()
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 140, in server_bind
-    socketserver.TCPServer.server_bind(self)
-  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/socketserver.py", line 478, in server_bind
-    self.socket.bind(self.server_address)
-OSError: [Errno 98] Address already in use
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /index.html HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /css/academy-popup.css HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /js/home-gallery.js HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /css/order-rules.css HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /css/style.css HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /js/site-settings.js HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /css/footer.css HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /js/banners.js HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /js/supabase-client.js HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /images/hero/baker-girl.png HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /js/menu.js HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /js/homepage-animation.js HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /js/load-components.js HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /js/academy-popup.js HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /js/supabase-config.js HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /components/sidebar.html HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /components/header.html HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /components/footer.html HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /images/gallery/cake1.jpg HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /images/gallery/cake14.jpg HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /images/gallery/cake4.jpg HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /images/logo/sweet-.png HTTP/1.1" 200 -
-127.0.0.1 - - [18/Jul/2026 13:58:55] "GET /images/icons/bale.svg HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /css/academy-popup.css HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /css/footer.css HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /css/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /css/order-rules.css HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /js/site-settings.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] code 404, message File not found
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /images/logo/bale-logo.png HTTP/1.1" 404 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /images/hero/baker-girl.png HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /js/banners.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /js/menu.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /js/home-gallery.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /js/homepage-animation.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /js/academy-popup.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /js/load-components.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /js/supabase-client.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:02] "GET /js/supabase-config.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:03] "GET /components/header.html HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:03] "GET /components/sidebar.html HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:03] "GET /components/footer.html HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:03] "GET /images/gallery/cake1.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:03] "GET /images/gallery/cake14.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:03] "GET /images/gallery/cake4.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:03] "GET /images/logo/sweet-.png HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:03] "GET /images/icons/bale.svg HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /css/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /css/order-rules.css HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /css/academy-popup.css HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /css/footer.css HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /js/home-gallery.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /js/site-settings.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /js/banners.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /images/hero/baker-girl.png HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] code 404, message File not found
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /images/logo/bale-logo.png HTTP/1.1" 404 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /js/menu.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /js/supabase-client.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /js/homepage-animation.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /js/academy-popup.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /js/load-components.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:08] "GET /js/supabase-config.js HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:09] "GET /components/sidebar.html HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:09] "GET /components/header.html HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:09] "GET /components/footer.html HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:09] "GET /images/gallery/cake14.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:09] "GET /images/gallery/cake1.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:09] "GET /images/gallery/cake4.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:09] "GET /images/logo/sweet-.png HTTP/1.1" 200 -
+127.0.0.1 - - [18/Jul/2026 18:13:09] "GET /images/icons/bale.svg HTTP/1.1" 200 -
