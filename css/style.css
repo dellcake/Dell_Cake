@@ -301,7 +301,7 @@ font-weight:800;
     left: 0;
     width: 100%;
     padding: 40px 20px 20px;
-    background: linear-gradient(to top, rgba(107, 61, 42, 0.8), transparent);
+    background: linear-gradient(to top, rgba(107, 61, 42, 0.85), transparent);
     color: white;
     opacity: 0;
     transform: translateY(20px);
@@ -455,7 +455,7 @@ font-weight:800;
     }
 
 }
-/* ===== PROMOTIONAL PREMIUM BANNERS ===== */
+/* ===== PROMOTIONAL PREMIUM BANNERS (BENTO & CROP FIX RE-ARCHITECTED) ===== */
 .promo-banners-container {
     margin-top: 50px;
     padding: 30px 0;
@@ -478,6 +478,7 @@ font-weight:800;
     opacity: 0.85;
 }
 
+/* Bento Layout System */
 .promo-banners-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -489,19 +490,64 @@ font-weight:800;
     position: relative;
     border-radius: 30px;
     overflow: hidden;
-    padding: 40px 30px;
-    min-height: 250px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: flex-start;
     text-align: right;
-    background-size: cover;
-    background-position: center;
     box-shadow: 0 15px 35px rgba(107, 61, 42, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.4);
-    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-    transform: translateZ(0);
+    background-color: #000;
+
+    /* Elegant Reveal Animation on Scroll */
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+    transition:
+        opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1),
+        transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1),
+        box-shadow 0.5s ease;
+}
+
+.promo-banner-item.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* Absolute CROP FIX Solution:
+   1. Blur image as a background frame so no empty space exists.
+   2. Centered uncropped foreground image using object-fit: contain.
+*/
+.banner-blur-bg {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background-size: cover;
+    background-position: center;
+    filter: blur(16px) brightness(0.6);
+    z-index: 0;
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.banner-img-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* PERFECT UN-CROPPED DISPLAY */
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .promo-banner-overlay {
@@ -510,18 +556,20 @@ font-weight:800;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(107, 61, 42, 0.85) 0%, rgba(240, 24, 115, 0.3) 100%);
-    z-index: 1;
+    background: linear-gradient(to top, rgba(107, 61, 42, 0.9) 0%, rgba(240, 24, 115, 0.25) 100%);
+    z-index: 2;
     transition: opacity 0.5s ease;
 }
 
 .promo-banner-content {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     display: flex;
     flex-direction: column;
     gap: 8px;
     width: 100%;
+    padding: 40px 30px;
+    color: var(--text-color, #ffffff);
 }
 
 .promo-banner-subtitle {
@@ -530,6 +578,7 @@ font-weight:800;
     text-transform: uppercase;
     letter-spacing: 1px;
     opacity: 0.9;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .promo-banner-title {
@@ -537,6 +586,7 @@ font-weight:800;
     font-weight: 800;
     line-height: 1.4;
     margin-bottom: 12px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .promo-banner-btn {
@@ -548,13 +598,13 @@ font-weight:800;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 50px;
     text-decoration: none;
     font-weight: 700;
     font-size: 14px;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .promo-banner-btn i {
@@ -564,12 +614,20 @@ font-weight:800;
 
 /* Animations and Hover Effects */
 .promo-banner-item:hover {
-    transform: translateY(-8px) scale(1.01);
-    box-shadow: 0 25px 50px rgba(240, 24, 115, 0.22);
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(240, 24, 115, 0.25);
+}
+
+.promo-banner-item:hover .banner-blur-bg {
+    transform: scale(1.1);
+}
+
+.promo-banner-item:hover .banner-img {
+    transform: scale(1.05); /* Soft, luxurious zoom */
 }
 
 .promo-banner-item:hover .promo-banner-overlay {
-    opacity: 0.95;
+    opacity: 0.85;
 }
 
 .promo-banner-item:hover .promo-banner-btn {
@@ -583,27 +641,50 @@ font-weight:800;
     transform: translateX(-4px);
 }
 
+/* Aspect-ratio specifications to preserve responsive layouts on all platforms */
+.banner-hero-layout {
+    aspect-ratio: 16/10;
+    min-height: 300px;
+}
+.banner-half-layout {
+    aspect-ratio: 16/11;
+    min-height: 250px;
+}
+.banner-third-layout {
+    aspect-ratio: 1/1;
+    min-height: 220px;
+}
+.banner-wide-layout {
+    aspect-ratio: 21/9;
+    min-height: 260px;
+}
+.banner-two-thirds-layout {
+    aspect-ratio: 16/10;
+    min-height: 280px;
+}
+
 /* Fallback Skeleton */
 .banner-skeleton-loader {
-    height: 250px;
+    aspect-ratio: 16/10;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 25%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.4) 75%);
     background-size: 200% 100%;
     animation: skeleton-loading 1.5s infinite;
     border-radius: 30px;
 }
 
-/* Responsive Banner Grid Structure */
+/* Responsive Grid and Bento System */
 @media (min-width: 768px) {
     .promo-banners-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
     }
-    .banner-wide {
+    .banner-hero-layout {
         grid-column: span 2;
-        min-height: 280px;
+        aspect-ratio: 16/9;
     }
-    .banner-full {
+    .banner-wide-layout {
         grid-column: span 2;
-        min-height: 350px;
+        aspect-ratio: 21/9;
     }
 }
 
@@ -611,24 +692,50 @@ font-weight:800;
     .promo-banners-grid {
         grid-template-columns: repeat(12, 1fr);
     }
-    .banner-half {
+    .banner-hero-layout {
+        grid-column: span 12;
+        aspect-ratio: 21/9;
+    }
+    .banner-half-layout {
         grid-column: span 6;
+        aspect-ratio: 16/10;
     }
-    .banner-wide {
-        grid-column: span 8;
-    }
-    .banner-square {
+    .banner-third-layout {
         grid-column: span 4;
+        aspect-ratio: 1/1;
     }
-    .banner-hero {
+    .banner-wide-layout {
         grid-column: span 12;
-        min-height: 380px;
+        aspect-ratio: 21/9;
     }
-    .banner-full {
-        grid-column: span 12;
-        min-height: 420px;
+    .banner-two-thirds-layout {
+        grid-column: span 8;
+        aspect-ratio: 16/10;
     }
 }
+
+/* Mobile-Specific Adaptations: Prevent Horizontal Scroll, ensure gorgeous spacing, touch-friendliness */
+@media (max-width: 767px) {
+    .promo-banners-container {
+        padding: 15px 5px;
+    }
+    .promo-banner-item {
+        border-radius: 20px;
+        min-height: 200px !important;
+        aspect-ratio: 4/3 !important; /* Perfect mobile dimension */
+    }
+    .promo-banner-content {
+        padding: 20px;
+    }
+    .promo-banner-title {
+        font-size: 1.35rem;
+    }
+    .promo-banner-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+}
+
 .top-header{
     position: fixed;
     top: 0;
