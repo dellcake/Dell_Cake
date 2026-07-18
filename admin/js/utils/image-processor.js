@@ -113,3 +113,5 @@ export const ImageProcessor = {
         ctx.shadowBlur = 0;
     }
 };
+
+export const imageProcessor = ImageProcessor;
