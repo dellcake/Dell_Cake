@@ -61,14 +61,22 @@
 
       <!-- <h1>دل‌کیک</h1> -->
 
-        <!-- Dynamic Promotional Banners (Upgraded from Services Section) -->
+        <!-- Dynamic Promotional Banners (Upgraded from Services Section to Premium Swiper Slider) -->
         <section class="promo-banners-container">
             <h2 class="section-title-premium">دنیای شیرین دل‌کیک 💕</h2>
             <p class="section-subtitle-premium">انتخاب کنید، یاد بگیرید و لحظات خود را شیرین‌تر کنید</p>
-            <div class="promo-banners-grid" id="promo-banners-grid">
-                <!-- Loaded dynamically by js/banners.js -->
-                <div class="banner-skeleton-loader"></div>
-                <div class="banner-skeleton-loader"></div>
+
+            <div class="swiper promo-swiper">
+                <div class="swiper-wrapper" id="promo-banners-slider-wrapper">
+                    <!-- Loaded dynamically by js/banners.js -->
+                    <div class="swiper-slide banner-skeleton-loader"></div>
+                    <div class="swiper-slide banner-skeleton-loader"></div>
+                </div>
+                <!-- Navigation Buttons -->
+                <div class="swiper-button-next promo-swiper-next"></div>
+                <div class="swiper-button-prev promo-swiper-prev"></div>
+                <!-- Pagination -->
+                <div class="swiper-pagination promo-swiper-pagination"></div>
             </div>
         </section>
 
