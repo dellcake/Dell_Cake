@@ -478,39 +478,37 @@ font-weight:800;
     opacity: 0.85;
 }
 
-/* Bento Layout System */
-.promo-banners-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 25px;
+/* Swiper Slider layout styling for Promotional Banners */
+.promo-swiper {
+    position: relative;
     width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 35px;
+    overflow: hidden;
+    box-shadow: 0 20px 45px rgba(107, 61, 42, 0.15);
+    background: #000;
+}
+
+.promo-banner-slide {
+    width: 100%;
+    height: auto;
 }
 
 .promo-banner-item {
     position: relative;
-    border-radius: 30px;
-    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 21/9;
+    min-height: 380px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: flex-start;
     text-align: right;
-    box-shadow: 0 15px 35px rgba(107, 61, 42, 0.12);
+    border-radius: 35px;
+    overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.4);
     background-color: #000;
-
-    /* Elegant Reveal Animation on Scroll */
-    opacity: 0;
-    transform: translateY(30px) scale(0.97);
-    transition:
-        opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1),
-        transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1),
-        box-shadow 0.5s ease;
-}
-
-.promo-banner-item.visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
 }
 
 /* Absolute CROP FIX Solution:
@@ -519,15 +517,15 @@ font-weight:800;
 */
 .banner-blur-bg {
     position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
     background-size: cover;
     background-position: center;
-    filter: blur(16px) brightness(0.6);
+    filter: blur(25px) brightness(0.55);
     z-index: 0;
-    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .banner-img-container {
@@ -547,7 +545,7 @@ font-weight:800;
     width: 100%;
     height: 100%;
     object-fit: contain; /* PERFECT UN-CROPPED DISPLAY */
-    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .promo-banner-overlay {
@@ -556,9 +554,9 @@ font-weight:800;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to top, rgba(107, 61, 42, 0.9) 0%, rgba(240, 24, 115, 0.25) 100%);
+    background: linear-gradient(to top, rgba(107, 61, 42, 0.85) 0%, rgba(240, 24, 115, 0.2) 100%);
     z-index: 2;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.6s ease;
 }
 
 .promo-banner-content {
@@ -566,152 +564,126 @@ font-weight:800;
     z-index: 3;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
     width: 100%;
-    padding: 40px 30px;
+    padding: 60px 50px;
     color: var(--text-color, #ffffff);
 }
 
 .promo-banner-subtitle {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: 0.9;
+    letter-spacing: 1.5px;
+    opacity: 0.95;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .promo-banner-title {
-    font-size: clamp(20px, 3.5vw, 28px);
+    font-size: clamp(24px, 4vw, 36px);
     font-weight: 800;
-    line-height: 1.4;
-    margin-bottom: 12px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    line-height: 1.3;
+    margin-bottom: 15px;
+    font-family: 'Lalezar', cursive;
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.6);
 }
 
 .promo-banner-btn {
     align-self: flex-start;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 22px;
+    gap: 10px;
+    padding: 12px 26px;
     background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.45);
     border-radius: 50px;
     text-decoration: none;
     font-weight: 700;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-size: 15px;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 .promo-banner-btn i {
-    font-size: 11px;
+    font-size: 12px;
     transition: transform 0.3s ease;
 }
 
 /* Animations and Hover Effects */
-.promo-banner-item:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 25px 50px rgba(240, 24, 115, 0.25);
+.promo-swiper:hover .banner-blur-bg {
+    transform: scale(1.05);
 }
 
-.promo-banner-item:hover .banner-blur-bg {
-    transform: scale(1.1);
+.promo-swiper:hover .banner-img {
+    transform: scale(1.03); /* Soft, luxurious zoom */
 }
 
-.promo-banner-item:hover .banner-img {
-    transform: scale(1.05); /* Soft, luxurious zoom */
-}
-
-.promo-banner-item:hover .promo-banner-overlay {
+.promo-swiper:hover .promo-banner-overlay {
     opacity: 0.85;
 }
 
-.promo-banner-item:hover .promo-banner-btn {
+.promo-banner-btn:hover {
     background: #ffffff;
     color: #f01873 !important;
     border-color: #ffffff;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 25px rgba(240, 24, 115, 0.25);
+    transform: translateY(-2px);
 }
 
-.promo-banner-item:hover .promo-banner-btn i {
+.promo-banner-btn:hover i {
     transform: translateX(-4px);
 }
 
-/* Aspect-ratio specifications to preserve responsive layouts on all platforms */
-.banner-hero-layout {
-    aspect-ratio: 16/10;
-    min-height: 300px;
+/* Customized Swiper Navigation Arrows */
+.promo-swiper-next, .promo-swiper-prev {
+    color: #f01873 !important;
+    background: rgba(253, 246, 240, 0.9);
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50%;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(240, 24, 115, 0.15);
 }
-.banner-half-layout {
-    aspect-ratio: 16/11;
-    min-height: 250px;
+
+.promo-swiper-next::after, .promo-swiper-prev::after {
+    font-size: 20px !important;
+    font-weight: bold;
 }
-.banner-third-layout {
-    aspect-ratio: 1/1;
-    min-height: 220px;
+
+.promo-swiper-next:hover, .promo-swiper-prev:hover {
+    background: #f01873;
+    color: #fdf6f0 !important;
+    transform: scale(1.1);
 }
-.banner-wide-layout {
-    aspect-ratio: 21/9;
-    min-height: 260px;
+
+/* Bullet Pagination Customized */
+.promo-swiper-pagination .swiper-pagination-bullet {
+    background: #6b3d2a !important;
+    opacity: 0.35;
+    width: 10px;
+    height: 10px;
+    transition: all 0.3s ease;
 }
-.banner-two-thirds-layout {
-    aspect-ratio: 16/10;
-    min-height: 280px;
+
+.promo-swiper-pagination .swiper-pagination-bullet-active {
+    background: #f01873 !important;
+    opacity: 1;
+    width: 25px;
+    border-radius: 10px;
 }
 
 /* Fallback Skeleton */
 .banner-skeleton-loader {
-    aspect-ratio: 16/10;
+    width: 100%;
+    aspect-ratio: 21/9;
+    min-height: 380px;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 25%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.4) 75%);
     background-size: 200% 100%;
     animation: skeleton-loading 1.5s infinite;
-    border-radius: 30px;
-}
-
-/* Responsive Grid and Bento System */
-@media (min-width: 768px) {
-    .promo-banners-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 30px;
-    }
-    .banner-hero-layout {
-        grid-column: span 2;
-        aspect-ratio: 16/9;
-    }
-    .banner-wide-layout {
-        grid-column: span 2;
-        aspect-ratio: 21/9;
-    }
-}
-
-@media (min-width: 992px) {
-    .promo-banners-grid {
-        grid-template-columns: repeat(12, 1fr);
-    }
-    .banner-hero-layout {
-        grid-column: span 12;
-        aspect-ratio: 21/9;
-    }
-    .banner-half-layout {
-        grid-column: span 6;
-        aspect-ratio: 16/10;
-    }
-    .banner-third-layout {
-        grid-column: span 4;
-        aspect-ratio: 1/1;
-    }
-    .banner-wide-layout {
-        grid-column: span 12;
-        aspect-ratio: 21/9;
-    }
-    .banner-two-thirds-layout {
-        grid-column: span 8;
-        aspect-ratio: 16/10;
-    }
+    border-radius: 35px;
 }
 
 /* Mobile-Specific Adaptations: Prevent Horizontal Scroll, ensure gorgeous spacing, touch-friendliness */
@@ -719,20 +691,27 @@ font-weight:800;
     .promo-banners-container {
         padding: 15px 5px;
     }
+    .promo-swiper {
+        border-radius: 24px;
+        box-shadow: 0 10px 25px rgba(107, 61, 42, 0.12);
+    }
     .promo-banner-item {
-        border-radius: 20px;
-        min-height: 200px !important;
-        aspect-ratio: 4/3 !important; /* Perfect mobile dimension */
+        border-radius: 24px;
+        min-height: 250px !important;
+        aspect-ratio: 16/10 !important; /* Perfect mobile dimension */
     }
     .promo-banner-content {
-        padding: 20px;
+        padding: 30px 20px;
     }
     .promo-banner-title {
-        font-size: 1.35rem;
+        font-size: 1.45rem;
     }
     .promo-banner-btn {
-        padding: 8px 16px;
-        font-size: 12px;
+        padding: 8px 18px;
+        font-size: 13px;
+    }
+    .promo-swiper-next, .promo-swiper-prev {
+        display: none !important; /* Hide navigation arrows on small screens for cleaner visual */
     }
 }
 
