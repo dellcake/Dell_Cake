@@ -27,164 +27,78 @@
  
 <div class="background-hearts"></div>
 
-<div class="container landing-container">
+<div class="container">
 
-    <!-- HERO SECTION -->
-    <section class="hero-section">
-        <h1 class="hero-title">دل‌کیک</h1>
-        <h2 class="hero-slogan">هنر شیرینی‌پزی، طعم عشق و خلق لحظه‌های ماندگار</h2>
-        <p class="hero-description">
-            سفارش کیک‌های خاص، شیرینی‌های خانگی و آموزش تخصصی
-            شیرینی‌پزی با عشق، خلاقیت و طراحی اختصاصی برای
-            شیرین‌تر کردن لحظه‌های خاص زندگی شما 💕
-        </p>
-    </section>
+
+<section class="hero-section">
+
+    <h1 class="hero-title">
+        دل‌کیک
+    </h1>
+
+    <h2 class="hero-slogan">
+        هنر شیرینی‌پزی، طعم عشق و خلق لحظه‌های ماندگار
+    </h2>
+
+    <p class="hero-description">
+        سفارش کیک‌های خاص، شیرینی‌های خانگی و آموزش تخصصی
+        شیرینی‌پزی با عشق، خلاقیت و طراحی اختصاصی برای
+        شیرین‌تر کردن لحظه‌های خاص زندگی شما 💕
+    </p>
+
+</section>
 
     <section class="hero-image-section">
-        <img src="images/hero/baker-girl.png" alt="Dell Cake" class="hero-image">
-    </section>
 
-    <!-- INTRO/ABOUT SECTION -->
-    <section class="intro-about-section reveal-on-scroll">
-        <div class="intro-card-premium">
-            <div class="intro-badge">درباره ما</div>
-            <h3>داستان شیرین دل‌کیک 💕</h3>
-            <p>ما در دل‌کیک با استفاده از باکیفیت‌ترین و تازه‌ترین مواد اولیه، رویاهای شیرین شما را به واقعیت تبدیل می‌کنیم. از پخت ظریف‌ترین کوکی‌ها و کاپ‌کیک‌ها تا طراحی و اجرای مدرن‌ترین ماکت‌ها و کیک‌های تولد و عروسی، هر سفارش اثری هنری و منحصر‌به‌فرد است. همچنین در بخش آموزش، تمام تجربیات و فوت‌وفن‌های شیرینی‌پزی حرفه‌ای را با عشق به شما آموزش می‌دهیم تا مسیر مهارت‌آموزی برایتان ساده و لذت‌بخش شود.</p>
-        </div>
-    </section>
+   <img
+    src="images/hero/baker-girl.png"
+    alt="Dell Cake"
+    class="hero-image"
+>
 
-    <!-- MOBILE-ONLY BANNER CAROUSEL (Touch friendly swipeable Swiper deck) -->
-    <section class="mobile-banners-section" id="mobile-banner-carousel-container">
-        <div class="swiper mobile-banner-swiper">
-            <div class="swiper-wrapper" id="mobile-banner-swiper-wrapper">
-                <div class="swiper-slide skeleton-slide"></div>
+</section>
+    <div class="intro hidden" id="introBox">
+
+      <!-- <h1>دل‌کیک</h1> -->
+
+        <!-- Dynamic Promotional Banners (Upgraded from Services Section) -->
+        <section class="promo-banners-container">
+            <h2 class="section-title-premium">دنیای شیرین دل‌کیک 💕</h2>
+            <p class="section-subtitle-premium">انتخاب کنید، یاد بگیرید و لحظات خود را شیرین‌تر کنید</p>
+            <div class="promo-banners-grid" id="promo-banners-grid">
+                <!-- Loaded dynamically by js/banners.js -->
+                <div class="banner-skeleton-loader"></div>
+                <div class="banner-skeleton-loader"></div>
             </div>
-            <div class="swiper-pagination mobile-banner-pagination"></div>
-        </div>
-    </section>
+        </section>
 
-    <!-- BANNER SLOT 1 (Desktop Floating Banner) -->
-    <div id="banner-slot-1" class="desktop-banner-slot reveal-on-scroll"></div>
 
-    <!-- PRODUCTS / SERVICES SHOWCASE SECTION -->
-    <section class="products-showcase-section reveal-on-scroll">
-        <div class="showcase-header">
-            <h2 class="section-title-premium">منوی سفارش‌های دل‌کیک</h2>
-            <p class="section-subtitle-premium">دنیایی از طعم‌های بی‌نظیر و کیفیت بی‌رقیب، آماده سفارش شما</p>
-        </div>
-        <div class="products-grid-premium">
-            <a href="order-cake.html" class="product-card-premium hover-lift">
-                <div class="product-icon-box pink-bg"><i class="fas fa-cake-candles"></i></div>
-                <h4>سفارش کیک</h4>
-                <p>کیک‌های تولد، مناسبتی و مدرن با فیلینگ‌ها و دیزاین سفارشی</p>
-                <span class="product-action-link">مشاهده و سفارش <i class="fas fa-chevron-left"></i></span>
-            </a>
-            <a href="order-cake.html" class="product-card-premium hover-lift">
-                <div class="product-icon-box gold-bg"><i class="fas fa-cookie"></i></div>
-                <h4>سفارش شیرینی</h4>
-                <p>شیرینی‌های خانگی عید، دسرها و فینگرفودهای لوکس و لذیذ</p>
-                <span class="product-action-link">مشاهده و سفارش <i class="fas fa-chevron-left"></i></span>
-            </a>
-            <a href="order-cake.html" class="product-card-premium hover-lift">
-                <div class="product-icon-box blue-bg"><i class="fas fa-apple-whole"></i></div>
-                <h4>تغذیه مدرسه</h4>
-                <p>پک‌های تغذیه سالم، مقوی و جذاب برای دانش‌آموزان پرانرژی</p>
-                <span class="product-action-link">مشاهده و سفارش <i class="fas fa-chevron-left"></i></span>
-            </a>
-            <a href="order-cake.html" class="product-card-premium hover-lift">
-                <div class="product-icon-box purple-bg"><i class="fas fa-ice-cream"></i></div>
-                <h4>کاپ کیک و مافین</h4>
-                <p>مینی‌کیک‌ها و کاپ‌کیک‌های خامه‌ای با تزیینات فانتزی و زیبا</p>
-                <span class="product-action-link">مشاهده و سفارش <i class="fas fa-chevron-left"></i></span>
-            </a>
-            <a href="order-cake.html" class="product-card-premium hover-lift">
-                <div class="product-icon-box brown-bg"><i class="fas fa-shapes"></i></div>
-                <h4>ماکت کیک</h4>
-                <p>اجاره و سفارش ماکت‌های آتلیه‌ای و تالاری فوق‌العاده شیک و سبک</p>
-                <span class="product-action-link">مشاهده و سفارش <i class="fas fa-chevron-left"></i></span>
-            </a>
-        </div>
-    </section>
+          <div class="gallery hidden" id="gallerySection">
+             <h2>نمونه‌ای از سفارش‌های دوست‌داشتنی شما 💕</h2>
 
-    <!-- BANNER SLOT 2 (Desktop Floating Banner) -->
-    <div id="banner-slot-2" class="desktop-banner-slot reveal-on-scroll"></div>
+             <!-- Modern Portfolio Slider -->
+             <div class="swiper portfolio-swiper">
+                <div class="swiper-wrapper" id="home-gallery-wrapper">
+                    <!-- Dynamic Items from Supabase -->
+                    <div class="swiper-slide skeleton-slide"></div>
+                    <div class="swiper-slide skeleton-slide"></div>
+                    <div class="swiper-slide skeleton-slide"></div>
+                </div>
+                <!-- Navigation -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <!-- Pagination -->
+                <div class="swiper-pagination"></div>
+             </div>
 
-    <!-- ACADEMY TEASER SECTION -->
-    <section class="academy-teaser-section reveal-on-scroll">
-        <div class="academy-card-premium">
-            <div class="academy-badge">آموزش تخصصی</div>
-            <h3>آکادمی شیرینی‌پزی دل‌کیک 🎓</h3>
-            <p>دوست داری کیک‌‌پزی و دکوراتوری حرفه‌ای رو از پایه و به صورت اصولی یاد بگیری؟ دوره‌های آموزشی دل‌کیک به صورت صفر تا صد با پشتیبانی دائمی طراحی شدن تا بتونی به سادگی وارد بازار کار بشی یا تو خونه برای عزیزانت بهترین‌ها رو خلق کنی.</p>
-            <div class="academy-teaser-features">
-                <div class="feature-item-pill"><i class="fas fa-certificate"></i> مدرک معتبر</div>
-                <div class="feature-item-pill"><i class="fas fa-headset"></i> پشتیبانی همیشگی</div>
-                <div class="feature-item-pill"><i class="fas fa-video"></i> ویدیوهای باکیفیت</div>
-            </div>
-            <a href="#" onclick="openAcademyPopup(); return false;" class="btn-academy-teaser">
-                مشاهده دوره‌های آکادمی
-                <i class="fas fa-arrow-left"></i>
-            </a>
-        </div>
-    </section>
-
-    <!-- BANNER SLOT 3 (Desktop Floating Banner) -->
-    <div id="banner-slot-3" class="desktop-banner-slot reveal-on-scroll"></div>
-
-    <!-- GALLERY / PORTFOLIO SECTION -->
-    <section class="gallery reveal-on-scroll" id="gallerySection">
-        <h2>نمونه‌ای از سفارش‌های دوست‌داشتنی شما 💕</h2>
-        <p class="section-subtitle-premium">تصاویری از آثار خلق شده با عشق برای جشن‌های شما</p>
-
-        <!-- Modern Portfolio Slider -->
-        <div class="swiper portfolio-swiper">
-            <div class="swiper-wrapper" id="home-gallery-wrapper">
-                <!-- Dynamic Items from Supabase -->
-                <div class="swiper-slide skeleton-slide"></div>
-                <div class="swiper-slide skeleton-slide"></div>
-                <div class="swiper-slide skeleton-slide"></div>
-            </div>
-            <!-- Navigation -->
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-            <!-- Pagination -->
-            <div class="swiper-pagination"></div>
-        </div>
-
-        <div class="view-all-container">
-            <a href="gallery.html" class="btn-view-all">
-                مشاهده همه نمونه‌کارها
-                <i class="fas fa-chevron-left"></i>
-            </a>
-        </div>
-    </section>
-
-    <!-- BANNER SLOT 4 (Desktop Floating Banner) -->
-    <div id="banner-slot-4" class="desktop-banner-slot reveal-on-scroll"></div>
-
-    <!-- CONTACT US / CHANNELS SECTION -->
-    <section class="contact-us-section reveal-on-scroll">
-        <h2 class="section-title-premium">راه‌های ارتباطی با ما 📞</h2>
-        <p class="contact-text">جهت مشاوره سریع، ثبت سفارش و ثبت نام در دوره‌ها از راه‌های زیر با ما در ارتباط باشید. تیم پشتیبانی <span>دل‌کیک</span> همواره پاسخگوی شماست.</p>
-
-        <div class="buttons">
-            <a href="https://instagram.com/dell_cake_" target="_blank" class="card instagram">
-                <span class="social-icon instagram-icon"><i class="fab fa-instagram"></i></span>
-                <span>اینستاگرام دل‌کیک</span>
-            </a>
-            <a href="https://t.me/sobhan_77_rahimi" target="_blank" class="card telegram">
-                <span class="social-icon telegram-icon"><i class="fab fa-telegram"></i></span>
-                <span>پشتیبانی تلگرام</span>
-            </a>
-            <a href="https://ble.ir/sobhan_77_rahimi" target="_blank" class="card bale">
-                <img src="images/logo/bale-logo.png" alt="بله" class="bale-logo">
-                <span>پشتیبانی بله</span>
-            </a>
-            <a href="tel:09102768171" class="card phone">
-                <span class="social-icon phone-icon"><i class="fas fa-phone"></i></span>
-                <span>تماس مستقیم تلفنی</span>
-            </a>
-        </div>
-    </section>
+             <div class="view-all-container">
+                <a href="gallery.html" class="btn-view-all">
+                    مشاهده همه نمونه‌کارها
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+             </div>
+          </div>
+    </div>
 
 </div>
  
@@ -196,12 +110,12 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 <div id="menuOverlay" class="menu-overlay"></div>
 
-<script src="js/menu.js" defer></script>
-<script src="js/homepage-animation.js" defer></script>
-<script src="js/academy-popup.js" defer></script>
-<script type="module" src="js/site-settings.js"></script>
-<script type="module" src="js/home-gallery.js"></script>
-<script type="module" src="js/banners.js"></script>
+    <script src="js/menu.js" defer></script>
+    <script src="js/homepage-animation.js" defer></script>
+    <script src="js/academy-popup.js" defer></script>
+    <script type="module" src="js/site-settings.js"></script>
+    <script type="module" src="js/home-gallery.js"></script>
+    <script type="module" src="js/banners.js"></script>
 
 <div id="footer-container"></div>
 
