@@ -1,95 +1,39 @@
-/* Modern Segmented Control Tabs */
-.tabs-container {
-    display: flex;
-    justify-content: center;
-    margin: 30px 0 50px;
-    padding: 0 20px;
+.order-tabs{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:20px;
 }
 
-.order-tabs {
-    background: #ffffff;
-    padding: 6px;
-    border-radius: 100px;
-    display: flex;
-    gap: 4px;
-    box-shadow: 0 10px 25px rgba(107, 61, 42, 0.08);
-    border: 1px solid rgba(240, 24, 115, 0.1);
-    max-width: 100%;
-    position: relative;
-    overflow: hidden;
+.tab-btn{
+    padding:10px 16px;
+    border:none;
+    border-radius:14px;
+
+    background:#fff;
+    color:#f01873;
+
+    font-weight:700;
+    cursor:pointer;
+
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+
+    transition:.25s;
 }
 
-.tab-link {
-    border: none;
-    background: transparent;
-    padding: 12px 45px;
-    border-radius: 100px;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: #6b3d2a;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    white-space: nowrap;
-    font-family: 'Vazirmatn', sans-serif;
-    z-index: 1;
+.tab-btn:hover{
+    transform:translateY(-2px);
 }
 
-.tab-link i {
-    font-size: 1.2rem;
-    transition: transform 0.3s ease;
+.tab-btn.active{
+    background:linear-gradient(135deg,#ff6cab,#ff8ec7);
+    color:#fff;
 }
 
-.tab-link:hover:not(.active) {
-    background: rgba(240, 24, 115, 0.05);
-    color: #f01873;
+.tab-content{
+    display:none;
 }
 
-.tab-link.active {
-    background: #f01873;
-    color: #ffffff;
-    box-shadow: 0 8px 20px rgba(240, 24, 115, 0.3);
-}
-
-.tab-link.active i {
-    transform: scale(1.1) rotate(-5deg);
-}
-
-/* Tab Content Transitions */
-.tab-content {
-    display: none;
-    opacity: 0;
-    transform: translateY(15px);
-    transition: all 0.5s ease;
-}
-
-.tab-content.active {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-@media (max-width: 600px) {
-    .tabs-container {
-        margin: 20px 0 40px;
-    }
-
-    .order-tabs {
-        width: 100%;
-        padding: 4px;
-    }
-
-    .tab-link {
-        flex: 1;
-        padding: 12px 10px;
-        font-size: 0.9rem;
-        justify-content: center;
-        gap: 6px;
-    }
-
-    .tab-link i {
-        font-size: 1rem;
-    }
+.tab-content.active{
+    display:block;
 }

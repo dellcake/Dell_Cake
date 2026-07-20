@@ -1,134 +1,168 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ورود به پنل مدیریت | دل‌کیک</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&family=Lalezar&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <style>
-        :root {
-            --primary: #e8789a;
-            --secondary: #6b3d2a;
-            --cream: #fdf6f0;
-            --white: #ffffff;
-            --shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
 
-        body {
-            font-family: 'Vazirmatn', sans-serif;
-            background: var(--cream);
-            background-image: radial-gradient(circle at 20% 20%, rgba(232, 120, 154, 0.1) 0%, transparent 40%),
-                              radial-gradient(circle at 80% 80%, rgba(107, 61, 42, 0.05) 0%, transparent 40%);
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-        .login-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 40px;
-            border-radius: 30px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            animation: fadeIn 0.8s ease-out;
-        }
+<title>
+پنل مدیریت | دل‌کیک
+</title>
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+<!-- Font -->
 
-        .logo {
-            width: 120px;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 5px 15px rgba(232, 120, 154, 0.2));
-        }
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
 
-        h1 {
-            font-family: 'Lalezar', cursive;
-            color: var(--secondary);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
 
-        p {
-            color: #888;
-            font-size: 0.9rem;
-            margin-bottom: 30px;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800&display=swap"
+rel="stylesheet">
 
-        .btn-google {
-            background: var(--white);
-            color: #555;
-            border: 1px solid #ddd;
-            padding: 12px 24px;
-            border-radius: 15px;
-            font-family: inherit;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            width: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
+<!-- FontAwesome -->
 
-        .btn-google:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-            background: #fafafa;
-        }
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-        .btn-google img {
-            width: 20px;
-        }
+<!-- CSS -->
 
-        .footer-text {
-            margin-top: 30px;
-            font-size: 0.8rem;
-            color: var(--primary);
-        }
+<link rel="stylesheet"
+href="css/login.css">
 
-        .error-message {
-            background: rgba(231, 76, 60, 0.1);
-            color: #e74c3c;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            display: none;
-        }
-    </style>
 </head>
-<body class="admin-body">
-    <div class="login-card">
-        <img src="../images/logo/sweet-.png" alt="دل‌کیک" class="logo">
-        <h1>دل‌کیک</h1>
-        <p>پنل مدیریت تخصصی آموزش و سفارش</p>
 
-        <div id="error-box" class="error-message"></div>
+<body>
 
-        <button id="google-login-btn" class="btn-google">
-            <i class="fab fa-google" style="color: #4285F4; font-size: 1.2rem;"></i>
-            ورود با حساب گوگل
-        </button>
+<!-- Floating Shapes -->
 
-        <div class="footer-text">
-            طراحی شده با عشق برای دنیای شیرین دل‌کیک 💕
-        </div>
-    </div>
+<div class="bg-circle c1"></div>
+<div class="bg-circle c2"></div>
+<div class="bg-circle c3"></div>
 
-    <script type="module" src="js/login.js"></script>
+<div class="floating-heart h1">❤</div>
+<div class="floating-heart h2">❤</div>
+<div class="floating-heart h3">❤</div>
+
+<!-- Login Card -->
+
+<div class="login-card">
+
+<div class="glass-reflection"></div>
+
+<div class="logo-wrapper">
+
+<div class="logo-glow"></div>
+
+<img
+src="../images/logo/sweet-.png"
+alt="Dell Cake"
+class="logo">
+
+</div>
+
+<div class="login-title">
+
+<h1>
+
+پنل مدیریت
+
+</h1>
+
+<h2>
+
+دل‌کیک
+
+</h2>
+
+<p>
+
+ورود فقط برای مدیر سایت امکان‌پذیر است.
+
+</p>
+
+</div>
+
+<!-- Google -->
+
+<button
+id="googleLogin"
+class="google-btn">
+
+<img
+src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+alt="Google">
+
+<span>
+
+ورود با حساب Google
+
+</span>
+
+</button>
+
+<div class="login-divider">
+
+<span>
+
+ورود امن با Firebase Authentication
+
+</span>
+
+</div>
+
+<div class="security-box">
+
+<div class="security-item">
+
+<i class="fa-solid fa-shield-halved"></i>
+
+<span>
+
+احراز هویت امن
+
+</span>
+
+</div>
+
+<div class="security-item">
+
+<i class="fa-solid fa-user-lock"></i>
+
+<span>
+
+دسترسی فقط مدیر
+
+</span>
+
+</div>
+
+<div class="security-item">
+
+<i class="fa-solid fa-lock"></i>
+
+<span>
+
+رمزنگاری اطلاعات
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script
+type="module"
+src="js/login.js">
+</script>
+
 </body>
+
 </html>
