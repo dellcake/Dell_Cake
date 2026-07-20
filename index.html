@@ -3,27 +3,161 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="دل‌کیک - سفارش آنلاین کیک‌های خاص و آموزش تخصصی شیرینی‌پزی حرفه‌ای">
-<meta name="keywords" content="کیک, شیرینی, آموزش کیک پزی, سفارش کیک, دل کیک">
-<title>دل‌کیک | سفارش آنلاین و آموزش شیرینی‌پزی</title>
+<title>دل‌کیک</title>
 
-<link rel="stylesheet" href="css/academy-popup.css">
-<link rel="stylesheet" href="css/style.css">
+ <link rel="stylesheet" href="css/academy-popup.css">
+<link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="css/footer.css">
 <link rel="stylesheet" href="css/order-rules.css">
  
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700&display=swap"
+rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
     
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
 </head>
 
 <body>
 
-<div id="header-placeholder"></div>
-<div id="sidebar-placeholder"></div>
+  <header class="top-header">
+
+
+
+    <button class="menu-btn">
+
+    <i class="fas fa-bars"></i>
+
+    </button>
+
+
+
+    <a href="index.html" class="site-logo-mini">
+
+        <img src="images/logo/sweet-.png" alt="دل کیک">
+
+    </a>
+
+
+
+<a href="#"
+
+   class="academy-btn"
+
+   onclick="openAcademyPopup(); return false;">
+
+    ثبت‌نام دوره
+
+</a>
+
+
+
+</header>
+
+
+
+<div id="sideMenu" class="side-menu">
+
+
+
+    <div class="menu-profile">
+
+
+
+        <img
+
+        src="images/logo/sweet-.png"
+
+        alt="دل کیک">
+
+
+
+        <h3>دل‌کیک</h3>
+
+
+
+        <p>
+
+            شیرینی، آموزش و خلاقیت
+
+        </p>
+
+
+
+    </div>
+
+
+
+<a href="index.html">
+
+    <i class="fas fa-house"></i>
+
+    خانه
+
+</a>
+
+
+
+<a href="#"
+
+onclick="openAcademyPopup(); return false;">
+
+    <i class="fas fa-graduation-cap"></i>
+
+    آکادمی دل‌کیک
+
+</a>
+
+
+
+
+
+<a href="order-cake.html">
+
+    <i class="fas fa-cake-candles"></i>
+
+    سفارش کیک و شیرینی
+
+</a>
+
+
+
+<a href="#gallerySection">
+
+    <i class="fas fa-image"></i>
+
+    نمونه کارها
+
+</a>
+
+
+
+<a href="tel:09102768171">
+
+    <i class="fas fa-phone"></i>
+
+    تماس با ما
+
+</a>
+
+<a href="admin/admin.html">
+ <i class="fas fa-chart-bar"></i>
+
+    پنل مدیریت</a>
+
+<a href="#">
+
+    <i class="fas fa-user"></i>
+
+    ورود / عضویت
+
+</a>
+
+</div>
  
 <div class="background-hearts"></div>
 
@@ -61,51 +195,71 @@
 
       <!-- <h1>دل‌کیک</h1> -->
 
-        <!-- Dynamic Promotional Banners (Upgraded from Services Section to Premium Swiper Slider) -->
-        <section class="promo-banners-container">
-            <h2 class="section-title-premium">دنیای شیرین دل‌کیک 💕</h2>
-            <p class="section-subtitle-premium">انتخاب کنید، یاد بگیرید و لحظات خود را شیرین‌تر کنید</p>
+        <section class="services-section">
 
-            <div class="swiper promo-swiper">
-                <div class="swiper-wrapper" id="promo-banners-slider-wrapper">
-                    <!-- Loaded dynamically by js/banners.js -->
-                    <div class="swiper-slide banner-skeleton-loader"></div>
-                    <div class="swiper-slide banner-skeleton-loader"></div>
-                </div>
-                <!-- Navigation Buttons -->
-                <div class="swiper-button-next promo-swiper-next"></div>
-                <div class="swiper-button-prev promo-swiper-prev"></div>
-                <!-- Pagination -->
-                <div class="swiper-pagination promo-swiper-pagination"></div>
-            </div>
+    <a href="#" class="service-card">
+
+        <i class="fas fa-cake-candles"></i>
+
+        <h3>کیک سفارشی</h3>
+
+    </a>
+
+    <a href="#" class="service-card">
+
+        <i class="fas fa-cookie-bite"></i>
+
+        <h3>شیرینی خانگی</h3>
+
+    </a>
+
+    <a href="#gallerySection" class="service-card">
+
+        <i class="fas fa-images"></i>
+
+        <h3>نمونه کارها</h3>
+
+    </a>
+
+    <a href="#"
+   class="service-card"
+   onclick="openAcademyPopup(); return false;">
+
+    <i class="fas fa-graduation-cap"></i>
+
+    <h3>آکادمی دل‌کیک</h3>
+
+    </a>
+
         </section>
 
 
           <div class="gallery hidden" id="gallerySection">
+
              <h2>نمونه‌ای از سفارش‌های دوست‌داشتنی شما 💕</h2>
 
-             <!-- Modern Portfolio Slider -->
-             <div class="swiper portfolio-swiper">
-                <div class="swiper-wrapper" id="home-gallery-wrapper">
-                    <!-- Dynamic Items from Supabase -->
-                    <div class="swiper-slide skeleton-slide"></div>
-                    <div class="swiper-slide skeleton-slide"></div>
-                    <div class="swiper-slide skeleton-slide"></div>
-                </div>
-                <!-- Navigation -->
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-                <!-- Pagination -->
-                <div class="swiper-pagination"></div>
-             </div>
+<div class="gallery-grid">
 
-             <div class="view-all-container">
-                <a href="gallery.html" class="btn-view-all">
-                    مشاهده همه نمونه‌کارها
-                    <i class="fas fa-chevron-left"></i>
-                </a>
-             </div>
-          </div>
+<img src="images/gallery/cake1.jpg" alt="کیک">
+<img src="images/gallery/cake2.jpg" alt="کیک">
+<img src="images/gallery/cake3.jpg" alt="کیک">
+<img src="images/gallery/cake4.jpg" alt="کیک">
+<img src="images/gallery/cake5.jpg" alt="کیک">
+<img src="images/gallery/cake6.jpg" alt="کیک">
+<img src="images/gallery/cake7.jpg" alt="کیک">
+<img src="images/gallery/cake8.jpg" alt="کیک">
+<img src="images/gallery/cake9.jpg" alt="کیک">
+<img src="images/gallery/cake10.jpg" alt="کیک">
+<img src="images/gallery/cake11.jpg" alt="کیک">
+<img src="images/gallery/cake12.jpg" alt="کیک">
+<img src="images/gallery/cake13.jpg" alt="کیک">
+<img src="images/gallery/cake14.jpg" alt="کیک">
+<img src="images/gallery/cake15.jpg" alt="کیک">
+<img src="images/gallery/cake16.jpg" alt="کیک">
+
+</div>
+
+</div>
     </div>
 
 </div>
@@ -115,25 +269,22 @@
 <div class="heart h3">❤</div>
 <div class="heart h4">❤</div>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <div id="menuOverlay" class="menu-overlay"></div>
 
-    <script src="js/menu.js" defer></script>
-    <script src="js/homepage-animation.js" defer></script>
-    <script src="js/academy-popup.js" defer></script>
-    <script type="module" src="js/site-settings.js"></script>
-    <script type="module" src="js/home-gallery.js"></script>
-    <script type="module" src="js/banners.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/homepage-animation.js"></script>
+    <script src="js/academy-popup.js"></script>
 
 <div id="footer-container"></div>
 
-<script src="js/load-components.js" defer></script>
+<script src="js/load-components.js"></script>
+
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        loadComponent("header-placeholder", "components/header.html");
-        loadComponent("sidebar-placeholder", "components/sidebar.html");
-        loadComponent("footer-container", "components/footer.html");
-    });
+loadComponent(
+    "footer-container",
+    "components/footer.html"
+);
 </script>
  
 </body>
