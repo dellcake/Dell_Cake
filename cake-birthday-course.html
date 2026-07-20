@@ -9,8 +9,8 @@
 
 <title>دوره کیک تولد حرفه‌ای | دل‌کیک</title>
 
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="academy.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/academy.css">
 <link rel="stylesheet" href="css/footer.css">
 
   
@@ -21,139 +21,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 <body>
 
-  <header class="top-header">
+  <div id="header-placeholder"></div>
 
 
 
-    <button class="menu-btn">
-
-    <i class="fas fa-bars"></i>
-
-    </button>
-
-
-
-    <a href="index.html" class="site-logo-mini">
-
-        <img src="images/logo/sweet-.png" alt="دل کیک">
-
-    </a>
-
-
-
-<a href="#"
-
-   class="academy-btn"
-
-   onclick="openAcademyPopup(); return false;">
-
-    ثبت‌نام دوره
-
-</a>
-
-
-
-</header>
-
-
-
-<div id="sideMenu" class="side-menu">
-
-
-
-    <div class="menu-profile">
-
-
-
-        <img
-
-        src="images/logo/sweet-.png"
-
-        alt="دل کیک">
-
-
-
-        <h3>دل‌کیک</h3>
-
-
-
-        <p>
-
-            شیرینی، آموزش و خلاقیت
-
-        </p>
-
-
-
-    </div>
-
-
-
-<a href="index.html">
-
-    <i class="fas fa-house"></i>
-
-    خانه
-
-</a>
-
-
-
-<a href="#"
-
-onclick="openAcademyPopup(); return false;">
-
-    <i class="fas fa-graduation-cap"></i>
-
-    آکادمی دل‌کیک
-
-</a>
-
-
-
-
-
-<a href="order-cake.html">
-
-    <i class="fas fa-cake-candles"></i>
-
-    سفارش کیک و شیرینی
-
-</a>
-
-
-
-<a href="#gallerySection">
-
-    <i class="fas fa-image"></i>
-
-    نمونه کارها
-
-</a>
-
-
-
-<a href="tel:09102768171">
-
-    <i class="fas fa-phone"></i>
-
-    تماس با ما
-
-</a>
-
-
-
-<a href="#">
-
-    <i class="fas fa-user"></i>
-
-    ورود / عضویت
-
-</a>
-
-
-
-</div>
+<div id="sidebar-placeholder"></div>
   
 <div class="course-container">
     
@@ -241,7 +113,7 @@ onclick="openAcademyPopup(); return false;">
 
 <section class="teacher-box">
 
-<img src="images/teacher.jpg" alt="مدرس">
+<img src="images/hero/baker-girl.png" alt="مدرس">
 
 <h2>مدرس دوره</h2>
 
@@ -269,17 +141,23 @@ onclick="openAcademyPopup(); return false;">
 
 <div id="menuOverlay" class="menu-overlay"></div>
 
-    <script src="js/menu.js"></script>
+    <script src="js/menu.js" defer></script>
+    <script type="module" src="js/site-settings.js"></script>
+    <script type="module" src="js/academy-popup.js"></script>
 
   <div id="footer-container"></div>
 
-  <script src="js/load-components.js"></script>
+  <script src="js/load-components.js" defer></script>
+
 
 <script>
-loadComponent(
-    "footer-container",
-    "components/footer.html"
-);
+    document.addEventListener("DOMContentLoaded", () => {
+        loadComponent("header-placeholder", "components/header.html");
+        loadComponent("sidebar-placeholder", "components/sidebar.html");
+        if (document.getElementById("footer-container")) {
+            loadComponent("footer-container", "components/footer.html");
+        }
+    });
 </script>
   
 </body>
