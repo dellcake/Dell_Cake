@@ -1,18 +1,34 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const tabs = document.querySelectorAll('.tab-link');
-    const contents = document.querySelectorAll('.tab-content');
+document.addEventListener("DOMContentLoaded", () => {
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const target = tab.dataset.tab;
+    const tabButtons = document.querySelectorAll(".tab-btn");
 
-            // Remove active class from all tabs and contents
-            tabs.forEach(t => t.classList.remove('active'));
-            contents.forEach(c => c.classList.remove('active'));
+    const tabMap = {
+        cake: document.getElementById("cakeTab"),
+        cookies: document.getElementById("cookiesTab")
+    };
 
-            // Add active class to clicked tab and target content
-            tab.classList.add('active');
-            document.getElementById(target).classList.add('active');
+    function switchTab(target) {
+
+        Object.values(tabMap).forEach(tab => {
+            if (tab) tab.classList.remove("active");
         });
+
+        if (tabMap[target]) {
+            tabMap[target].classList.add("active");
+        }
+    }
+
+    tabButtons.forEach(btn => {
+
+        btn.addEventListener("click", () => {
+
+            tabButtons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            switchTab(btn.dataset.tab);
+
+        });
+
     });
+
 });

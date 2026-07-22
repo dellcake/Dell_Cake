@@ -8,7 +8,7 @@
 
 <title>قوانین ثبت سفارش | دل‌کیک</title>
 
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="css/academy-popup.css">
 <link rel="stylesheet" href="css/footer.css">
 <link rel="stylesheet" href="css/order-rules.css">
@@ -22,9 +22,40 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 <body>
 
-<div id="header-placeholder"></div>
+<header class="top-header">
 
-<div id="sidebar-placeholder"></div>
+    <button class="menu-btn">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <a href="index.html" class="site-logo-mini">
+        <img src="images/logo/sweet-.png" alt="دل کیک">
+    </a>
+
+<a href="#"
+   class="academy-btn"
+   onclick="openAcademyPopup(); return false;">
+
+    ثبت‌نام دوره
+</a>
+
+</header>
+
+<div id="sideMenu" class="side-menu">
+
+    <div class="menu-profile">
+
+        <img
+        src="images/logo/sweet-.png"
+        alt="دل کیک">
+
+        <h3>دل‌کیک</h3>
+
+        <p>
+            شیرینی، آموزش و خلاقیت
+        </p>
+
+    </div>
 
     <a href="index.html">
         <i class="fas fa-house"></i>
@@ -59,10 +90,13 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         تماس با ما
     </a>
 
-    <a href="admin/" class="admin-link" style="display: none;">
-        <i class="fas fa-chart-bar"></i>
-        پنل مدیریت
-    </a>
+    <a href="#">
+
+    <i class="fas fa-user"></i>
+
+    ورود / عضویت
+
+</a>
 
 </div>
 
@@ -230,20 +264,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 
 <div id="footer-container"></div>
 
-<script src="js/menu.js" defer></script>
-<script type="module" src="js/site-settings.js"></script>
-<script src="js/academy-popup.js" defer></script>
-<script src="js/load-components.js" defer></script>
-
+<script src="js/menu.js"></script>
+<script src="js/academy-popup.js"></script>
+<script src="js/load-components.js"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        loadComponent("header-placeholder", "components/header.html");
-        loadComponent("sidebar-placeholder", "components/sidebar.html");
-        if (document.getElementById("footer-container")) {
-            loadComponent("footer-container", "components/footer.html");
-        }
-    });
+loadComponent(
+    "footer-container",
+    "components/footer.html"
+);
 </script>
 
 </body>
