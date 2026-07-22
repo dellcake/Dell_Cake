@@ -1,0 +1,181 @@
+<div class="content-section">
+    <div class="section-header">
+        <div class="header-left">
+            <h2><i class="fas fa-graduation-cap"></i> مدیریت دوره‌ها</h2>
+            <p>افزودن، ویرایش و مدیریت دوره‌های آموزشی</p>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-primary" onclick="openCourseModal()">
+                <i class="fas fa-plus"></i> دوره جدید
+            </button>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card" style="margin-bottom: 25px;">
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <div class="form-group" style="flex: 1; min-width: 200px; margin-bottom: 0;">
+                <input type="text" class="form-control" placeholder="جستجو در عنوان یا توضیحات..." oninput="handleCourseSearch(this.value)">
+            </div>
+            <div class="form-group" style="width: 180px; margin-bottom: 0;">
+                <select class="form-control" id="filter-category" onchange="handleCourseFilter()">
+                    <option value="all">همه دسته‌ها</option>
+                </select>
+            </div>
+            <div class="form-group" style="width: 180px; margin-bottom: 0;">
+                <select class="form-control" id="filter-status" onchange="handleCourseFilter()">
+                    <option value="all">همه وضعیت‌ها</option>
+                    <option value="published">منتشر شده</option>
+                    <option value="draft">پیش‌نویس</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>تصویر</th>
+                        <th>عنوان دوره</th>
+                        <th>قیمت</th>
+                        <th>دسته‌بندی</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody id="courses-tbody">
+                    <!-- Loaded by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Course Modal -->
+<div id="course-modal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+            <h3 id="modal-title">افزودن دوره جدید</h3>
+            <span class="close" onclick="closeCourseModal()">&times;</span>
+        </div>
+        <form id="course-form" onsubmit="saveCourse(event)">
+            <input type="hidden" name="courseId">
+            <input type="hidden" name="imageUrl">
+
+            <div class="modal-body">
+                <div style="display: flex; gap: 15px; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;">
+                    <button type="button" class="btn btn-outline tab-btn active" onclick="switchFormTab('basic')">اطلاعات پایه</button>
+                    <button type="button" class="btn btn-outline tab-btn" onclick="switchFormTab('details')">محتوا و جزئیات</button>
+                    <button type="button" class="btn btn-outline tab-btn" onclick="switchFormTab('seo')">سئو (SEO)</button>
+                </div>
+
+                <!-- Tab: Basic -->
+                <div id="tab-basic" class="tab-pane active">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label>عنوان دوره</label>
+                            <input type="text" name="title" class="form-control" required oninput="generateSlug(this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>اسلاگ (URL)</label>
+                            <input type="text" name="slug" class="form-control" dir="ltr" required>
+                        </div>
+                        <div class="form-group">
+                            <label>دسته‌بندی</label>
+                            <select name="category" id="course-form-category" class="form-control">
+                                <!-- Loaded from CourseCategoriesModule -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>نام مدرس</label>
+                            <input type="text" name="teacher_name" class="form-control" value="مدیر دل‌کیک">
+                        </div>
+                        <div class="form-group">
+                            <label>قیمت اصلی (تومان)</label>
+                            <input type="number" name="price" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>تخفیف (تومان)</label>
+                            <input type="number" name="discount" class="form-control" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>سطح دوره</label>
+                            <select name="level" class="form-control">
+                                <option value="beginner">مبتدی</option>
+                                <option value="intermediate">متوسط</option>
+                                <option value="advanced">پیشرفته</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>مدت زمان</label>
+                            <input type="text" name="duration" class="form-control" placeholder="مثلا: ۵ ساعت">
+                        </div>
+                        <div class="form-group">
+                            <label>تعداد جلسات</label>
+                            <input type="number" name="sessions_count" class="form-control" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label>ترتیب نمایش</label>
+                            <input type="number" name="display_order" class="form-control" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>وضعیت انتشار</label>
+                            <select name="status" class="form-control">
+                                <option value="published">منتشر شده</option>
+                                <option value="draft">پیش‌نویس</option>
+                                <option value="archived">بایگانی شده</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Details -->
+                <div id="tab-details" class="tab-pane">
+                    <div class="form-group">
+                        <label>تصویر دوره</label>
+                        <input type="file" id="course-image-input" class="form-control" accept="image/*" onchange="previewCourseImage(event)">
+                        <div id="image-preview" style="margin-top: 10px; height: 150px; border: 2px dashed var(--border-color); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                            <span>پیش‌نمایش تصویر</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>ویدئو معرفی (لینک آپارات یا یوتیوب)</label>
+                        <input type="text" name="video_url" class="form-control" dir="ltr" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>توضیح کوتاه</label>
+                        <textarea name="short_description" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>توضیحات کامل دوره</label>
+                        <textarea name="description" class="form-control" rows="6"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>سرفصل‌ها / محتوای پکیج (هر مورد در یک خط)</label>
+                        <textarea name="packageContent" class="form-control" rows="4" placeholder="مثلا: جلسه اول: پخت پایه"></textarea>
+                    </div>
+                </div>
+
+                <!-- Tab: SEO -->
+                <div id="tab-seo" class="tab-pane">
+                    <div class="form-group">
+                        <label>عنوان سئو (Meta Title)</label>
+                        <input type="text" name="seoTitle" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>توضیحات سئو (Meta Description)</label>
+                        <textarea name="seoDescription" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeCourseModal()">انصراف</button>
+                <button type="submit" class="btn btn-primary" id="save-course-btn">ذخیره دوره</button>
+            </div>
+        </form>
+    </div>
+</div>

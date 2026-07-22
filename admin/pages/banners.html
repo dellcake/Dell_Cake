@@ -1,0 +1,240 @@
+<div class="content-section" style="max-width: 1400px; margin: auto; padding: 20px;">
+    <!-- Title Section -->
+    <div class="section-header" style="margin-bottom: 30px;">
+        <div class="header-left">
+            <h2 style="font-size: 26px; color: var(--secondary); font-weight: 800; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-ad" style="color: var(--primary);"></i> مدیریت بنرهای هوشمند صفحه اصلی
+            </h2>
+            <p style="color: var(--text-muted); margin-top: 5px;">بنرهای تبلیغاتی، کمپین‌ها و اسلایدرها را به صورت پویا با پیش‌نمایش آنی طراحی و مدیریت کنید.</p>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-primary" onclick="resetBannerForm()" style="display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-plus"></i> ایجاد بنر جدید
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Workspace Split-Screen Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 420px; gap: 30px;" class="admin-banners-split-layout">
+
+        <!-- Left Side: Banner Grid -->
+        <div class="banners-list-column">
+            <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 18px; font-weight: 700; color: var(--secondary);">بنرهای فعال و پیش‌نویس</h3>
+                <span id="banners-count-badge" class="status-badge" style="background: var(--primary-light); color: var(--primary);">۰ بنر</span>
+            </div>
+
+            <!-- Cards Container -->
+            <div id="banners-cards-grid" class="admin-banners-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+                <!-- Loaded Dynamically by BannersModule -->
+                <div style="grid-column: 1/-1; text-align: center; padding: 50px;" class="card">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 28px; color: var(--primary);"></i>
+                    <p style="margin-top: 15px; color: var(--text-muted);">در حال دریافت اطلاعات بنرها...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Live Editing Panel (Sticky Card) -->
+        <div class="banners-editor-column">
+            <div class="card sticky-editor" style="position: sticky; top: 90px; padding: 24px; border-radius: 20px;">
+                <h3 id="editor-panel-title" style="font-size: 18px; font-weight: 800; color: var(--secondary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-magic" style="color: var(--primary);"></i> طراحی بنر جدید
+                </h3>
+
+                <form id="banner-form" onsubmit="saveBanner(event)">
+                    <input type="hidden" id="bannerId" name="bannerId">
+                    <input type="hidden" id="desktopImageUrl" name="desktopImageUrl">
+                    <input type="hidden" id="mobileImageUrl" name="mobileImageUrl">
+
+                    <!-- Live Visualization Sandbox -->
+                    <div class="live-banner-sandbox" style="position: relative; border-radius: 16px; height: 160px; overflow: hidden; background: #eaeaea; margin-bottom: 20px; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; padding: 15px; background-size: cover; background-position: center; border: 1px solid var(--border-color);">
+                        <div id="live-overlay" class="live-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4); z-index: 1;"></div>
+                        <div class="live-content" style="position: relative; z-index: 2; width: 100%; text-align: right;">
+                            <span id="live-subtitle" style="font-size: 10px; color: #fff; font-weight: 700; opacity: 0.9;">زیرعنوان بنر</span>
+                            <h4 id="live-title" style="font-size: 14px; color: #fff; font-weight: 800; margin: 4px 0 8px;">عنوان اصلی بنر</h4>
+                            <span id="live-btn" class="promo-banner-btn" style="font-size: 10px; padding: 4px 12px; height: auto; align-self: flex-start;">مشاهده</span>
+                        </div>
+                    </div>
+
+                    <!-- Fields Layout -->
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div class="form-group">
+                            <label>عنوان اصلی بنر</label>
+                            <input type="text" id="banner-title-input" name="title" class="form-control" placeholder="مثال: تخفیف‌های طلایی عید نوروز" required oninput="updateLivePreview()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>زیرعنوان (توضیح کوتاه یا شعار)</label>
+                            <input type="text" id="banner-subtitle-input" name="subtitle" class="form-control" placeholder="مثال: تا ۵۰٪ تخفیف روی تمام کیک‌های خانگی" oninput="updateLivePreview()">
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 120px 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>متن دکمه</label>
+                                <input type="text" id="banner-btn-text-input" name="buttonText" class="form-control" value="مشاهده" oninput="updateLivePreview()">
+                            </div>
+                            <div class="form-group">
+                                <label>آدرس لینک مقصد (URL)</label>
+                                <input type="text" name="buttonUrl" class="form-control" placeholder="order-cake.html" dir="ltr">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>نوع چیدمان بنر (Layout Format)</label>
+                            <select name="layoutType" id="banner-layout-select" class="form-control" onchange="updateLivePreview()">
+                                <option value="half">نیم‌صفحه (جفت در دسکتاپ - ۵۰٪ عرض)</option>
+                                <option value="wide">عریض متوسط (۶۶٪ عرض)</option>
+                                <option value="square">بلوک مربعی کوچک (۳۳٪ عرض)</option>
+                                <option value="hero">اسلایدر بالایی هیرو (۱۰۰٪ عرض)</option>
+                                <option value="full">تمام‌عرض عریض بزرگ (۱۰۰٪ عرض)</option>
+                            </select>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div class="form-group">
+                                <label>ترتیب نمایش</label>
+                                <input type="number" name="displayOrder" class="form-control" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label>وضعیت انتشار</label>
+                                <select name="status" class="form-control">
+                                    <option value="active">منتشر شده (فعال)</option>
+                                    <option value="inactive">پیش‌نویس (غیرفعال)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Drag & Drop / Click Upload Workspace -->
+                        <div class="form-group">
+                            <label style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>تصویر پس‌زمینه بنر</span>
+                                <span id="upload-status-text" style="font-size: 11px; color: var(--primary); font-weight: 700;"></span>
+                            </label>
+                            <div class="banner-drag-drop-zone" id="banner-drop-zone" onclick="triggerBannerDesktopUpload()">
+                                <i class="fas fa-cloud-upload-alt" style="font-size: 28px; color: var(--primary); margin-bottom: 8px;"></i>
+                                <span>بکشید و رها کنید یا کلیک کنید</span>
+                                <p style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">فایل‌های JPG, PNG یا WebP تا حجم ۵ مگابایت</p>
+                                <input type="file" id="banner-desktop-file" accept="image/*" style="display: none;" onchange="handleBannerDesktopSelect(event)">
+                            </div>
+
+                            <!-- Custom Progress Tracker -->
+                            <div id="banner-upload-progress-container" style="display: none; margin-top: 10px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
+                                    <span id="progress-step-label">در حال آپلود...</span>
+                                    <span id="progress-percent-label">0%</span>
+                                </div>
+                                <div class="progress-bar" style="height: 6px; background: #eef2f5; border-radius: 10px; overflow: hidden;">
+                                    <div id="banner-progress-fill" style="width: 0%; height: 100%; background: var(--primary); transition: width 0.2s;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Styling Settings (Collapsible Advanced Settings) -->
+                        <div style="background: #faf8f6; padding: 12px; border-radius: 12px; border: 1px dashed var(--border-color);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <span style="font-size: 12px; font-weight: 700; color: var(--secondary);">تنظیمات پیشرفته رنگ و لایه</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label style="font-size: 11px;">پوشش تیرگی (Overlay)</label>
+                                    <input type="text" id="banner-overlay-input" name="bgOverlay" class="form-control" value="rgba(0,0,0,0.4)" style="font-size: 12px; padding: 6px;" dir="ltr" oninput="updateLivePreview()">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label style="font-size: 11px;">رنگ متن</label>
+                                    <input type="text" id="banner-color-input" name="textColor" class="form-control" value="#ffffff" style="font-size: 12px; padding: 6px;" dir="ltr" oninput="updateLivePreview()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button type="submit" id="save-banner-submit-btn" class="btn btn-primary" style="flex: 1; padding: 12px; font-weight: 700;">ذخیره اطلاعات بنر</button>
+                            <button type="button" class="btn btn-outline" onclick="resetBannerForm()" style="padding: 12px;">انصراف</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+/* Custom Interactive Styling for Premium Banners Management */
+.live-banner-sandbox {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+}
+.banner-drag-drop-zone {
+    border: 2px dashed #f0187333;
+    background: #fff9fb;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.banner-drag-drop-zone:hover, .banner-drag-drop-zone.dragover {
+    background: #fff0f4;
+    border-color: var(--primary);
+    box-shadow: 0 5px 15px rgba(240, 24, 115, 0.05);
+}
+.admin-banners-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+.premium-banner-card {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(107, 61, 42, 0.05);
+    border: 1px solid var(--border-color);
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.premium-banner-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(240, 24, 115, 0.1);
+}
+.premium-banner-card-preview {
+    position: relative;
+    height: 140px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 12px;
+}
+.premium-banner-card-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    font-size: 10px;
+    font-weight: 700;
+}
+.premium-banner-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px;
+    background: #faf8f6;
+    border-top: 1px solid var(--border-color);
+}
+.sticky-editor {
+    box-shadow: 0 15px 40px rgba(107, 61, 42, 0.06);
+}
+@media (max-width: 992px) {
+    .admin-banners-split-layout {
+        grid-template-columns: 1fr !important;
+    }
+    .sticky-editor {
+        position: static !important;
+    }
+}
+</style>

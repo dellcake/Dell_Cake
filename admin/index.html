@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت دل‌کیک</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script type="module" src="js/auth-guard.js"></script>
+</head>
+<body class="admin-body">
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    <div id="admin-layout" class="admin-container">
+        <!-- Sidebar Container -->
+        <div id="sidebar-container"></div>
+
+        <main class="main-content">
+            <!-- Header Container -->
+            <div id="header-container"></div>
+
+            <!-- Dynamic Content Area -->
+            <div id="main-view">
+                <div class="loader-wrapper">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>
