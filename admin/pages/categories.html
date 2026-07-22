@@ -1,0 +1,67 @@
+<div class="content-section">
+    <div class="section-header">
+        <div class="header-left">
+            <h2><i class="fas fa-tags"></i> مدیریت دسته‌بندی‌ها</h2>
+            <p>مدیریت دسته‌های گالری نمونه‌کارها برای فیلتر هوشمند</p>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 25px;">
+        <!-- Add Category Card -->
+        <div class="card" style="height: fit-content;">
+            <div class="card-header">
+                <h2 id="category-form-title"><i class="fas fa-plus"></i> دسته جدید</h2>
+            </div>
+            <form id="category-form" onsubmit="handleCategorySave(event)">
+                <input type="hidden" id="cat-id">
+                <div class="form-group">
+                    <label>نام دسته (نمایشی)</label>
+                    <input type="text" id="cat-name" class="form-control" placeholder="مثلاً: کیک تولد" required>
+                </div>
+                <div class="form-group">
+                    <label>نامک (Slug - انگلیسی)</label>
+                    <input type="text" id="cat-slug" class="form-control" placeholder="birthday-cakes" required>
+                </div>
+                <div class="form-group">
+                    <label>ترتیب نمایش</label>
+                    <input type="number" id="cat-order" class="form-control" value="0">
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="cat-active" style="width: 20px; height: 20px;" checked>
+                    <label for="cat-active" style="margin: 0;">دسته فعال باشد</label>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 2;">
+                        <i class="fas fa-save"></i> ذخیره دسته
+                    </button>
+                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="resetCategoryForm()">
+                        انصراف
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Categories List -->
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-list"></i> لیست دسته‌ها</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ترتیب</th>
+                            <th>نام</th>
+                            <th>نامک</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categories-grid">
+                        <!-- Loaded by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

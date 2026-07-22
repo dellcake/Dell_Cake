@@ -1,0 +1,50 @@
+<header class="top-bar">
+    <button id="mobile-menu-toggle" class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="welcome-text">
+        <h1 id="page-title">داشبورد</h1>
+        <p id="today-date">خوش آمدید به پنل مدیریت</p>
+    </div>
+
+    <div class="admin-profile-container">
+        <div class="profile-trigger" id="profile-trigger">
+            <div class="info">
+                <span class="name" id="admin-name">مدیر سایت</span>
+                <span class="role">مدیر کل</span>
+            </div>
+            <div class="avatar-wrapper">
+                <img src="../images/logo/sweet-.png" alt="مدیر" class="avatar" id="admin-avatar">
+                <div class="online-status"></div>
+            </div>
+            <i class="fas fa-chevron-down toggle-icon"></i>
+        </div>
+
+        <div class="profile-dropdown" id="profile-dropdown">
+            <div class="dropdown-header">
+                <p id="dropdown-admin-email">admin@dellcake.ir</p>
+            </div>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="#" onclick="navigateTo('settings')">
+                        <i class="fas fa-user-cog"></i>
+                        <span>تنظیمات پروفایل</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../index.html" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>مشاهده سایت</span>
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="#" id="logout-btn-dropdown" class="logout-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>خروج از حساب</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>

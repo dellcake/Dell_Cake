@@ -1,75 +1,40 @@
-import { supabase } from "./supabase-client.js";
-
 /* =========================
-   ثبت سفارش کیک
+   ثبت سفارش
 ========================= */
+import { supabase, publicSupabase } from "./supabase-client.js";
 
 const orderForm = document.getElementById("orderForm");
 
 if (orderForm) {
-    orderForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
 
-        // Show loading state on submit button
-        const submitBtn = orderForm.querySelector(".order-submit-btn");
-        const originalBtnHTML = submitBtn.innerHTML;
+    orderForm.addEventListener("submit", async function (e) {
+
+        e.preventDefault();
+        const submitBtn = e.target.querySelector('.order-submit-btn');
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ثبت سفارش...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ثبت...';
 
         try {
             await shareOrder();
         } catch (error) {
-            console.error("Order submission error:", error);
-            alert("خطایی در ثبت سفارش رخ داد. لطفا دوباره تلاش کنید.");
+            console.error("Order Error:", error);
         } finally {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnHTML;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> ثبت سفارش';
         }
     });
+
 }
 
 function getValue(id) {
+
     const el = document.getElementById(id);
     return el ? el.value.trim() : "";
-}
 
-async function getCustomerIP() {
-    try {
-        const res = await fetch("https://api.ipify.org?format=json");
-        const data = await res.json();
-        return data.ip || "";
-    } catch (e) {
-        return "";
-    }
-}
-
-async function uploadImage(fileInputId) {
-    const fileInput = document.getElementById(fileInputId);
-    const file = fileInput?.files?.[0];
-    if (!file) return "";
-    try {
-        // Try uploading to Supabase Storage if configured
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-        const { data, error } = await supabase.storage.from('orders').upload(fileName, file);
-        if (!error && data) {
-            const { data: publicData } = supabase.storage.from('orders').getPublicUrl(fileName);
-            return publicData.publicUrl || "";
-        }
-    } catch (e) {
-        console.warn("Supabase Storage upload failed, trying Base64 fallback.", e);
-    }
-
-    // Fallback: Base64 data URL
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.onerror = () => resolve("");
-        reader.readAsDataURL(file);
-    });
 }
 
 async function shareOrder() {
+
     const name = getValue("customerName");
     const phone = getValue("customerPhone");
     const type = getValue("cakeType");
@@ -80,8 +45,10 @@ async function shareOrder() {
     const desc = getValue("orderDescription");
 
     if (!name || !phone || !type) {
+
         alert("لطفاً نام، شماره تماس و نوع کیک را تکمیل کنید 💗");
         return;
+
     }
 
     const typeMap = {
@@ -91,6 +58,48 @@ async function shareOrder() {
         wedding: "کیک عروسی 👰",
         custom: "کیک سفارشی ✨"
     };
+
+    // Save to Database
+    try {
+        // Try to get real session if user is logged in
+        const { data: { session } } = await supabase.auth.getSession();
+
+        const orderDetails = {
+            weight,
+            deliveryDate: date,
+            deliveryTime: time,
+            fields: {}
+        };
+
+        const fieldConfigs = {
+            birthday: ["birthdayFlavor", "birthdayFilling", "birthdayDesign", "birthdayColors", "birthdayText"],
+            kids: ["kidFlavor", "kidFilling", "kidDesign", "kidCharacter", "kidColors"],
+            engagement: ["engagementFlavor", "engagementFilling", "engagementDesign", "engagementTheme", "engagementText"],
+            wedding: ["weddingFloors", "weddingFlavor", "weddingFilling", "weddingDesign", "weddingTheme", "weddingColors"],
+            custom: ["customTheme", "customFlavor", "customFilling", "customDesign", "customColors", "customText"]
+        };
+
+        (fieldConfigs[type] || []).forEach(fid => {
+            orderDetails.fields[fid] = getValue(fid);
+        });
+
+        // Use publicSupabase for insertion to avoid session conflicts for anonymous users
+        const { error: dbError } = await publicSupabase.from('orders').insert([{
+            user_id: session?.user?.id || null,
+            customer_name: name,
+            phone: phone,
+            product_name: typeMap[type] || type,
+            address: desc,
+            details: orderDetails,
+            status: 'new'
+        }]);
+
+        if (dbError) throw dbError;
+        console.log("✅ Order saved successfully to database.");
+    } catch (err) {
+        console.error("⚠️ Error saving order to database:", err);
+        // We still proceed with sharing even if DB fails, but we log it
+    }
 
     let message = "💗 سفارش جدید دل‌کیک\n\n";
 
@@ -102,6 +111,7 @@ async function shareOrder() {
     message += "──────────────\n";
 
     const fields = {
+
         birthday: [
             ["طعم", "birthdayFlavor"],
             ["فیلینگ", "birthdayFilling"],
@@ -109,6 +119,7 @@ async function shareOrder() {
             ["رنگ‌ها", "birthdayColors"],
             ["متن روی کیک", "birthdayText"]
         ],
+
         kids: [
             ["طعم", "kidFlavor"],
             ["فیلینگ", "kidFilling"],
@@ -116,6 +127,7 @@ async function shareOrder() {
             ["شخصیت کارتونی", "kidCharacter"],
             ["رنگ‌ها", "kidColors"]
         ],
+
         engagement: [
             ["طعم", "engagementFlavor"],
             ["فیلینگ", "engagementFilling"],
@@ -123,6 +135,7 @@ async function shareOrder() {
             ["تم رنگی", "engagementTheme"],
             ["متن روی کیک", "engagementText"]
         ],
+
         wedding: [
             ["تعداد طبقات", "weddingFloors"],
             ["طعم", "weddingFlavor"],
@@ -131,6 +144,7 @@ async function shareOrder() {
             ["تم مراسم", "weddingTheme"],
             ["رنگ‌ها", "weddingColors"]
         ],
+
         custom: [
             ["موضوع کیک", "customTheme"],
             ["طعم", "customFlavor"],
@@ -139,17 +153,19 @@ async function shareOrder() {
             ["رنگ‌ها", "customColors"],
             ["متن روی کیک", "customText"]
         ]
+
     };
 
     const selectedFields = fields[type] || [];
-    const detailsObj = {};
 
     selectedFields.forEach(([label, id]) => {
+
         const value = getValue(id);
+
         if (value) {
             message += `• ${label}: ${value}\n`;
-            detailsObj[label] = value;
         }
+
     });
 
     message += "\n🚚 اطلاعات تحویل\n";
@@ -161,78 +177,44 @@ async function shareOrder() {
 
     if (date) {
         message += `📅 تاریخ تحویل: ${date}\n`;
-    }
+}
 
     if (time) {
         message += `⏰ ساعت تحویل: ${time}\n`;
     }
 
     if (desc) {
+
         message += "\n📝 توضیحات سفارش\n";
         message += "──────────────\n";
         message += `${desc}\n`;
+
     }
 
-    // Fetch IP and upload sample image
-    const [ip, imageUrl] = await Promise.all([
-        getCustomerIP(),
-        uploadImage("cakePhoto")
-    ]);
+    const baleUrl =
+        `https://ble.ir/dellcake_pv?text=${encodeURIComponent(message)}`;
 
-    // Prepare database order payload
-    const orderPayload = {
-        customer_name: name,
-        customer_phone: phone,
-        type: "cake",
-        cake_type: type,
-        details: detailsObj,
-        weight: weight ? parseFloat(weight) : null,
-        delivery_date: date,
-        delivery_time: time,
-        description: desc,
-        image_url: imageUrl,
-        ip_address: ip,
-        status: "new"
-    };
+        openShareModal(message);
 
-    // Save to Supabase (Database Step)
-    const { error } = await supabase.from("orders").insert([orderPayload]);
-    if (error) {
-        console.error("Error saving order to Supabase:", error);
-    } else {
-        console.log("Order saved to Supabase successfully!");
-    }
-
-    // Proceed to Messengers Modal
-    openShareModal(message);
-}
+        }
 
 let currentMessage = "";
 
 /* باز کردن مودال */
-export function openShareModal(message) {
+function openShareModal(message) {
     currentMessage = message;
-    const modal = document.getElementById("shareModal");
-    if (modal) {
-        modal.classList.remove("hidden");
-    }
-}
 
-// Attach openShareModal and supabase to window so other scripts (like cookieForm) can access it
-window.openShareModal = openShareModal;
-window.supabase = supabase;
+    document.getElementById("shareModal").classList.remove("hidden");
+}
 
 /* بستن مودال */
 function closeShareModal() {
-    const modal = document.getElementById("shareModal");
-    if (modal) {
-        modal.classList.add("hidden");
-    }
+    document.getElementById("shareModal").classList.add("hidden");
 }
 
 /* تلگرام */
 function openTelegram() {
-    const url = `https://t.me/share/url?text=${encodeURIComponent(currentMessage)}`;
+    const url = `https://t.me/Dellmanager_pv?text=${encodeURIComponent(currentMessage)}`;
     window.open(url, "_blank");
 }
 
@@ -251,6 +233,7 @@ function openSMS() {
 
 /* events */
 document.addEventListener("DOMContentLoaded", () => {
+
     document.getElementById("closeShare")
         ?.addEventListener("click", closeShareModal);
 
@@ -262,4 +245,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("shareSMS")
         ?.addEventListener("click", openSMS);
+
 });
+
