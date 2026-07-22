@@ -1,60 +1,38 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 import { SUPABASE_CONFIG } from './supabase-config.js';
 
-// Validate Configuration before initializing
-const isConfigValid =
+const isConfigured =
     SUPABASE_CONFIG.url &&
-    SUPABASE_CONFIG.url.startsWith('http') &&
+    !SUPABASE_CONFIG.url.includes("your-project-id") &&
     SUPABASE_CONFIG.anonKey &&
-    !SUPABASE_CONFIG.anonKey.includes('لطفا');
+    !SUPABASE_CONFIG.anonKey.includes("your-anon-key");
 
-if (!isConfigValid) {
-    console.error(
-        "❌ خطا: اطلاعات اتصال به سوپابیس (URL یا Anon Key) تنظیم نشده است.\n" +
-        "لطفا فایل 'js/supabase-config.js' را ویرایش کرده و اطلاعات پروژه خود را وارد کنید."
+if (!isConfigured) {
+    console.warn(
+        "⚠️ هشدار دل‌کیک: تنظیمات اتصال به سوپابیس (Supabase) انجام نشده است.\n" +
+        "لطفاً فایل 'js/supabase-config.js' را با مشخصات پروژه خود ویرایش کنید."
     );
 }
 
-// Export a placeholder if config is invalid to prevent breaking imports
+// Graceful Mock for offline/unconfigured environments
 const mockQuery = {
+    insert: () => Promise.resolve({ data: [{ id: "mock-id-" + Date.now() }], error: null }),
     select: () => mockQuery,
     eq: () => mockQuery,
     order: () => mockQuery,
     limit: () => mockQuery,
-    range: () => mockQuery,
-    single: () => mockQuery,
-    // Add then/catch/finally to make it thenable (awaitable)
-    then: (onFullfilled) => onFullfilled({ data: [], error: null }),
-    catch: (onRejected) => onRejected(new Error("Supabase not configured")),
-    finally: (onFinally) => onFinally()
+    single: () => Promise.resolve({ data: null, error: null }),
+    then: (resolve) => resolve({ data: [], error: null })
 };
 
-export const supabase = isConfigValid
+export const supabase = isConfigured
     ? createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
     : {
-        auth: {
-            getSession: async () => ({ data: { session: null }, error: null }),
-            onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
-            signInWithOAuth: async () => {
-                const msg = "❌ خطا: اطلاعات Supabase تنظیم نشده است. لطفا فایل js/supabase-config.js را ویرایش کنید.";
-                alert(msg);
-                return { data: {}, error: { message: msg } };
-            },
-            signOut: async () => ({ error: null })
-        },
         from: () => mockQuery,
+        channel: () => ({
+            on: () => ({
+                subscribe: () => ({ unsubscribe: () => {} })
+            })
+        }),
         isMock: true
     };
-
-// Dedicated Public Client for Guest Access (No session persistence)
-// storageKey is added to avoid "Multiple GoTrueClient instances" warning
-export const publicSupabase = isConfigValid
-    ? createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey, {
-        auth: {
-            persistSession: false,
-            autoRefreshToken: false,
-            detectSessionInUrl: false,
-            storageKey: 'dellcake-public-session'
-        }
-    })
-    : supabase;
