@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خلاصه سفارش و پرداخت | آکادمی دل‌کیک</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/academy.css">
+    <link rel="stylesheet" href="css/footer.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Vazirmatn:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        .purchase-page-container {
+            padding-top: 130px;
+            background-color: #faf6f4;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .purchase-card-wrapper {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(107, 61, 42, 0.05);
+            border: 1px solid rgba(107, 61, 42, 0.02);
+            padding: 40px;
+        }
+
+        .purchase-header {
+            text-align: center;
+            border-bottom: 2px dashed #f6efeb;
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+        }
+
+        .purchase-header h1 {
+            font-family: 'Lalezar', cursive;
+            font-size: 2.4rem;
+            color: var(--academy-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .purchase-header h1 i {
+            color: var(--academy-primary);
+        }
+
+        .purchase-header p {
+            color: var(--academy-muted);
+            margin-top: 8px;
+            font-size: 0.95rem;
+        }
+
+        /* Course Item Detail Row */
+        .order-course-item {
+            display: flex;
+            gap: 20px;
+            background: #faf7f5;
+            padding: 20px;
+            border-radius: 18px;
+            border: 1px solid #f0e9e6;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+
+        .order-course-item img {
+            width: 120px;
+            height: 120px;
+            border-radius: 14px;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.04);
+        }
+
+        .order-course-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .order-course-details h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--academy-secondary);
+        }
+
+        .order-course-details .teacher {
+            font-size: 0.85rem;
+            color: var(--academy-muted);
+        }
+
+        .order-course-details .level {
+            display: inline-block;
+            align-self: flex-start;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 6px;
+            background: white;
+            border: 1px solid #f0e9e6;
+            color: var(--academy-primary);
+        }
+
+        /* Pricing Table */
+        .invoice-table {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 35px;
+            background: white;
+            border: 1px solid #f0e9e6;
+            border-radius: 18px;
+            padding: 25px;
+        }
+
+        .invoice-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--academy-muted);
+        }
+
+        .invoice-row.total-row {
+            border-top: 1px solid #f5ebe6;
+            padding-top: 15px;
+            margin-top: 5px;
+            color: var(--academy-secondary);
+            font-weight: 800;
+            font-size: 1.15rem;
+        }
+
+        .invoice-row.total-row .val {
+            color: var(--academy-primary);
+            font-size: 1.35rem;
+        }
+
+        .invoice-row .discount-text {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+
+        /* Actions */
+        .payment-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-pay {
+            background: var(--academy-primary);
+            color: white !important;
+            padding: 18px;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.15rem;
+            text-decoration: none;
+            box-shadow: 0 10px 25px rgba(240, 24, 115, 0.25);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn-pay:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(240, 24, 115, 0.35);
+        }
+
+        .btn-cancel {
+            text-align: center;
+            color: var(--academy-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .btn-cancel:hover {
+            color: var(--academy-primary);
+        }
+
+        /* SUCCESS POPUP MODAL */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(107, 61, 42, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .success-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .success-modal {
+            background: white;
+            max-width: 600px;
+            width: 90%;
+            border-radius: 28px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            transform: scale(0.8) translateY(30px);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(240, 24, 115, 0.05);
+        }
+
+        .success-overlay.active .success-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .success-icon-wrapper {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #e8fcf0;
+            color: #2ecc71;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            margin: 0 auto 25px;
+            animation: success-bounce 1s ease infinite alternate;
+        }
+
+        @keyframes success-bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-8px); }
+        }
+
+        .success-modal h2 {
+            font-family: 'Lalezar', cursive;
+            font-size: 2.2rem;
+            color: var(--academy-secondary);
+            margin-bottom: 15px;
+        }
+
+        .success-modal p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #4a4a4a;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        /* Large Messenger Buttons Grid */
+        .messenger-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .messenger-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white !important;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .messenger-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .messenger-btn.telegram { background: #229ED9; }
+        .messenger-btn.whatsapp { background: #25D366; }
+        .messenger-btn.bale { background: #55b244; }
+        .messenger-btn.eitaa { background: #FFA800; }
+
+        .btn-modal-close {
+            background: #faf7f5;
+            color: var(--academy-secondary);
+            padding: 12px 30px;
+            border-radius: 12px;
+            border: 1px solid #f0e9e6;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: 0.2s ease;
+        }
+
+        .btn-modal-close:hover {
+            background: #e9eae8;
+            color: var(--academy-primary);
+        }
+
+        @media (max-width: 600px) {
+            .messenger-grid { grid-template-columns: 1fr; }
+            .purchase-card-wrapper { padding: 25px 20px; }
+            .order-course-item { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <main class="purchase-page-container">
+        <div class="container">
+            <div class="purchase-card-wrapper" id="purchase-card-root">
+                <div style="text-align: center; padding: 60px 0;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--academy-primary);"></i>
+                    <p style="margin-top: 25px; font-weight: 500; color: var(--academy-secondary);">در حال پردازش خلاصه سفارش...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- SUCCESS POPUP MODAL -->
+    <div class="success-overlay" id="payment-success-overlay">
+        <div class="success-modal">
+            <div class="success-icon-wrapper">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2>پرداخت شما با موفقیت ثبت شد!</h2>
+            <p>
+                پرداخت شما ثبت شد. برای فعال‌سازی سریع دوره و دریافت لینک‌های دانلود، لطفاً رسید پرداخت خود را از طریق یکی از پیام‌رسان‌های زیر برای مدیر دل‌کیک ارسال کنید تا دوره شما فوراً فعال گردد.
+            </p>
+
+            <div class="messenger-grid" id="success-messengers">
+                <!-- Messenger buttons with configurable placeholders -->
+            </div>
+
+            <button class="btn-modal-close" id="btn-close-modal">بازگشت به آکادمی</button>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <script type="module">
+        import { publicSupabase } from './js/supabase-client.js';
+
+        // ==========================================
+        // CONFIGURABLE LINKS CONSTANT (Single Location)
+        // Edit payment link and messenger buttons here.
+        // ==========================================
+        const CONFIG = {
+            // Main Payment Gateway URL (Configurable Link)
+            paymentGatewayUrl: "https://zarinpal.com/pg/",
+
+            // Social Messenger Links for payment receipt approval (Configurable Links)
+            messengers: {
+                telegram: "https://t.me/dellcake_admin",
+                whatsapp: "https://wa.me/989123456789",
+                bale: "https://ble.ir/dellcake_admin",
+                eitaa: "https://eitaa.com/dellcake_admin"
+            }
+        };
+
+        async function initPurchasePage() {
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get('slug');
+            const status = params.get('status');
+            const returned = params.get('returned');
+
+            // 1. Check if success status parameter is present
+            if (status === 'success' || returned === 'true') {
+                showSuccessPopup();
+            }
+
+            if (!slug) {
+                window.location.href = 'academy.html';
+                return;
+            }
+
+            try {
+                // Fetch course details
+                const { data: course, error } = await publicSupabase
+                    .from('courses')
+                    .select('*')
+                    .eq('slug', slug)
+                    .single();
+
+                if (error || !course) throw new Error('Course not found');
+
+                renderOrderSummary(course);
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('purchase-card-root').innerHTML = `
+                    <div style="text-align:center; padding: 40px 0;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--academy-primary); margin-bottom: 20px;"></i>
+                        <h2 style="font-family: 'Lalezar'; color: var(--academy-secondary);">خطا در دریافت اطلاعات دوره</h2>
+                        <a href="academy.html" class="primary-btn" style="display:inline-block; margin-top:25px;">بازگشت به آکادمی</a>
+                    </div>
+                `;
+            }
+        }
+
+        function renderOrderSummary(c) {
+            const root = document.getElementById('purchase-card-root');
+            const finalPrice = c.price - (c.discount || 0);
+            const hasDiscount = c.discount > 0;
+            const discountPercent = hasDiscount ? Math.round((c.discount / c.price) * 100) : 0;
+
+            root.innerHTML = `
+                <div class="purchase-header">
+                    <h1><i class="fas fa-receipt"></i> خلاصه سفارش و خرید دوره</h1>
+                    <p>لطفاً اطلاعات سفارش خود را بررسی کرده و جهت اتصال به درگاه روی دکمه پرداخت کلیک کنید.</p>
+                </div>
+
+                <!-- Course Thumbnail & Detail card -->
+                <div class="order-course-item animate-fade-in">
+                    <img src="${c.image_url || 'images/logo/sweet-.png'}" alt="${c.title}" onerror="this.src='images/logo/sweet-.png'">
+                    <div class="order-course-details">
+                        <span class="level">${translateLevel(c.level)}</span>
+                        <h3>${c.title}</h3>
+                        <span class="teacher"><i class="fas fa-user-tie" style="color: var(--academy-primary); margin-left: 6px;"></i> مدرس: ${c.teacher_name || 'مدیر دل‌کیک'}</span>
+                    </div>
+                </div>
+
+                <!-- Invoice -->
+                <div class="invoice-table">
+                    <div class="invoice-row">
+                        <span>شهریه اصلی دوره:</span>
+                        <span>${c.price.toLocaleString('fa-IR')} تومان</span>
+                    </div>
+                    ${hasDiscount ? `
+                        <div class="invoice-row">
+                            <span>میزان تخفیف ویژه:</span>
+                            <span class="discount-text">${c.discount.toLocaleString('fa-IR')} تومان (${Number(discountPercent).toLocaleString('fa-IR')}٪-)</span>
+                        </div>
+                    ` : ''}
+                    <div class="invoice-row total-row">
+                        <span>مبلغ نهایی قابل پرداخت:</span>
+                        <span class="val">${finalPrice === 0 ? 'رایگان' : `${finalPrice.toLocaleString('fa-IR')} تومان`}</span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="payment-actions">
+                    <button class="btn-pay" id="btn-submit-payment">
+                        <i class="fas fa-shield-alt"></i> پرداخت و اتصال به درگاه ایمن
+                    </button>
+                    <a href="course-detail.html?slug=${c.slug}" class="btn-cancel">انصراف و بازگشت</a>
+                </div>
+            `;
+
+            // Click listener for gateway redirection / mock payment success simulation
+            document.getElementById('btn-submit-payment').addEventListener('click', () => {
+                if (finalPrice === 0) {
+                    // Free course bypass gateway
+                    window.location.href = window.location.pathname + `?slug=${c.slug}&status=success`;
+                } else {
+                    // Simulate routing to the configured payment gateway, and redirecting back with success params
+                    console.log("Redirecting to gateway: ", CONFIG.paymentGatewayUrl);
+
+                    // Direct simulation: wait 1 second and then redirect back with success status parameters
+                    const button = document.getElementById('btn-submit-payment');
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال انتقال به درگاه بانکی...';
+                    button.style.opacity = '0.8';
+                    button.style.pointerEvents = 'none';
+
+                    setTimeout(() => {
+                        window.location.href = window.location.pathname + `?slug=${c.slug}&status=success`;
+                    }, 1000);
+                }
+            });
+        }
+
+        function showSuccessPopup() {
+            const overlay = document.getElementById('payment-success-overlay');
+            const grid = document.getElementById('success-messengers');
+
+            // Render Messenger Buttons Dynamically from single configuration
+            grid.innerHTML = `
+                <a href="${CONFIG.messengers.telegram}" target="_blank" class="messenger-btn telegram">
+                    <i class="fab fa-telegram"></i> ارسال در تلگرام
+                </a>
+                <a href="${CONFIG.messengers.whatsapp}" target="_blank" class="messenger-btn whatsapp">
+                    <i class="fab fa-whatsapp"></i> ارسال در واتساپ
+                </a>
+                <a href="${CONFIG.messengers.bale}" target="_blank" class="messenger-btn bale">
+                    <i class="fas fa-paper-plane"></i> ارسال در بله
+                </a>
+                <a href="${CONFIG.messengers.eitaa}" target="_blank" class="messenger-btn eitaa">
+                    <i class="fas fa-comment-dots"></i> ارسال در ایتا
+                </a>
+            `;
+
+            overlay.classList.add('active');
+
+            // Close button click listener
+            document.getElementById('btn-close-modal').addEventListener('click', () => {
+                overlay.classList.remove('active');
+                window.location.href = 'academy.html';
+            });
+        }
+
+        function translateLevel(lvl) {
+            const map = { beginner: 'مبتدی', intermediate: 'متوسط', advanced: 'پیشرفته' };
+            return map[lvl] || 'متوسط';
+        }
+
+        document.addEventListener('DOMContentLoaded', initPurchasePage);
+    </script>
+
+    <script src="js/load-components.js" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            loadComponent("header-placeholder", "components/header.html");
+            loadComponent("sidebar-placeholder", "components/sidebar.html");
+            loadComponent("footer-container", "components/footer.html");
+        });
+    </script>
+</body>
+</html>

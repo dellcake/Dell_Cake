@@ -3,27 +3,350 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جزئیات دوره | آکادمی دل‌کیک</title>
+    <title>بارگذاری دوره... | آکادمی دل‌کیک</title>
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/academy.css">
     <link rel="stylesheet" href="css/footer.css">
-    <link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Vazirmatn:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <style>
-        .course-detail-page { padding-top: 120px; background: #fdfdfd; min-height: 100vh; }
-        .course-header { display: grid; grid-template-columns: 1fr 400px; gap: 40px; margin-bottom: 60px; }
-        .video-placeholder { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 20px; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
-        .video-placeholder i { color: #fff; font-size: 5rem; opacity: 0.8; cursor: pointer; transition: 0.3s; }
-        .video-placeholder i:hover { transform: scale(1.1); opacity: 1; }
-        .course-sidebar { position: sticky; top: 120px; }
-        .purchase-card { background: #fff; border-radius: 25px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border: 1px solid #f0f0f0; }
-        .syllabus-item { background: #fff; border: 1px solid #eee; padding: 15px 20px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
-        .syllabus-item i { color: var(--academy-primary); }
-        .teacher-box-v2 { display: flex; align-items: center; gap: 20px; background: var(--academy-accent); padding: 25px; border-radius: 20px; margin-top: 40px; }
-        .teacher-box-v2 img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
-        @media (max-width: 992px) {
-            .course-header { grid-template-columns: 1fr; }
-            .course-sidebar { position: static; margin-top: 40px; }
+        .course-detail-v2 {
+            padding-top: 130px;
+            background-color: #faf6f4;
+            min-height: 100vh;
+        }
+
+        /* Hero Wrapper */
+        .detail-hero-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(107, 61, 42, 0.04);
+            border: 1px solid rgba(107, 61, 42, 0.02);
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 40px;
+            margin-bottom: 40px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-left-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-left-info h1 {
+            font-family: 'Lalezar', cursive;
+            font-size: 2.8rem;
+            color: var(--academy-secondary);
+            margin: 15px 0 20px;
+            line-height: 1.3;
+        }
+
+        .hero-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 25px 0;
+            padding: 20px 0;
+            border-top: 1px solid #f6efeb;
+            border-bottom: 1px solid #f6efeb;
+        }
+
+        .meta-grid-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .meta-grid-item .icon-wrapper {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: #fff0f4;
+            color: var(--academy-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .meta-grid-item .text-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meta-grid-item .text-wrapper span {
+            font-size: 0.8rem;
+            color: var(--academy-muted);
+        }
+
+        .meta-grid-item .text-wrapper strong {
+            font-size: 0.95rem;
+            color: var(--academy-secondary);
+            font-weight: 700;
+        }
+
+        .hero-right-media {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .media-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .media-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .media-fallback-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Pricing Card */
+        .detail-purchase-box {
+            background: #faf7f5;
+            border-radius: 18px;
+            padding: 25px;
+            border: 1px solid #f0e9e6;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .purchase-price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .purchase-price-row .price-label {
+            font-weight: 700;
+            color: var(--academy-secondary);
+        }
+
+        .purchase-price-row .price-value {
+            text-align: left;
+        }
+
+        .purchase-price-row .price-value .old {
+            font-size: 0.95rem;
+            color: #b2bec3;
+            text-decoration: line-through;
+            font-weight: 500;
+        }
+
+        .purchase-price-row .price-value .current {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--academy-primary);
+        }
+
+        .purchase-price-row .price-value .current span {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .purchase-btn {
+            background: var(--academy-primary);
+            color: white !important;
+            padding: 16px;
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            box-shadow: 0 8px 25px rgba(240, 24, 115, 0.2);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: block;
+        }
+
+        .purchase-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(240, 24, 115, 0.3);
+        }
+
+        /* Two-Column Layout */
+        .detail-body-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .info-card-premium {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: var(--academy-shadow);
+            border: 1px solid rgba(107, 61, 42, 0.02);
+            margin-bottom: 30px;
+        }
+
+        .info-card-premium h2 {
+            font-family: 'Lalezar', cursive;
+            font-size: 1.8rem;
+            color: var(--academy-secondary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card-premium h2 i {
+            color: var(--academy-primary);
+        }
+
+        .info-card-premium p {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #4f4f4f;
+            text-align: justify;
+        }
+
+        /* Sidebar Widgets */
+        .sidebar-widgets-col {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .widget-premium {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--academy-shadow);
+            border: 1px solid rgba(107, 61, 42, 0.02);
+        }
+
+        .widget-premium h3 {
+            font-family: 'Lalezar', cursive;
+            font-size: 1.4rem;
+            color: var(--academy-secondary);
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f9f1ee;
+            padding-bottom: 12px;
+        }
+
+        .teacher-widget-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 15px;
+        }
+
+        .teacher-widget-box img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid var(--academy-accent);
+            object-fit: cover;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .teacher-widget-box h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--academy-secondary);
+            margin: 5px 0 2px;
+        }
+
+        .teacher-widget-box p {
+            font-size: 0.88rem;
+            color: var(--academy-muted);
+            line-height: 1.6;
+        }
+
+        /* FAQ & Related List */
+        .faq-item-premium {
+            border-bottom: 1px solid #f5ebe6;
+            padding: 20px 0;
+        }
+
+        .faq-item-premium:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .faq-item-premium h4 {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--academy-secondary);
+            margin-bottom: 8px;
+        }
+
+        .faq-item-premium p {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--academy-muted);
+        }
+
+        /* Related Mini Cards */
+        .related-mini-card {
+            display: flex;
+            gap: 15px;
+            text-decoration: none;
+            border-bottom: 1px solid #f5ebe6;
+            padding: 15px 0;
+            align-items: center;
+        }
+
+        .related-mini-card:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .related-mini-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .related-mini-info h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--academy-secondary);
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .related-mini-info .price {
+            font-size: 0.85rem;
+            color: var(--academy-primary);
+            font-weight: 700;
+        }
+
+        @media (max-width: 1024px) {
+            .detail-hero-card { grid-template-columns: 1fr; padding: 30px; }
+            .detail-body-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-left-info h1 { font-size: 2.2rem; }
+            .hero-meta-grid { grid-template-columns: 1fr; gap: 15px; }
+            .detail-hero-card { padding: 20px; }
         }
     </style>
 </head>
@@ -31,11 +354,24 @@
     <div id="header-placeholder"></div>
     <div id="sidebar-placeholder"></div>
 
-    <main class="course-detail-page container" id="course-content">
-        <!-- Loaded by JS -->
-        <div style="text-align: center; padding: 100px;">
-            <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--academy-primary);"></i>
-            <p style="margin-top: 20px;">در حال بارگذاری اطلاعات دوره...</p>
+    <main class="course-detail-v2">
+        <div class="container">
+            <!-- BREADCRUMBS -->
+            <div class="breadcrumb-container animate-fade-in">
+                <ul class="breadcrumbs" id="breadcrumbs-list">
+                    <li><a href="index.html">خانه</a></li>
+                    <li><a href="academy.html">آکادمی قنادی</a></li>
+                    <li class="active" id="breadcrumb-course-name">بارگذاری دوره...</li>
+                </ul>
+            </div>
+
+            <!-- CORE CONTENT CONTAINER -->
+            <div id="course-content-root">
+                <div style="text-align: center; padding: 120px 0;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--academy-primary);"></i>
+                    <p style="margin-top: 25px; font-weight: 500; color: var(--academy-secondary);">در حال بارگذاری اطلاعات دوره...</p>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -44,7 +380,7 @@
     <script type="module">
         import { publicSupabase } from './js/supabase-client.js';
 
-        async function loadCourse() {
+        async function initDetailPage() {
             const params = new URLSearchParams(window.location.search);
             const slug = params.get('slug');
 
@@ -54,6 +390,7 @@
             }
 
             try {
+                // Fetch course details
                 const { data: course, error } = await publicSupabase
                     .from('courses')
                     .select('*')
@@ -62,112 +399,350 @@
 
                 if (error || !course) throw new Error('Course not found');
 
-                renderCourse(course);
+                // Fetch Category Name for Breadcrumb / Info
+                let categoryName = 'آموزش تخصصی';
+                if (course.category) {
+                    const { data: catData } = await publicSupabase
+                        .from('course_categories')
+                        .select('name')
+                        .eq('slug', course.category)
+                        .maybeSingle();
+                    if (catData) categoryName = catData.name;
+                }
+
+                // Fetch Related Courses in the same category (limit 3)
+                const { data: related } = await publicSupabase
+                    .from('courses')
+                    .select('*')
+                    .eq('status', 'published')
+                    .eq('category', course.category)
+                    .neq('id', course.id)
+                    .limit(3);
+
+                // Update Breadcrumbs
+                const bcList = document.getElementById('breadcrumbs-list');
+                const bcName = document.getElementById('breadcrumb-course-name');
+                if (bcList && bcName) {
+                    bcName.textContent = course.title;
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a href="academy.html">${categoryName}</a>`;
+                    bcList.insertBefore(li, bcName);
+                }
+
+                // Inject SEO Metadata
+                injectSEOMetadata(course, categoryName);
+
+                // Render Course
+                renderCourseDetails(course, related || [], categoryName);
+
+                // Initialize Accordion
+                initAccordionLogic();
+
             } catch (err) {
-                document.getElementById('course-content').innerHTML = `
-                    <div style="text-align:center; padding: 100px;">
-                        <h2>دوره مورد نظر یافت نشد!</h2>
-                        <a href="academy.html" class="primary-btn" style="display:inline-block; margin-top:20px;">بازگشت به آکادمی</a>
+                console.error(err);
+                document.getElementById('course-content-root').innerHTML = `
+                    <div style="text-align:center; padding: 100px 20px;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--academy-primary); margin-bottom: 20px;"></i>
+                        <h2 style="font-family: 'Lalezar'; color: var(--academy-secondary);">دوره مورد نظر یافت نشد!</h2>
+                        <p style="color: var(--academy-muted); margin-top: 10px;">ممکن است این دوره حذف شده باشد یا آدرس آن تغییر کرده باشد.</p>
+                        <a href="academy.html" class="primary-btn" style="display:inline-block; margin-top:25px;">بازگشت به آکادمی</a>
                     </div>
                 `;
             }
         }
 
-        function renderCourse(c) {
+        function renderCourseDetails(c, related, catName) {
             const finalPrice = c.price - (c.discount || 0);
-            const content = document.getElementById('course-content');
+            const hasDiscount = c.discount > 0;
+            const discountPercent = hasDiscount ? Math.round((c.discount / c.price) * 100) : 0;
+            const root = document.getElementById('course-content-root');
 
-            content.innerHTML = `
-                <div class="course-header">
-                    <div class="course-info-main">
-                        <span class="academy-badge">${c.level === 'beginner' ? 'مبتدی' : c.level === 'intermediate' ? 'متوسط' : 'پیشرفته'}</span>
-                        <h1 style="font-family: 'Lalezar'; font-size: 3rem; color: var(--academy-secondary); margin-bottom: 20px;">${c.title}</h1>
-                        <p style="font-size: 1.2rem; line-height: 2; color: #555; margin-bottom: 40px;">${c.description || ''}</p>
+            // Construct Syllabus Accordion HTML
+            let syllabusHtml = '';
+            if (c.package_content && Array.isArray(c.package_content) && c.package_content.length > 0) {
+                syllabusHtml = c.package_content.map((session, i) => `
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span><i class="fas fa-play-circle" style="color: var(--academy-primary)"></i> جلسه ${Number(i+1).toLocaleString('fa-IR')}: ${session.split(':')[0] || 'موضوع جلسه'}</span>
+                            <i class="fas fa-chevron-down chevron"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <p>${session.split(':')[1] || session || 'آموزش گام به گام ویدیویی به همراه فایل و مواد اولیه مورد نیاز.'}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                syllabusHtml = '<p style="color: var(--academy-muted)">سرفصل‌های این دوره به زودی قرار خواهد گرفت.</p>';
+            }
 
-                        <div class="video-placeholder">
-                            ${c.video_url ? `<iframe src="${c.video_url}" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allowfullscreen></iframe>` : '<i class="fas fa-play-circle"></i>'}
+            // Construct Related Mini Cards HTML
+            let relatedHtml = '';
+            if (related.length > 0) {
+                relatedHtml = related.map(item => {
+                    const priceVal = item.price - (item.discount || 0);
+                    return `
+                        <a href="course-detail.html?slug=${item.slug}" class="related-mini-card">
+                            <img src="${item.image_url || 'images/logo/sweet-.png'}" alt="${item.title}" onerror="this.src='images/logo/sweet-.png'">
+                            <div class="related-mini-info">
+                                <h4>${item.title}</h4>
+                                <div class="price">${priceVal === 0 ? 'رایگان' : `${priceVal.toLocaleString('fa-IR')} تومان`}</div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            } else {
+                relatedHtml = '<p style="font-size:0.9rem; color: var(--academy-muted)">دوره مرتبط دیگری در این دسته یافت نشد.</p>';
+            }
+
+            root.innerHTML = `
+                <!-- 1. HERO CARD -->
+                <section class="detail-hero-card">
+                    <div class="hero-left-info animate-fade-in">
+                        <span class="academy-badge">✨ آکادمی تخصصی دل‌کیک</span>
+                        <h1>${c.title}</h1>
+                        <p style="font-size: 1.1rem; line-height: 1.8; color: var(--academy-muted); margin-bottom: 25px;">
+                            ${c.short_description || 'یک آموزش جامع و کاملاً ویدیویی ویژه علاقه‌مندانی که می‌خواهند پخت انواع کیک و دکوراسیون شیرینی را به صورت حرفه‌ای یاد بگیرند.'}
+                        </p>
+
+                        <!-- Meta Info Grid -->
+                        <div class="hero-meta-grid">
+                            <div class="meta-grid-item">
+                                <div class="icon-wrapper"><i class="fas fa-graduation-cap"></i></div>
+                                <div class="text-wrapper">
+                                    <span>سطح آموزش</span>
+                                    <strong>${translateLevel(c.level)}</strong>
+                                </div>
+                            </div>
+                            <div class="meta-grid-item">
+                                <div class="icon-wrapper"><i class="fas fa-clock"></i></div>
+                                <div class="text-wrapper">
+                                    <span>مدت زمان</span>
+                                    <strong>${c.duration || '۵ ساعت'}</strong>
+                                </div>
+                            </div>
+                            <div class="meta-grid-item">
+                                <div class="icon-wrapper"><i class="fas fa-play-circle"></i></div>
+                                <div class="text-wrapper">
+                                    <span>تعداد جلسات</span>
+                                    <strong>${c.sessions_count || 1} جلسه</strong>
+                                </div>
+                            </div>
                         </div>
 
-                        <div style="margin-top: 60px;">
-                            <h2 style="font-family: 'Lalezar'; color: var(--academy-secondary); margin-bottom: 25px;">سرفصل‌های دوره</h2>
-                            <div class="syllabus-list">
-                                ${c.package_content ? c.package_content.map((item, i) => `
-                                    <div class="syllabus-item">
-                                        <strong>${i+1}</strong>
-                                        <span>${item}</span>
-                                        <i class="fas fa-lock" style="margin-right: auto; opacity: 0.3;"></i>
+                        <!-- Price & Purchase Widget -->
+                        <div class="detail-purchase-box">
+                            <div class="purchase-price-row">
+                                <span class="price-label"><i class="fas fa-tag"></i> شهریه ثبت‌نام دوره:</span>
+                                <div class="price-value">
+                                    ${hasDiscount ? `<div class="old">${c.price.toLocaleString('fa-IR')} تومان</div>` : ''}
+                                    <div class="current">
+                                        ${finalPrice === 0 ? 'رایگان' : `${finalPrice.toLocaleString('fa-IR')} <span>تومان</span>`}
                                     </div>
-                                `).join('') : '<p>سرفصلی ثبت نشده است.</p>'}
+                                </div>
+                            </div>
+                            <a href="course-purchase.html?slug=${c.slug}" class="purchase-btn">
+                                <i class="fas fa-shopping-cart" style="margin-left: 8px;"></i> ثبت‌نام و خرید آنلاین دوره
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 2. HERO RIGHT MEDIA -->
+                    <div class="hero-right-media">
+                        <div class="media-container">
+                            ${c.video_url ? `
+                                <iframe src="${c.video_url}" allowfullscreen></iframe>
+                            ` : `
+                                <img src="${c.image_url || 'images/logo/sweet-.png'}" class="media-fallback-img" alt="${c.title}" onerror="this.src='images/logo/sweet-.png'">
+                            `}
+                        </div>
+                        <div style="background:#fff4f7; padding:15px; border-radius:12px; border:1px solid #fbdce5; font-size:0.85rem; color:var(--academy-primary); display:flex; align-items:center; gap:8px;">
+                            <i class="fas fa-info-circle"></i>
+                            <span>شما بلافاصله پس از پرداخت به لینک‌های دانلود و تماشای جلسات دسترسی پیدا خواهید کرد.</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. TWO COLUMN BODY LAYOUT -->
+                <div class="detail-body-grid">
+                    <!-- Left Primary Col -->
+                    <div class="body-primary-col">
+                        <!-- Description -->
+                        <article class="info-card-premium">
+                            <h2><i class="fas fa-book-open"></i> توضیحات تکمیلی دوره</h2>
+                            <p>${c.description || 'توضیحات تکمیلی این دوره به زودی منتشر خواهد شد.'}</p>
+                        </article>
+
+                        <!-- Accordion Syllabus -->
+                        <div class="info-card-premium">
+                            <h2><i class="fas fa-list-ol"></i> سرفصل‌های آموزشی دوره</h2>
+                            <p style="font-size:0.95rem; color: var(--academy-muted); margin-bottom: 20px;">
+                                برای مشاهده جزئیات هر جلسه روی عنوان آن کلیک کنید:
+                            </p>
+                            <div class="syllabus-accordion">
+                                ${syllabusHtml}
                             </div>
                         </div>
 
-                        <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div class="info-card" style="background: #fcfcfc; padding: 20px; border-radius: 15px; border: 1px solid #f0f0f0;">
-                                <h4 style="color: var(--academy-primary); margin-bottom: 10px;"><i class="fas fa-check-circle"></i> پیش‌نیازها</h4>
-                                <p style="font-size: 0.9rem; color: #666;">علاقه به قنادی و داشتن ابزار اولیه (بسته به نوع دوره)</p>
+                        <!-- FAQ -->
+                        <div class="info-card-premium">
+                            <h2><i class="fas fa-question-circle"></i> سوالات متداول دانشجویان</h2>
+                            <div class="faq-item-premium">
+                                <h4>آیا دسترسی به جلسات دائمی است؟</h4>
+                                <p>بله، پس از ثبت‌نام در دوره دسترسی شما به تمامی ویدیوها و فایل‌های دوره مادام‌العمر و دائمی خواهد بود.</p>
                             </div>
-                            <div class="info-card" style="background: #fcfcfc; padding: 20px; border-radius: 15px; border: 1px solid #f0f0f0;">
-                                <h4 style="color: var(--academy-primary); margin-bottom: 10px;"><i class="fas fa-users"></i> مخاطبین دوره</h4>
-                                <p style="font-size: 0.9rem; color: #666;">علاقمندان به کسب درآمد از قنادی و بانوان خانه‌دار</p>
+                            <div class="faq-item-premium">
+                                <h4>آیا این دوره پشتیبانی دارد؟</h4>
+                                <p>بله، تمامی دوره‌ها دارای پشتیبانی مستقیم مدرس از طریق تلگرام و واتساپ هستند و شما می‌توانید سوالات خود را بپرسید.</p>
                             </div>
-                        </div>
-
-                        <div style="margin-top: 60px;">
-                            <h2 style="font-family: 'Lalezar'; color: var(--academy-secondary); margin-bottom: 25px;">سوالات متداول</h2>
-                            <div class="faq-item" style="border-bottom: 1px solid #eee; padding: 15px 0;">
-                                <h4 style="margin-bottom: 10px;">آیا پس از پایان دوره مدرک اعطا می‌شود؟</h4>
-                                <p style="font-size: 0.9rem; color: #777;">بله، پس از ارسال نمونه‌کارها مدرک داخلی آکادمی دل‌کیک اعطا خواهد شد.</p>
-                            </div>
-                            <div class="faq-item" style="border-bottom: 1px solid #eee; padding: 15px 0;">
-                                <h4 style="margin-bottom: 10px;">دسترسی به ویدئوها دائمی است؟</h4>
-                                <p style="font-size: 0.9rem; color: #777;">بله، شما محدودیت زمانی برای مشاهده آموزش‌ها ندارید.</p>
-                            </div>
-                        </div>
-
-                        <div class="teacher-box-v2">
-                            <img src="images/logo/sweet-.png" alt="Teacher">
-                            <div>
-                                <h3 style="margin-bottom: 5px;">${c.teacher_name || 'مدیر دل‌کیک'}</h3>
-                                <p style="font-size: 0.9rem; opacity: 0.7;">مدرس قنادی و دکوراتوری کیک</p>
+                            <div class="faq-item-premium">
+                                <h4>آیا پس از دوره مدرک دریافت می‌کنیم؟</h4>
+                                <p>بله، پس از اتمام پخت و فرستادن تصاویر نمونه کارها، مدرک داخلی افتخاری آکادمی دل‌کیک برای شما صادر خواهد شد.</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="course-sidebar">
-                        <div class="purchase-card">
-                            <img src="${c.image_url}" style="width: 100%; border-radius: 15px; margin-bottom: 25px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                                <span style="font-weight: 700; color: #555;">قیمت دوره:</span>
-                                <div style="text-align: left;">
-                                    ${c.discount > 0 ? `<div style="text-decoration: line-through; color: #ccc; font-size: 0.9rem;">${c.price.toLocaleString('fa-IR')}</div>` : ''}
-                                    <div style="font-size: 1.8rem; font-weight: 800; color: var(--academy-primary);">${finalPrice.toLocaleString('fa-IR')} <small style="font-size: 0.8rem;">تومان</small></div>
-                                </div>
+                    <!-- Right Secondary Col (Sidebar Widgets) -->
+                    <div class="sidebar-widgets-col">
+                        <!-- Teacher Widget -->
+                        <div class="widget-premium">
+                            <h3><i class="fas fa-user-tie"></i> مدرس دوره</h3>
+                            <div class="teacher-widget-box">
+                                <img src="images/logo/sweet-.png" alt="Teacher" onerror="this.src='images/logo/sweet-.png'">
+                                <h4>${c.teacher_name || 'مدیر دل‌کیک'}</h4>
+                                <p>کارآفرین، قناد و مدرس برتر دکوراسیون و پخت انواع کیک با بیش از ۷ سال تجربه درخشان در تدریس شیرینی‌پزی.</p>
                             </div>
+                        </div>
 
-                            <ul style="list-style: none; margin-bottom: 30px;">
-                                <li style="padding: 10px 0; border-bottom: 1px solid #f5f5f5; display: flex; justify-content: space-between;">
-                                    <span><i class="fas fa-clock" style="color: var(--academy-primary);"></i> مدت زمان:</span>
-                                    <span>${c.duration || 'نامشخص'}</span>
-                                </li>
-                                <li style="padding: 10px 0; border-bottom: 1px solid #f5f5f5; display: flex; justify-content: space-between;">
-                                    <span><i class="fas fa-play-circle" style="color: var(--academy-primary);"></i> تعداد جلسات:</span>
-                                    <span>${c.sessions_count || 1} جلسه</span>
-                                </li>
-                                <li style="padding: 10px 0; display: flex; justify-content: space-between;">
-                                    <span><i class="fas fa-headset" style="color: var(--academy-primary);"></i> پشتیبانی:</span>
-                                    <span>دائمی</span>
-                                </li>
-                            </ul>
-
-                            <button class="primary-btn" style="width: 100%; border: none; cursor: pointer; font-size: 1.1rem;">ثبت‌نام در دوره</button>
-                            <p style="text-align: center; font-size: 0.8rem; margin-top: 15px; color: #888;">تضمین بازگشت وجه در صورت نارضایتی</p>
+                        <!-- Related Courses Widget -->
+                        <div class="widget-premium">
+                            <h3><i class="fas fa-graduation-cap"></i> دوره‌های مرتبط</h3>
+                            <div style="display: flex; flex-direction: column;">
+                                ${relatedHtml}
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        document.addEventListener('DOMContentLoaded', loadCourse);
+        function translateLevel(lvl) {
+            const map = { beginner: 'مبتدی', intermediate: 'متوسط', advanced: 'پیشرفته' };
+            return map[lvl] || 'متوسط';
+        }
+
+        function initAccordionLogic() {
+            const headers = document.querySelectorAll('.accordion-header');
+            headers.forEach(header => {
+                header.addEventListener('click', () => {
+                    const item = header.parentElement;
+                    const isActive = item.classList.contains('active');
+
+                    // Collapse all items first
+                    document.querySelectorAll('.accordion-item').forEach(i => {
+                        i.classList.remove('active');
+                        i.querySelector('.accordion-content').style.maxHeight = null;
+                    });
+
+                    // Expand clicked if it wasn't active
+                    if (!isActive) {
+                        item.classList.add('active');
+                        const content = item.querySelector('.accordion-content');
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    }
+                });
+            });
+        }
+
+        function injectSEOMetadata(c, catName) {
+            // Update Page Title
+            document.title = `${c.seo_title || c.title} | آکادمی دل‌کیک`;
+
+            // Meta Description
+            let metaDesc = document.querySelector('meta[name="description"]');
+            if (!metaDesc) {
+                metaDesc = document.createElement('meta');
+                metaDesc.name = "description";
+                document.head.appendChild(metaDesc);
+            }
+            metaDesc.content = c.seo_description || c.short_description || `آموزش حرفه‌ای و تخصصی ${c.title} در آکادمی قنادی دل‌کیک.`;
+
+            // Open Graph Title
+            let ogTitle = document.querySelector('meta[property="og:title"]');
+            if (!ogTitle) {
+                ogTitle = document.createElement('meta');
+                ogTitle.setAttribute('property', 'og:title');
+                document.head.appendChild(ogTitle);
+            }
+            ogTitle.content = c.title;
+
+            // Open Graph Description
+            let ogDesc = document.querySelector('meta[property="og:description"]');
+            if (!ogDesc) {
+                ogDesc = document.createElement('meta');
+                ogDesc.setAttribute('property', 'og:description');
+                document.head.appendChild(ogDesc);
+            }
+            ogDesc.content = c.short_description || '';
+
+            // Open Graph Image
+            let ogImg = document.querySelector('meta[property="og:image"]');
+            if (!ogImg) {
+                ogImg = document.createElement('meta');
+                ogImg.setAttribute('property', 'og:image');
+                document.head.appendChild(ogImg);
+            }
+            ogImg.content = c.image_url || '';
+
+            // Open Graph URL
+            let ogUrl = document.querySelector('meta[property="og:url"]');
+            if (!ogUrl) {
+                ogUrl = document.createElement('meta');
+                ogUrl.setAttribute('property', 'og:url');
+                document.head.appendChild(ogUrl);
+            }
+            ogUrl.content = window.location.href;
+
+            // Canonical
+            let canonical = document.querySelector('link[rel="canonical"]');
+            if (!canonical) {
+                canonical = document.createElement('link');
+                canonical.setAttribute('rel', 'canonical');
+                document.head.appendChild(canonical);
+            }
+            canonical.href = window.location.href;
+
+            // Schema JSON-LD Course
+            const schemaId = 'jsonld-course-schema';
+            let schemaScript = document.getElementById(schemaId);
+            if (!schemaScript) {
+                schemaScript = document.createElement('script');
+                schemaScript.id = schemaId;
+                schemaScript.type = 'application/ld+json';
+                document.head.appendChild(schemaScript);
+            }
+
+            const schemaJSON = {
+                "@context": "https://schema.org",
+                "@type": "Course",
+                "name": c.title,
+                "description": c.short_description || c.description,
+                "provider": {
+                    "@type": "Organization",
+                    "name": "آکادمی قنادی دل‌کیک",
+                    "sameAs": window.location.origin
+                },
+                "image": c.image_url,
+                "offers": {
+                    "@type": "Offer",
+                    "price": c.price - (c.discount || 0),
+                    "priceCurrency": "IRR",
+                    "category": catName
+                }
+            };
+            schemaScript.text = JSON.stringify(schemaJSON);
+        }
+
+        document.addEventListener('DOMContentLoaded', initDetailPage);
     </script>
 
     <script src="js/load-components.js" defer></script>
