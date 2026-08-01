@@ -404,11 +404,12 @@
     <script type="module">
         import { publicSupabase } from './js/supabase-client.js';
 
-        // Helper to resolve handle correctly
-        function resolveSocialHandle(handle, baseUrl) {
-            if (!handle) return '#';
-            const cleanHandle = handle.replace('@', '').replace(baseUrl, '').split('/').pop();
-            return `${baseUrl}${cleanHandle}`;
+        // Helper to resolve handle correctly with precise custom default fallbacks
+        function resolveSocialHandle(handle, baseUrl, defaultUrl) {
+            if (!handle) return defaultUrl;
+            // Clean dynamic parameters
+            const cleanHandle = handle.replace('@', '').replace(baseUrl, '').split('/').pop().trim();
+            return cleanHandle ? `${baseUrl}${cleanHandle}` : defaultUrl;
         }
 
         async function fetchSocialMediaSettings() {
@@ -423,9 +424,9 @@
                 if (data && data.value) {
                     const config = data.value;
                     return {
-                        telegram: resolveSocialHandle(config.telegram, 'https://t.me/'),
-                        bale: resolveSocialHandle(config.bale, 'https://ble.ir/'),
-                        instagram: resolveSocialHandle(config.instagram, 'https://instagram.com/')
+                        telegram: resolveSocialHandle(config.telegram, 'https://t.me/', 'https://t.me/Dellmanager_pv'),
+                        bale: resolveSocialHandle(config.bale, 'https://ble.ir/', 'https://ble.ir/dellcake_pv'),
+                        instagram: resolveSocialHandle(config.instagram, 'https://instagram.com/', 'https://instagram.com/dell_cake_')
                     };
                 }
             } catch (err) {
@@ -433,9 +434,9 @@
             }
             // Fallback default handles if missing
             return {
-                telegram: "https://t.me/dellcake_admin",
-                bale: "https://ble.ir/dellcake_admin",
-                instagram: "https://instagram.com/dellcake_admin"
+                telegram: "https://t.me/Dellmanager_pv",
+                bale: "https://ble.ir/dellcake_pv",
+                instagram: "https://instagram.com/dell_cake_"
             };
         }
 
@@ -557,7 +558,7 @@
                     <i class="fab fa-telegram"></i> Telegram
                 </a>
                 <a href="${links.bale}" target="_blank" class="messenger-btn bale">
-                    <i class="fas fa-paper-plane"></i> Bale
+                    <img src="images/icons/bale.svg" alt="بله" style="width: 24px; height: 24px; filter: brightness(0) invert(1);"> Bale
                 </a>
                 <a href="${links.instagram}" target="_blank" class="messenger-btn instagram">
                     <i class="fab fa-instagram"></i> Instagram
