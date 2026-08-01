@@ -198,6 +198,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
 }
 
 .hero-img-backdrop {
@@ -212,7 +215,9 @@ body {
 
 .hero-artist-img {
     width: 100%;
+    height: auto;
     max-width: 440px;
+    display: block;
     z-index: 1;
     filter: drop-shadow(0 20px 45px rgba(107, 61, 42, 0.15));
     animation: slow-bounce-hero 6s ease-in-out infinite;
