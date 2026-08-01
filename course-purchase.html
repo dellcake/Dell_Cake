@@ -57,7 +57,7 @@
             font-size: 0.95rem;
         }
 
-        /* Course Item Detail Row */
+        /* Course Item Detail Card */
         .order-course-item {
             display: flex;
             gap: 20px;
@@ -106,7 +106,7 @@
             color: var(--academy-primary);
         }
 
-        /* Pricing Table */
+        /* Invoice Grid */
         .invoice-table {
             display: flex;
             flex-direction: column;
@@ -145,7 +145,7 @@
             font-weight: 700;
         }
 
-        /* Actions */
+        /* Pay button triggers */
         .payment-actions {
             display: flex;
             flex-direction: column;
@@ -190,7 +190,7 @@
             color: var(--academy-primary);
         }
 
-        /* SUCCESS POPUP MODAL */
+        /* SUCCESS POPUP MODAL V3 - MOBILE OPTIMIZED */
         .success-overlay {
             position: fixed;
             top: 0;
@@ -199,13 +199,14 @@
             height: 100%;
             background: rgba(107, 61, 42, 0.6);
             backdrop-filter: blur(5px);
-            z-index: 1000;
+            z-index: 1010;
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.4s ease;
+            padding: 20px;
         }
 
         .success-overlay.active {
@@ -215,77 +216,105 @@
 
         .success-modal {
             background: white;
-            max-width: 600px;
-            width: 90%;
+            max-width: 550px;
+            width: 100%;
+            max-height: calc(100vh - 40px);
             border-radius: 28px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.15);
-            padding: 40px;
-            text-align: center;
+            box-shadow: 0 25px 60px rgba(107, 61, 42, 0.15);
+            display: flex;
+            flex-direction: column;
             position: relative;
             transform: scale(0.8) translateY(30px);
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 1px solid rgba(240, 24, 115, 0.05);
+            overflow: hidden;
         }
 
         .success-overlay.active .success-modal {
             transform: scale(1) translateY(0);
         }
 
+        .success-modal-header {
+            padding: 30px 30px 15px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+
         .success-icon-wrapper {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             background: #e8fcf0;
             color: #2ecc71;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.8rem;
-            margin: 0 auto 25px;
+            font-size: 2.5rem;
+            margin: 0 auto 15px;
             animation: success-bounce 1s ease infinite alternate;
         }
 
         @keyframes success-bounce {
             from { transform: translateY(0); }
-            to { transform: translateY(-8px); }
+            to { transform: translateY(-6px); }
         }
 
-        .success-modal h2 {
+        .success-modal-header h2 {
             font-family: 'Lalezar', cursive;
-            font-size: 2.2rem;
+            font-size: 2rem;
             color: var(--academy-secondary);
-            margin-bottom: 15px;
+            margin: 0;
         }
 
-        .success-modal p {
-            font-size: 1.05rem;
+        .success-modal-body {
+            padding: 15px 30px;
+            overflow-y: auto;
+            flex-grow: 1;
+            text-align: center;
+            -webkit-overflow-scrolling: touch; /* Momentum scrolling on iOS */
+        }
+
+        .success-modal-body p {
+            font-size: 1rem;
             line-height: 1.8;
             color: #4a4a4a;
-            margin-bottom: 30px;
-            padding: 0 10px;
+            margin-bottom: 25px;
         }
 
-        /* Large Messenger Buttons Grid */
+        .success-modal-footer {
+            padding: 20px 30px 30px;
+            border-top: 1px solid #f9f1ee;
+            background: #faf7f5;
+            flex-shrink: 0;
+            text-align: center;
+        }
+
+        /* Messenger Grid - Telegram, Bale, Instagram */
         .messenger-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 5px;
         }
 
         .messenger-btn {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            padding: 16px;
+            gap: 8px;
+            padding: 14px 10px;
             border-radius: 16px;
             text-decoration: none;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.88rem;
             color: white !important;
             transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .messenger-btn i {
+            font-size: 1.5rem;
         }
 
         .messenger-btn:hover {
@@ -294,31 +323,35 @@
         }
 
         .messenger-btn.telegram { background: #229ED9; }
-        .messenger-btn.whatsapp { background: #25D366; }
         .messenger-btn.bale { background: #55b244; }
-        .messenger-btn.eitaa { background: #FFA800; }
+        .messenger-btn.instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 
         .btn-modal-close {
-            background: #faf7f5;
-            color: var(--academy-secondary);
-            padding: 12px 30px;
+            background: var(--academy-secondary);
+            color: white !important;
+            padding: 12px 40px;
             border-radius: 12px;
-            border: 1px solid #f0e9e6;
+            border: none;
             cursor: pointer;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 1rem;
             transition: 0.2s ease;
+            box-shadow: 0 4px 10px rgba(107, 61, 42, 0.15);
+            width: 100%;
         }
 
         .btn-modal-close:hover {
-            background: #e9eae8;
-            color: var(--academy-primary);
+            background: var(--academy-primary);
+            box-shadow: 0 8px 20px rgba(240, 24, 115, 0.2);
         }
 
         @media (max-width: 600px) {
             .messenger-grid { grid-template-columns: 1fr; }
-            .purchase-card-wrapper { padding: 25px 20px; }
-            .order-course-item { flex-direction: column; text-align: center; }
+            .messenger-btn { flex-direction: row; gap: 12px; padding: 14px; }
+            .success-modal { padding: 0; }
+            .success-modal-header { padding: 25px 20px 10px; }
+            .success-modal-body { padding: 10px 20px; }
+            .success-modal-footer { padding: 15px 20px 25px; }
         }
     </style>
 </head>
@@ -340,19 +373,29 @@
     <!-- SUCCESS POPUP MODAL -->
     <div class="success-overlay" id="payment-success-overlay">
         <div class="success-modal">
-            <div class="success-icon-wrapper">
-                <i class="fas fa-check"></i>
-            </div>
-            <h2>پرداخت شما با موفقیت ثبت شد!</h2>
-            <p>
-                پرداخت شما ثبت شد. برای فعال‌سازی سریع دوره و دریافت لینک‌های دانلود، لطفاً رسید پرداخت خود را از طریق یکی از پیام‌رسان‌های زیر برای مدیر دل‌کیک ارسال کنید تا دوره شما فوراً فعال گردد.
-            </p>
-
-            <div class="messenger-grid" id="success-messengers">
-                <!-- Messenger buttons with configurable placeholders -->
+            <!-- Fixed Header -->
+            <div class="success-modal-header">
+                <div class="success-icon-wrapper">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h2>پرداخت شما با موفقیت ثبت شد!</h2>
             </div>
 
-            <button class="btn-modal-close" id="btn-close-modal">بازگشت به آکادمی</button>
+            <!-- Scrollable Body -->
+            <div class="success-modal-body">
+                <p>
+                    پرداخت شما ثبت شد. برای فعال‌سازی سریع دوره و دریافت لینک‌های دانلود، لطفاً رسید پرداخت خود را از طریق یکی از پیام‌رسان‌های زیر برای مدیر دل‌کیک ارسال کنید تا دوره شما فوراً فعال گردد.
+                </p>
+
+                <div class="messenger-grid" id="success-messengers">
+                    <!-- Loaded dynamically from Supabase site_settings -->
+                </div>
+            </div>
+
+            <!-- Fixed Footer -->
+            <div class="success-modal-footer">
+                <button class="btn-modal-close" id="btn-close-modal">بازگشت به آکادمی</button>
+            </div>
         </div>
     </div>
 
@@ -361,22 +404,40 @@
     <script type="module">
         import { publicSupabase } from './js/supabase-client.js';
 
-        // ==========================================
-        // CONFIGURABLE LINKS CONSTANT (Single Location)
-        // Edit payment link and messenger buttons here.
-        // ==========================================
-        const CONFIG = {
-            // Main Payment Gateway URL (Configurable Link)
-            paymentGatewayUrl: "https://zarinpal.com/pg/",
+        // Helper to resolve handle correctly
+        function resolveSocialHandle(handle, baseUrl) {
+            if (!handle) return '#';
+            const cleanHandle = handle.replace('@', '').replace(baseUrl, '').split('/').pop();
+            return `${baseUrl}${cleanHandle}`;
+        }
 
-            // Social Messenger Links for payment receipt approval (Configurable Links)
-            messengers: {
-                telegram: "https://t.me/dellcake_admin",
-                whatsapp: "https://wa.me/989123456789",
-                bale: "https://ble.ir/dellcake_admin",
-                eitaa: "https://eitaa.com/dellcake_admin"
+        async function fetchSocialMediaSettings() {
+            try {
+                const { data, error } = await publicSupabase
+                    .from('site_settings')
+                    .select('value')
+                    .eq('key', 'global_settings')
+                    .single();
+
+                if (error) throw error;
+                if (data && data.value) {
+                    const config = data.value;
+                    return {
+                        telegram: resolveSocialHandle(config.telegram, 'https://t.me/'),
+                        bale: resolveSocialHandle(config.bale, 'https://ble.ir/'),
+                        instagram: resolveSocialHandle(config.instagram, 'https://instagram.com/')
+                    };
+                }
+            } catch (err) {
+                console.error("Error fetching social media settings:", err);
             }
-        };
+            // Fallback default handles if missing
+            return {
+                telegram: "https://t.me/dellcake_admin",
+                bale: "https://ble.ir/dellcake_admin",
+                instagram: "https://instagram.com/dellcake_admin"
+            };
+        }
 
         async function initPurchasePage() {
             const params = new URLSearchParams(window.location.search);
@@ -470,13 +531,8 @@
             // Click listener for gateway redirection / mock payment success simulation
             document.getElementById('btn-submit-payment').addEventListener('click', () => {
                 if (finalPrice === 0) {
-                    // Free course bypass gateway
                     window.location.href = window.location.pathname + `?slug=${c.slug}&status=success`;
                 } else {
-                    // Simulate routing to the configured payment gateway, and redirecting back with success params
-                    console.log("Redirecting to gateway: ", CONFIG.paymentGatewayUrl);
-
-                    // Direct simulation: wait 1 second and then redirect back with success status parameters
                     const button = document.getElementById('btn-submit-payment');
                     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال انتقال به درگاه بانکی...';
                     button.style.opacity = '0.8';
@@ -489,23 +545,22 @@
             });
         }
 
-        function showSuccessPopup() {
+        async function showSuccessPopup() {
             const overlay = document.getElementById('payment-success-overlay');
             const grid = document.getElementById('success-messengers');
 
-            // Render Messenger Buttons Dynamically from single configuration
+            const links = await fetchSocialMediaSettings();
+
+            // Render Messenger Buttons Dynamically from single configuration (Telegram, Bale, Instagram)
             grid.innerHTML = `
-                <a href="${CONFIG.messengers.telegram}" target="_blank" class="messenger-btn telegram">
-                    <i class="fab fa-telegram"></i> ارسال در تلگرام
+                <a href="${links.telegram}" target="_blank" class="messenger-btn telegram">
+                    <i class="fab fa-telegram"></i> Telegram
                 </a>
-                <a href="${CONFIG.messengers.whatsapp}" target="_blank" class="messenger-btn whatsapp">
-                    <i class="fab fa-whatsapp"></i> ارسال در واتساپ
+                <a href="${links.bale}" target="_blank" class="messenger-btn bale">
+                    <i class="fas fa-paper-plane"></i> Bale
                 </a>
-                <a href="${CONFIG.messengers.bale}" target="_blank" class="messenger-btn bale">
-                    <i class="fas fa-paper-plane"></i> ارسال در بله
-                </a>
-                <a href="${CONFIG.messengers.eitaa}" target="_blank" class="messenger-btn eitaa">
-                    <i class="fas fa-comment-dots"></i> ارسال در ایتا
+                <a href="${links.instagram}" target="_blank" class="messenger-btn instagram">
+                    <i class="fab fa-instagram"></i> Instagram
                 </a>
             `;
 
@@ -526,6 +581,7 @@
         document.addEventListener('DOMContentLoaded', initPurchasePage);
     </script>
 
+    <script src="js/menu.js" defer></script>
     <script src="js/load-components.js" defer></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {

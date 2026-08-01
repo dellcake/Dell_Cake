@@ -1,6 +1,6 @@
 /**
- * Menu Handler for Dell Cake
- * Handles sidebar toggling and overlay management.
+ * Bulletproof Menu Handler for Dell Cake
+ * Handles sidebar toggling, overlay management, and eliminates dynamic component race conditions.
  */
 
 function initMenu() {
@@ -8,8 +8,7 @@ function initMenu() {
     const sideMenu = document.getElementById("sideMenu");
     let overlay = document.getElementById("menuOverlay");
 
-    // Create overlay if it doesn't exist
-    if (!overlay) {
+    if (!overlay && sideMenu) {
         overlay = document.createElement("div");
         overlay.id = "menuOverlay";
         overlay.className = "menu-overlay";
@@ -24,7 +23,7 @@ function initMenu() {
             document.body.style.overflow = isActive ? "hidden" : "";
         };
 
-        // Remove existing listeners by cloning (if needed) or just using a flag
+        // Bind cleanly
         menuBtn.onclick = (e) => {
             e.preventDefault();
             toggleMenu();
@@ -41,17 +40,25 @@ function initMenu() {
 
         // Handle links inside sidebar
         sideMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => toggleMenu(false));
+            link.onclick = () => toggleMenu(false);
         });
     }
 }
 
-// Re-initialize menu when components are loaded dynamically
+// Ensure initMenu runs safely whenever any component is loaded
 document.addEventListener("componentsLoaded", () => {
     initMenu();
 });
 
-// Also try to init on DOMContentLoaded for static pages (if any)
+// Polyfill / Poll to ensure binding as soon as both elements appear in DOM
+(function pollMenuElements() {
+    initMenu();
+    if (!document.querySelector(".menu-btn") || !document.getElementById("sideMenu")) {
+        setTimeout(pollMenuElements, 100);
+    }
+})();
+
+// Also init on DOMContentLoaded
 document.addEventListener("DOMContentLoaded", () => {
     initMenu();
 });
