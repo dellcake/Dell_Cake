@@ -78,8 +78,7 @@ export const BannerEngine = {
                 title: 'آکادمی تخصصی دل‌کیک',
                 subtitle: 'آموزش صفر تا صد و حرفه‌ای کیک‌پزی و دکوراتوری',
                 img: 'images/hero/baker-girl.png',
-                url: '#',
-                onclick: 'openAcademyPopup(); return false;',
+                url: 'academy.html',
                 btnText: 'شروع یادگیری'
             },
             {
