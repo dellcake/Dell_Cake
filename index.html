@@ -1,123 +1,286 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="دل‌کیک - سفارش آنلاین کیک‌های خاص و آموزش تخصصی شیرینی‌پزی حرفه‌ای">
-<meta name="keywords" content="کیک, شیرینی, آموزش کیک پزی, سفارش کیک, دل کیک">
-<title>دل‌کیک | سفارش آنلاین و آموزش شیرینی‌پزی</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="دل‌کیک - سفارش آنلاین کیک‌های خاص و آموزش تخصصی شیرینی‌پزی حرفه‌ای">
+    <meta name="keywords" content="کیک, شیرینی, آموزش کیک پزی, سفارش کیک, دل کیک">
+    <title>دل‌کیک | سفارش آنلاین و آموزش شیرینی‌پزی</title>
 
-<link rel="stylesheet" href="css/academy-popup.css">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/footer.css">
-<link rel="stylesheet" href="css/order-rules.css">
- 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/academy-popup.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=Lalezar&display=swap" rel="stylesheet">
     
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
 </head>
-
 <body>
+    <div id="header-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
 
-<div id="header-placeholder"></div>
-<div id="sidebar-placeholder"></div>
- 
-<div class="background-hearts"></div>
+    <!-- BACKGROUND LIGHT SHADOWS & HEARTS -->
+    <div class="background-decorations">
+        <div class="glow-spot g1"></div>
+        <div class="glow-spot g2"></div>
+        <div class="background-hearts"></div>
+    </div>
 
-<div class="container">
-
-
-<section class="hero-section">
-
-    <h1 class="hero-title">
-        دل‌کیک
-    </h1>
-
-    <h2 class="hero-slogan">
-        هنر شیرینی‌پزی، طعم عشق و خلق لحظه‌های ماندگار
-    </h2>
-
-    <p class="hero-description">
-        سفارش کیک‌های خاص، شیرینی‌های خانگی و آموزش تخصصی
-        شیرینی‌پزی با عشق، خلاقیت و طراحی اختصاصی برای
-        شیرین‌تر کردن لحظه‌های خاص زندگی شما 💕
-    </p>
-
-</section>
-
-    <section class="hero-image-section">
-
-   <img
-    src="images/hero/baker-girl.png"
-    alt="Dell Cake"
-    class="hero-image"
->
-
-</section>
-    <div class="intro hidden" id="introBox">
-
-      <!-- <h1>دل‌کیک</h1> -->
-
-        <!-- Dynamic Promotional Banners (Upgraded from Services Section to Premium Swiper Slider) -->
-        <section class="promo-banners-container">
-            <h2 class="section-title-premium">دنیای شیرین دل‌کیک 💕</h2>
-            <p class="section-subtitle-premium">انتخاب کنید، یاد بگیرید و لحظات خود را شیرین‌تر کنید</p>
-
-            <div class="swiper promo-swiper">
-                <div class="swiper-wrapper" id="promo-banners-slider-wrapper">
-                    <!-- Loaded dynamically by js/banners.js -->
-                    <div class="swiper-slide banner-skeleton-loader"></div>
-                    <div class="swiper-slide banner-skeleton-loader"></div>
+    <!-- MAIN WRAPPER -->
+    <div class="premium-homepage-v2">
+        <!-- 1. PREMIUM HERO SECTION (DUAL COLUMN) -->
+        <section class="new-hero-section">
+            <div class="hero-inner-container">
+                <div class="hero-left-text animate-reveal-left">
+                    <span class="hero-brand-badge"><i class="fas fa-sparkles"></i> طعم اصیل و طراحی مینیاتوری</span>
+                    <h1 class="hero-title-v2">خلق شیرین‌ترین <span class="accent-color">خاطره‌ها</span></h1>
+                    <h2 class="hero-slogan-v2">هنر شیرینی‌پزی، طعم عشق و دکوراسیون اختصاصی</h2>
+                    <p class="hero-description-v2">
+                        سفارش آنلاین کیک‌های لاکچری، مینی‌کیک‌های سفارشی و کاپ‌کیک‌های فانتزی با طراحی هنری گام‌به‌گام. ما لحظه‌های خاص شما را با طعم رویایی دل‌کیک شیرین‌تر می‌کنیم 💕
+                    </p>
+                    <div class="hero-cta-buttons">
+                        <a href="order-cake.html" class="cta-btn primary"><i class="fas fa-birthday-cake"></i> ثبت سفارش آنلاین</a>
+                        <a href="academy.html" class="cta-btn secondary"><i class="fas fa-graduation-cap"></i> آکادمی قنادی</a>
+                    </div>
                 </div>
-                <!-- Navigation Buttons -->
-                <div class="swiper-button-next promo-swiper-next"></div>
-                <div class="swiper-button-prev promo-swiper-prev"></div>
-                <!-- Pagination -->
-                <div class="swiper-pagination promo-swiper-pagination"></div>
+                <div class="hero-right-image animate-reveal-right">
+                    <div class="hero-img-backdrop"></div>
+                    <img src="images/hero/baker-girl.png" alt="Baker Girl / Cake Artist" class="hero-artist-img" onerror="this.src='images/logo/sweet-.png'">
+                    <div class="floating-bubble fb1">🧁 ۱۰۰٪ مواد ارگانیک</div>
+                    <div class="floating-bubble fb2">🌸 تزیین دست‌ساز</div>
+                </div>
             </div>
         </section>
 
+        <!-- 2. MAIN CATEGORIES (LARGE PREMIUM CARDS) -->
+        <section class="homepage-section container-v2">
+            <div class="section-header-bar">
+                <h2>دسته‌بندی محصولات <span class="brand-dots"></span></h2>
+                <p>انتخاب طعم رویایی شما با بهترین دیزاین</p>
+            </div>
+            <div class="categories-grid-v2">
+                <a href="order-cake.html" class="category-card-premium">
+                    <div class="card-bg-blur" style="background-image: url('images/gallery/cake1.jpg');"></div>
+                    <div class="card-inner-overlay"></div>
+                    <div class="card-content-premium">
+                        <div class="icon-holder"><i class="fas fa-cake-candles"></i></div>
+                        <h3>کیک‌های سفارشی</h3>
+                        <p>کیک تولد، فیگور، مینی‌کیک و دکور خامه و فوندانت</p>
+                        <span class="explore-btn">ثبت سفارش <i class="fas fa-arrow-left"></i></span>
+                    </div>
+                </a>
+                <a href="order-cake.html#cookie-tab" class="category-card-premium">
+                    <div class="card-bg-blur" style="background-image: url('images/gallery/cake15.webp');"></div>
+                    <div class="card-inner-overlay"></div>
+                    <div class="card-content-premium">
+                        <div class="icon-holder"><i class="fas fa-cookie"></i></div>
+                        <h3>کوکی و کاپ‌کیک</h3>
+                        <p>کوکی‌های تزیینی، کاپ‌کیک‌های فانتزی و پاپ‌کیک</p>
+                        <span class="explore-btn">ثبت سفارش <i class="fas fa-arrow-left"></i></span>
+                    </div>
+                </a>
+                <a href="academy.html" class="category-card-premium">
+                    <div class="card-bg-blur" style="background-image: url('images/gallery/cake12.webp');"></div>
+                    <div class="card-inner-overlay"></div>
+                    <div class="card-content-premium">
+                        <div class="icon-holder"><i class="fas fa-graduation-cap"></i></div>
+                        <h3>آکادمی قنادی</h3>
+                        <p>دوره‌های تخصصی و پیشرفته شیرینی‌پزی و دکور کیک</p>
+                        <span class="explore-btn">مشاهده دوره‌ها <i class="fas fa-arrow-left"></i></span>
+                    </div>
+                </a>
+            </div>
+        </section>
 
-          <div class="gallery hidden" id="gallerySection">
-             <h2>نمونه‌ای از سفارش‌های دوست‌داشتنی شما 💕</h2>
+        <!-- 3. PROMOTIONAL BANNERS (BENTO GRID - ADMIN EDITABLE) -->
+        <section class="homepage-section container-v2 promo-bento-section">
+            <div class="section-header-bar">
+                <h2>دنیای شیرین دل‌کیک 💕</h2>
+                <p>جشنواره‌ها، تخفیف‌ها و پیشنهادهای جذاب هفته را دنبال کنید</p>
+            </div>
 
-             <!-- Modern Portfolio Slider -->
-             <div class="swiper portfolio-swiper">
+            <!-- Bento Box Grid populated dynamically by js/banners.js -->
+            <div class="bento-banners-grid" id="promo-banners-bento">
+                <!-- Fallback Loading Skeletons -->
+                <div class="bento-skeleton large"></div>
+                <div class="bento-skeleton"></div>
+                <div class="bento-skeleton"></div>
+                <div class="bento-skeleton"></div>
+                <div class="bento-skeleton"></div>
+            </div>
+        </section>
+
+        <!-- 4. FEATURED CAKES SLIDER -->
+        <section class="homepage-section container-v2 featured-cakes-section">
+            <div class="section-header-bar">
+                <h2>سفارش‌های دوست‌داشتنی شما 💕</h2>
+                <p>گالری مینی‌کیک‌ها و سفارش‌های تزیین شده با عشق</p>
+            </div>
+
+            <div class="swiper portfolio-swiper">
                 <div class="swiper-wrapper" id="home-gallery-wrapper">
-                    <!-- Dynamic Items from Supabase -->
+                    <!-- Loaded dynamically by js/home-gallery.js -->
                     <div class="swiper-slide skeleton-slide"></div>
                     <div class="swiper-slide skeleton-slide"></div>
                     <div class="swiper-slide skeleton-slide"></div>
                 </div>
-                <!-- Navigation -->
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
+                <!-- Navigation Arrows -->
+                <div class="swiper-button-next portfolio-swiper-next"></div>
+                <div class="swiper-button-prev portfolio-swiper-prev"></div>
                 <!-- Pagination -->
                 <div class="swiper-pagination"></div>
-             </div>
+            </div>
 
-             <div class="view-all-container">
+            <div class="view-all-container">
                 <a href="gallery.html" class="btn-view-all">
                     مشاهده همه نمونه‌کارها
-                    <i class="fas fa-chevron-left"></i>
+                    <i class="fas fa-chevron-left" style="margin-right: 8px;"></i>
                 </a>
-             </div>
-          </div>
+            </div>
+        </section>
+
+        <!-- 5. DELL CAKE ACADEMY PREVIEW -->
+        <section class="homepage-section container-v2 academy-preview-section">
+            <div class="academy-preview-card">
+                <div class="preview-card-left">
+                    <span class="preview-badge">✨ آکادمی آنلاین دل‌کیک</span>
+                    <h2>با مهارتی نو، کسب‌وکار شیرین خود را آغاز کنید</h2>
+                    <p>
+                        کیک‌پزی و دکوراسیون کیک‌های خاص را به صورت کاملاً حرفه‌ای و قدم‌به‌قدم از پایه یاد بگیرید. دوره‌های تخصصی با تدریس مدیر دل‌کیک همراه با پشتیبانی همیشگی و رفع اشکال آنلاین.
+                    </p>
+                    <div class="preview-stats">
+                        <div class="preview-stat-item">
+                            <strong>+۱۰</strong>
+                            <span>دوره ویدیویی</span>
+                        </div>
+                        <div class="preview-stat-item">
+                            <strong>+۵۰۰</strong>
+                            <span>دانشجوی موفق</span>
+                        </div>
+                        <div class="preview-stat-item">
+                            <strong>پشتیبانی</strong>
+                            <span>مستقیم و دائمی</span>
+                        </div>
+                    </div>
+                    <a href="academy.html" class="preview-cta">ورود به آکادمی قنادی <i class="fas fa-chevron-left" style="margin-right: 8px;"></i></a>
+                </div>
+                <div class="preview-card-right">
+                    <img src="images/hero/baker-girl.png" alt="Academy Preview" class="preview-image" onerror="this.src='images/logo/sweet-.png'">
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. WHY DELL CAKE -->
+        <section class="homepage-section container-v2 why-section">
+            <div class="section-header-bar">
+                <h2>چرا دل‌کیک را انتخاب کنید؟ <span class="brand-dots"></span></h2>
+                <p>مهم‌ترین ویژگی‌هایی که طعم شیرین ما را متمایز می‌کند</p>
+            </div>
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-heart"></i></div>
+                    <h3>طعم اصیل و خانگی</h3>
+                    <p>پخت روزانه با بهترین مواد اولیه تازه و درجه یک خانگی بدون مواد نگهدارنده مضر.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-palette"></i></div>
+                    <h3>طراحی کاملاً سفارشی</h3>
+                    <p>خلق طرح‌های مینیاتوری و سفارشی شما متناسب با تم جشن و سلیقه شخصی شما.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-award"></i></div>
+                    <h3>آموزش گام‌به‌گام</h3>
+                    <p>انتقال تخصص چند ساله به شکل ویدیوهای روان و فایل‌های آموزشی در آکادمی دل‌کیک.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-truck"></i></div>
+                    <h3>تحویل سالم و مطمئن</h3>
+                    <p>ارسال امن سفارشات شما با بسته‌بندی‌های شیک و بهداشتی مخصوص حمل کیک.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. CUSTOMER TESTIMONIALS -->
+        <section class="homepage-section container-v2 testimonials-section">
+            <div class="section-header-bar">
+                <h2>نظرات شیرین مشتریان 💕 <span class="brand-dots"></span></h2>
+                <p>همراهان همیشگی ما درباره طعم و تزیینات دل‌کیک چه می‌گویند</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>«سفارش کیک تولد دخترم فوق‌العاده زیباتر از عکس مرجعی بود که فرستاده بودم! طعم موز و گردو و خامه هم بی‌نظیر و سبک بود.»</p>
+                    <div class="testimonial-user">
+                        <img src="images/logo/sweet-.png" alt="کاربر" onerror="this.src='images/logo/sweet-.png'">
+                        <div>
+                            <h4>مریم رضایی</h4>
+                            <span>مشتری کیک تولد سفارشی</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>«من دوره صفر تا صد خامه آکادمی دل‌کیک رو خریدم و الان برای خانواده خودم کیک‌های تولد حرفه‌ای می‌پزم. آموزشتون عالیه.»</p>
+                    <div class="testimonial-user">
+                        <img src="images/logo/sweet-.png" alt="کاربر" onerror="this.src='images/logo/sweet-.png'">
+                        <div>
+                            <h4>سارا حسینی</h4>
+                            <span>دانشجوی آکادمی دل‌کیک</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>«مینی‌کیک‌های جعبه‌ای با طرح فانتزی که سفارش داده بودم عالی بودن! برای هدیه دادن بهترین انتخاب هستن.»</p>
+                    <div class="testimonial-user">
+                        <img src="images/logo/sweet-.png" alt="کاربر" onerror="this.src='images/logo/sweet-.png'">
+                        <div>
+                            <h4>مهسا احمدی</h4>
+                            <span>مشتری مینی‌کیک جعبه‌ای</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. INSTAGRAM PHOTO GALLERY -->
+        <section class="homepage-section container-v2 insta-section">
+            <div class="section-header-bar">
+                <h2>گالری لحظه‌های شیرین دل‌کیک <span class="brand-dots"></span></h2>
+                <p>ما را در شبکه‌های اجتماعی دنبال کنید تا همیشه طعم عشق را حس کنید</p>
+            </div>
+            <div class="insta-grid">
+                <div class="insta-item">
+                    <img src="images/gallery/cake1.jpg" alt="Insta Cake" onerror="this.src='images/logo/sweet-.png'">
+                    <div class="insta-overlay"><i class="fab fa-instagram"></i></div>
+                </div>
+                <div class="insta-item">
+                    <img src="images/gallery/cake5.webp" alt="Insta Cake" onerror="this.src='images/logo/sweet-.png'">
+                    <div class="insta-overlay"><i class="fab fa-instagram"></i></div>
+                </div>
+                <div class="insta-item">
+                    <img src="images/gallery/cake8.webp" alt="Insta Cake" onerror="this.src='images/logo/sweet-.png'">
+                    <div class="insta-overlay"><i class="fab fa-instagram"></i></div>
+                </div>
+                <div class="insta-item">
+                    <img src="images/gallery/cake14.webp" alt="Insta Cake" onerror="this.src='images/logo/sweet-.png'">
+                    <div class="insta-overlay"><i class="fab fa-instagram"></i></div>
+                </div>
+            </div>
+        </section>
     </div>
 
-</div>
- 
-<div class="heart h1">❤</div>
-<div class="heart h2">❤</div>
-<div class="heart h3">❤</div>
-<div class="heart h4">❤</div>
+    <!-- HEART DECORATIONS -->
+    <div class="heart h1">❤</div>
+    <div class="heart h2">❤</div>
+    <div class="heart h3">❤</div>
+    <div class="heart h4">❤</div>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
-<div id="menuOverlay" class="menu-overlay"></div>
+    <div id="menuOverlay" class="menu-overlay"></div>
 
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
     <script src="js/menu.js" defer></script>
     <script src="js/homepage-animation.js" defer></script>
     <script src="js/academy-popup.js" defer></script>
@@ -125,16 +288,15 @@
     <script type="module" src="js/home-gallery.js"></script>
     <script type="module" src="js/banners.js"></script>
 
-<div id="footer-container"></div>
+    <div id="footer-container"></div>
 
-<script src="js/load-components.js" defer></script>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        loadComponent("header-placeholder", "components/header.html");
-        loadComponent("sidebar-placeholder", "components/sidebar.html");
-        loadComponent("footer-container", "components/footer.html");
-    });
-</script>
- 
+    <script src="js/load-components.js" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            loadComponent("header-placeholder", "components/header.html");
+            loadComponent("sidebar-placeholder", "components/sidebar.html");
+            loadComponent("footer-container", "components/footer.html");
+        });
+    </script>
 </body>
 </html>
