@@ -651,7 +651,8 @@ tr:hover td {
     box-shadow: var(--shadow-lg);
     position: relative;
     animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    overflow: hidden;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
 }
 
 @keyframes slideUp {
