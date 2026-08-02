@@ -28,13 +28,22 @@
     font-family: var(--font-sans);
 }
 
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
 body {
     background-color: var(--bg-peach);
     color: var(--text-dark);
-    overflow-x: hidden;
     min-height: 100vh;
     padding-top: 70px; /* Offset for fixed top-header */
     line-height: 1.6;
+}
+
+.premium-homepage-v2 {
+    width: 100%;
+    overflow-x: hidden;
 }
 
 /* Background Decorations (Soft Gradients & Floating Blobs) */
@@ -95,6 +104,7 @@ body {
     backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(240, 24, 115, 0.05);
     margin-bottom: 60px;
+    overflow: hidden; /* Prevent horizontal overflow & auto-zoom from floating bubbles */
 }
 
 .hero-inner-container {
