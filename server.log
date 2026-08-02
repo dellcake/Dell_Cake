@@ -1,0 +1,35 @@
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /css/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /css/footer.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /css/academy-popup.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /js/site-settings.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /js/banners.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /images/logo/sweet-.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /js/home-gallery.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /images/gallery/cake1.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /images/hero/baker-girl.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] code 404, message File not found
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /images/gallery/cake8.webp HTTP/1.1" 404 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] code 404, message File not found
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /images/gallery/cake5.webp HTTP/1.1" 404 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] code 404, message File not found
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /images/gallery/cake14.webp HTTP/1.1" 404 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /js/menu.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /js/homepage-animation.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /js/academy-popup.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /js/load-components.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /js/supabase-client.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] code 404, message File not found
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /images/gallery/cake12.webp HTTP/1.1" 404 -
+127.0.0.1 - - [02/Aug/2026 05:55:31] code 404, message File not found
+127.0.0.1 - - [02/Aug/2026 05:55:31] "GET /images/gallery/cake15.webp HTTP/1.1" 404 -
+127.0.0.1 - - [02/Aug/2026 05:55:32] "GET /js/supabase-config.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:34] "GET /components/sidebar.html HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:34] "GET /components/footer.html HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:34] "GET /components/header.html HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:34] "GET /images/icons/bale.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:38] "GET /academy.html HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:38] "GET /css/academy.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:38] "GET /js/academy.js HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:38] "GET /images/academy/camera-academy.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 05:55:41] "GET /course-purchase.html?courseId=test-uuid&title=%DA%A9%DB%8C%DA%A9%20%D9%BE%D8%A7%DB%8C%D9%87&price=1500000 HTTP/1.1" 200 -
