@@ -790,9 +790,8 @@ body {
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     border: 1px solid rgba(107, 61, 42, 0.02);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
     overflow: hidden;
 }
 
@@ -800,25 +799,11 @@ body {
     padding: 60px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
     justify-content: center;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.preview-image {
-    width: 100%;
-    max-width: 650px;
-    height: auto;
-    object-fit: contain;
-    margin-bottom: 30px;
-    border-radius: var(--radius-md);
-    display: block;
 }
 
 .preview-badge {
-    align-self: center;
+    align-self: flex-start;
     background: rgba(240, 24, 115, 0.08);
     color: var(--primary);
     font-weight: 700;
@@ -841,14 +826,12 @@ body {
     font-size: 1.05rem;
     line-height: 1.8;
     margin-bottom: 30px;
-    max-width: 800px;
 }
 
 .preview-stats {
     display: flex;
     gap: 35px;
     margin-bottom: 35px;
-    justify-content: center;
 }
 
 .preview-stat-item {
@@ -870,7 +853,7 @@ body {
 }
 
 .preview-cta {
-    align-self: center;
+    align-self: flex-start;
     background: var(--secondary);
     color: white !important;
     padding: 14px 30px;
@@ -1419,10 +1402,10 @@ body {
         font-size: 1.2rem;
     }
     .academy-preview-card {
-        flex-direction: column;
+        grid-template-columns: 1fr;
     }
     .preview-card-left {
-        padding: 30px 20px;
+        padding: 40px 25px;
         text-align: center;
         align-items: center;
     }
