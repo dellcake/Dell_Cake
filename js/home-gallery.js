@@ -12,9 +12,10 @@ export async function initHomeGallery() {
         if (publicSupabase.isMock) {
             wrapper.innerHTML = `
                 <div class="swiper-slide portfolio-slide">
-                    <div class="portfolio-item-inner no-data mock-data">
-                        <i class="fas fa-plug-circle-exclamation" style="font-size: 2rem; color: #e8789a; margin-bottom: 10px;"></i>
-                        <p style="color: #6b3d2a; font-size: 0.8rem; text-align:center;">لطفا تنظیمات Supabase را در <br><code>js/supabase-config.js</code> وارد کنید.</p>
+                    <div class="portfolio-card no-data mock-data">
+                        <i class="fas fa-plug-circle-exclamation" style="font-size: 2rem; color: #f01873; margin-bottom: 10px;"></i>
+                        <p style="color: #6b3d2a; font-size: 0.9rem; text-align:center; font-weight: 700;">اتصال پایگاه‌داده برقرار نیست</p>
+                        <p style="color: #8c7b75; font-size: 0.8rem; text-align:center; margin-top: 5px;">لطفا تنظیمات Supabase را در <br><code>js/supabase-config.js</code> وارد کنید.</p>
                     </div>
                 </div>
             `;
@@ -36,8 +37,8 @@ export async function initHomeGallery() {
         if (!data || data.length === 0) {
             wrapper.innerHTML = `
                 <div class="swiper-slide portfolio-slide">
-                    <div class="portfolio-item-inner no-data">
-                        <img src="images/logo/sweet-.png" alt="دل‌کیک" style="opacity: 0.2; width: 100px; height: auto;">
+                    <div class="portfolio-card no-data">
+                        <img src="images/logo/sweet-.png" alt="دل‌کیک" style="opacity: 0.2; width: 80px; height: auto;">
                         <p style="margin-top: 15px; color: #6b3d2a; font-weight: bold; font-size: 0.9rem;">هنوز نمونه‌کار ویژه‌ای ثبت نشده است</p>
                     </div>
                 </div>
@@ -47,13 +48,14 @@ export async function initHomeGallery() {
 
         wrapper.innerHTML = data.map(item => `
             <div class="swiper-slide portfolio-slide">
-                <div class="portfolio-item-inner">
-                    <img src="${item.thumbnail_url || item.image_url}" loading="lazy" alt="${item.alt_text || item.title || 'Dell Cake Portfolio'}" onerror="this.src='images/logo/sweet-.png'">
-                    <div class="portfolio-overlay">
-                        <div class="portfolio-info">
-                            <h4>${item.title || ''}</h4>
-                            <span>${item.gallery_categories?.name || 'سایر'}</span>
-                        </div>
+                <div class="portfolio-card">
+                    <div class="portfolio-img-wrapper">
+                        <img src="${item.thumbnail_url || item.image_url}" loading="lazy" decoding="async" alt="${item.alt_text || item.title || 'Dell Cake Portfolio'}" onerror="this.src='images/logo/sweet-.png'">
+                        <span class="portfolio-category-badge">${item.gallery_categories?.name || 'سایر'}</span>
+                    </div>
+                    <div class="portfolio-info-box">
+                        <h4 class="portfolio-card-title">${item.title || ''}</h4>
+                        <span class="portfolio-card-subtitle">نمونه‌کار گالری دل‌کیک</span>
                     </div>
                 </div>
             </div>
@@ -63,25 +65,38 @@ export async function initHomeGallery() {
         if (typeof Swiper !== 'undefined') {
             new Swiper('.portfolio-swiper', {
                 slidesPerView: 1,
-                spaceBetween: 20,
-                loop: data.length > 4,
+                spaceBetween: 16,
+                loop: data.length > 3,
                 autoplay: {
-                    delay: 4000,
+                    delay: 4500,
                     disableOnInteraction: false,
                     pauseOnMouseEnter: true,
                 },
                 pagination: {
-                    el: '.swiper-pagination',
+                    el: '.portfolio-swiper-pagination',
                     clickable: true,
                 },
                 navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
+                    nextEl: '.portfolio-swiper-next',
+                    prevEl: '.portfolio-swiper-prev',
+                },
+                keyboard: {
+                    enabled: true,
+                    onlyInViewport: true,
+                },
+                a11y: {
+                    prevSlideMessage: 'نمونه‌کار قبلی',
+                    nextSlideMessage: 'نمونه‌کار بعدی',
                 },
                 breakpoints: {
-                    640: { slidesPerView: 2 },
-                    992: { slidesPerView: 3 },
-                    1200: { slidesPerView: 4 }
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 24
+                    },
+                    1024: {
+                        slidesPerView: 3,
+                        spaceBetween: 30
+                    }
                 }
             });
         }

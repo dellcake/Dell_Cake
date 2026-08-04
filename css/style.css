@@ -546,6 +546,244 @@ body {
     padding: 80px 0;
 }
 
+/* Portfolio Slider Outer Wrapper */
+.portfolio-slider-outer {
+    position: relative;
+    padding: 0 60px; /* leaves comfortable space for outside-navigation-arrows on desktop */
+    margin: 40px auto 0 auto;
+}
+
+/* Swiper Container overrides */
+.portfolio-swiper {
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Slide container must stretch to match tallest slide */
+.portfolio-swiper .swiper-wrapper {
+    align-items: stretch;
+}
+
+.portfolio-slide {
+    height: auto; /* allows equal height matching */
+}
+
+/* Premium Portfolio Card Design */
+.portfolio-card {
+    background: #ffffff;
+    border-radius: var(--radius-lg);
+    padding: 12px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(107, 61, 42, 0.04);
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.portfolio-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(240, 24, 115, 0.12);
+}
+
+/* Image wrapper preserving exact aspect ratio with zero layout shift */
+.portfolio-img-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5; /* 4:5 Portrait format for premium cake portfolio look */
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background-color: var(--bg-peach);
+}
+
+.portfolio-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    display: block;
+}
+
+.portfolio-card:hover .portfolio-img-wrapper img {
+    transform: scale(1.08);
+}
+
+/* Elegant Category Badge floating on image */
+.portfolio-category-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--primary);
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(107, 61, 42, 0.05);
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.portfolio-card:hover .portfolio-category-badge {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 6px 16px rgba(240, 24, 115, 0.2);
+}
+
+/* Card Content Typography Block */
+.portfolio-info-box {
+    padding: 16px 8px 8px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-grow: 1;
+}
+
+.portfolio-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--secondary);
+    margin: 0;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+.portfolio-card:hover .portfolio-card-title {
+    color: var(--primary);
+}
+
+.portfolio-card-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Elegant Outside Navigation Arrows */
+.portfolio-swiper-next,
+.portfolio-swiper-prev {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 48px !important;
+    height: 48px !important;
+    background: white !important;
+    border: 1px solid rgba(107, 61, 42, 0.08) !important;
+    border-radius: 50% !important;
+    color: var(--primary) !important;
+    box-shadow: 0 4px 16px rgba(107, 61, 42, 0.08) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    z-index: 10 !important;
+}
+
+/* Custom Arrows alignment - in RTL next moves to left and prev to right */
+.portfolio-swiper-next {
+    left: 6px !important;
+    right: auto !important;
+}
+
+.portfolio-swiper-prev {
+    right: 6px !important;
+    left: auto !important;
+}
+
+.portfolio-swiper-next:hover,
+.portfolio-swiper-prev:hover {
+    background: var(--primary) !important;
+    color: white !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 8px 24px rgba(240, 24, 115, 0.25) !important;
+}
+
+.portfolio-swiper-next:active,
+.portfolio-swiper-prev:active {
+    transform: translateY(-50%) scale(0.92) !important;
+}
+
+/* Reset default swiper icon sizing on arrows */
+.portfolio-swiper-next::after,
+.portfolio-swiper-prev::after {
+    font-size: 16px !important;
+    font-weight: 800 !important;
+}
+
+/* Animated Modern Pagination Indicators */
+.portfolio-swiper-pagination {
+    position: relative !important;
+    bottom: 0 !important;
+    margin-top: 35px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    z-index: 10;
+}
+
+.portfolio-swiper-pagination .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(107, 61, 42, 0.15);
+    opacity: 1;
+    border-radius: 50px;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    cursor: pointer;
+}
+
+.portfolio-swiper-pagination .swiper-pagination-bullet-active {
+    width: 24px; /* Pill-shaped active state */
+    background-color: var(--primary) !important;
+}
+
+/* Skeleton Slide Styling */
+.skeleton-slide {
+    aspect-ratio: 4 / 5;
+    background: linear-gradient(90deg, #f3ede8 25%, #f9f5f2 50%, #f3ede8 75%);
+    background-size: 200% 100%;
+    animation: loading-pulse-bento 1.5s infinite;
+    border-radius: var(--radius-lg);
+}
+
+/* Empty State Styling for Home Slider */
+.portfolio-card.no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    min-height: 350px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+    .portfolio-slider-outer {
+        padding: 0 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .portfolio-slider-outer {
+        padding: 0 15px; /* Maximum content space on mobile screen */
+    }
+    .portfolio-swiper-next,
+    .portfolio-swiper-prev {
+        display: none !important; /* Hide navigation arrows as natural swipe gestures are active */
+    }
+    .portfolio-swiper-pagination {
+        margin-top: 25px;
+    }
+    .portfolio-card {
+        border-radius: var(--radius-md);
+    }
+}
+
 /* 5. ACADEMY PREVIEW CARD */
 .academy-preview-card {
     background: white;
