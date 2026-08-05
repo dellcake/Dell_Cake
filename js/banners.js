@@ -89,22 +89,22 @@ export const BannerEngine = {
                 title: 'سفارش کیک‌های خاص',
                 subtitle: 'طراحی مینیاتوری با طعم رویایی',
                 img: 'images/gallery/cake1.jpg',
-                url: 'order-cake.html',
+                url: 'order-cake.html?tab=cake',
                 btnText: 'ثبت سفارش'
             },
             {
                 title: 'شیرینی‌های لوکس',
                 subtitle: 'طعم اصیل و خانگی ممتاز',
                 img: 'images/gallery/cake14.webp',
-                url: 'order-cake.html',
+                url: 'order-cake.html?tab=sweets',
                 btnText: 'مشاهده شیرینی‌ها'
             },
             {
-                title: 'منوی کوکی و کاپ‌کیک',
-                subtitle: 'هدیه‌ای فانتزی برای مناسبت‌ها',
+                title: 'سفارش ماکت کیک',
+                subtitle: 'ماکت‌های اختصاصی مناسب آتلیه و مجالس',
                 img: 'images/gallery/cake15.webp',
-                url: 'order-cake.html#cookie-tab',
-                btnText: 'مشاهده منو'
+                url: 'order-cake.html?tab=dummy',
+                btnText: 'سفارش ماکت'
             },
             {
                 title: 'گالری نمونه کارها',
@@ -192,22 +192,22 @@ export const BannerEngine = {
                 title: 'سفارش کیک‌های خاص',
                 subtitle: 'طراحی مینیاتوری و سفارشی با طعم رویایی',
                 img: 'images/gallery/cake1.jpg',
-                url: 'order-cake.html',
+                url: 'order-cake.html?tab=cake',
                 btnText: 'ثبت سفارش کیک'
             },
             {
                 title: 'شیرینی‌های خانگی لوکس',
                 subtitle: 'طعم اصیل و خانگی با بهترین مواد اولیه',
                 img: 'images/gallery/cake14.webp',
-                url: 'order-cake.html',
+                url: 'order-cake.html?tab=sweets',
                 btnText: 'سفارش شیرینی'
             },
             {
-                title: 'گالری نمونه کارها',
-                subtitle: 'الهام‌بخش لحظات شیرین و رویایی شما',
-                img: 'images/gallery/cake4.jpg',
-                url: 'gallery.html',
-                btnText: 'مشاهده گالری'
+                title: 'سفارش ماکت کیک',
+                subtitle: 'طراحی ماکت‌های باکیفیت و اختصاصی',
+                img: 'images/gallery/cake15.webp',
+                url: 'order-cake.html?tab=dummy',
+                btnText: 'سفارش ماکت'
             }
         ];
 

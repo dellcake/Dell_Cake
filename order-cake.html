@@ -80,6 +80,10 @@ href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-dat
             <i class="fas fa-cookie-bite"></i>
             سفارش شیرینی
         </button>
+        <button class="tab-link" data-tab="dummyTab">
+            <i class="fas fa-shapes"></i>
+            سفارش ماکت کیک
+        </button>
     </div>
 </div>
 
@@ -677,6 +681,121 @@ placeholder="مثلاً 2.5">
 
     </section>
 
+</div>
+
+   <div class="tab-content" id="dummyTab">
+
+    <section class="order-form">
+
+        <form id="dummyForm">
+
+            <div class="form-group">
+                <label for="dummyName">نام و نام خانوادگی</label>
+                <input type="text"
+                       id="dummyName"
+                       name="dummyName"
+                       placeholder="نام خود را وارد کنید"
+                       required>
+           </div>
+
+            <div class="form-group">
+                <label for="dummyPhone">شماره تماس</label>
+                <input
+                   type="tel"
+                   id="dummyPhone"
+                   name="dummyPhone"
+                   placeholder="09xxxxxxxxx"
+                   maxlength="11"
+                   pattern="09[0-9]{9}"
+                   inputmode="numeric"
+                   required>
+            </div>
+
+            <div class="form-group">
+                <label for="dummyType">نوع ماکت</label>
+                <select id="dummyType" required>
+                    <option value="">انتخاب کنید</option>
+                    <option value="birthday">ماکت کیک تولد</option>
+                    <option value="wedding">ماکت کیک عروسی/نامزدی</option>
+                    <option value="special">ماکت کیک خاص/مناسبتی</option>
+                    <option value="other">سایر موارد</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="dummyDimensions">ابعاد</label>
+                <input type="text"
+                       id="dummyDimensions"
+                       name="dummyDimensions"
+                       placeholder="مثلاً: ارتفاع ۴۰ سانت، قطر ۳۰ سانت"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label for="dummyColors">رنگ‌بندی</label>
+                <input type="text"
+                       id="dummyColors"
+                       name="dummyColors"
+                       placeholder="مثلاً: سفید صدفی و صورتی ملایم"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label for="dummyDeliveryDate">تاریخ تحویل</label>
+                <div class="date-input-box">
+                    <input
+                        type="text"
+                        id="dummyDeliveryDate"
+                        name="dummyDeliveryDate"
+                        placeholder="مثال: ۱۴۰۵/۰۳/۲۵"
+                        readonly
+                        required>
+                    <i class="fas fa-calendar-alt" id="dummyCalendarBtn"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="dummyImage">امکان آپلود تصویر نمونه</label>
+                <input type="file"
+                       id="dummyImage"
+                       name="dummyImage"
+                       accept="image/*"
+                       style="padding: 10px;">
+                <div id="dummyImagePreviewContainer" class="photo-notice" style="display: none; flex-direction: column; align-items: center; gap: 10px;">
+                    <img id="dummyImagePreview" src="" alt="پیش‌نمایش تصویر نمونه" style="max-width: 100%; max-height: 200px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                    <span id="dummyImageName" style="font-size: 13px; color: #6b3d2a; font-weight: bold;"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="dummyDescription">توضیحات سفارش</label>
+                <textarea id="dummyDescription"
+                          name="dummyDescription"
+                          rows="5"
+                          placeholder="هر توضیحی که دوست دارید (رنگ، تزیینات، تم و ...)..."></textarea>
+            </div>
+
+            <label class="rules-check">
+                <input
+                    type="checkbox"
+                    id="dummyRulesAccept"
+                    required>
+                <span>
+                    قوانین ثبت سفارش را مطالعه کرده و می‌پذیرم.
+                    <a href="order-rules.html" target="_blank">
+                        مشاهده قوانین
+                    </a>
+                </span>
+            </label>
+
+            <button class="order-submit-btn" type="submit">
+                <i class="fas fa-paper-plane"></i> ثبت سفارش ماکت 🌸
+            </button>
+
+        </form>
+
+    </section>
+
 </div> 
 </div>
 
@@ -749,6 +868,7 @@ placeholder="مثلاً 2.5">
 <script src="js/cake-fields.js"></script>    
 <script type="module" src="js/order-form.js"></script>
 <script type="module" src="js/cookie-form.js"></script>
+<script type="module" src="js/dummy-form.js"></script>
 <script src="js/date-picker.js"></script>
 <script src="js/order-popup.js"></script>
 <script type="module" src="js/site-settings.js"></script>

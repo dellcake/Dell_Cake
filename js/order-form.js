@@ -207,6 +207,8 @@ function openShareModal(message) {
     document.getElementById("shareModal").classList.remove("hidden");
 }
 
+window.openShareModal = openShareModal;
+
 /* بستن مودال */
 function closeShareModal() {
     document.getElementById("shareModal").classList.add("hidden");

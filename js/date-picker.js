@@ -66,4 +66,10 @@ document.addEventListener("DOMContentLoaded", () => {
         "cookieCalendarBtn"
     );
 
+    /* تقویم فرم ماکت کیک */
+    initPersianDatePicker(
+        "dummyDeliveryDate",
+        "dummyCalendarBtn"
+    );
+
 });
