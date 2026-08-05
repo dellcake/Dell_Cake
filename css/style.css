@@ -1031,53 +1031,6 @@ body {
     color: var(--text-muted);
 }
 
-/* 8. INSTAGRAM PHOTO GALLERY */
-.insta-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-}
-
-.insta-item {
-    position: relative;
-    aspect-ratio: 1/1;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    cursor: pointer;
-}
-
-.insta-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.insta-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(240, 24, 115, 0.4);
-    color: white;
-    font-size: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.insta-item:hover img {
-    transform: scale(1.08);
-}
-
-.insta-item:hover .insta-overlay {
-    opacity: 1;
-}
-
 /* Top Header adjustments for fixed menus */
 .top-header {
     position: fixed;
@@ -1431,9 +1384,6 @@ body {
     }
     .testimonials-grid {
         grid-template-columns: 1fr;
-    }
-    .insta-grid {
-        grid-template-columns: repeat(2, 1fr);
     }
     .site-logo-mini {
         left: calc(50% - 25px);
