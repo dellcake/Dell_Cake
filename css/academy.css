@@ -18,6 +18,9 @@
     background-color: #faf6f4;
     color: var(--academy-text);
     padding-bottom: 60px;
+    width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .container {
