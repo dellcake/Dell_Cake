@@ -820,38 +820,30 @@ body {
 
 .preview-card-left h2.academy-title {
     font-family: 'Lalezar', cursive;
-    font-size: 3.2rem; /* Increased size by ~45% from original 2.2rem, modern bold typography */
+    font-size: 2.8rem; /* Increased size by ~27% */
     color: var(--secondary);
-    line-height: 1.45;
+    line-height: 1.4;
     margin-bottom: 24px;
     font-weight: 800;
-    letter-spacing: -0.5px;
 }
 
-/* Elegant brand highlighting with subtle modern drop underlines and soft back-glows */
+/* Elegant brand highlighting */
 .preview-card-left h2.academy-title .highlight-pink {
     color: var(--primary);
-    background: linear-gradient(120deg, rgba(240, 24, 115, 0.12) 0%, rgba(240, 24, 115, 0.02) 100%);
-    padding: 2px 14px;
-    border-radius: 8px;
-    display: inline-block;
-    border-bottom: 3px solid var(--primary);
-    text-shadow: 0 2px 8px rgba(240, 24, 115, 0.15);
+    position: relative;
+    white-space: nowrap;
+    text-shadow: 0 2px 10px rgba(240, 24, 115, 0.1);
 }
 
 .preview-card-left h2.academy-title .highlight-brown {
     color: #552f1e;
-    background: linear-gradient(120deg, rgba(107, 61, 42, 0.08) 0%, rgba(107, 61, 42, 0.01) 100%);
-    padding: 2px 14px;
-    border-radius: 8px;
-    display: inline-block;
-    border-bottom: 3px solid var(--secondary);
+    font-weight: 900;
 }
 
 .preview-card-left p.academy-description {
     color: #7d655a;
-    font-size: 1.15rem;
-    line-height: 2.0; /* Increased line-height for absolute readability */
+    font-size: 1.1rem;
+    line-height: 1.95; /* Increased spacing for better readability */
     margin-bottom: 35px;
     max-width: 600px;
 }
