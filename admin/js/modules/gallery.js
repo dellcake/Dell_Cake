@@ -9,6 +9,7 @@ export const GalleryModule = {
     categories: [],
     currentFilter: 'all',
     searchQuery: '',
+    currentPreviewUrl: null,
 
     async load() {
         await this.loadCategories();
@@ -373,13 +374,20 @@ export const GalleryModule = {
 
         // Show thumbnail for image files
         if (file.type.startsWith('image/')) {
-            const reader = new FileReader();
+            // Revoke old object URL to prevent memory leaks
+            if (GalleryModule.currentPreviewUrl) {
+                try {
+                    URL.revokeObjectURL(GalleryModule.currentPreviewUrl);
+                } catch (e) {
+                    console.warn('Revoke object URL failed:', e);
+                }
+            }
 
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                thumbnailElement.style.backgroundImage = `url('${reader.result}')`;
-                document.getElementById('gallery-preview').src = reader.result;
-            };
+            // Create new object URL (instant, zero-memory-overhead)
+            GalleryModule.currentPreviewUrl = URL.createObjectURL(file);
+
+            thumbnailElement.style.backgroundImage = `url('${GalleryModule.currentPreviewUrl}')`;
+            document.getElementById('gallery-preview').src = GalleryModule.currentPreviewUrl;
         } else {
             thumbnailElement.style.backgroundImage = null;
         }
