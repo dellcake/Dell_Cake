@@ -13,7 +13,7 @@
     <div class="card" style="margin-bottom: 25px;">
         <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
             <div class="form-group" style="margin: 0; min-width: 200px;">
-                <input type="text" id="gallery-search" class="form-control" placeholder="جستجو در عنوان یا توضیحات..." oninput="handleGallerySearch(this.value)">
+                <input type="text" id="gallery-search" class="form-control" placeholder="جستجو در کد، عنوان یا توضیحات..." oninput="handleGallerySearch(this.value)">
             </div>
             <div class="form-group" style="margin: 0; min-width: 180px;">
                 <select id="gallery-category-filter" class="form-control" onchange="handleGalleryCategoryFilter(this.value)">
@@ -64,6 +64,13 @@
                     </div>
                 </div>
                 <div class="right-col">
+                    <div class="form-group" id="gallery-code-group" style="display: none;">
+                        <label>کد اختصاصی تصویر</label>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="text" id="gallery-code" class="form-control" readonly style="background: #e9ecef; cursor: not-allowed; font-weight: bold; flex: 1;">
+                            <button type="button" class="btn btn-outline" onclick="copyGalleryCodeFromModal()" style="padding: 10px 15px;" title="کپی کد"><i class="fas fa-copy"></i> کپی</button>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label>عنوان تصویر</label>
                         <input type="text" id="gallery-title" class="form-control" placeholder="مثلاً: کیک تولد شکلاتی">

@@ -45,7 +45,12 @@ export const GalleryModule = {
             }
 
             if (this.searchQuery) {
-                query = query.or(`title.ilike.%${this.searchQuery}%,description.ilike.%${this.searchQuery}%`);
+                const queryStr = this.searchQuery.trim();
+                if (/^\d+$/.test(queryStr)) {
+                    query = query.or(`code.eq.${queryStr},title.ilike.%${queryStr}%,description.ilike.%${queryStr}%`);
+                } else {
+                    query = query.or(`title.ilike.%${queryStr}%,description.ilike.%${queryStr}%`);
+                }
             }
 
             const { data, error } = await query;
@@ -76,6 +81,14 @@ export const GalleryModule = {
                         <h4>${item.title || 'بدون عنوان'}</h4>
                         <div style="font-size: 0.75rem; color: var(--text-muted);">
                             ${item.gallery_categories?.name || 'بدون دسته'} | ترتیب: ${item.display_order}
+                        </div>
+                        <div style="font-size: 0.85rem; font-weight: bold; margin-top: 6px; display: flex; align-items: center; gap: 8px; color: var(--secondary);">
+                            <span>کد: ${item.code || 'بدون کد'}</span>
+                            ${item.code ? `
+                            <button class="btn-icon" style="width: 20px; height: 20px; font-size: 0.7rem; border-radius: 4px;" onclick="copyGalleryCode('${item.code}')" title="کپی کد">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            ` : ''}
                         </div>
                         <div class="gallery-card-actions">
                             <span class="status-badge ${item.status === 'published' ? 'published' : 'draft'}">
@@ -258,6 +271,14 @@ export const GalleryModule = {
         document.getElementById('gallery-image-url').value = item.image_url || '';
         document.getElementById('gallery-thumb-url').value = item.thumbnail_url || '';
 
+        if (item.code) {
+            document.getElementById('gallery-code-group').style.display = 'block';
+            document.getElementById('gallery-code').value = item.code;
+        } else {
+            document.getElementById('gallery-code-group').style.display = 'none';
+            document.getElementById('gallery-code').value = '';
+        }
+
         document.getElementById('gallery-preview').src = item.thumbnail_url || item.image_url || '../images/logo/sweet-.png';
         document.getElementById('gallery-modal-title').innerText = 'ویرایش تصویر گالری';
         document.getElementById('gallery-modal').style.display = 'flex';
@@ -281,6 +302,8 @@ export const GalleryModule = {
         document.getElementById('gallery-id').value = '';
         document.getElementById('gallery-image-url').value = '';
         document.getElementById('gallery-thumb-url').value = '';
+        document.getElementById('gallery-code-group').style.display = 'none';
+        document.getElementById('gallery-code').value = '';
         document.getElementById('gallery-preview').src = '../images/logo/sweet-.png';
         document.getElementById('gallery-modal-title').innerText = 'افزودن تصویر به گالری';
         document.getElementById('gallery-modal').style.display = 'flex';
@@ -369,3 +392,38 @@ window.handleGallerySearch = (val) => GalleryModule.setSearch(val);
 window.handleGalleryCategoryFilter = (val) => GalleryModule.setFilter(val);
 window.openGalleryModal = () => GalleryModule.openModal();
 window.closeGalleryModal = () => GalleryModule.closeModal();
+
+window.copyGalleryCode = (code) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(() => {
+            alert('کد تصویر کپی شد: ' + code);
+        }).catch(err => {
+            fallbackCopyText(code);
+        });
+    } else {
+        fallbackCopyText(code);
+    }
+};
+
+window.copyGalleryCodeFromModal = () => {
+    const code = document.getElementById('gallery-code').value;
+    if (code) {
+        window.copyGalleryCode(code);
+    }
+};
+
+function fallbackCopyText(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";  // avoid scrolling to bottom
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+        document.execCommand('copy');
+        alert('کد تصویر کپی شد: ' + text);
+    } catch (err) {
+        console.error('Fallback copy failed', err);
+    }
+    document.body.removeChild(textArea);
+}
