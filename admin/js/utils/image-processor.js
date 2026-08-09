@@ -1,7 +1,9 @@
 /**
  * Image Processor Utility - Refactored for Robustness and Android Chrome Compatibility
- * Uses URL.createObjectURL as the primary path to prevent mobile memory exhaustion,
- * with a robust FileReader fallback path.
+ * Implements a multi-layered async cascade with:
+ *   1. Modern and fast createImageBitmap()
+ *   2. Modern and low-memory URL.createObjectURL()
+ *   3. Robust fallback FileReader (Base64 Data URL)
  */
 export const ImageProcessor = {
     /**
@@ -24,208 +26,168 @@ export const ImageProcessor = {
             size: file?.size || 0
         };
 
-        console.log('[ImageProcessor] Initiating processing for:', fileMeta);
+        console.log('[ImageProcessor] Initiating processing cascade for:', fileMeta);
 
-        return new Promise((resolve, reject) => {
-            // 1. Rigorous pre-processing validation
-            if (!file) {
-                console.error('[ImageProcessor] Validation failed: No file provided');
-                return reject(new Error('لطفاً یک فایل تصویر انتخاب کنید.'));
-            }
-            if (!(file instanceof File) && !(file instanceof Blob)) {
-                console.error('[ImageProcessor] Validation failed: Object is not a File or Blob instance');
-                return reject(new Error('فایل انتخاب شده معتبر نیست.'));
-            }
-            if (file.size <= 0) {
-                console.error('[ImageProcessor] Validation failed: File size is 0');
-                return reject(new Error('فایل انتخاب شده خالی است یا حجم آن صفر است.'));
-            }
-            if (!file.type || !file.type.startsWith('image/')) {
-                console.error('[ImageProcessor] Validation failed: Invalid MIME type:', file.type);
-                return reject(new Error('فرمت فایل نامعتبر است. لطفاً فقط تصویر انتخاب کنید.'));
+        // 1. Rigorous pre-processing validation
+        if (!file) {
+            console.error('[ImageProcessor] Validation failed: No file provided');
+            throw new Error('لطفاً یک فایل تصویر انتخاب کنید.');
+        }
+        if (!(file instanceof File) && !(file instanceof Blob)) {
+            console.error('[ImageProcessor] Validation failed: Object is not a File or Blob instance');
+            throw new Error('فایل انتخاب شده معتبر نیست.');
+        }
+        if (file.size <= 0) {
+            console.error('[ImageProcessor] Validation failed: File size is 0');
+            throw new Error('فایل انتخاب شده خالی است یا حجم آن صفر است.');
+        }
+        if (!file.type || !file.type.startsWith('image/')) {
+            console.error('[ImageProcessor] Validation failed: Invalid MIME type:', file.type);
+            throw new Error('فرمت فایل نامعتبر است. لطفاً فقط تصویر انتخاب کنید.');
+        }
+
+        // Shared Canvas processor helper
+        const handleCanvasProcessing = async (sourceImage, width, height) => {
+            const canvas = document.createElement('canvas');
+            let finalWidth = width;
+            let finalHeight = height;
+
+            if (finalWidth === 0 || finalHeight === 0) {
+                throw new Error('ابعاد تصویر معتبر نیست (0x0).');
             }
 
-            // Fallback function using FileReader
-            const runFileReaderFallback = (primaryErrorMsg) => {
-                console.log('[ImageProcessor] Executing fallback FileReader path. Primary failure reason:', primaryErrorMsg);
+            // Resize calculations
+            if (finalWidth > maxWidth) {
+                finalHeight *= maxWidth / finalWidth;
+                finalWidth = maxWidth;
+            }
+
+            canvas.width = finalWidth;
+            canvas.height = finalHeight;
+
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                throw new Error('امکان ایجاد محیط طراحی دو بعدی وجود ندارد.');
+            }
+
+            ctx.drawImage(sourceImage, 0, 0, finalWidth, finalHeight);
+
+            // Add Watermark Logo
+            if (options.watermarkEnabled !== false) {
+                try {
+                    await this.addLogoWatermark(ctx, finalWidth, finalHeight, logoUrl);
+                } catch (e) {
+                    console.warn('[ImageProcessor] Logo watermark failed, falling back to text:', e);
+                    this.addTextWatermark(ctx, finalWidth, finalHeight, watermarkText);
+                }
+            }
+
+            return new Promise((resolveBlob, rejectBlob) => {
+                canvas.toBlob((blob) => {
+                    if (!blob) {
+                        rejectBlob(new Error('تبدیل تصویر به فرمت نهایی با شکست مواجه شد.'));
+                    } else {
+                        console.log('[ImageProcessor] Processing complete, final size:', blob.size);
+                        resolveBlob(blob);
+                    }
+                }, 'image/webp', quality);
+            });
+        };
+
+        // --- METHOD 1: Modern & Ultra-fast createImageBitmap ---
+        if (typeof window !== 'undefined' && 'createImageBitmap' in window) {
+            try {
+                console.log('[ImageProcessor] Attempting Method 1: createImageBitmap');
+                const imgBitmap = await createImageBitmap(file);
+                console.log('[ImageProcessor] Method 1 Succeeded. ImageBitmap dimensions:', imgBitmap.width, 'x', imgBitmap.height);
+                try {
+                    const resultBlob = await handleCanvasProcessing(imgBitmap, imgBitmap.width, imgBitmap.height);
+                    imgBitmap.close();
+                    return resultBlob;
+                } catch (canvasErr) {
+                    imgBitmap.close();
+                    throw canvasErr;
+                }
+            } catch (err) {
+                console.warn('[ImageProcessor] Method 1 (createImageBitmap) failed, trying Method 2...', err);
+            }
+        }
+
+        // --- METHOD 2: Modern & High-Performance URL.createObjectURL ---
+        try {
+            console.log('[ImageProcessor] Attempting Method 2: HTMLImageElement + URL.createObjectURL');
+            const resultBlob = await new Promise((resolveMethod, rejectMethod) => {
+                const objectUrl = URL.createObjectURL(file);
+                const img = new Image();
+
+                img.onload = async () => {
+                    try {
+                        console.log('[ImageProcessor] Method 2 Image loaded successfully, dimensions:', img.width, 'x', img.height);
+                        const processedBlob = await handleCanvasProcessing(img, img.width, img.height);
+                        URL.revokeObjectURL(objectUrl);
+                        resolveMethod(processedBlob);
+                    } catch (err) {
+                        URL.revokeObjectURL(objectUrl);
+                        rejectMethod(err);
+                    }
+                };
+
+                img.onerror = (err) => {
+                    URL.revokeObjectURL(objectUrl);
+                    rejectMethod(new Error('خطا در لود آدرس موقت تصویر (ObjectURL)'));
+                };
+
+                img.src = objectUrl;
+            });
+            return resultBlob;
+        } catch (err) {
+            console.warn('[ImageProcessor] Method 2 (URL.createObjectURL) failed, trying Method 3 (FileReader)...', err);
+        }
+
+        // --- METHOD 3: Standard FileReader + HTMLImageElement ---
+        try {
+            console.log('[ImageProcessor] Attempting Method 3: FileReader + HTMLImageElement');
+            const resultBlob = await new Promise((resolveMethod, rejectMethod) => {
                 const reader = new FileReader();
 
                 reader.onload = (event) => {
                     if (!event.target || !event.target.result) {
-                        return reject(new Error('محتوای فایل در FileReader یافت نشد.'));
+                        return rejectMethod(new Error('محتوای فایل در FileReader یافت نشد.'));
                     }
+
                     const img = new Image();
                     img.onload = async () => {
                         try {
-                            console.log('[ImageProcessor] [Fallback] Image loaded successfully, dimensions:', img.width, 'x', img.height);
-                            const canvas = document.createElement('canvas');
-                            let width = img.width;
-                            let height = img.height;
-
-                            if (width === 0 || height === 0) {
-                                return reject(new Error('ابعاد تصویر معتبر نیست (0x0).'));
-                            }
-
-                            if (width > maxWidth) {
-                                height *= maxWidth / width;
-                                width = maxWidth;
-                            }
-
-                            canvas.width = width;
-                            canvas.height = height;
-
-                            const ctx = canvas.getContext('2d');
-                            if (!ctx) {
-                                return reject(new Error('امکان ایجاد محیط طراحی دو بعدی وجود ندارد.'));
-                            }
-
-                            ctx.drawImage(img, 0, 0, width, height);
-
-                            if (options.watermarkEnabled !== false) {
-                                try {
-                                    await this.addLogoWatermark(ctx, width, height, logoUrl);
-                                } catch (e) {
-                                    console.warn('[ImageProcessor] [Fallback] Logo watermark failed, falling back to text:', e);
-                                    this.addTextWatermark(ctx, width, height, watermarkText);
-                                }
-                            }
-
-                            canvas.toBlob((blob) => {
-                                if (!blob) {
-                                    reject(new Error('تبدیل تصویر به فرمت WebP با شکست مواجه شد.'));
-                                } else {
-                                    console.log('[ImageProcessor] [Fallback] Processing complete, final size:', blob.size);
-                                    resolve(blob);
-                                }
-                            }, 'image/webp', quality);
+                            console.log('[ImageProcessor] Method 3 Image loaded successfully, dimensions:', img.width, 'x', img.height);
+                            const processedBlob = await handleCanvasProcessing(img, img.width, img.height);
+                            resolveMethod(processedBlob);
                         } catch (err) {
-                            console.error('[ImageProcessor] [Fallback] Processing exception:', err);
-                            reject(new Error(`خطا در پردازش تصویر (Fallback): ${err.message}`));
+                            rejectMethod(err);
                         }
                     };
 
                     img.onerror = (err) => {
-                        console.error('[ImageProcessor] [Fallback] Image load error:', err);
-                        reject(new Error('لود تصویر در مرورگر با خطا مواجه شد. لطفاً فرمت تصویر یا حجم آن را بررسی کنید.'));
+                        rejectMethod(new Error('خطا در لود تگ تصویر با داده‌های FileReader'));
                     };
 
                     img.src = event.target.result;
                 };
 
                 reader.onerror = (err) => {
-                    console.error('[ImageProcessor] [Fallback] FileReader error:', err);
-                    reject(new Error(`خطا در خواندن فایل تصویر (FileReader): ${err.message || 'خطای عمومی خواندن'}`));
+                    rejectMethod(new Error(`خطا در خواندن فایل توسط ریدر: ${err.message || 'خطای عمومی خواندن'}`));
                 };
 
                 reader.onabort = () => {
-                    console.warn('[ImageProcessor] [Fallback] FileReader aborted');
-                    reject(new Error('عملیات خواندن فایل لغو شد.'));
+                    rejectMethod(new Error('عملیات خواندن فایل لغو شد.'));
                 };
 
-                try {
-                    reader.readAsDataURL(file);
-                } catch (err) {
-                    console.error('[ImageProcessor] [Fallback] FileReader failed to start:', err);
-                    reject(new Error(`عدم امکان شروع خواندن فایل تصویر: ${err.message}`));
-                }
-            };
-
-            // 2. Setup the image loading helper
-            const loadImageAndProcess = (srcUrl, isObjectURL = false) => {
-                const img = new Image();
-
-                img.onload = async () => {
-                    try {
-                        console.log('[ImageProcessor] Image loaded successfully, dimensions:', img.width, 'x', img.height);
-
-                        // Clean up object URL as soon as the image is loaded to free memory
-                        if (isObjectURL) {
-                            URL.revokeObjectURL(srcUrl);
-                        }
-
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-
-                        if (width === 0 || height === 0) {
-                            return reject(new Error('ابعاد تصویر معتبر نیست (0x0).'));
-                        }
-
-                        // Resize calculations
-                        if (width > maxWidth) {
-                            height *= maxWidth / width;
-                            width = maxWidth;
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-
-                        const ctx = canvas.getContext('2d');
-                        if (!ctx) {
-                            return reject(new Error('امکان ایجاد محیط طراحی دو بعدی وجود ندارد.'));
-                        }
-
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        // Add Watermark Logo
-                        if (options.watermarkEnabled !== false) {
-                            try {
-                                await this.addLogoWatermark(ctx, width, height, logoUrl);
-                            } catch (e) {
-                                console.warn('[ImageProcessor] Logo watermark failed, falling back to text:', e);
-                                this.addTextWatermark(ctx, width, height, watermarkText);
-                            }
-                        }
-
-                        // Convert Canvas to WebP Blob
-                        canvas.toBlob((blob) => {
-                            if (!blob) {
-                                reject(new Error('تبدیل تصویر به فرمت نهایی با شکست مواجه شد.'));
-                            } else {
-                                console.log('[ImageProcessor] Processing complete, final size:', blob.size);
-                                resolve(blob);
-                            }
-                        }, 'image/webp', quality);
-                    } catch (err) {
-                        if (isObjectURL) {
-                            try { URL.revokeObjectURL(srcUrl); } catch (_) {}
-                            console.warn('[ImageProcessor] Primary processing failed, falling back to FileReader...');
-                            runFileReaderFallback(err.message);
-                        } else {
-                            console.error('[ImageProcessor] Processing exception:', err);
-                            reject(new Error(`خطا در پردازش تصویر: ${err.message}`));
-                        }
-                    }
-                };
-
-                img.onerror = (err) => {
-                    if (isObjectURL) {
-                        try { URL.revokeObjectURL(srcUrl); } catch (_) {}
-                        console.warn('[ImageProcessor] Primary ObjectURL image load failed, trying FileReader fallback...');
-                        runFileReaderFallback('ObjectURL image load error');
-                    } else {
-                        console.error('[ImageProcessor] Image load error:', err);
-                        reject(new Error('لود تصویر در مرورگر با خطا مواجه شد. احتمالاً فایل خراب است.'));
-                    }
-                };
-
-                img.src = srcUrl;
-            };
-
-            // 3. Primary Path: Modern, high-performance URL.createObjectURL (prevents Base64 Android Chrome crashes)
-            if (typeof URL !== 'undefined' && URL.createObjectURL) {
-                try {
-                    console.log('[ImageProcessor] Using primary URL.createObjectURL path');
-                    const objectUrl = URL.createObjectURL(file);
-                    loadImageAndProcess(objectUrl, true);
-                } catch (e) {
-                    console.warn('[ImageProcessor] URL.createObjectURL failed, trying FileReader fallback:', e);
-                    runFileReaderFallback(e.message);
-                }
-            } else {
-                runFileReaderFallback('URL.createObjectURL not supported');
-            }
-        });
+                reader.readAsDataURL(file);
+            });
+            return resultBlob;
+        } catch (err) {
+            console.error('[ImageProcessor] All image processing methods in cascade failed.', err);
+            throw new Error(`پردازش تصویر با خطا مواجه شد: ${err.message || 'خطای ناشناخته در رمزگشایی تصویر'}`);
+        }
     },
 
     /**

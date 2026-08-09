@@ -10,6 +10,9 @@ export const GalleryModule = {
     currentFilter: 'all',
     searchQuery: '',
     currentPreviewUrl: null,
+    selectedFileBlob: null,
+    selectedFileName: '',
+    selectedFileType: '',
 
     async load() {
         await this.loadCategories();
@@ -158,7 +161,6 @@ export const GalleryModule = {
         console.log('--- Start Gallery Save Process ---');
 
         const id = document.getElementById('gallery-id').value;
-        const fileInput = document.getElementById('gallery-file-input');
         const saveBtn = document.getElementById('save-gallery-btn');
 
         const payload = {
@@ -181,9 +183,9 @@ export const GalleryModule = {
 
         try {
             // 1. If new file selected, upload it
-            if (fileInput.files && fileInput.files[0]) {
-                const file = fileInput.files[0];
-                console.log('New file detected for upload:', file.name);
+            if (this.selectedFileBlob) {
+                const file = this.selectedFileBlob;
+                console.log('Selected file Blob detected for upload, size:', file.size, 'type:', file.type);
 
                 const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.webp`;
 
@@ -299,6 +301,10 @@ export const GalleryModule = {
     },
 
     openModal() {
+        this.selectedFileBlob = null;
+        this.selectedFileName = '';
+        this.selectedFileType = '';
+
         document.getElementById('gallery-form').reset();
         document.getElementById('gallery-id').value = '';
         document.getElementById('gallery-image-url').value = '';
@@ -314,6 +320,9 @@ export const GalleryModule = {
     },
 
     closeModal() {
+        this.selectedFileBlob = null;
+        this.selectedFileName = '';
+        this.selectedFileType = '';
         document.getElementById('gallery-modal').style.display = 'none';
     },
 
@@ -327,9 +336,9 @@ export const GalleryModule = {
             inputElement.click();
         });
 
-        inputElement.addEventListener('change', (e) => {
+        inputElement.addEventListener('change', async (e) => {
             if (inputElement.files.length) {
-                this.updateThumbnail(dropZoneElement, inputElement.files[0]);
+                await this.updateThumbnail(dropZoneElement, inputElement.files[0]);
             }
         });
 
@@ -344,19 +353,19 @@ export const GalleryModule = {
             });
         });
 
-        dropZoneElement.addEventListener('drop', (e) => {
+        dropZoneElement.addEventListener('drop', async (e) => {
             e.preventDefault();
 
             if (e.dataTransfer.files.length) {
                 inputElement.files = e.dataTransfer.files;
-                this.updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
+                await this.updateThumbnail(dropZoneElement, e.dataTransfer.files[0]);
             }
 
             dropZoneElement.classList.remove('drop-zone--over');
         });
     },
 
-    updateThumbnail(dropZoneElement, file) {
+    async updateThumbnail(dropZoneElement, file) {
         let thumbnailElement = dropZoneElement.querySelector('.drop-zone__thumb');
 
         // First time - remove the prompt
@@ -372,6 +381,20 @@ export const GalleryModule = {
 
         thumbnailElement.dataset.label = file.name;
 
+        // Immediately read the file into an in-memory persistent Blob to prevent file descriptor expiration on mobile
+        try {
+            console.log('[GalleryModule] Instantly reading selected file into an ArrayBuffer...');
+            const buffer = await file.arrayBuffer();
+            this.selectedFileBlob = new Blob([buffer], { type: file.type });
+            this.selectedFileName = file.name;
+            this.selectedFileType = file.type;
+            console.log('[GalleryModule] File converted to persistent Blob successfully:', this.selectedFileBlob.size, 'bytes');
+        } catch (err) {
+            console.error('[GalleryModule] Failed to read selected file into memory Blob:', err);
+            alert('خطا در خواندن فایل تصویر از دستگاه. لطفاً دوباره تلاش کنید.');
+            return;
+        }
+
         // Show thumbnail for image files
         if (file.type.startsWith('image/')) {
             // Revoke old object URL to prevent memory leaks
@@ -383,8 +406,8 @@ export const GalleryModule = {
                 }
             }
 
-            // Create new object URL (instant, zero-memory-overhead)
-            GalleryModule.currentPreviewUrl = URL.createObjectURL(file);
+            // Create new object URL from our persistent Blob instead of the original File object
+            GalleryModule.currentPreviewUrl = URL.createObjectURL(this.selectedFileBlob);
 
             thumbnailElement.style.backgroundImage = `url('${GalleryModule.currentPreviewUrl}')`;
             document.getElementById('gallery-preview').src = GalleryModule.currentPreviewUrl;
