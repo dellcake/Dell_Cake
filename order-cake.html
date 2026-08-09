@@ -754,6 +754,18 @@ placeholder="مثلاً 2.5">
                 </div>
             </div>
 
+            <div class="form-group">
+                <label for="dummyImage">امکان آپلود تصویر نمونه</label>
+                <input type="file"
+                       id="dummyImage"
+                       name="dummyImage"
+                       accept="image/*"
+                       style="padding: 10px;">
+                <div id="dummyImagePreviewContainer" class="photo-notice" style="display: none; flex-direction: column; align-items: center; gap: 10px;">
+                    <img id="dummyImagePreview" src="" alt="پیش‌نمایش تصویر نمونه" style="max-width: 100%; max-height: 200px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                    <span id="dummyImageName" style="font-size: 13px; color: #6b3d2a; font-weight: bold;"></span>
+                </div>
+            </div>
 
             <div class="form-group">
                 <label for="dummyDescription">توضیحات سفارش</label>

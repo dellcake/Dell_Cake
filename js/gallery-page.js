@@ -148,6 +148,7 @@ const GalleryPage = {
             this.renderItems(data);
             this.page++;
 
+            if (this.lightbox) this.lightbox.reload();
             this.updateSchema();
 
         } catch (err) {
@@ -160,36 +161,25 @@ const GalleryPage = {
     },
 
     renderItems(newItems) {
-        const html = newItems.map((item, idx) => {
-            const globalIndex = this.items.length - newItems.length + idx;
-            return `
-                <article class="gallery-card" data-index="${globalIndex}" style="cursor: pointer;">
-                    <div class="gallery-img-wrapper">
-                        <img src="${item.thumbnail_url || item.image_url}" alt="${item.alt_text || item.title || 'Dell Cake'}" loading="lazy" onerror="this.src='images/logo/sweet-.png'">
-                        ${item.watermark_enabled ? '<div class="wm-indicator"><i class="fas fa-copyright"></i></div>' : ''}
-                    </div>
-                    <div class="card-content">
-                        <span class="card-category">${item.gallery_categories?.name || 'سایر'}</span>
-                        <h3 class="card-title">${item.title || 'محصول دل‌کیک'}</h3>
-                        <p class="card-desc">${item.description || ''}</p>
-                    </div>
-                </article>
-            `;
-        }).join('');
+        const html = newItems.map(item => `
+            <article class="gallery-card glightbox" data-glightbox="title: ${item.title || ''}; description: ${item.description || ''}" href="${item.image_url}">
+                <div class="gallery-img-wrapper">
+                    <img src="${item.thumbnail_url || item.image_url}" alt="${item.alt_text || item.title || 'Dell Cake'}" loading="lazy" onerror="this.src='images/logo/sweet-.png'">
+                    ${item.watermark_enabled ? '<div class="wm-indicator"><i class="fas fa-copyright"></i></div>' : ''}
+                </div>
+                <div class="card-content">
+                    <span class="card-category">${item.gallery_categories?.name || 'سایر'}</span>
+                    <h3 class="card-title">${item.title || 'محصول دل‌کیک'}</h3>
+                    <p class="card-desc">${item.description || ''}</p>
+                </div>
+            </article>
+        `).join('');
 
         if (this.page === 0) {
             this.grid.innerHTML = html;
         } else {
             this.grid.insertAdjacentHTML('beforeend', html);
         }
-
-        // Add event listeners to the cards
-        this.grid.querySelectorAll('.gallery-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                const idx = parseInt(card.dataset.index, 10);
-                this.openLightbox(idx);
-            });
-        });
     },
 
     renderEmptyState() {
@@ -223,139 +213,13 @@ const GalleryPage = {
     },
 
     initLightbox() {
-        // Create custom Lightbox elements in DOM if not present
-        if (!document.getElementById('dc-lightbox')) {
-            const lightboxHTML = `
-                <div id="dc-lightbox" class="dc-lightbox-overlay" role="dialog" aria-modal="true">
-                    <button class="dc-lightbox-close" aria-label="بستن">&times;</button>
-                    <button class="dc-lightbox-nav dc-lightbox-prev" aria-label="قبلی"><i class="fas fa-chevron-right"></i></button>
-                    <button class="dc-lightbox-nav dc-lightbox-next" aria-label="بعدی"><i class="fas fa-chevron-left"></i></button>
-                    <div class="dc-lightbox-container" tabindex="0">
-                        <div class="dc-lightbox-img-wrapper">
-                            <img class="dc-lightbox-img" src="" alt="">
-                        </div>
-                        <div class="dc-lightbox-caption">
-                            <h4 class="dc-lightbox-title"></h4>
-                            <p class="dc-lightbox-desc"></p>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', lightboxHTML);
-        }
-
-        const overlay = document.getElementById('dc-lightbox');
-        const closeBtn = overlay.querySelector('.dc-lightbox-close');
-        const prevBtn = overlay.querySelector('.dc-lightbox-prev');
-        const nextBtn = overlay.querySelector('.dc-lightbox-next');
-        const container = overlay.querySelector('.dc-lightbox-container');
-
-        // Close on overlay / background click (but not content click)
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                this.closeLightbox();
-            }
-        });
-
-        // Close button click
-        closeBtn.addEventListener('click', () => this.closeLightbox());
-
-        // Nav click
-        prevBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.navigateLightbox(-1);
-        });
-        nextBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.navigateLightbox(1);
-        });
-
-        // Keyboard support
-        document.addEventListener('keydown', (e) => {
-            if (!overlay.classList.contains('active')) return;
-            if (e.key === 'Escape') {
-                this.closeLightbox();
-            } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-                this.navigateLightbox(-1);
-            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-                this.navigateLightbox(1);
-            }
-        });
-
-        // Swipe support for mobile
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        container.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-
-        container.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            this.handleSwipe(touchStartX, touchEndX);
-        }, { passive: true });
-    },
-
-    openLightbox(index) {
-        if (index < 0 || index >= this.items.length) return;
-        this.currentLightboxIndex = index;
-
-        const item = this.items[index];
-        const overlay = document.getElementById('dc-lightbox');
-        const img = overlay.querySelector('.dc-lightbox-img');
-        const title = overlay.querySelector('.dc-lightbox-title');
-        const desc = overlay.querySelector('.dc-lightbox-desc');
-        const container = overlay.querySelector('.dc-lightbox-container');
-
-        // Fade effect transition
-        img.style.opacity = '0';
-        img.style.transform = 'scale(0.95)';
-
-        img.src = item.image_url;
-        img.alt = item.alt_text || item.title || 'Dell Cake';
-        title.textContent = item.title || 'محصول دل‌کیک';
-        desc.textContent = item.description || '';
-
-        img.onload = () => {
-            img.style.opacity = '1';
-            img.style.transform = 'scale(1)';
-        };
-
-        overlay.classList.add('active');
-        document.body.classList.add('dc-lightbox-locked');
-        container.focus();
-    },
-
-    closeLightbox() {
-        const overlay = document.getElementById('dc-lightbox');
-        if (overlay) {
-            overlay.classList.remove('active');
-        }
-        document.body.classList.remove('dc-lightbox-locked');
-    },
-
-    navigateLightbox(direction) {
-        if (typeof this.currentLightboxIndex === 'undefined') return;
-        let newIndex = this.currentLightboxIndex + direction;
-
-        // Infinite loop
-        if (newIndex < 0) {
-            newIndex = this.items.length - 1;
-        } else if (newIndex >= this.items.length) {
-            newIndex = 0;
-        }
-
-        this.openLightbox(newIndex);
-    },
-
-    handleSwipe(startX, endX) {
-        const threshold = 50;
-        if (startX - endX > threshold) {
-            // Swipe Left -> Next (since the screen is RTL, swipe left is actually Next)
-            this.navigateLightbox(1);
-        } else if (endX - startX > threshold) {
-            // Swipe Right -> Prev
-            this.navigateLightbox(-1);
+        if (typeof GLightbox !== 'undefined') {
+            this.lightbox = GLightbox({
+                selector: '.glightbox',
+                touchNavigation: true,
+                loop: true,
+                autoplayVideos: true
+            });
         }
     },
 

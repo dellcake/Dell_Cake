@@ -2,8 +2,68 @@ import { supabase, publicSupabase } from "./supabase-client.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("dummyForm");
+    const imageInput = document.getElementById("dummyImage");
+    const previewContainer = document.getElementById("dummyImagePreviewContainer");
+    const previewImg = document.getElementById("dummyImagePreview");
+    const imageNameSpan = document.getElementById("dummyImageName");
 
     if (!form) return;
+
+    // Interactive sample image upload preview & compression setup
+    let base64Image = null;
+
+    if (imageInput) {
+        imageInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (!file) {
+                previewContainer.style.display = "none";
+                previewImg.src = "";
+                imageNameSpan.textContent = "";
+                base64Image = null;
+                return;
+            }
+
+            // Real-time text display
+            imageNameSpan.textContent = file.name;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    // Compress image using HTML5 Canvas
+                    const canvas = document.createElement("canvas");
+                    const MAX_WIDTH = 800;
+                    const MAX_HEIGHT = 800;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Output compressed JPEG base64 string
+                    base64Image = canvas.toDataURL("image/jpeg", 0.7);
+                    previewImg.src = base64Image;
+                    previewContainer.style.display = "flex";
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -47,7 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 details: {
                     dimensions,
                     colors,
-                    deliveryDate: date
+                    deliveryDate: date,
+                    sample_image: base64Image // Storing base64 representation directly inside JSONB field
                 },
                 status: 'new'
             }]);
@@ -73,6 +134,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (desc) {
             message += `\n📝 توضیحات سفارش:\n`;
             message += `${desc}\n`;
+        }
+
+        if (base64Image) {
+            message += `\n🖼️ [تصویر نمونه توسط مشتری پیوست شده است]\n`;
         }
 
         // Trigger existing popup share overlay via global helper
