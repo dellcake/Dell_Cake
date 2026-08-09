@@ -45,6 +45,91 @@ export const ImageProcessor = {
                 return reject(new Error('فرمت فایل نامعتبر است. لطفاً فقط تصویر انتخاب کنید.'));
             }
 
+            // Fallback function using FileReader
+            const runFileReaderFallback = (primaryErrorMsg) => {
+                console.log('[ImageProcessor] Executing fallback FileReader path. Primary failure reason:', primaryErrorMsg);
+                const reader = new FileReader();
+
+                reader.onload = (event) => {
+                    if (!event.target || !event.target.result) {
+                        return reject(new Error('محتوای فایل در FileReader یافت نشد.'));
+                    }
+                    const img = new Image();
+                    img.onload = async () => {
+                        try {
+                            console.log('[ImageProcessor] [Fallback] Image loaded successfully, dimensions:', img.width, 'x', img.height);
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+
+                            if (width === 0 || height === 0) {
+                                return reject(new Error('ابعاد تصویر معتبر نیست (0x0).'));
+                            }
+
+                            if (width > maxWidth) {
+                                height *= maxWidth / width;
+                                width = maxWidth;
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+
+                            const ctx = canvas.getContext('2d');
+                            if (!ctx) {
+                                return reject(new Error('امکان ایجاد محیط طراحی دو بعدی وجود ندارد.'));
+                            }
+
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            if (options.watermarkEnabled !== false) {
+                                try {
+                                    await this.addLogoWatermark(ctx, width, height, logoUrl);
+                                } catch (e) {
+                                    console.warn('[ImageProcessor] [Fallback] Logo watermark failed, falling back to text:', e);
+                                    this.addTextWatermark(ctx, width, height, watermarkText);
+                                }
+                            }
+
+                            canvas.toBlob((blob) => {
+                                if (!blob) {
+                                    reject(new Error('تبدیل تصویر به فرمت WebP با شکست مواجه شد.'));
+                                } else {
+                                    console.log('[ImageProcessor] [Fallback] Processing complete, final size:', blob.size);
+                                    resolve(blob);
+                                }
+                            }, 'image/webp', quality);
+                        } catch (err) {
+                            console.error('[ImageProcessor] [Fallback] Processing exception:', err);
+                            reject(new Error(`خطا در پردازش تصویر (Fallback): ${err.message}`));
+                        }
+                    };
+
+                    img.onerror = (err) => {
+                        console.error('[ImageProcessor] [Fallback] Image load error:', err);
+                        reject(new Error('لود تصویر در مرورگر با خطا مواجه شد. لطفاً فرمت تصویر یا حجم آن را بررسی کنید.'));
+                    };
+
+                    img.src = event.target.result;
+                };
+
+                reader.onerror = (err) => {
+                    console.error('[ImageProcessor] [Fallback] FileReader error:', err);
+                    reject(new Error(`خطا در خواندن فایل تصویر (FileReader): ${err.message || 'خطای عمومی خواندن'}`));
+                };
+
+                reader.onabort = () => {
+                    console.warn('[ImageProcessor] [Fallback] FileReader aborted');
+                    reject(new Error('عملیات خواندن فایل لغو شد.'));
+                };
+
+                try {
+                    reader.readAsDataURL(file);
+                } catch (err) {
+                    console.error('[ImageProcessor] [Fallback] FileReader failed to start:', err);
+                    reject(new Error(`عدم امکان شروع خواندن فایل تصویر: ${err.message}`));
+                }
+            };
+
             // 2. Setup the image loading helper
             const loadImageAndProcess = (srcUrl, isObjectURL = false) => {
                 const img = new Image();
@@ -102,16 +187,26 @@ export const ImageProcessor = {
                             }
                         }, 'image/webp', quality);
                     } catch (err) {
-                        if (isObjectURL) URL.revokeObjectURL(srcUrl);
-                        console.error('[ImageProcessor] Processing exception:', err);
-                        reject(new Error(`خطا در پردازش تصویر: ${err.message}`));
+                        if (isObjectURL) {
+                            try { URL.revokeObjectURL(srcUrl); } catch (_) {}
+                            console.warn('[ImageProcessor] Primary processing failed, falling back to FileReader...');
+                            runFileReaderFallback(err.message);
+                        } else {
+                            console.error('[ImageProcessor] Processing exception:', err);
+                            reject(new Error(`خطا در پردازش تصویر: ${err.message}`));
+                        }
                     }
                 };
 
                 img.onerror = (err) => {
-                    if (isObjectURL) URL.revokeObjectURL(srcUrl);
-                    console.error('[ImageProcessor] Image load error:', err);
-                    reject(new Error('لود تصویر در مرورگر با خطا مواجه شد. احتمالاً فایل خراب است.'));
+                    if (isObjectURL) {
+                        try { URL.revokeObjectURL(srcUrl); } catch (_) {}
+                        console.warn('[ImageProcessor] Primary ObjectURL image load failed, trying FileReader fallback...');
+                        runFileReaderFallback('ObjectURL image load error');
+                    } else {
+                        console.error('[ImageProcessor] Image load error:', err);
+                        reject(new Error('لود تصویر در مرورگر با خطا مواجه شد. احتمالاً فایل خراب است.'));
+                    }
                 };
 
                 img.src = srcUrl;
@@ -122,38 +217,13 @@ export const ImageProcessor = {
                 try {
                     console.log('[ImageProcessor] Using primary URL.createObjectURL path');
                     const objectUrl = URL.createObjectURL(file);
-                    return loadImageAndProcess(objectUrl, true);
+                    loadImageAndProcess(objectUrl, true);
                 } catch (e) {
                     console.warn('[ImageProcessor] URL.createObjectURL failed, trying FileReader fallback:', e);
+                    runFileReaderFallback(e.message);
                 }
-            }
-
-            // 4. Fallback Path: Standard FileReader
-            console.log('[ImageProcessor] Executing fallback FileReader path');
-            const reader = new FileReader();
-
-            reader.onload = (event) => {
-                if (!event.target || !event.target.result) {
-                    return reject(new Error('محتوای فایل در ریدر یافت نشد.'));
-                }
-                loadImageAndProcess(event.target.result, false);
-            };
-
-            reader.onerror = (err) => {
-                console.error('[ImageProcessor] FileReader error:', err, 'File details:', fileMeta);
-                reject(new Error(`خطا در خواندن فایل تصویر (FileReader): ${err.message || 'خطای عمومی خواندن'}`));
-            };
-
-            reader.onabort = () => {
-                console.warn('[ImageProcessor] FileReader aborted', fileMeta);
-                reject(new Error('عملیات خواندن فایل لغو شد.'));
-            };
-
-            try {
-                reader.readAsDataURL(file);
-            } catch (err) {
-                console.error('[ImageProcessor] FileReader failed to start:', err, fileMeta);
-                reject(new Error(`عدم امکان شروع خواندن فایل تصویر: ${err.message}`));
+            } else {
+                runFileReaderFallback('URL.createObjectURL not supported');
             }
         });
     },
@@ -171,7 +241,15 @@ export const ImageProcessor = {
     async addLogoWatermark(ctx, width, height, logoUrl) {
         return new Promise((resolve, reject) => {
             const logo = new Image();
-            logo.crossOrigin = 'anonymous';
+
+            const isAbsoluteRemote = logoUrl.startsWith('http://') || logoUrl.startsWith('https://');
+            const isSameOrigin = isAbsoluteRemote ? logoUrl.startsWith(window.location.origin) : true;
+
+            if (!isSameOrigin) {
+                logo.crossOrigin = 'anonymous';
+            }
+
+            let triedFallback = false;
 
             logo.onload = () => {
                 try {
@@ -195,7 +273,14 @@ export const ImageProcessor = {
             };
 
             logo.onerror = (err) => {
-                reject(new Error(`Failed to load logo watermark image: ${logoUrl}`));
+                if (!triedFallback && logoUrl.startsWith('..')) {
+                    triedFallback = true;
+                    const fallbackUrl = logoUrl.substring(2); // e.g. "/images/logo/sweet-.png"
+                    console.log(`[ImageProcessor] Watermark logo relative load failed, trying absolute path fallback: ${fallbackUrl}`);
+                    logo.src = fallbackUrl;
+                } else {
+                    reject(new Error(`Failed to load logo watermark image: ${logoUrl}`));
+                }
             };
 
             logo.src = logoUrl;
