@@ -28,7 +28,6 @@ export async function initHomeGallery() {
             .select('*, gallery_categories(name)')
             .eq('status', 'published')
             .eq('is_featured', true)
-            .order('display_order', { ascending: true })
             .order('created_at', { ascending: false })
             .limit(10);
 

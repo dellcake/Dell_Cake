@@ -118,7 +118,6 @@ const GalleryPage = {
                 .from('gallery')
                 .select('*, gallery_categories(name)')
                 .eq('status', 'published')
-                .order('display_order', { ascending: true })
                 .order('created_at', { ascending: false })
                 .range(this.page * this.perPage, (this.page + 1) * this.perPage - 1);
 
