@@ -168,7 +168,10 @@ const GalleryPage = {
                         ${item.watermark_enabled ? '<div class="wm-indicator"><i class="fas fa-copyright"></i></div>' : ''}
                     </div>
                     <div class="card-content">
-                        <span class="card-category">${item.gallery_categories?.name || 'سایر'}</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <span class="card-category" style="margin-bottom: 0;">${item.gallery_categories?.name || 'سایر'}</span>
+                            ${item.code ? `<span class="card-code" style="font-size: 0.8rem; color: #8c7b75; font-weight: 700; font-family: 'Vazirmatn', sans-serif;">کد: ${item.code}</span>` : ''}
+                        </div>
                         <h3 class="card-title">${item.title || 'محصول دل‌کیک'}</h3>
                         <p class="card-desc">${item.description || ''}</p>
                     </div>
@@ -312,7 +315,9 @@ const GalleryPage = {
 
         img.src = item.image_url;
         img.alt = item.alt_text || item.title || 'Dell Cake';
-        title.textContent = item.title || 'محصول دل‌کیک';
+        title.textContent = item.title
+            ? (item.code ? `${item.title} (کد: ${item.code})` : item.title)
+            : (item.code ? `محصول دل‌کیک (کد: ${item.code})` : 'محصول دل‌کیک');
         desc.textContent = item.description || '';
 
         img.onload = () => {
