@@ -41,7 +41,6 @@ export const GalleryModule = {
             let query = supabase
                 .from('gallery')
                 .select('*, gallery_categories(name)')
-                .order('display_order', { ascending: true })
                 .order('created_at', { ascending: false });
 
             if (this.currentFilter !== 'all') {
@@ -84,7 +83,7 @@ export const GalleryModule = {
                     <div class="gallery-card-info">
                         <h4>${item.title || 'بدون عنوان'}</h4>
                         <div style="font-size: 0.75rem; color: var(--text-muted);">
-                            ${item.gallery_categories?.name || 'بدون دسته'} | ترتیب: ${item.display_order}
+                            ${item.gallery_categories?.name || 'بدون دسته'}
                         </div>
                         <div style="font-size: 0.85rem; font-weight: bold; margin-top: 6px; display: flex; align-items: center; gap: 8px; color: var(--secondary);">
                             <span>کد: ${item.code || 'بدون کد'}</span>
@@ -168,7 +167,6 @@ export const GalleryModule = {
             description: document.getElementById('gallery-description').value,
             category_id: document.getElementById('gallery-modal-category').value || null,
             alt_text: document.getElementById('gallery-alt').value,
-            display_order: parseInt(document.getElementById('gallery-order').value) || 0,
             status: document.getElementById('gallery-status').value,
             is_featured: document.getElementById('gallery-is-featured-modal').checked,
             watermark_enabled: document.getElementById('gallery-watermark').checked,
@@ -267,7 +265,6 @@ export const GalleryModule = {
         document.getElementById('gallery-description').value = item.description || '';
         document.getElementById('gallery-modal-category').value = item.category_id || '';
         document.getElementById('gallery-alt').value = item.alt_text || '';
-        document.getElementById('gallery-order').value = item.display_order || 0;
         document.getElementById('gallery-status').value = item.status || 'published';
         document.getElementById('gallery-is-featured-modal').checked = item.is_featured || false;
         document.getElementById('gallery-watermark').checked = item.watermark_enabled ?? true;
