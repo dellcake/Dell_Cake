@@ -22,10 +22,10 @@ export async function initHomeGallery() {
             return;
         }
 
-        // Fetch only Featured & Published gallery items via public client
+        // Fetch only Featured & Published gallery items with child images via public client
         const { data, error } = await publicSupabase
             .from('gallery')
-            .select('*, gallery_categories(name)')
+            .select('*, gallery_categories(name), gallery_images(*)')
             .eq('status', 'published')
             .eq('is_featured', true)
             .order('created_at', { ascending: false })
@@ -45,20 +45,30 @@ export async function initHomeGallery() {
             return;
         }
 
-        wrapper.innerHTML = data.map(item => `
-            <div class="swiper-slide portfolio-slide">
-                <div class="portfolio-card">
-                    <div class="portfolio-img-wrapper">
-                        <img src="${item.thumbnail_url || item.image_url}" loading="lazy" decoding="async" alt="${item.alt_text || item.title || 'Dell Cake Portfolio'}" onerror="this.src='images/logo/sweet-.png'">
-                        <span class="portfolio-category-badge">${item.gallery_categories?.name || 'سایر'}</span>
-                    </div>
-                    <div class="portfolio-info-box">
-                        <h4 class="portfolio-card-title">${item.title || ''}</h4>
-                        <span class="portfolio-card-subtitle">نمونه‌کار گالری دل‌کیک</span>
+        wrapper.innerHTML = data.map(item => {
+            const galleryImages = item.gallery_images || [];
+            const totalImages = galleryImages.length > 0 ? galleryImages.length : (item.image_url ? 1 : 0);
+
+            return `
+                <div class="swiper-slide portfolio-slide">
+                    <div class="portfolio-card">
+                        <div class="portfolio-img-wrapper">
+                            <img src="${item.thumbnail_url || item.image_url}" loading="lazy" decoding="async" alt="${item.alt_text || item.title || 'Dell Cake Portfolio'}" onerror="this.src='images/logo/sweet-.png'">
+                            <span class="portfolio-category-badge">${item.gallery_categories?.name || 'سایر'}</span>
+                            ${totalImages > 1 ? `
+                                <span style="position: absolute; bottom: 10px; right: 10px; background: rgba(107, 61, 42, 0.85); color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; backdrop-filter: blur(4px); z-index: 2;">
+                                    <i class="fas fa-camera"></i> ${totalImages} تصویر
+                                </span>
+                            ` : ''}
+                        </div>
+                        <div class="portfolio-info-box">
+                            <h4 class="portfolio-card-title">${item.title || ''}</h4>
+                            <span class="portfolio-card-subtitle">نمونه‌کار گالری دل‌کیک</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
 
         // Initialize Swiper
         if (typeof Swiper !== 'undefined') {

@@ -1,13 +1,12 @@
 import { publicSupabase } from "./supabase-client.js";
 
 /**
- * Professional Gallery Page Logic - Supabase Only Version
+ * Professional Multi-Image Gallery Page Logic - Supabase Dynamic Version
  */
 const GalleryPage = {
     grid: null,
     filterContainer: null,
     loader: null,
-    lightbox: null,
     items: [],
     categories: [],
     currentFilter: 'all',
@@ -16,6 +15,10 @@ const GalleryPage = {
     perPage: 12,
     hasMore: true,
     loading: false,
+
+    // Lightbox State
+    currentProductIndex: 0,
+    currentSubImageIndex: 0,
 
     async init() {
         try {
@@ -116,7 +119,7 @@ const GalleryPage = {
 
             let query = publicSupabase
                 .from('gallery')
-                .select('*, gallery_categories(name)')
+                .select('*, gallery_categories(name), gallery_images(*)')
                 .eq('status', 'published')
                 .order('created_at', { ascending: false })
                 .range(this.page * this.perPage, (this.page + 1) * this.perPage - 1);
@@ -126,7 +129,12 @@ const GalleryPage = {
             }
 
             if (this.searchQuery) {
-                query = query.or(`title.ilike.%${this.searchQuery}%,description.ilike.%${this.searchQuery}%`);
+                const queryStr = this.searchQuery.trim();
+                if (/^\d+$/.test(queryStr)) {
+                    query = query.or(`code.eq.${queryStr},title.ilike.%${queryStr}%,description.ilike.%${queryStr}%`);
+                } else {
+                    query = query.or(`title.ilike.%${queryStr}%,description.ilike.%${queryStr}%`);
+                }
             }
 
             const { data, error } = await query;
@@ -161,10 +169,18 @@ const GalleryPage = {
     renderItems(newItems) {
         const html = newItems.map((item, idx) => {
             const globalIndex = this.items.length - newItems.length + idx;
+            const galleryImages = item.gallery_images || [];
+            const totalImages = galleryImages.length > 0 ? galleryImages.length : (item.image_url ? 1 : 0);
+
             return `
                 <article class="gallery-card" data-index="${globalIndex}" style="cursor: pointer;">
                     <div class="gallery-img-wrapper">
                         <img src="${item.thumbnail_url || item.image_url}" alt="${item.alt_text || item.title || 'Dell Cake'}" loading="lazy" onerror="this.src='images/logo/sweet-.png'">
+                        ${totalImages > 1 ? `
+                            <span style="position: absolute; bottom: 10px; right: 10px; background: rgba(107, 61, 42, 0.85); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; backdrop-filter: blur(4px); z-index: 2;">
+                                <i class="fas fa-camera"></i> ${totalImages} تصویر
+                            </span>
+                        ` : ''}
                         ${item.watermark_enabled ? '<div class="wm-indicator"><i class="fas fa-copyright"></i></div>' : ''}
                     </div>
                     <div class="card-content">
@@ -187,9 +203,9 @@ const GalleryPage = {
 
         // Add event listeners to the cards
         this.grid.querySelectorAll('.gallery-card').forEach(card => {
-            card.addEventListener('click', (e) => {
+            card.addEventListener('click', () => {
                 const idx = parseInt(card.dataset.index, 10);
-                this.openLightbox(idx);
+                this.openLightbox(idx, 0);
             });
         });
     },
@@ -225,7 +241,6 @@ const GalleryPage = {
     },
 
     initLightbox() {
-        // Create custom Lightbox elements in DOM if not present
         if (!document.getElementById('dc-lightbox')) {
             const lightboxHTML = `
                 <div id="dc-lightbox" class="dc-lightbox-overlay" role="dialog" aria-modal="true">
@@ -235,6 +250,7 @@ const GalleryPage = {
                     <div class="dc-lightbox-container" tabindex="0">
                         <div class="dc-lightbox-img-wrapper">
                             <img class="dc-lightbox-img" src="" alt="">
+                            <div class="dc-lightbox-counter" id="dc-lightbox-counter" style="position: absolute; bottom: 12px; left: 12px; background: rgba(107, 61, 42, 0.85); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; backdrop-filter: blur(4px);"></div>
                         </div>
                         <div class="dc-lightbox-caption">
                             <h4 class="dc-lightbox-title"></h4>
@@ -252,17 +268,14 @@ const GalleryPage = {
         const nextBtn = overlay.querySelector('.dc-lightbox-next');
         const container = overlay.querySelector('.dc-lightbox-container');
 
-        // Close on overlay / background click (but not content click)
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) {
                 this.closeLightbox();
             }
         });
 
-        // Close button click
         closeBtn.addEventListener('click', () => this.closeLightbox());
 
-        // Nav click
         prevBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             this.navigateLightbox(-1);
@@ -272,7 +285,6 @@ const GalleryPage = {
             this.navigateLightbox(1);
         });
 
-        // Keyboard support
         document.addEventListener('keydown', (e) => {
             if (!overlay.classList.contains('active')) return;
             if (e.key === 'Escape') {
@@ -284,7 +296,6 @@ const GalleryPage = {
             }
         });
 
-        // Swipe support for mobile
         let touchStartX = 0;
         let touchEndX = 0;
 
@@ -298,27 +309,60 @@ const GalleryPage = {
         }, { passive: true });
     },
 
-    openLightbox(index) {
-        if (index < 0 || index >= this.items.length) return;
-        this.currentLightboxIndex = index;
+    getProductImages(productItem) {
+        if (productItem.gallery_images && productItem.gallery_images.length > 0) {
+            return productItem.gallery_images;
+        }
+        if (productItem.image_url) {
+            return [{ image_url: productItem.image_url, thumbnail_url: productItem.thumbnail_url }];
+        }
+        return [];
+    },
 
-        const item = this.items[index];
+    openLightbox(productIdx, subImageIdx = 0) {
+        if (productIdx < 0 || productIdx >= this.items.length) return;
+
+        this.currentProductIndex = productIdx;
+        this.currentSubImageIndex = subImageIdx;
+
+        const product = this.items[productIdx];
+        const images = this.getProductImages(product);
+
+        if (images.length === 0) return;
+
+        // Clamp subImageIdx
+        if (this.currentSubImageIndex < 0) this.currentSubImageIndex = 0;
+        if (this.currentSubImageIndex >= images.length) this.currentSubImageIndex = images.length - 1;
+
+        const currentImage = images[this.currentSubImageIndex];
+
         const overlay = document.getElementById('dc-lightbox');
         const img = overlay.querySelector('.dc-lightbox-img');
         const title = overlay.querySelector('.dc-lightbox-title');
         const desc = overlay.querySelector('.dc-lightbox-desc');
+        const counter = overlay.querySelector('#dc-lightbox-counter');
         const container = overlay.querySelector('.dc-lightbox-container');
 
-        // Fade effect transition
         img.style.opacity = '0';
         img.style.transform = 'scale(0.95)';
 
-        img.src = item.image_url;
-        img.alt = item.alt_text || item.title || 'Dell Cake';
-        title.textContent = item.title
-            ? (item.code ? `${item.title} (کد: ${item.code})` : item.title)
-            : (item.code ? `محصول دل‌کیک (کد: ${item.code})` : 'محصول دل‌کیک');
-        desc.textContent = item.description || '';
+        img.src = currentImage.image_url;
+        img.alt = product.alt_text || product.title || 'Dell Cake';
+
+        title.textContent = product.title
+            ? (product.code ? `${product.title} (کد: ${product.code})` : product.title)
+            : (product.code ? `محصول دل‌کیک (کد: ${product.code})` : 'محصول دل‌کیک');
+
+        desc.textContent = product.description || '';
+
+        if (counter) {
+            if (images.length > 1) {
+                counter.style.display = 'block';
+                counter.innerText = `${this.currentSubImageIndex + 1} از ${images.length}`;
+            } else {
+                counter.style.display = 'none';
+            }
+        }
 
         img.onload = () => {
             img.style.opacity = '1';
@@ -339,23 +383,37 @@ const GalleryPage = {
     },
 
     navigateLightbox(direction) {
-        if (typeof this.currentLightboxIndex === 'undefined') return;
-        let newIndex = this.currentLightboxIndex + direction;
+        if (typeof this.currentProductIndex === 'undefined') return;
 
-        // Infinite loop
-        if (newIndex < 0) {
-            newIndex = this.items.length - 1;
-        } else if (newIndex >= this.items.length) {
-            newIndex = 0;
+        const product = this.items[this.currentProductIndex];
+        const images = this.getProductImages(product);
+
+        let newSubIdx = this.currentSubImageIndex + direction;
+
+        if (newSubIdx >= 0 && newSubIdx < images.length) {
+            // Stay within current product images
+            this.openLightbox(this.currentProductIndex, newSubIdx);
+        } else {
+            // Move to next or previous product item
+            let newProdIdx = this.currentProductIndex + direction;
+            if (newProdIdx < 0) {
+                newProdIdx = this.items.length - 1;
+            } else if (newProdIdx >= this.items.length) {
+                newProdIdx = 0;
+            }
+
+            const nextProduct = this.items[newProdIdx];
+            const nextImages = this.getProductImages(nextProduct);
+            const startSubIdx = direction > 0 ? 0 : nextImages.length - 1;
+
+            this.openLightbox(newProdIdx, startSubIdx);
         }
-
-        this.openLightbox(newIndex);
     },
 
     handleSwipe(startX, endX) {
         const threshold = 50;
         if (startX - endX > threshold) {
-            // Swipe Left -> Next (since the screen is RTL, swipe left is actually Next)
+            // Swipe Left -> Next
             this.navigateLightbox(1);
         } else if (endX - startX > threshold) {
             // Swipe Right -> Prev

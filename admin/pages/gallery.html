@@ -44,22 +44,25 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                 <div class="left-col">
                     <div class="form-group">
-                        <label>آپلود تصویر (Drag & Drop)</label>
+                        <label>آپلود تصاویر (انتخاب چند عکس همزمان)</label>
                         <div id="gallery-drop-zone" class="drop-zone">
                             <span class="drop-zone__prompt">
                                 <i class="fas fa-cloud-upload-alt"></i>
-                                <span>فایل را اینجا رها کنید یا کلیک کنید</span>
+                                <span>فایل‌ها را اینجا رها کنید یا کلیک کنید (چند انتخابی)</span>
                             </span>
-                            <input type="file" name="galleryFile" id="gallery-file-input" class="drop-zone__input" accept="image/*">
+                            <input type="file" name="galleryFile" id="gallery-file-input" class="drop-zone__input" accept="image/*" multiple>
                         </div>
                         <input type="hidden" id="gallery-image-url">
                         <input type="hidden" id="gallery-thumb-url">
                     </div>
 
                     <div class="form-group">
-                        <label>پیش‌نمایش تصویر</label>
-                        <div class="image-preview-container">
-                            <img id="gallery-preview" src="../images/logo/sweet-.png" style="width: 100%; height: 200px; object-fit: contain; border-radius: 12px; background: #f8f9fa; border: 1px solid var(--border-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label style="margin: 0;">لیست تصاویر نمونه‌کار (<span id="gallery-images-count">۰</span> عکس)</label>
+                            <small style="color: var(--text-muted); font-size: 0.75rem;">⭐ تصویر کاور اصلی</small>
+                        </div>
+                        <div id="gallery-images-preview-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; max-height: 250px; overflow-y: auto; padding: 10px; background: #f8f9fa; border-radius: 12px; border: 1px solid var(--border-color);">
+                            <!-- Dynamic image items rendered by JS -->
                         </div>
                     </div>
                 </div>
